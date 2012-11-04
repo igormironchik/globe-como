@@ -28,68 +28,59 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CHANNEL_WIDGET_HPP__INCLUDED
-#define GLOBE__CHANNEL_WIDGET_HPP__INCLUDED
-
-// Qt include.
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
+// Globe include.
+#include <Globe/channels_to_show.hpp>
+#include <Globe/ui_channels_to_show.h>
 
 
 namespace Globe {
 
-class Channel;
-class ChannelWidgetPrivate;
-
 //
-// ChannelWidget
+// ChannelsToShowPrivate
 //
 
-/*!
-	Widget that will display channel and controls to
-	control channel.
-*/
-class ChannelWidget
-	:	public QWidget
-{
-	Q_OBJECT
-
+class ChannelsToShowPrivate {
 public:
-	explicit ChannelWidget( Channel * channel,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ChannelsToShowPrivate()
+	{
+	}
 
-	QSize minimumSizeHint() const;
-	QSize sizeHint() const;
+	//! User interface.
+	Ui::ChannelsToShow m_ui;
+}; // class ChannelsToShowPrivate
 
-	//! \return Channel.
-	Channel * channel() const;
 
-private slots:
-	//! Timeout was changed.
-	void timeoutChanged( int msecs );
-	//! New message rate.
-	void messageRate( int msgCount );
-	//! Channel connected.
-	void connected();
-	//! Channel disconnected.
-	void disconnected();
-	//! Connect button was clicked.
-	void connectButtonClicked();
-	//! Disconnect button clicked.
-	void disconnectButtonClicked();
-	//! Reconnect button was clicked.
-	void reconnectButtonClicked();
+//
+// ChannelsToShow
+//
 
-private:
-	//!Init.
-	void init();
 
-private:
-	Q_DISABLE_COPY( ChannelWidget )
+ChannelsToShow::ChannelsToShow( QWidget * parent, Qt::WindowFlags f )
+	:	QWidget( parent, f )
+	,	d( new ChannelsToShowPrivate )
+{
+	init();
+}
 
-	QScopedPointer< ChannelWidgetPrivate > d;
-}; // class ChannelWidget
+void
+ChannelsToShow::init()
+{
+	d->m_ui.setupUi( this );
+
+	connect( d->m_ui.m_shownChannels, SIGNAL( currentIndexChanged( int ) ),
+		this, SLOT( displayModeChanged( int ) ) );
+}
+
+void
+ChannelsToShow::displayModeChanged( int index )
+{
+	switch( index )
+	{
+		case 0 : emit displayAllChannels(); break;
+		case 1 : emit displayConnectedChannels(); break;
+		case 2 : emit displayDisconnectedChannels(); break;
+	}
+}
 
 } /* namespace Globe */
 
-#endif // GLOBE__CHANNEL_WIDGET_HPP__INCLUDED

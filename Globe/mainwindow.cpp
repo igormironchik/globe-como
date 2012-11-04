@@ -32,9 +32,7 @@
 #include <Globe/mainwindow.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
-#include <Globe/channel_widget.hpp>
-#include <QtGui/QWidget>
-#include <QtGui/QHBoxLayout>
+#include <Globe/channels_list.hpp>
 
 
 namespace Globe {
@@ -77,15 +75,25 @@ MainWindow::~MainWindow()
 void
 MainWindow::init()
 {
-	QWidget * w = new QWidget( this );
-	QHBoxLayout * layout = new QHBoxLayout( w );
-	Channel * ch = d->m_channelsManager->createChannel( QString( "Test" ),
-		QHostAddress( QString( "127.0.0.1" ) ), 4545 );
-	ChannelWidget * chw = new ChannelWidget( ch, w );
-	layout->addWidget( chw );
-	setCentralWidget( w );
+	ChannelsList * list = new ChannelsList( ShowAll, Qt::AscendingOrder, this );
 
-	ch->connectToHost();
+	setCentralWidget( list );
+
+	Channel * ch1 = d->m_channelsManager->createChannel( QString( "Test" ),
+		QHostAddress( QString( "127.0.0.1" ) ), 4545 );
+	list->addChannel( ch1 );
+
+	Channel * ch2 = d->m_channelsManager->createChannel( QString( "Test Always Offline" ),
+		QHostAddress( QString( "127.0.0.1" ) ), 2030 );
+	list->addChannel( ch2 );
+
+	Channel * ch3 = d->m_channelsManager->createChannel( QString( "Test Always Offline #2" ),
+		QHostAddress( QString( "127.0.0.1" ) ), 3031 );
+	list->addChannel( ch3 );
+
+	ch1->connectToHost();
+	ch2->connectToHost();
+	ch3->connectToHost();
 }
 
 } /* namespace Globe */

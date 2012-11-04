@@ -39,19 +39,15 @@
 
 namespace Globe {
 
-//! Type of sorting.
-enum ChannelsTypeOfSorting {
-	//! First will be shown connected channels.
-	ConnectedFirst = 0,
-	//! First will be shown disconnected channels.
-	DisconnectedFirst = 1,
-	/*!
-		Channels will be shown in the given sort order
-		but without reference to the state of the connection,
-		i.e. as is.
-	*/
-	AsIs = 2
-}; // enum ChannelsTypeOfSorting
+//! Shown channels.
+enum ShownChannels {
+	//! Show only connected channels.
+	ShowConnectedOnly = 0,
+	//! Show only disconnected channels.
+	ShowDisconnectedOnly = 1,
+	//! Show all channels.
+	ShowAll = 2
+}; // enum ShownChannels
 
 
 class Channel;
@@ -68,13 +64,16 @@ class ChannelsList
 	Q_OBJECT
 
 public:
-	ChannelsList( ChannelsTypeOfSorting typeOfSorting = AsIs,
+	ChannelsList( ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder, QWidget * parent = 0 );
 
 	//! Add channel.
 	void addChannel( Channel * channel );
 	//! Remove channel.
 	void removeChannel( Channel * channel );
+
+protected:
+	void resizeEvent( QResizeEvent * event );
 
 private:
 	//! Init.
@@ -104,7 +103,7 @@ class ChannelsListWidget
 	Q_OBJECT
 
 public:
-	ChannelsListWidget( ChannelsTypeOfSorting typeOfSorting = AsIs,
+	ChannelsListWidget( ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
@@ -115,13 +114,23 @@ public:
 
 public slots:
 	//! Sort channels in the given order.
-	void sort( Qt::SortOrder order, ChannelsTypeOfSorting type );
+	void sort( Qt::SortOrder order );
+	//! Hide or show widgets in correcpondence with given type.
+	void shownChannels( ShownChannels shownChannels );
 	//! Show only connected channels.
 	void showConnectedOnly();
 	//! Show only disconnected channels.
 	void showDisconnectedOnly();
 	//! Show all channels.
 	void showAll();
+	//! Resize widget.
+	void resizeWidget( const QSize & size );
+
+private slots:
+	//! Channel connected.
+	void connected();
+	//! Channel disconnected.
+	void disconnected();
 
 private:
 	Q_DISABLE_COPY( ChannelsListWidget )

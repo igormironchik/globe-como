@@ -247,19 +247,23 @@ ChannelWidget::init()
 QSize
 ChannelWidget::minimumSizeHint() const
 {
-	int height = qMax( d->m_stateLabel->height(), d->m_nameLabel->height() );
-	int width = d->m_stateLabel->width() + d->m_nameLabel->width();
+	int height = qMax( d->m_stateLabel->minimumSizeHint().height(),
+		d->m_nameLabel->minimumSizeHint().height() );
+	int width = d->m_stateLabel->minimumSizeHint().width() +
+		d->m_nameLabel->minimumSizeHint().width();
 
-	height += ( labelsLayoutSpacing + d->m_ipLabel->height() );
-	width = qMax( width, d->m_ipLabel->width() );
+	height += ( labelsLayoutSpacing + d->m_ipLabel->minimumSizeHint().height() );
+	width = qMax( width, d->m_ipLabel->minimumSizeHint().width() );
 
 	height += ( labelsLayoutSpacing +
-		qMax( d->m_timeoutWidget->height(), d->m_rateLabel->height() ) );
-	width = qMax( width, ( d->m_timeoutWidget->width() + d->m_rateLabel->width() +
-		d->m_rateUnits->width() ) );
+		qMax( d->m_timeoutWidget->minimumSizeHint().height(),
+			d->m_rateLabel->minimumSizeHint().height() ) );
+	width = qMax( width, ( d->m_timeoutWidget->minimumSizeHint().width() +
+		d->m_rateLabel->minimumSizeHint().width() +
+		d->m_rateUnits->minimumSizeHint().width() ) );
 
-	width += d->m_connectButton->width();
-	height = qMax( height, d->m_connectButton->height() * 3 );
+	width += d->m_connectButton->minimumSizeHint().width();
+	height = qMax( height, d->m_connectButton->minimumSizeHint().height() * 3 );
 
 	return QSize( width, height );
 }
@@ -268,6 +272,12 @@ QSize
 ChannelWidget::sizeHint() const
 {
 	return minimumSizeHint();
+}
+
+Channel *
+ChannelWidget::channel() const
+{
+	return d->m_channel;
 }
 
 void

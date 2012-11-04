@@ -28,8 +28,8 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CHANNEL_WIDGET_HPP__INCLUDED
-#define GLOBE__CHANNEL_WIDGET_HPP__INCLUDED
+#ifndef GLOBE__CHANNELS_TO_SHOW_HPP__INCLUDED
+#define GLOBE__CHANNELS_TO_SHOW_HPP__INCLUDED
 
 // Qt include.
 #include <QtGui/QWidget>
@@ -38,58 +38,44 @@
 
 namespace Globe {
 
-class Channel;
-class ChannelWidgetPrivate;
+class ChannelsToShowPrivate;
 
 //
-// ChannelWidget
+// ChannelsToShow
 //
 
-/*!
-	Widget that will display channel and controls to
-	control channel.
-*/
-class ChannelWidget
+//! Widget that allow user to select display mode of the channels.
+class ChannelsToShow
 	:	public QWidget
 {
+
 	Q_OBJECT
 
+signals:
+	//! "Display all channels" mode selected.
+	void displayAllChannels();
+	//! "Display connected channels" mode selected.
+	void displayConnectedChannels();
+	//! "Display disconnected channels" mode selected.
+	void displayDisconnectedChannels();
+
 public:
-	explicit ChannelWidget( Channel * channel,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
-
-	QSize minimumSizeHint() const;
-	QSize sizeHint() const;
-
-	//! \return Channel.
-	Channel * channel() const;
+	ChannelsToShow( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 private slots:
-	//! Timeout was changed.
-	void timeoutChanged( int msecs );
-	//! New message rate.
-	void messageRate( int msgCount );
-	//! Channel connected.
-	void connected();
-	//! Channel disconnected.
-	void disconnected();
-	//! Connect button was clicked.
-	void connectButtonClicked();
-	//! Disconnect button clicked.
-	void disconnectButtonClicked();
-	//! Reconnect button was clicked.
-	void reconnectButtonClicked();
+	//! User changed the display mode.
+	void displayModeChanged( int index );
 
 private:
-	//!Init.
+	//! Init.
 	void init();
 
 private:
-	Q_DISABLE_COPY( ChannelWidget )
+	Q_DISABLE_COPY( ChannelsToShow )
 
-	QScopedPointer< ChannelWidgetPrivate > d;
-}; // class ChannelWidget
+	QScopedPointer< ChannelsToShowPrivate > d;
+}; // class ChannelsToShow
 
 } /* namespace Globe */
 
-#endif // GLOBE__CHANNEL_WIDGET_HPP__INCLUDED
+#endif // GLOBE__CHANNELS_TO_SHOW_HPP__INCLUDED

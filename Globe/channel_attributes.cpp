@@ -38,7 +38,6 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QColor>
 #include <QtCore/QRegExp>
-#include <QtGui/QMessageBox>
 
 
 namespace Globe {
@@ -126,16 +125,68 @@ public:
 		,	m_channelsManager( channelsManager )
 		,	m_isNameSet( false )
 		,	m_isIPSet( false )
-		,	m_isPortSet( false )
+		,	m_isPortSet( true )
 		,	m_parent( parent )
 	{
 	}
 
 	//! \return State of the validation of IP address and port.
-	bool checkIpAndPort()
+	bool checkIPAndPort()
 	{
 		return ( m_channelsManager->isAddressAndPortUnique(
 			QHostAddress( m_ui.m_ip->text() ), m_ui.m_port->value() ) );
+	}
+
+	//! Print message about current state.
+	void printMessageAndHighlight()
+	{
+		if( !m_isNameSet )
+		{
+			m_ui.m_message->setText( m_parent->tr(
+				"Enter name of the channel." ) );
+			return;
+		}
+		else if( !m_isIPSet )
+		{
+			m_ui.m_message->setText( m_parent->tr(
+				"Enter IP address of the channel." ) );
+			return;
+		}
+		else if( !m_isPortSet )
+		{
+			m_ui.m_message->setText( m_parent->tr(
+				"Enter port number." ) );
+			return;
+		}
+
+		if( m_isIPSet && m_isPortSet )
+		{
+			if( !checkIPAndPort() )
+			{
+				highlightError( m_ui.m_ip );
+				highlightError( m_ui.m_port );
+
+				m_ui.m_message->setText( m_parent->tr(
+					"Channel with the given IP and port already exists." ) );
+
+				m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
+
+				return;
+			}
+			else
+			{
+				highlightNormal( m_ui.m_ip );
+				highlightNormal( m_ui.m_port );
+
+				m_ui.m_message->setText( m_parent->tr(
+					"All is OK." ) );
+			}
+		}
+
+		if( m_isNameSet && m_isIPSet && m_isPortSet )
+			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( true );
+		else
+			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 	}
 
 	/*!
@@ -144,31 +195,7 @@ public:
 	*/
 	void stateChanged()
 	{
-		if( m_isIPSet && m_isPortSet )
-		{
-			if( !checkIpAndPort() )
-			{
-				highlightError( m_ui.m_ip );
-				highlightError( m_ui.m_port );
-
-				m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
-
-				QMessageBox::critical( m_parent, m_parent->tr( "Channel already exists..." ),
-					m_parent->tr( "Channel with the given address and port already exists." ) );
-
-				return;
-			}
-			else
-			{
-				highlightNormal( m_ui.m_ip );
-				highlightNormal( m_ui.m_port );
-			}
-		}
-
-		if( m_isNameSet && m_isIPSet && m_isPortSet )
-			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( true );
-		else
-			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
+		printMessageAndHighlight();
 	}
 
 	//! Set foreground color to red for the given widget.

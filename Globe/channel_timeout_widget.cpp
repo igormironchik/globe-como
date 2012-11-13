@@ -128,6 +128,10 @@ ChannelTimeoutWidget::ChannelTimeoutWidget( int timeout,
 	setSizePolicy( QSizePolicy::Fixed, QSizePolicy::Fixed );
 }
 
+ChannelTimeoutWidget::~ChannelTimeoutWidget()
+{
+}
+
 QSize
 ChannelTimeoutWidget::sizeHint() const
 {

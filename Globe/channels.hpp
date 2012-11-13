@@ -202,6 +202,16 @@ public:
 		//! Port.
 		quint16 port );
 
+	//! Remove channel.
+	void removeChannel( const QString & name );
+
+	//! \return Is name of the channel unique.
+	bool isNameUnique( const QString & name );
+
+	//! \return Is given \a hostAddress and \a port unique.
+	bool isAddressAndPortUnique( const QHostAddress & hostAddress,
+		quint16 port );
+
 private:
 	Q_DISABLE_COPY( ChannelsManager )
 

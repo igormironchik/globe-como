@@ -57,6 +57,7 @@ class ChannelWidget
 public:
 	explicit ChannelWidget( Channel * channel,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	~ChannelWidget();
 
 	QSize minimumSizeHint() const;
 	QSize sizeHint() const;

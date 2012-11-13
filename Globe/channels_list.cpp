@@ -32,12 +32,17 @@
 #include <Globe/channels_list.hpp>
 #include <Globe/channel_widget.hpp>
 #include <Globe/channels.hpp>
-#include <Globe/channels_to_show.hpp>
+#include <Globe/channel_attributes.hpp>
 
 // Qt include.
 #include <QtCore/QList>
 #include <QtGui/QFrame>
 #include <QtGui/QResizeEvent>
+#include <QtGui/QContextMenuEvent>
+#include <QtGui/QAction>
+#include <QtGui/QIcon>
+#include <QtGui/QMenu>
+#include <QtGui/QMessageBox>
 
 
 namespace Globe {
@@ -48,9 +53,12 @@ namespace Globe {
 
 class ChannelsListPrivate {
 public:
-	ChannelsListPrivate( QWidget * parent,
-		ShownChannels shownChannels, Qt::SortOrder sortOrder )
-		:	m_widget( new ChannelsListWidget( shownChannels, sortOrder, parent ) )
+	ChannelsListPrivate( ChannelsManager * channelsManager,
+		QWidget * parent,
+		ShownChannels shownChannels,
+		Qt::SortOrder sortOrder )
+		:	m_widget( new ChannelsListWidget( channelsManager,
+				shownChannels, sortOrder, parent ) )
 	{
 	}
 
@@ -64,12 +72,19 @@ public:
 //
 
 
-ChannelsList::ChannelsList( ShownChannels shownChannels,
-	Qt::SortOrder sortOrder, QWidget * parent )
+ChannelsList::ChannelsList( ChannelsManager * channelsManager,
+	ShownChannels shownChannels,
+	Qt::SortOrder sortOrder,
+	QWidget * parent )
 	:	QScrollArea( parent )
-	,	d( new ChannelsListPrivate( this, shownChannels, sortOrder ) )
+	,	d( new ChannelsListPrivate( channelsManager,
+			this, shownChannels, sortOrder ) )
 {
 	init();
+}
+
+ChannelsList::~ChannelsList()
+{
 }
 
 void
@@ -153,17 +168,22 @@ const int spaceBetweenChannelWidgets = 4;
 
 class ChannelsListWidgetPrivate {
 public:
-	ChannelsListWidgetPrivate( QWidget * widget,
-		ShownChannels shownChannels, Qt::SortOrder sortOrder )
+	ChannelsListWidgetPrivate( ChannelsManager * channelsManager,
+		QWidget * widget,
+		ShownChannels shownChannels,
+		Qt::SortOrder sortOrder )
 		:	m_widget( widget )
-		,	m_shownChannels( shownChannels )
 		,	m_sortOrder( sortOrder )
 		,	m_minWidth( 0 )
 		,	m_minHeight( 0 )
 		,	m_currentWidth( 0 )
 		,	m_currentHeight( 0 )
-		,	m_channelsToShowWidget( new ChannelsToShow( widget ) )
+		,	m_channelsToShowWidget( new ChannelsToShow( shownChannels, widget ) )
 		,	m_channelsToShowWidgetHeight( m_channelsToShowWidget->height() )
+		,	m_addChannelAction( 0 )
+		,	m_delChannelAction( 0 )
+		,	m_currentWidgetIndex( -1 )
+		,	m_channelsManager( channelsManager )
 	{
 		m_channelsToShowWidget->move( 0, 0 );
 		m_minWidth = m_currentWidth = m_channelsToShowWidget->width();
@@ -203,7 +223,7 @@ public:
 	//! Ensure that last line is not visible.
 	void ensureLastLineIsNotVisible()
 	{
-		int lastVisibleIndex = 0;
+		int lastVisibleIndex = -1;
 		int i = 0;
 
 		foreach( const ChannelWidgetAndLine & w, m_widgets )
@@ -214,7 +234,8 @@ public:
 			++i;
 		}
 
-		m_widgets.at( lastVisibleIndex ).line()->hide();
+		if( lastVisibleIndex != -1 )
+			m_widgets.at( lastVisibleIndex ).line()->hide();
 	}
 
 	//! Resize widgets.
@@ -257,26 +278,51 @@ public:
 		return ( m_widgets.indexOf( w ) == ( m_widgets.size() - 1 ) );
 	}
 
+	/*!
+		\return Index of the ChannelWidgetAndLine for the given \a pos
+		or -1 if there is no ChannelWidget for the given \a pos.
+	*/
+	int indexOfChannelWidget( const QPoint & pos )
+	{
+		int index = 0;
+
+		foreach( const ChannelWidgetAndLine & w, m_widgets )
+		{
+			if( w.widget()->geometry().contains( pos ) )
+				return index;
+
+			++index;
+		}
+
+		return -1;
+	}
+
 	//! Widget.
 	QWidget * m_widget;
-	//! Type of sorting.
-	ShownChannels m_shownChannels;
 	//! Sort order.
 	Qt::SortOrder m_sortOrder;
 	//! List with child widgets.
 	QList< ChannelWidgetAndLine > m_widgets;
-	//! Max width of the child widget.
+	//! Min width of the child widget.
 	int m_minWidth;
-	//! Max height of the child widget.
+	//! Min height of the child widget.
 	int m_minHeight;
 	//! Current width of the widget.
 	int m_currentWidth;
-	//!Current height of the widget.
+	//! Current height of the widget.
 	int m_currentHeight;
 	//! Widgets that allow to user select display mode of the channels.
 	ChannelsToShow * m_channelsToShowWidget;
 	//! Height of the m_channelsToShowWidget.
 	int m_channelsToShowWidgetHeight;
+	//! Add new channel action.
+	QAction * m_addChannelAction;
+	//!Remove channel action.
+	QAction * m_delChannelAction;
+	//! Index of current ChannelWidget.
+	int m_currentWidgetIndex;
+	//! Channels manager.
+	ChannelsManager * m_channelsManager;
 }; // class ChannelsListWidgetPrivate
 
 
@@ -284,17 +330,40 @@ public:
 // ChannelsListWidget
 //
 
-ChannelsListWidget::ChannelsListWidget( ShownChannels shownChannels,
-	Qt::SortOrder sortOrder, QWidget * parent, Qt::WindowFlags f )
+ChannelsListWidget::ChannelsListWidget( ChannelsManager * channelsManager,
+	ShownChannels shownChannels,
+	Qt::SortOrder sortOrder,
+	QWidget * parent,
+	Qt::WindowFlags f )
 	:	QWidget( parent, f )
-	,	d( new ChannelsListWidgetPrivate( this, shownChannels, sortOrder ) )
+	,	d( new ChannelsListWidgetPrivate( channelsManager,
+			this, shownChannels, sortOrder ) )
 {
+	init();
+}
+
+ChannelsListWidget::~ChannelsListWidget()
+{
+}
+
+void
+ChannelsListWidget::init()
+{
+	d->m_addChannelAction = new QAction( QIcon( ":/img/add_22x22.png" ),
+		tr( "Add Channel" ), this );
+	d->m_delChannelAction = new QAction( QIcon( ":/img/remove_22x22.png" ),
+		tr( "Delete Channel" ), this );
+
 	connect( d->m_channelsToShowWidget, SIGNAL( displayAllChannels() ),
 		this, SLOT( showAll() ) );
 	connect( d->m_channelsToShowWidget, SIGNAL( displayConnectedChannels() ),
 		this, SLOT( showConnectedOnly() ) );
 	connect( d->m_channelsToShowWidget, SIGNAL( displayDisconnectedChannels() ),
 		this, SLOT( showDisconnectedOnly() ) );
+	connect( d->m_addChannelAction, SIGNAL( triggered() ),
+		this, SLOT( addChannel() ) );
+	connect( d->m_delChannelAction, SIGNAL( triggered() ),
+		this, SLOT( delChannel() ) );
 }
 
 void
@@ -329,12 +398,14 @@ ChannelsListWidget::addChannel( Channel * channel )
 			connect( channel, SIGNAL( disconnected() ),
 				this, SLOT( disconnected() ) );
 
-			if( d->m_shownChannels == ShowConnectedOnly && !channel->isConnected() )
+			if( d->m_channelsToShowWidget->shownChannelsMode() == ShowConnectedOnly &&
+				!channel->isConnected() )
 			{
 				widget->hide();
 				line->hide();
 			}
-			else if( d->m_shownChannels == ShowDisconnectedOnly && channel->isConnected() )
+			else if( d->m_channelsToShowWidget->shownChannelsMode() == ShowDisconnectedOnly &&
+				channel->isConnected() )
 			{
 				widget->hide();
 				line->hide();
@@ -369,6 +440,22 @@ ChannelsListWidget::removeChannel( Channel * channel )
 			d->updateWidgetsPosition();
 		}
 	}
+}
+
+void
+ChannelsListWidget::contextMenuEvent( QContextMenuEvent * event )
+{
+	d->m_currentWidgetIndex = d->indexOfChannelWidget( event->pos() );
+
+	QMenu menu( this );
+	menu.addAction( d->m_addChannelAction );
+
+	if( d->m_currentWidgetIndex != -1 )
+		menu.addAction( d->m_delChannelAction );
+
+	menu.exec( event->globalPos() );
+
+	event->accept();
 }
 
 class ChannelWidgetLessThenFunction {
@@ -409,23 +496,8 @@ ChannelsListWidget::sort( Qt::SortOrder order )
 }
 
 void
-ChannelsListWidget::shownChannels( ShownChannels shownChannels )
-{
-	d->m_shownChannels = shownChannels;
-
-	if( d->m_shownChannels == ShowConnectedOnly )
-		showConnectedOnly();
-	else if( d->m_shownChannels == ShowDisconnectedOnly )
-		showDisconnectedOnly();
-	else
-		showAll();
-}
-
-void
 ChannelsListWidget::showConnectedOnly()
 {
-	d->m_shownChannels = ShowConnectedOnly;
-
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 		if( !w.widget()->channel()->isConnected() )
 		{
@@ -444,8 +516,6 @@ ChannelsListWidget::showConnectedOnly()
 void
 ChannelsListWidget::showDisconnectedOnly()
 {
-	d->m_shownChannels = ShowDisconnectedOnly;
-
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 		if( w.widget()->channel()->isConnected() )
 		{
@@ -464,8 +534,6 @@ ChannelsListWidget::showDisconnectedOnly()
 void
 ChannelsListWidget::showAll()
 {
-	d->m_shownChannels = ShowAll;
-
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 	{
 		if( w.widget()->isHidden() )
@@ -497,13 +565,13 @@ ChannelsListWidget::connected()
 
 	if( w.widget() )
 	{
-		if( d->m_shownChannels == ShowConnectedOnly )
+		if( d->m_channelsToShowWidget->shownChannelsMode() == ShowConnectedOnly )
 		{
 			w.widget()->show();
 			w.line()->show();
 			d->updateWidgetsPosition();
 		}
-		else if( d->m_shownChannels == ShowDisconnectedOnly )
+		else if( d->m_channelsToShowWidget->shownChannelsMode() == ShowDisconnectedOnly )
 		{
 			w.widget()->hide();
 			w.line()->hide();
@@ -520,18 +588,66 @@ ChannelsListWidget::disconnected()
 
 	if( w.widget() )
 	{
-		if( d->m_shownChannels == ShowConnectedOnly )
+		if( d->m_channelsToShowWidget->shownChannelsMode() == ShowConnectedOnly )
 		{
 			w.widget()->hide();
 			w.line()->hide();
 			d->updateWidgetsPosition();
 		}
-		else if( d->m_shownChannels == ShowDisconnectedOnly )
+		else if( d->m_channelsToShowWidget->shownChannelsMode() == ShowDisconnectedOnly )
 		{
 			w.widget()->show();
 			w.line()->show();
 			d->updateWidgetsPosition();
 		}
+	}
+}
+
+void
+ChannelsListWidget::addChannel()
+{
+	ChannelAttributes attributes;
+
+	ChannelAttributesDialog dlg( attributes, d->m_channelsManager, this );
+
+	if( QDialog::Accepted == dlg.exec() )
+	{
+		Channel * channel = d->m_channelsManager->createChannel(
+			attributes.name(), attributes.address(), attributes.port() );
+
+		if( channel )
+			addChannel( channel );
+		else
+			QMessageBox::critical( this, tr( "Unable to create channel..." ),
+				tr( "Unable to create channel with:\n"
+					"\tName: %1\n"
+					"\tAddress: %2\n"
+					"\tPort: %3" ).arg( attributes.name() )
+						.arg( attributes.address().toString() )
+						.arg( QString::number( attributes.port() ) ) );
+	}
+}
+
+void
+ChannelsListWidget::delChannel()
+{
+	if( d->m_currentWidgetIndex != -1 )
+	{
+		const ChannelWidgetAndLine & widgetAndLine =
+			d->m_widgets.at( d->m_currentWidgetIndex );
+
+		d->m_channelsManager->removeChannel(
+			widgetAndLine.widget()->channel()->name() );
+
+		widgetAndLine.widget()->hide();
+		widgetAndLine.line()->hide();
+		widgetAndLine.widget()->deleteLater();
+		widgetAndLine.line()->deleteLater();
+
+		d->m_widgets.removeAt( d->m_currentWidgetIndex );
+		d->m_currentWidgetIndex = -1;
+
+		d->updateWidgetsPosition();
 	}
 }
 

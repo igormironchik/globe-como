@@ -60,6 +60,7 @@ signals:
 public:
 	ChannelTimeoutWidget( int timeout = 0,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	~ChannelTimeoutWidget();
 
 	QSize sizeHint() const;
 	QSize minimumSizeHint() const;

@@ -36,21 +36,14 @@
 #include <QtCore/QScopedPointer>
 #include <QtGui/QWidget>
 
+// Globe include.
+#include <Globe/channels_to_show.hpp>
+
 
 namespace Globe {
 
-//! Shown channels.
-enum ShownChannels {
-	//! Show only connected channels.
-	ShowConnectedOnly = 0,
-	//! Show only disconnected channels.
-	ShowDisconnectedOnly = 1,
-	//! Show all channels.
-	ShowAll = 2
-}; // enum ShownChannels
-
-
 class Channel;
+class ChannelsManager;
 class ChannelsListPrivate;
 
 //
@@ -64,8 +57,11 @@ class ChannelsList
 	Q_OBJECT
 
 public:
-	ChannelsList( ShownChannels shownChannels = ShowAll,
-		Qt::SortOrder sortOrder = Qt::AscendingOrder, QWidget * parent = 0 );
+	explicit ChannelsList( ChannelsManager * channelsManager,
+		ShownChannels shownChannels = ShowAll,
+		Qt::SortOrder sortOrder = Qt::AscendingOrder,
+		QWidget * parent = 0 );
+	~ChannelsList();
 
 	//! Add channel.
 	void addChannel( Channel * channel );
@@ -103,20 +99,24 @@ class ChannelsListWidget
 	Q_OBJECT
 
 public:
-	ChannelsListWidget( ShownChannels shownChannels = ShowAll,
+	ChannelsListWidget( ChannelsManager * channelsManager,
+		ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0,
+		Qt::WindowFlags f = 0 );
+	~ChannelsListWidget();
 
 	//! Add channel.
 	void addChannel( Channel * channel );
 	//! Remove channel.
 	void removeChannel( Channel * channel );
 
+protected:
+	void contextMenuEvent( QContextMenuEvent * event );
+
 public slots:
 	//! Sort channels in the given order.
 	void sort( Qt::SortOrder order );
-	//! Hide or show widgets in correcpondence with given type.
-	void shownChannels( ShownChannels shownChannels );
 	//! Show only connected channels.
 	void showConnectedOnly();
 	//! Show only disconnected channels.
@@ -131,6 +131,14 @@ private slots:
 	void connected();
 	//! Channel disconnected.
 	void disconnected();
+	//! Add new channel.
+	void addChannel();
+	//! Delete channel.
+	void delChannel();
+
+private:
+	//! Init.
+	void init();
 
 private:
 	Q_DISABLE_COPY( ChannelsListWidget )

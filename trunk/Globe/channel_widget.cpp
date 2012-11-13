@@ -106,6 +106,10 @@ ChannelWidget::ChannelWidget( Channel * channel,
 	init();
 }
 
+ChannelWidget::~ChannelWidget()
+{
+}
+
 const int labelsLayoutSpacing = 4;
 const int rateAndTimeoutLayoutSpacing = 6;
 const int spacerSize = 10;

@@ -7,7 +7,8 @@ CONFIG += console
 
 RESOURCES = resources.qrc
 
-HEADERS += channels.hpp \
+HEADERS += channel_attributes.hpp \
+           channels.hpp \
            channels_list.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
@@ -15,7 +16,8 @@ HEADERS += channels.hpp \
            db.hpp \
            mainwindow.hpp
 
-SOURCES += channels.cpp \
+SOURCES += channel_attributes.cpp \
+           channels.cpp \
            channels_list.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
@@ -24,7 +26,8 @@ SOURCES += channels.cpp \
            mainwindow.cpp \
            main.cpp
 
-FORMS	 = channels_to_show.ui
+FORMS	 = channels_to_show.ui \
+           channel_attributes.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo

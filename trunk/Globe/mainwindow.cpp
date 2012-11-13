@@ -75,7 +75,8 @@ MainWindow::~MainWindow()
 void
 MainWindow::init()
 {
-	ChannelsList * list = new ChannelsList( ShowAll, Qt::AscendingOrder, this );
+	ChannelsList * list = new ChannelsList( d->m_channelsManager,
+		ShowAll, Qt::AscendingOrder, this );
 
 	setCentralWidget( list );
 

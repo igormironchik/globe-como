@@ -38,6 +38,17 @@
 
 namespace Globe {
 
+//! Shown channels.
+enum ShownChannels {
+	//! Show only connected channels.
+	ShowConnectedOnly = 0,
+	//! Show only disconnected channels.
+	ShowDisconnectedOnly = 1,
+	//! Show all channels.
+	ShowAll = 2
+}; // enum ShownChannels
+
+
 class ChannelsToShowPrivate;
 
 //
@@ -60,7 +71,12 @@ signals:
 	void displayDisconnectedChannels();
 
 public:
-	ChannelsToShow( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ChannelsToShow( ShownChannels shownChannels = ShowAll,
+		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	~ChannelsToShow();
+
+	//! \return Shown channels mode.
+	ShownChannels shownChannelsMode() const;
 
 private slots:
 	//! User changed the display mode.

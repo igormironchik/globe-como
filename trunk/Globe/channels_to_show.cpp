@@ -30,7 +30,7 @@
 
 // Globe include.
 #include <Globe/channels_to_show.hpp>
-#include <Globe/ui_channels_to_show.h>
+#include "ui_channels_to_show.h"
 
 
 namespace Globe {
@@ -41,12 +41,15 @@ namespace Globe {
 
 class ChannelsToShowPrivate {
 public:
-	ChannelsToShowPrivate()
+	ChannelsToShowPrivate( ShownChannels shownChannels )
+		:	m_shownChannels( shownChannels )
 	{
 	}
 
 	//! User interface.
 	Ui::ChannelsToShow m_ui;
+	//! Shown channels mode.
+	ShownChannels m_shownChannels;
 }; // class ChannelsToShowPrivate
 
 
@@ -55,11 +58,16 @@ public:
 //
 
 
-ChannelsToShow::ChannelsToShow( QWidget * parent, Qt::WindowFlags f )
+ChannelsToShow::ChannelsToShow( ShownChannels shownChannels,
+	QWidget * parent, Qt::WindowFlags f )
 	:	QWidget( parent, f )
-	,	d( new ChannelsToShowPrivate )
+	,	d( new ChannelsToShowPrivate( shownChannels ) )
 {
 	init();
+}
+
+ChannelsToShow::~ChannelsToShow()
+{
 }
 
 void
@@ -67,8 +75,24 @@ ChannelsToShow::init()
 {
 	d->m_ui.setupUi( this );
 
+	switch( d->m_shownChannels )
+	{
+		case ShowAll : d->m_ui.m_shownChannels->setCurrentIndex( 0 );
+			break;
+		case ShowConnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 1 );
+			break;
+		case ShowDisconnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 2 );
+			break;
+	}
+
 	connect( d->m_ui.m_shownChannels, SIGNAL( currentIndexChanged( int ) ),
 		this, SLOT( displayModeChanged( int ) ) );
+}
+
+ShownChannels
+ChannelsToShow::shownChannelsMode() const
+{
+	return d->m_shownChannels;
 }
 
 void
@@ -76,9 +100,18 @@ ChannelsToShow::displayModeChanged( int index )
 {
 	switch( index )
 	{
-		case 0 : emit displayAllChannels(); break;
-		case 1 : emit displayConnectedChannels(); break;
-		case 2 : emit displayDisconnectedChannels(); break;
+		case 0 : {
+			d->m_shownChannels = ShowAll;
+			emit displayAllChannels();
+		} break;
+		case 1 : {
+			d->m_shownChannels = ShowConnectedOnly;
+			emit displayConnectedChannels();
+		} break;
+		case 2 : {
+			d->m_shownChannels = ShowDisconnectedOnly;
+			emit displayDisconnectedChannels();
+		} break;
 	}
 }
 

@@ -42,6 +42,7 @@
 #include <QtCore/QMutexLocker>
 #include <QtCore/QThread>
 #include <QtCore/QMap>
+#include <QtCore/QEventLoop>
 
 
 namespace Globe {
@@ -229,7 +230,8 @@ Channel::connectToHostImplementation()
 		d->m_isDisconnectedByUser = false;
 	}
 
-	d->m_socket->connectToHost( d->m_address, d->m_port );
+	if( d->m_socket->state() == QAbstractSocket::UnconnectedState )
+		d->m_socket->connectToHost( d->m_address, d->m_port );
 }
 
 void
@@ -241,14 +243,21 @@ Channel::disconnectFromHostImplementation()
 		d->m_isDisconnectedByUser = true;
 	}
 
-	d->m_socket->disconnectFromHost();
+	if( d->m_socket->state() != QAbstractSocket::UnconnectedState )
+		d->m_socket->disconnectFromHost();
 }
 
 void
 Channel::reconnectToHostImplementation()
 {
-	disconnectFromHostImplementation();
-	connectToHostImplementation();
+	{
+		QMutexLocker lock( &d->m_mutex );
+
+		d->m_isDisconnectedByUser = false;
+	}
+
+	if( d->m_socket->state() != QAbstractSocket::UnconnectedState )
+		d->m_socket->disconnectFromHost();
 }
 
 void
@@ -488,4 +497,82 @@ ChannelsManager::createChannel(	const QString & name,
 	}
 }
 
+
+//
+// ChannelAndThreadDeleter
+//
+
+class ChannelAndThreadDeleter
+	:	public QObject
+{
+	Q_OBJECT
+
+public:
+	ChannelAndThreadDeleter( const ChannelAndThread & channelAndThread )
+		:	m_channelAndThread( channelAndThread )
+	{
+		if( m_channelAndThread.channel()->isConnected() )
+			connect( m_channelAndThread.channel(), SIGNAL( disconnected() ),
+				this, SLOT( jobDone() ) );
+		else
+			jobDone();
+	}
+
+public slots:
+	void jobDone()
+	{
+		m_channelAndThread.channel()->disconnect();
+		m_channelAndThread.thread()->disconnect();
+		m_channelAndThread.thread()->quit();
+		m_channelAndThread.thread()->wait();
+		m_channelAndThread.channel()->deleteLater();
+		m_channelAndThread.thread()->deleteLater();
+
+		deleteLater();
+	}
+
+private:
+	ChannelAndThread m_channelAndThread;
+}; // class ChannelAndThreadDeleter
+
+void
+ChannelsManager::removeChannel( const QString & name )
+{
+	if( d->m_channels.contains( name ) )
+	{
+		ChannelAndThread channelAndThread = d->m_channels[ name ];
+		d->m_channels.remove( name );
+
+		ChannelAndThreadDeleter * deleter = new ChannelAndThreadDeleter(
+			channelAndThread );
+
+		Q_UNUSED( deleter )
+
+		channelAndThread.channel()->disconnectFromHost();
+	}
+}
+
+bool
+ChannelsManager::isNameUnique( const QString & name )
+{
+	return ( !d->m_channels.contains( name ) );
+}
+
+bool
+ChannelsManager::isAddressAndPortUnique( const QHostAddress & hostAddress,
+	quint16 port )
+{
+	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+		last = d->m_channels.end(); it != last; ++it )
+	{
+		if( it.value().channel()->hostAddress() == hostAddress &&
+			it.value().channel()->portNumber() == port )
+				return false;
+	}
+
+	return true;
+}
+
 } /* namespace Globe */
+
+#include "channels.moc"

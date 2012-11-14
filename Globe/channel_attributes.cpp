@@ -140,6 +140,8 @@ public:
 	//! Print message about current state.
 	void printMessageAndHighlight()
 	{
+		m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
+
 		if( !m_isNameSet )
 		{
 			m_ui.m_message->setText( m_parent->tr(
@@ -169,8 +171,6 @@ public:
 				m_ui.m_message->setText( m_parent->tr(
 					"Channel with the given IP and port already exists." ) );
 
-				m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
-
 				return;
 			}
 			else
@@ -185,8 +185,6 @@ public:
 
 		if( m_isNameSet && m_isIPSet && m_isPortSet )
 			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( true );
-		else
-			m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 	}
 
 	/*!

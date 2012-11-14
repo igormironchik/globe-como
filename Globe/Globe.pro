@@ -7,24 +7,32 @@ CONFIG += console
 
 RESOURCES = resources.qrc
 
-HEADERS += channel_attributes.hpp \
+HEADERS += application_cfg.hpp \
+           channel_attributes.hpp \
            channels.hpp \
+           channels_cfg.hpp \
            channels_list.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
            db.hpp \
-           mainwindow.hpp
+           mainwindow.hpp \
+           mainwindow_cfg.hpp \
+           window_state_cfg.hpp
 
-SOURCES += channel_attributes.cpp \
+SOURCES += application_cfg.cpp \
+           channel_attributes.cpp \
            channels.cpp \
+           channels_cfg.cpp \
            channels_list.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
            db.cpp \
            mainwindow.cpp \
-           main.cpp
+           mainwindow_cfg.cpp \
+           main.cpp \
+           window_state_cfg.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui

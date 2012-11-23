@@ -36,6 +36,7 @@
 #include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtNetwork/QHostAddress>
+#include <QtCore/QList>
 
 // Como include.
 #include <Como/Source>
@@ -106,6 +107,8 @@ public:
 	int timeout() const;
 	//! \return Is channel in connected state.
 	bool isConnected() const;
+	//! \return Whether the user wants to make this channel connected.
+	bool isMustBeConnected() const;
 
 public slots:
 	//! Forcibly connect to host.
@@ -211,6 +214,9 @@ public:
 	//! \return Is given \a hostAddress and \a port unique.
 	bool isAddressAndPortUnique( const QHostAddress & hostAddress,
 		quint16 port );
+
+	//! \return All available channels.
+	QList< Channel* > channels() const;
 
 private:
 	Q_DISABLE_COPY( ChannelsManager )

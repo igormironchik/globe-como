@@ -113,6 +113,12 @@ ChannelsList::removeChannel( Channel * channel )
 	d->m_widget->removeChannel( channel );
 }
 
+ShownChannels
+ChannelsList::shownChannelsMode() const
+{
+	return d->m_widget->shownChannelsMode();
+}
+
 
 //
 // ChannelWidgetAndLine
@@ -440,6 +446,12 @@ ChannelsListWidget::removeChannel( Channel * channel )
 			d->updateWidgetsPosition();
 		}
 	}
+}
+
+ShownChannels
+ChannelsListWidget::shownChannelsMode() const
+{
+	return d->m_channelsToShowWidget->shownChannelsMode();
 }
 
 void

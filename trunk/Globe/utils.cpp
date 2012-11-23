@@ -28,58 +28,35 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Qt include.
-#include <QtGui/QApplication>
-#include <QtCore/QTranslator>
-#include <QtCore/QLocale>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
+// Globe include.
+#include <Globe/utils.hpp>
 
-// Globe icnlude.
-#include <Globe/mainwindow.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/db.hpp>
+//  Globe include.
+#include <QtGui/QWidget>
+#include <QtCore/QDir>
 
 
-static inline void printHelp( char * appName )
+namespace Globe {
+
+WindowState state( QWidget * w )
 {
-	QTextStream out( stdout );
+	Qt::WindowStates st = w->windowState();
 
-	out << "Usage: " << appName << " [confFileName]";
+	if( st & Qt::WindowNoState )
+		return NormalWindow;
+	else if( st & Qt::WindowMinimized )
+		return MinimizedWindow;
+	else if( st & Qt::WindowMaximized )
+		return MaximizedWindow;
+	else
+		return NormalWindow;
 }
 
-static inline QString cfgFileName( char ** argv )
+QString path( const QString & fileName )
 {
-	return QString( argv[ 1 ] );
+	static QDir dir( "./" );
+
+	return dir.relativeFilePath( fileName );
 }
 
-
-int main( int argc, char ** argv )
-{
-	QString cfgFile;
-
-	if( argc == 2 )
-		cfgFile = cfgFileName( argv );
-	else if( argc > 2 )
-	{
-		printHelp( argv[ 0 ] );
-		return 1;
-	}
-
-	QApplication app( argc, argv );
-
-	QTranslator appTranslator;
-	appTranslator.load( "./tr/" + QLocale::system().name() );
-	app.installTranslator( &appTranslator );
-
-	Globe::DB db;
-
-	Globe::ChannelsManager channelsManager( &db );
-
-	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db );
-
-	QTimer::singleShot( 0, &mainWindow, SLOT( init() ) );
-
-	return app.exec();
-}
+} /* namespace Globe */

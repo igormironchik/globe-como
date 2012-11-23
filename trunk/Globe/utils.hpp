@@ -28,58 +28,21 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// Qt include.
-#include <QtGui/QApplication>
-#include <QtCore/QTranslator>
-#include <QtCore/QLocale>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
+#ifndef GLOBE__UTILS_HPP__INCLUDED
+#define GLOBE__UTILS_HPP__INCLUDED
 
-// Globe icnlude.
-#include <Globe/mainwindow.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/db.hpp>
+// Globe include.
+#include <Globe/window_state_cfg.hpp>
 
 
-static inline void printHelp( char * appName )
-{
-	QTextStream out( stdout );
+namespace Globe {
 
-	out << "Usage: " << appName << " [confFileName]";
-}
+//! \return Window's state.
+WindowState state( QWidget * w );
 
-static inline QString cfgFileName( char ** argv )
-{
-	return QString( argv[ 1 ] );
-}
+//! \return Path to the specified file.
+QString path( const QString & fileName );
 
+} /* namespace Globe */
 
-int main( int argc, char ** argv )
-{
-	QString cfgFile;
-
-	if( argc == 2 )
-		cfgFile = cfgFileName( argv );
-	else if( argc > 2 )
-	{
-		printHelp( argv[ 0 ] );
-		return 1;
-	}
-
-	QApplication app( argc, argv );
-
-	QTranslator appTranslator;
-	appTranslator.load( "./tr/" + QLocale::system().name() );
-	app.installTranslator( &appTranslator );
-
-	Globe::DB db;
-
-	Globe::ChannelsManager channelsManager( &db );
-
-	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db );
-
-	QTimer::singleShot( 0, &mainWindow, SLOT( init() ) );
-
-	return app.exec();
-}
+#endif // GLOBE__UTILS_HPP__INCLUDED

@@ -51,15 +51,36 @@ class MainWindowPrivate;
 class MainWindow
 	:	public QMainWindow
 {
+	Q_OBJECT
+
 public:
-	MainWindow( ChannelsManager * channelsManager, DB * db,
+	MainWindow( const QString & cfgFileName,
+		ChannelsManager * channelsManager, DB * db,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~MainWindow();
 
-private:
+public slots:
 	//! Init.
 	void init();
+
+private slots:
+	//! About to quit.
+	void aboutToQuit();
+
+private:
+	//! Read application's configuration.
+	void readAppCfg( const QString & cfgFileName );
+	//! Read main window's configuration and init main window.
+	void readMainWindowCfg( const QString & cfgFileName );
+	//! Read channels configuration.
+	void readChannelsCfg( const QString & cfgFileName );
+	//! Save application's configuration.
+	void saveAppCfg( const QString & cfgFileName );
+	//! Save main window's configuration.
+	void saveMainWindowCfg( const QString & cfgFileName );
+	//! Save channels configuration.
+	void saveChannelsCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( MainWindow )

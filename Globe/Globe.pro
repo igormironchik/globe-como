@@ -18,7 +18,8 @@ HEADERS += application_cfg.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
-           window_state_cfg.hpp
+           window_state_cfg.hpp \
+           utils.hpp
 
 SOURCES += application_cfg.cpp \
            channel_attributes.cpp \
@@ -32,7 +33,8 @@ SOURCES += application_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
-           window_state_cfg.cpp
+           window_state_cfg.cpp \
+           utils.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui

@@ -68,6 +68,9 @@ public:
 	//! Remove channel.
 	void removeChannel( Channel * channel );
 
+	//! \return Shown channels mode.
+	ShownChannels shownChannelsMode() const;
+
 protected:
 	void resizeEvent( QResizeEvent * event );
 
@@ -110,6 +113,9 @@ public:
 	void addChannel( Channel * channel );
 	//! Remove channel.
 	void removeChannel( Channel * channel );
+
+	//! \return Shown channels mode.
+	ShownChannels shownChannelsMode() const;
 
 protected:
 	void contextMenuEvent( QContextMenuEvent * event );

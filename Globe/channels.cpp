@@ -67,7 +67,7 @@ public:
 		,	m_updateTimer( new QTimer( parent ) )
 		,	m_messagesCount( 0 )
 		,	m_isConnected( false )
-		,	m_isDisconnectedByUser( false )
+		,	m_isDisconnectedByUser( true )
 	{}
 
 	//! Name of the channel.
@@ -186,6 +186,14 @@ Channel::isConnected() const
 	QMutexLocker lock( &d->m_mutex );
 
 	return d->m_isConnected;
+}
+
+bool
+Channel::isMustBeConnected() const
+{
+	QMutexLocker lock( &d->m_mutex );
+
+	return !d->m_isDisconnectedByUser;
 }
 
 void
@@ -484,7 +492,7 @@ ChannelsManager::createChannel(	const QString & name,
 		else
 			return 0;
 	}
-	else
+	else if( isAddressAndPortUnique( hostAddress, port ) )
 	{
 		ch = new Channel( name, hostAddress, port, d->m_db );
 
@@ -495,6 +503,8 @@ ChannelsManager::createChannel(	const QString & name,
 
 		return ch;
 	}
+	else
+		return 0;
 }
 
 
@@ -571,6 +581,20 @@ ChannelsManager::isAddressAndPortUnique( const QHostAddress & hostAddress,
 	}
 
 	return true;
+}
+
+QList< Channel* >
+ChannelsManager::channels() const
+{
+	QList< Channel* > channels;
+
+	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+		last = d->m_channels.end(); it != last; ++it )
+	{
+		channels.append( it.value().channel() );
+	}
+
+	return channels;
 }
 
 } /* namespace Globe */

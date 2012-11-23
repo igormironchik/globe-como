@@ -33,7 +33,6 @@
 
 // Qt include.
 #include <QtCore/QString>
-#include <QtCore/QRect>
 
 // QtConfFile include.
 #include <QtConfFile/TagNoValue>
@@ -68,51 +67,12 @@ public:
 	//! Set file name of the channels configuration.
 	void setChannelsCfgFile( const QString & fileName );
 
-	//! \return Available screen geometry for findows.
-	const QRect & availableScreenGeometry() const;
-	//! Set available screen geometry for windows.
-	void setAvailableScreenGeometry( const QRect & rect );
-
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
 	//! File name of the channels configuration.
 	QString m_channelsCfgFileName;
-	//! Available screen geometry for windows.
-	QRect m_availableScreenGeometry;
 }; // class ApplicationCfg
-
-
-//
-// AvailableScreenGeometryTag
-//
-
-//! Tag with available screen space for windows.
-class AvailableScreenGeometryTag
-	:	public QtConfFile::TagNoValue
-{
-public:
-	AvailableScreenGeometryTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
-
-	AvailableScreenGeometryTag( const QRect & rect,
-		QtConfFile::Tag & owner, const QString & name, bool isMandatory = false );
-
-	//! \return Geometry.
-	QRect geometry() const;
-
-private:
-	//! X.
-	QtConfFile::TagScalar< int > m_x;
-	//! Y.
-	QtConfFile::TagScalar< int > m_y;
-	//! Width.
-	QtConfFile::TagScalar< int > m_width;
-	//! Height.
-	QtConfFile::TagScalar< int > m_height;
-	//! Constraint for width and height.
-	QtConfFile::ConstraintMinMax< int > m_constraint;
-}; // class AvailableScreenGeometryTag
 
 
 //
@@ -136,8 +96,6 @@ private:
 	QtConfFile::TagScalar< QString > m_mainWindowCfgFileName;
 	//! File name of the channels configuration.
 	QtConfFile::TagScalar< QString > m_channelsCfgFileName;
-	//! Available screen geometry for windows.
-	AvailableScreenGeometryTag m_availableScreenGeometry;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

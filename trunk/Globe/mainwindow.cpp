@@ -194,10 +194,7 @@ MainWindow::readMainWindowCfg( const QString & cfgFileName )
 
 	setCentralWidget( d->m_list );
 
-	move( d->m_mainWindowCfg.windowState().pos() );
-
-	if( d->m_mainWindowCfg.windowState().size().isValid() )
-		resize( d->m_mainWindowCfg.windowState().size() );
+	restoreWindowState( d->m_mainWindowCfg.windowState(), this );
 }
 
 void
@@ -206,7 +203,6 @@ MainWindow::readChannelsCfg( const QString & cfgFileName )
 	AvailableChannelsCfg cfg;
 
 	try {
-
 		if( !cfgFileName.isEmpty() )
 		{
 			AvailableChannelsCfgTag tag;
@@ -269,8 +265,6 @@ MainWindow::saveAppCfg( const QString & cfgFileName )
 
 	appCfg.setMainWindowCfgFile( path( d->m_appCfg.mainWindowCfgFile() ) );
 	appCfg.setChannelsCfgFile( path( d->m_appCfg.channelsCfgFile() ) );
-	appCfg.setAvailableScreenGeometry(
-		QApplication::desktop()->availableGeometry() );
 
 	ApplicationCfgTag tag( appCfg );
 
@@ -344,6 +338,33 @@ MainWindow::saveChannelsCfg( const QString & cfgFileName )
 			tr( "Unable to save channels configuration..." ),
 			x.whatAsQString() );
 	}
+}
+
+void
+MainWindow::restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
+{
+	static const QRect screenGeometry =
+		QApplication::desktop()->availableGeometry();
+
+	QPoint pos = cfg.pos();
+
+	if( !screenGeometry.contains( pos ) )
+	{
+		if( pos.x() < screenGeometry.x() )
+			pos.setX( screenGeometry.x() + 10 );
+		else if( pos.x() >= screenGeometry.x() + screenGeometry.width() )
+			pos.setX( screenGeometry.x() + 10 );
+
+		if( pos.y() < screenGeometry.y() )
+			pos.setY( screenGeometry.y() + 10 );
+		else if( pos.y() >= screenGeometry.y() + screenGeometry.height() )
+			pos.setY( screenGeometry.y() + 10 );
+	}
+
+	window->move( pos );
+
+	if( cfg.size().isValid() )
+		window->resize( cfg.size() );
 }
 
 } /* namespace Globe */

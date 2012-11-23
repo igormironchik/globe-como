@@ -40,6 +40,7 @@ namespace Globe {
 
 class ChannelsManager;
 class DB;
+class WindowStateCfg;
 
 class MainWindowPrivate;
 
@@ -81,6 +82,8 @@ private:
 	void saveMainWindowCfg( const QString & cfgFileName );
 	//! Save channels configuration.
 	void saveChannelsCfg( const QString & cfgFileName );
+	//! Restore window state.
+	void restoreWindowState( const WindowStateCfg & cfg, QWidget * window );
 
 private:
 	Q_DISABLE_COPY( MainWindow )

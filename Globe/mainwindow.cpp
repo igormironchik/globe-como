@@ -46,6 +46,9 @@
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QMenuBar>
+#include <QtGui/QMenu>
+#include <QtGui/QAction>
 
 
 namespace Globe {
@@ -70,6 +73,7 @@ public:
 		,	m_db( db )
 		,	m_list( 0 )
 		,	m_appCfgWasLoaded( false )
+		,	m_menuBar( 0 )
 	{
 	}
 
@@ -87,6 +91,8 @@ public:
 	MainWindowCfg m_mainWindowCfg;
 	//! Was application's configuration loaded?
 	bool m_appCfgWasLoaded;
+	//! Menu bar.
+	QMenuBar * m_menuBar;
 }; // class MainWindowPrivate
 
 
@@ -104,6 +110,7 @@ MainWindow::MainWindow( const QString & cfgFileName,
 
 MainWindow::~MainWindow()
 {
+	d->m_menuBar->deleteLater();
 }
 
 void
@@ -111,6 +118,12 @@ MainWindow::init()
 {
 	connect( qApp, SIGNAL( aboutToQuit() ),
 		this, SLOT( aboutToQuit() ) );
+
+	d->m_menuBar = new QMenuBar( 0 );
+	QMenu * fileMenu = d->m_menuBar->addMenu( tr( "&File" ) );
+	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
+		tr( "E&xit" ), qApp, SLOT( quit() ) );
+	setMenuBar( d->m_menuBar );
 
 	readAppCfg( d->m_cfgFileName );
 

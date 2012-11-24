@@ -15,9 +15,11 @@ HEADERS += application_cfg.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
+           condition.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
+           properties.hpp \
            window_state_cfg.hpp \
            utils.hpp
 
@@ -29,10 +31,12 @@ SOURCES += application_cfg.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
+           condition.cpp \
            db.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
+           properties.cpp \
            window_state_cfg.cpp \
            utils.cpp
 

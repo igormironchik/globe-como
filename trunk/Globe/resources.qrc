@@ -7,5 +7,6 @@
         <file>img/reconnect_16x16.png</file>
         <file>img/add_22x22.png</file>
         <file>img/remove_22x22.png</file>
+        <file>img/exit_22x22.png</file>
     </qresource>
 </RCC>

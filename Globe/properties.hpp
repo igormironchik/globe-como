@@ -65,6 +65,8 @@ public:
 	int conditionsAmount() const;
 	//! \return Condition with the given index.
 	Condition & conditionAt( int index );
+	//! \return Condition with the given index.
+	const Condition & conditionAt( int index ) const;
 	//! Insert new condition to the new place with \arg index.
 	//! If \arg index is -1 then condition will be placed to the end of list.
 	void insertCondition( const Condition & cond, int index = -1 );

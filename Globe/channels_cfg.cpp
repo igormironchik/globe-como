@@ -41,15 +41,17 @@ namespace Globe {
 ChannelCfg::ChannelCfg()
 	:	m_port( 0 )
 	,	m_isMustBeConnected( false )
+	,	m_timeout( 0 )
 {
 }
 
 ChannelCfg::ChannelCfg( const QString & name, const QHostAddress & address,
-	quint16 port, bool isMustBeConnected )
+	quint16 port, bool isMustBeConnected, int timeout )
 	:	m_name( name )
 	,	m_address( address )
 	,	m_port( port )
 	,	m_isMustBeConnected( isMustBeConnected )
+	,	m_timeout( timeout )
 {
 }
 
@@ -58,6 +60,7 @@ ChannelCfg::ChannelCfg( const ChannelCfg & other )
 	,	m_address( other.address() )
 	,	m_port( other.port() )
 	,	m_isMustBeConnected( other.isMustBeConnected() )
+	,	m_timeout( other.timeout() )
 {
 }
 
@@ -70,6 +73,7 @@ ChannelCfg::operator = ( const ChannelCfg & other )
 		m_address = other.address();
 		m_port = other.port();
 		m_isMustBeConnected = other.isMustBeConnected();
+		m_timeout = other.timeout();
 	}
 
 	return *this;
@@ -124,6 +128,18 @@ ChannelCfg::setMustBeConnected( bool on )
 	m_isMustBeConnected = on;
 }
 
+int
+ChannelCfg::timeout() const
+{
+	return m_timeout;
+}
+
+void
+ChannelCfg::setTimeout( int t )
+{
+	m_timeout = t;
+}
+
 
 //
 // ChannelTag
@@ -135,8 +151,11 @@ ChannelTag::ChannelTag( const QString & name, bool isMandatory )
 	,	m_port( *this, QLatin1String( "port" ), true )
 	,	m_portConstraint( 1, 65536 )
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
+	,	m_timeout( *this, QLatin1String( "timeout" ), false )
+	,	m_timeoutConstraint( 0, 10000 )
 {
 	m_port.setConstraint( &m_portConstraint );
+	m_timeout.setConstraint( &m_timeoutConstraint );
 }
 
 ChannelTag::ChannelTag( QtConfFile::Tag & owner, const QString & name,
@@ -146,8 +165,11 @@ ChannelTag::ChannelTag( QtConfFile::Tag & owner, const QString & name,
 	,	m_port( *this, QLatin1String( "port" ), true )
 	,	m_portConstraint( 1, 65536 )
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
+	,	m_timeout( *this, QLatin1String( "timeout" ), false )
+	,	m_timeoutConstraint( 0, 10000 )
 {
 	m_port.setConstraint( &m_portConstraint );
+	m_timeout.setConstraint( &m_timeoutConstraint );
 }
 
 ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
@@ -157,8 +179,11 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
 	,	m_port( *this, QLatin1String( "port" ), true )
 	,	m_portConstraint( 1, 65536 )
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
+	,	m_timeout( *this, QLatin1String( "timeout" ), false )
+	,	m_timeoutConstraint( 0, 10000 )
 {
 	m_port.setConstraint( &m_portConstraint );
+	m_timeout.setConstraint( &m_timeoutConstraint );
 
 	setValue( cfg.name() );
 	m_address.setValue( cfg.address().toString() );
@@ -166,6 +191,9 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
 
 	if( cfg.isMustBeConnected() )
 		m_isMustBeConnected.setDefined();
+
+	if( cfg.timeout() )
+		m_timeout.setValue( cfg.timeout() );
 }
 
 ChannelTag::ChannelTag( const ChannelCfg & cfg,
@@ -175,8 +203,11 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg,
 	,	m_port( *this, QLatin1String( "port" ), true )
 	,	m_portConstraint( 1, 65536 )
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
+	,	m_timeout( *this, QLatin1String( "timeout" ), false )
+	,	m_timeoutConstraint( 0, 10000 )
 {
 	m_port.setConstraint( &m_portConstraint );
+	m_timeout.setConstraint( &m_timeoutConstraint );
 
 	setValue( cfg.name() );
 	m_address.setValue( cfg.address().toString() );
@@ -184,6 +215,9 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg,
 
 	if( cfg.isMustBeConnected() )
 		m_isMustBeConnected.setDefined();
+
+	if( cfg.timeout() )
+		m_timeout.setValue( cfg.timeout() );
 }
 
 ChannelTag::~ChannelTag()
@@ -199,6 +233,9 @@ ChannelTag::cfg() const
 	cfg.setAddress( QHostAddress( m_address.value() ) );
 	cfg.setPort( m_port.value() );
 	cfg.setMustBeConnected( m_isMustBeConnected.isDefined() );
+
+	if( m_timeout.isDefined() )
+		cfg.setTimeout( m_timeout.value() );
 
 	return cfg;
 }

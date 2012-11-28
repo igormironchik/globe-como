@@ -249,6 +249,9 @@ MainWindow::readChannelsCfg( const QString & cfgFileName )
 		{
 			d->m_list->addChannel( channel );
 
+			if( channelCfg.timeout() )
+				channel->updateTimeout( channelCfg.timeout() );
+
 			if( channelCfg.isMustBeConnected() )
 				channel->connectToHost();
 		}
@@ -329,6 +332,7 @@ MainWindow::saveChannelsCfg( const QString & cfgFileName )
 		chCfg.setAddress( channel->hostAddress() );
 		chCfg.setPort( channel->portNumber() );
 		chCfg.setMustBeConnected( channel->isMustBeConnected() );
+		chCfg.setTimeout( channel->timeout() );
 
 		channelsCfg.append( chCfg );
 	}

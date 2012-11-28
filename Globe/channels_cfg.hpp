@@ -55,7 +55,7 @@ public:
 	ChannelCfg();
 
 	ChannelCfg( const QString & name, const QHostAddress & address,
-		quint16 port, bool isMustBeConnected );
+		quint16 port, bool isMustBeConnected, int timeout );
 
 	ChannelCfg( const ChannelCfg & other );
 
@@ -81,6 +81,11 @@ public:
 	//! Set whether the channel must be connected.
 	void setMustBeConnected( bool on = true );
 
+	//! \return Timeout in the channel.
+	int timeout() const;
+	//! Set timeout in the channel.
+	void setTimeout( int t );
+
 private:
 	//! Name of the channel.
 	QString m_name;
@@ -90,6 +95,8 @@ private:
 	quint16 m_port;
 	//! Whether the channel must be connected.
 	bool m_isMustBeConnected;
+	//! Timeout in the channel.
+	int m_timeout;
 }; // class ChannelCfg
 
 
@@ -131,6 +138,10 @@ private:
 	QtConfFile::ConstraintMinMax< int > m_portConstraint;
 	//! Whether the channel must be connected.
 	QtConfFile::TagNoValue m_isMustBeConnected;
+	//! Timeout in the channel.
+	QtConfFile::TagScalar< int > m_timeout;
+	//! Consatrint for the timeout.
+	QtConfFile::ConstraintMinMax< int > m_timeoutConstraint;
 }; // class ChannelTag
 
 

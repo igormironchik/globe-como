@@ -16,10 +16,12 @@ HEADERS += application_cfg.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
            condition.hpp \
+           condition_widget.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
+           properties_widget.hpp \
            window_state_cfg.hpp \
            utils.hpp
 
@@ -32,11 +34,13 @@ SOURCES += application_cfg.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
            condition.cpp \
+           condition_widget.cpp \
            db.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
            properties.cpp \
+           properties_widget.cpp \
            window_state_cfg.cpp \
            utils.cpp
 

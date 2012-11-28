@@ -38,21 +38,26 @@
 // Como include.
 #include <Como/Source>
 
+// QtConfFile include.
+#include <QtConfFile/TagNoValue>
+#include <QtConfFile/TagScalar>
+#include <QtConfFile/ConstraintOneOf>
+
 
 namespace Globe {
 
 //! Expression in the condition
 enum Expression {
 	//! If less or equal.
-	IfLessOrEqual,
+	IfLessOrEqual = 0x01,
 	//! If less.
-	IfLess,
+	IfLess = 0x02,
 	//! If equal.
-	IfEqual,
+	IfEqual = 0x03,
 	//! If greater.
-	IfGreater,
+	IfGreater = 0x04,
 	//! If greater or equal.
-	IfGreaterOrEqual
+	IfGreaterOrEqual = 0x05
 }; // enum Expression
 
 
@@ -78,14 +83,14 @@ enum Level {
 //! Condition in the properties of the Como source.
 class Condition {
 public:
-	explicit Condition( Como::Source::Type t );
+	Condition();
 
 	Condition( const Condition & other );
 
 	Condition & operator = ( const Condition & other );
 
 	//! Check if this condition is match the given value.
-	bool check( const QVariant & val );
+	bool check( const QVariant & val, Como::Source::Type valueType  );
 
 	//! \return Tpe of the condition (Expression).
 	Expression type() const;
@@ -108,8 +113,6 @@ public:
 	void setMessage( const QString & msg );
 
 private:
-	//! Type of the value.
-	Como::Source::Type m_valueType;
 	//! Expression type.
 	Expression m_exprType;
 	//! Value for the comparison.
@@ -119,6 +122,66 @@ private:
 	//! Message.
 	QString m_message;
 }; // class Condition
+
+
+//
+// IfStatementTag
+//
+
+//! Tag with logical relation.
+class IfStatementTag
+	:	public QtConfFile::TagScalar< QString >
+{
+public:
+	IfStatementTag( QtConfFile::Tag & owner, const QString & name,
+		bool isMandatory = false );
+
+	IfStatementTag( const QVariant & value, QtConfFile::Tag & owner,
+		const QString & name, bool isMandatory = false );
+
+	//! \return Value for the if-statement.
+	QString value() const;
+}; // class IfStatementTag
+
+
+//
+// ConditionTag
+//
+
+//! Configuration's tag for condition.
+class ConditionTag
+	:	public QtConfFile::TagNoValue
+{
+public:
+	explicit ConditionTag( const QString & name, bool isMandatory = false );
+
+	ConditionTag( const Condition & cond, const QString & name,
+		bool isMandatory = false );
+
+	//! Called when tag parsing finished.
+	void onFinish( const QtConfFile::ParserInfo & info );
+
+	//! \return Condition.
+	Condition condition() const;
+
+private:
+	//! If greater or equal.
+	IfStatementTag m_greaterOrEqual;
+	//! If greater.
+	IfStatementTag m_greater;
+	//! If equal.
+	IfStatementTag m_equal;
+	//! If less.
+	IfStatementTag m_less;
+	//! If less or equal.
+	IfStatementTag m_lessOrEqual;
+	//! Level.
+	QtConfFile::TagScalar< QString > m_level;
+	//! Constraint for level.
+	QtConfFile::ConstraintOneOf< QString > m_levelConstraint;
+	//! Message.
+	QtConfFile::TagScalar< QString > m_message;
+}; // class ConditionTag
 
 } /* namespace Globe */
 

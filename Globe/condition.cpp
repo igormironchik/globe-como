@@ -79,7 +79,7 @@ bool checkIfStatement( const T & a, const T & b, Expression expr )
 }
 
 bool
-Condition::check( const QVariant & val, Como::Source::Type valueType )
+Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 {
 	if( valueType = Como::Source::Int )
 	{

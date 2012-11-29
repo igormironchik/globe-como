@@ -90,7 +90,7 @@ public:
 	Condition & operator = ( const Condition & other );
 
 	//! Check if this condition is match the given value.
-	bool check( const QVariant & val, Como::Source::Type valueType  );
+	bool check( const QVariant & val, Como::Source::Type valueType  ) const;
 
 	//! \return Tpe of the condition (Expression).
 	Expression type() const;
@@ -123,6 +123,14 @@ private:
 	QString m_message;
 }; // class Condition
 
+
+//
+// FIX ME! For perfomance increase IfStatementTag and ConditionTag
+// must be templated. Due to changes of QVariant value every time in
+// calculating condition (look at Condition::check()).
+// But it's neccessary to confirm with profiler.
+// First implementation will so as is.
+//
 
 //
 // IfStatementTag

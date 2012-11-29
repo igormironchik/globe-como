@@ -21,6 +21,7 @@ HEADERS += application_cfg.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
+           properties_cfg.hpp \
            properties_widget.hpp \
            window_state_cfg.hpp \
            utils.hpp
@@ -40,6 +41,7 @@ SOURCES += application_cfg.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
            properties.cpp \
+           properties_cfg.cpp \
            properties_widget.cpp \
            window_state_cfg.cpp \
            utils.cpp

@@ -41,7 +41,7 @@ namespace Globe {
 WindowState state( QWidget * w );
 
 //! \return Path to the specified file.
-QString path( const QString & fileName );
+QString relativeFilePath( const QString & fileName );
 
 } /* namespace Globe */
 

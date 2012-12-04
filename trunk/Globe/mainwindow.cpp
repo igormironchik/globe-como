@@ -273,8 +273,10 @@ MainWindow::saveAppCfg( const QString & cfgFileName )
 {
 	ApplicationCfg appCfg;
 
-	appCfg.setMainWindowCfgFile( path( d->m_appCfg.mainWindowCfgFile() ) );
-	appCfg.setChannelsCfgFile( path( d->m_appCfg.channelsCfgFile() ) );
+	appCfg.setMainWindowCfgFile( relativeFilePath(
+		d->m_appCfg.mainWindowCfgFile() ) );
+	appCfg.setChannelsCfgFile( relativeFilePath(
+		d->m_appCfg.channelsCfgFile() ) );
 
 	ApplicationCfgTag tag( appCfg );
 

@@ -16,6 +16,7 @@ HEADERS += application_cfg.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
            condition.hpp \
+           condition_cfg.hpp \
            condition_widget.hpp \
            db.hpp \
            mainwindow.hpp \
@@ -35,6 +36,7 @@ SOURCES += application_cfg.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
            condition.cpp \
+           condition_cfg.cpp \
            condition_widget.cpp \
            db.cpp \
            mainwindow.cpp \

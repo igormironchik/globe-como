@@ -52,7 +52,7 @@ WindowState state( QWidget * w )
 		return NormalWindow;
 }
 
-QString path( const QString & fileName )
+QString relativeFilePath( const QString & fileName )
 {
 	static QDir dir( "./" );
 

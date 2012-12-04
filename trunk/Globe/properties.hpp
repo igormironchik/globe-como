@@ -52,7 +52,7 @@ namespace Globe {
 //! Properties of the source.
 class Properties {
 public:
-	explicit Properties( const Como::Source & source );
+	Properties();
 
 	Properties( const Properties & other );
 
@@ -70,8 +70,7 @@ public:
 	//! \return Condition with the given index.
 	const Condition & conditionAt( int index ) const;
 	//! Insert new condition to the new place with \arg index.
-	//! If \arg index is -1 then condition will be placed to the end of list.
-	void insertCondition( const Condition & cond, int index = -1 );
+	void insertCondition( const Condition & cond, int index );
 	//! Remove condition with the \arg index.
 	void removeCondition( int index );
 	//! Swap to conditions in the list.
@@ -81,10 +80,11 @@ public:
 		\return Index of the found condition.
 		\retval -1 if there is no corresopnding condition for the given value.
 	*/
-	int checkConditions( const QVariant & value ) const;
+	int checkConditions( const QVariant & value,
+		Como::Source::Type valueType ) const;
 
 	// Save properties configuration.
-	void saveConfiguration( const QString & fileName );
+	void saveConfiguration( const QString & fileName ) const;
 	//! Read properties configuration.
 	void readConfiguration( const QString & fileName );
 
@@ -122,7 +122,7 @@ private:
 */
 class PropertiesKey {
 public:
-	explicit PropertiesKey( const QString & name,
+	PropertiesKey( const QString & name,
 		const QString & typeName, const QString & channelName );
 
 	PropertiesKey( const PropertiesKey & other );
@@ -198,7 +198,7 @@ class PropertiesManagerPrivate;
 //! Manager of all properties in application.
 class PropertiesManager {
 public:
-	PropertiesManager();
+	explicit PropertiesManager( const QString & propertiesConfDirectory );
 
 	~PropertiesManager();
 
@@ -207,14 +207,20 @@ public:
 		\retval NULL if there is no properties for the given source.
 	*/
 	Properties * findProperties( const Como::Source & source,
-		const QString & channelName );
+		const QString & channelName ) const;
+	/*!
+		\return Properties for the given key.
+		\retval NULL if there is no properties for the given key.
+	*/
+	Properties * findProperties( const PropertiesKey & key ) const;
 	//! Add new properties.
-	void addProperties( const PropertiesKey & key, const Properties & props );
+	void addProperties( const PropertiesKey & key, const Properties & props,
+		const Como::Source::Type & type );
 	//! Remove properties for the given \arg source source.
 	void removeProperties( const PropertiesKey & key );
 
-	// Save properties manager configuration.
-	void saveConfiguration( const QString & fileName );
+	//! Save properties manager configuration.
+	void saveConfiguration( const QString & fileName ) const;
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
 

@@ -54,7 +54,7 @@ IfStatementTag::IfStatementTag( const QVariant & value, QtConfFile::Tag & owner,
 QString
 IfStatementTag::value() const
 {
-	return value();
+	return QtConfFile::TagScalar< QString >::value();
 }
 
 

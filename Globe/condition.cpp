@@ -115,7 +115,7 @@ Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 	}
 	else
 		return checkIfStatement< QString > ( m_value.toString(),
-			val.toString(), m_expType );
+			val.toString(), m_exprType );
 }
 
 Expression
@@ -139,9 +139,6 @@ Condition::value() const
 void
 Condition::setValue( const QVariant & v )
 {
-	if( !checkValueType( m_valueType, v.type() ) )
-		return;
-
 	m_value = v;
 }
 

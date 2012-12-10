@@ -32,6 +32,8 @@
 #include <Globe/properties.hpp>
 #include <Globe/utils.hpp>
 
+#include "ui_properties_mainwindow.h"
+
 // Qt include.
 #include <QtCore/QFile>
 #include <QtCore/QDateTime>
@@ -299,6 +301,12 @@ PropertiesValue::properties()
 	return m_properties;
 }
 
+const Properties &
+PropertiesValue::properties() const
+{
+	return m_properties;
+}
+
 
 //
 // PropertiesManagerPrivate
@@ -306,13 +314,8 @@ PropertiesValue::properties()
 
 class PropertiesManagerPrivate {
 public:
-	PropertiesManagerPrivate( const QString & propertiesConfDirectory )
+	PropertiesManagerPrivate()
 	{
-		m_directoryName = path( propertiesConfDirectory );
-
-		if( !m_directoryName.endsWith( QChar( '/' ) ) &&
-			!m_directoryName.endsWith( QChar( '\\' ) ) )
-				m_directoryName.append( QChar( '/' ) );
 	}
 
 	//! Generate unique file name for the given key.
@@ -340,10 +343,22 @@ public:
 		return fileName;
 	}
 
+	//! Set directory for the properties configuration files.
+	void setDirectory( const QString & dir )
+	{
+		m_directoryName = relativeFilePath( dir );
+
+		if( !m_directoryName.endsWith( QChar( '/' ) ) &&
+			!m_directoryName.endsWith( QChar( '\\' ) ) )
+				m_directoryName.append( QChar( '/' ) );
+	}
+
 	//! Properties map.
 	PropertiesMap m_map;
 	//! Directory name with properties configuration.
 	QString m_directoryName;
+	//! UI.
+	Ui::PropertiesMainWindow m_ui;
 }; // class PropertiesManagerPrivate
 
 
@@ -351,16 +366,24 @@ public:
 // PropertiesManager
 //
 
-PropertiesManager::PropertiesManager( const QString & propertiesConfDirectory )
-	:	d( new PropertiesManagerPrivate( propertiesConfDirectory ) )
+PropertiesManager::PropertiesManager( QWidget * parent, Qt::WindowFlags flags )
+	:	QMainWindow( parent, flags )
+	,	d( new PropertiesManagerPrivate )
 {
+	init();
 }
 
 PropertiesManager::~PropertiesManager()
 {
 }
 
-Properties *
+void
+PropertiesManager::init()
+{
+	d->m_ui.setupUi( this );
+}
+
+const Properties *
 PropertiesManager::findProperties( const Como::Source & source,
 	const QString & channelName ) const
 {
@@ -403,7 +426,7 @@ PropertiesManager::findProperties( const Como::Source & source,
 	return 0;
 }
 
-Properties *
+const Properties *
 PropertiesManager::findProperties( const PropertiesKey & key ) const
 {
 	PropertiesMap::ConstIterator it = d->m_map.find( key );
@@ -458,12 +481,6 @@ PropertiesManager::saveConfiguration( const QString & fileName ) const
 void
 PropertiesManager::readConfiguration( const QString & fileName )
 {
-}
-
-const PropertiesMap &
-PropertiesManager::allProperties() const
-{
-	return d->m_map;
 }
 
 } /* namespace Globe */

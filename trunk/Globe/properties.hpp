@@ -38,6 +38,7 @@
 #include <QtCore/QList>
 #include <QtCore/QMap>
 #include <QtCore/QScopedPointer>
+#include <QtGui/QMainWindow>
 
 // Globe include.
 #include <Globe/condition.hpp>
@@ -175,6 +176,9 @@ public:
 	//! \return Properties.
 	Properties & properties();
 
+	//! \return Properties.
+	const Properties & properties() const;
+
 private:
 	//! Configuration's file name.
 	QString m_confFileName;
@@ -196,9 +200,13 @@ typedef QMap< PropertiesKey, PropertiesValue > PropertiesMap;
 class PropertiesManagerPrivate;
 
 //! Manager of all properties in application.
-class PropertiesManager {
+class PropertiesManager
+	:	public QMainWindow
+{
+	Q_OBJECT
+
 public:
-	explicit PropertiesManager( const QString & propertiesConfDirectory );
+	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~PropertiesManager();
 
@@ -206,13 +214,13 @@ public:
 		\return Properties for the given source.
 		\retval NULL if there is no properties for the given source.
 	*/
-	Properties * findProperties( const Como::Source & source,
+	const Properties * findProperties( const Como::Source & source,
 		const QString & channelName ) const;
 	/*!
 		\return Properties for the given key.
 		\retval NULL if there is no properties for the given key.
 	*/
-	Properties * findProperties( const PropertiesKey & key ) const;
+	const Properties * findProperties( const PropertiesKey & key ) const;
 	//! Add new properties.
 	void addProperties( const PropertiesKey & key, const Properties & props,
 		const Como::Source::Type & type );
@@ -224,8 +232,9 @@ public:
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
 
-	//! \return Properties map.
-	const PropertiesMap & allProperties() const;
+private:
+	//! Init.
+	void init();
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

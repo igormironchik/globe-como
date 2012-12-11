@@ -41,6 +41,7 @@ namespace Globe {
 class ChannelsManager;
 class DB;
 class WindowStateCfg;
+class PropertiesManager;
 
 class MainWindowPrivate;
 
@@ -57,6 +58,7 @@ class MainWindow
 public:
 	MainWindow( const QString & cfgFileName,
 		ChannelsManager * channelsManager, DB * db,
+		PropertiesManager * propertiesManager,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~MainWindow();
@@ -76,14 +78,16 @@ private:
 	void readMainWindowCfg( const QString & cfgFileName );
 	//! Read channels configuration.
 	void readChannelsCfg( const QString & cfgFileName );
+	//! Read properties configuration.
+	void readPropertiesCfg( const QString & cfgFileName );
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.
 	void saveMainWindowCfg( const QString & cfgFileName );
 	//! Save channels configuration.
 	void saveChannelsCfg( const QString & cfgFileName );
-	//! Restore window state.
-	void restoreWindowState( const WindowStateCfg & cfg, QWidget * window );
+	//! Save properties configuration.
+	void savePropertiesCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( MainWindow )

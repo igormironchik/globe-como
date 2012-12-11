@@ -52,6 +52,7 @@ ApplicationCfg::~ApplicationCfg()
 ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	:	m_mainWindowCfgFileName( other.mainWindowCfgFile() )
 	,	m_channelsCfgFileName( other.channelsCfgFile() )
+	,	m_propertiesCfgFileName( other.propertiesCfgFile() )
 {
 }
 
@@ -62,6 +63,7 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 	{
 		m_mainWindowCfgFileName = other.mainWindowCfgFile();
 		m_channelsCfgFileName = other.channelsCfgFile();
+		m_propertiesCfgFileName = other.propertiesCfgFile();
 	}
 
 	return *this;
@@ -91,6 +93,18 @@ ApplicationCfg::setChannelsCfgFile( const QString & fileName )
 	m_channelsCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::propertiesCfgFile() const
+{
+	return m_propertiesCfgFileName;
+}
+
+void
+ApplicationCfg::setPropertiesCfgFile( const QString & fileName )
+{
+	m_propertiesCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -102,6 +116,8 @@ ApplicationCfgTag::ApplicationCfgTag()
 			true )
 	,	m_channelsCfgFileName( *this, QLatin1String( "channelsCfgFileName" ),
 			true )
+	,	m_propertiesCfgFileName( *this, QLatin1String( "propertiesCfgFileName" ),
+			true )
 {
 }
 
@@ -111,9 +127,12 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			true )
 	,	m_channelsCfgFileName( *this, QLatin1String( "channelsCfgFileName" ),
 			true )
+	,	m_propertiesCfgFileName( *this, QLatin1String( "propertiesCfgFileName" ),
+			true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
+	m_propertiesCfgFileName.setValue( cfg.propertiesCfgFile() );
 
 	setDefined();
 }
@@ -125,6 +144,7 @@ ApplicationCfgTag::cfg() const
 
 	cfg.setMainWindowCfgFile( m_mainWindowCfgFileName.value() );
 	cfg.setChannelsCfgFile( m_channelsCfgFileName.value() );
+	cfg.setPropertiesCfgFile( m_propertiesCfgFileName.value() );
 
 	return cfg;
 }

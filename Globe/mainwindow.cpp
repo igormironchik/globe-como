@@ -37,6 +37,8 @@
 #include <Globe/channels_cfg.hpp>
 #include <Globe/mainwindow_cfg.hpp>
 #include <Globe/utils.hpp>
+#include <Globe/window_state_cfg.hpp>
+#include <Globe/properties.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -45,7 +47,6 @@
 // Qt include.
 #include <QtGui/QApplication>
 #include <QtGui/QMessageBox>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
 #include <QtGui/QAction>
@@ -59,6 +60,8 @@ static const QString defaultMainWindowCfgFileName =
 	QLatin1String( "./etc/MainWindow.cfg" );
 static const QString defaultChannelsCfgFileName =
 	QLatin1String( "./etc/Channels.cfg" );
+static const QString defaultPropertiesCfgFileName =
+	QLatin1String( "./etc/Properties.cfg" );
 
 //
 // MainWindowPrivate
@@ -67,12 +70,14 @@ static const QString defaultChannelsCfgFileName =
 class MainWindowPrivate {
 public:
 	MainWindowPrivate( const QString & cfgFileName,
-		ChannelsManager * channelsManager, DB * db )
+		ChannelsManager * channelsManager, DB * db,
+		PropertiesManager * propertiesManager )
 		:	m_cfgFileName( cfgFileName )
 		,	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_list( 0 )
 		,	m_appCfgWasLoaded( false )
+		,	m_propertiesManager( propertiesManager )
 	{
 	}
 
@@ -90,6 +95,8 @@ public:
 	MainWindowCfg m_mainWindowCfg;
 	//! Was application's configuration loaded?
 	bool m_appCfgWasLoaded;
+	//! Properties manager.
+	PropertiesManager * m_propertiesManager;
 }; // class MainWindowPrivate
 
 
@@ -99,9 +106,11 @@ public:
 
 MainWindow::MainWindow( const QString & cfgFileName,
 	ChannelsManager * channelsManager, DB * db,
+	PropertiesManager * propertiesManager,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new MainWindowPrivate( cfgFileName, channelsManager, db ) )
+	,	d( new MainWindowPrivate( cfgFileName, channelsManager, db,
+			propertiesManager ) )
 {
 }
 
@@ -125,12 +134,16 @@ MainWindow::init()
 
 	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
+	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
+
 	show();
 }
 
 void
 MainWindow::aboutToQuit()
 {
+	savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
+
 	saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	saveMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
@@ -269,6 +282,26 @@ MainWindow::readChannelsCfg( const QString & cfgFileName )
 }
 
 void
+MainWindow::readPropertiesCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		d->m_propertiesManager->readConfiguration( cfgFileName );
+	else
+	{
+		d->m_appCfg.setPropertiesCfgFile( defaultPropertiesCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+			QMessageBox::warning( this,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified properties configuration file.\n"
+					"Properties configuration will not be loaded.\n"
+					"At exit properties configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultPropertiesCfgFileName ) );
+	}
+}
+
+void
 MainWindow::saveAppCfg( const QString & cfgFileName )
 {
 	ApplicationCfg appCfg;
@@ -277,6 +310,8 @@ MainWindow::saveAppCfg( const QString & cfgFileName )
 		d->m_appCfg.mainWindowCfgFile() ) );
 	appCfg.setChannelsCfgFile( relativeFilePath(
 		d->m_appCfg.channelsCfgFile() ) );
+	appCfg.setPropertiesCfgFile( relativeFilePath(
+		d->m_appCfg.propertiesCfgFile() ) );
 
 	ApplicationCfgTag tag( appCfg );
 
@@ -295,16 +330,9 @@ MainWindow::saveAppCfg( const QString & cfgFileName )
 void
 MainWindow::saveMainWindowCfg( const QString & cfgFileName )
 {
-	WindowStateCfg windowStateCfg;
-
-	windowStateCfg.setPos( pos() );
-	windowStateCfg.setSize( QSize( width(), height() ) );
-	windowStateCfg.setState( state( this ) );
-	windowStateCfg.setActive( isActiveWindow() );
-
 	ShownChannels shownChannels = d->m_list->shownChannelsMode();
 
-	MainWindowCfg mainWindowCfg( windowStateCfg, shownChannels );
+	MainWindowCfg mainWindowCfg( windowStateCfg( this ), shownChannels );
 
 	MainWindowCfgTag tag( mainWindowCfg );
 
@@ -354,30 +382,9 @@ MainWindow::saveChannelsCfg( const QString & cfgFileName )
 }
 
 void
-MainWindow::restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
+MainWindow::savePropertiesCfg( const QString & cfgFileName )
 {
-	static const QRect screenGeometry =
-		QApplication::desktop()->availableGeometry();
-
-	QPoint pos = cfg.pos();
-
-	if( !screenGeometry.contains( pos ) )
-	{
-		if( pos.x() < screenGeometry.x() )
-			pos.setX( screenGeometry.x() + 10 );
-		else if( pos.x() >= screenGeometry.x() + screenGeometry.width() )
-			pos.setX( screenGeometry.x() + 10 );
-
-		if( pos.y() < screenGeometry.y() )
-			pos.setY( screenGeometry.y() + 10 );
-		else if( pos.y() >= screenGeometry.y() + screenGeometry.height() )
-			pos.setY( screenGeometry.y() + 10 );
-	}
-
-	window->move( pos );
-
-	if( cfg.size().isValid() )
-		window->resize( cfg.size() );
+	d->m_propertiesManager->saveConfiguration( cfgFileName );
 }
 
 } /* namespace Globe */

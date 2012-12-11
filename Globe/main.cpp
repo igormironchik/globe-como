@@ -40,6 +40,7 @@
 #include <Globe/mainwindow.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
+#include <Globe/properties.hpp>
 
 
 static inline void printHelp( char * appName )
@@ -77,7 +78,10 @@ int main( int argc, char ** argv )
 
 	Globe::ChannelsManager channelsManager( &db );
 
-	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db );
+	Globe::PropertiesManager propertiesManager;
+
+	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
+		&propertiesManager );
 
 	QTimer::singleShot( 0, &mainWindow, SLOT( init() ) );
 

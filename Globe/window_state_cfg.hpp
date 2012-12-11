@@ -112,6 +112,22 @@ private:
 
 
 //
+// windowState
+//
+
+//! \return Window state cfg structure for the given window.
+WindowStateCfg windowStateCfg( const QWidget * window );
+
+
+//
+// restoreWindowState
+//
+
+//! Restore window state.
+void restoreWindowState( const WindowStateCfg & cfg, QWidget * window );
+
+
+//
 // PosTag
 //
 

@@ -35,6 +35,9 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QScopedPointer>
 
+// Globe include.
+#include <Globe/properties.hpp>
+
 
 namespace Globe {
 
@@ -53,6 +56,9 @@ class PropertiesModel
 public:
 	PropertiesModel( QObject * parent = 0 );
 	~PropertiesModel();
+
+	//! Init model with the properties map.
+	void initModel( const PropertiesMap & map );
 
 	//! Clear model.
 	void clear();

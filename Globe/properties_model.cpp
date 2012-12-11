@@ -30,7 +30,6 @@
 
 // Globe include.
 #include <Globe/properties_model.hpp>
-#include <Globe/properties.hpp>
 
 // Qt include.
 #include <QtCore/QList>
@@ -55,6 +54,20 @@ public:
 		,	m_valueType( value.valueType() )
 		,	m_confFileName( value.confFileName() )
 	{
+	}
+
+	Data & operator = ( const Data & other )
+	{
+		if( this != &other )
+		{
+			m_sourceName = other.m_sourceName;
+			m_typeName = other.m_typeName;
+			m_channelName = other.m_channelName;
+			m_valueType = other.m_valueType;
+			m_confFileName = other.m_confFileName;
+		}
+
+		return *this;
 	}
 
 	//! Source name.
@@ -102,11 +115,28 @@ PropertiesModel::~PropertiesModel()
 }
 
 void
+PropertiesModel::initModel( const PropertiesMap & map )
+{
+	clear();
+
+	insertRows( 0, map.size(), QModelIndex() );
+
+	int i = 0;
+
+	for( PropertiesMap::ConstIterator it = map.begin(),
+		last = map.end(); it != last; ++it, ++i )
+			d->m_data[ i ] = Data( it.key(), it.value() );
+
+	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
+		QAbstractTableModel::index( i - 1, confFileColumn ) );
+}
+
+void
 PropertiesModel::clear()
 {
-	beginResetPropertiesModel();
+	beginResetModel();
 	d->m_data.clear();
-	endResetPropertiesModel();
+	endResetModel();
 }
 
 int
@@ -229,7 +259,7 @@ PropertiesModel::setData( const QModelIndex & index, const QVariant & value, int
 			case channelNameColumn :
 				d->m_data[ row ].m_channelName = value.toString(); break;
 			case valueTypeColumn :
-				d->m_data[ row ].m_valueType = valueFromString(
+				d->m_data[ row ].m_valueType = valueTypeFromString(
 					value.toString() ); break;
 			case confFileColumn :
 				d->m_data[ row ].m_confFileName = value.toString(); break;

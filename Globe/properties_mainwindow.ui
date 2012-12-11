@@ -50,9 +50,6 @@
    </layout>
    <zorder>m_view</zorder>
    <zorder>groupBox</zorder>
-   <zorder>m_addButton</zorder>
-   <zorder>m_removeButton</zorder>
-   <zorder>verticalSpacer</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -90,7 +87,7 @@
      <normaloff>:/img/exit_22x22.png</normaloff>:/img/exit_22x22.png</iconset>
    </property>
    <property name="text">
-    <string>&amp;Quit</string>
+    <string>E&amp;xit</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+Q</string>

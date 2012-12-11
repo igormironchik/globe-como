@@ -31,12 +31,21 @@
 // Globe include.
 #include <Globe/properties.hpp>
 #include <Globe/utils.hpp>
+#include <Globe/properties_model.hpp>
+#include <Globe/properties_cfg.hpp>
+#include <Globe/window_state_cfg.hpp>
 
 #include "ui_properties_mainwindow.h"
 
 // Qt include.
 #include <QtCore/QFile>
 #include <QtCore/QDateTime>
+#include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QMessageBox>
+#include <QtGui/QCloseEvent>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
 
 
 namespace Globe {
@@ -140,11 +149,21 @@ Properties::checkConditions( const QVariant & value,
 void
 Properties::saveConfiguration( const QString & fileName ) const
 {
+	PropertiesTag tag( *this );
+
+	QtConfFile::writeQtConfFile( tag, fileName,
+		QTextCodec::codecForName( "UTF-8" ) );
 }
 
 void
 Properties::readConfiguration( const QString & fileName )
 {
+	PropertiesTag tag;
+
+	QtConfFile::readQtConfFile( tag, fileName,
+		QTextCodec::codecForName( "UTF-8" ) );
+
+	operator = ( tag.properties() );
 }
 
 
@@ -312,9 +331,14 @@ PropertiesValue::properties() const
 // PropertiesManagerPrivate
 //
 
+static const QString defaultConfigurationDirectory =
+	QLatin1String( "./etc/dataclasses/" );
+
 class PropertiesManagerPrivate {
 public:
 	PropertiesManagerPrivate()
+		:	m_model( 0 )
+		,	m_directoryName( defaultConfigurationDirectory )
 	{
 	}
 
@@ -359,6 +383,8 @@ public:
 	QString m_directoryName;
 	//! UI.
 	Ui::PropertiesMainWindow m_ui;
+	//! Model for the properties in the view.
+	PropertiesModel * m_model;
 }; // class PropertiesManagerPrivate
 
 
@@ -381,6 +407,17 @@ void
 PropertiesManager::init()
 {
 	d->m_ui.setupUi( this );
+
+	d->m_model = new PropertiesModel( this );
+	QSortFilterProxyModel * sortModel = new QSortFilterProxyModel( this );
+
+	sortModel->setSourceModel( d->m_model );
+
+	d->m_ui.m_view->setModel( sortModel );
+	d->m_ui.m_view->setSortingEnabled( true );
+	d->m_ui.m_view->setRootIsDecorated( false );
+
+	d->m_ui.m_directory->setText( d->m_directoryName );
 }
 
 const Properties *
@@ -474,13 +511,108 @@ PropertiesManager::removeProperties( const PropertiesKey & key )
 }
 
 void
-PropertiesManager::saveConfiguration( const QString & fileName ) const
+PropertiesManager::saveConfiguration( const QString & fileName )
 {
+	PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
+		d->m_map, windowStateCfg( this ) );
+
+	try {
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( this,
+			tr( "Unable to save properties configuration..." ),
+			x.whatAsQString() );
+	}
 }
 
 void
 PropertiesManager::readConfiguration( const QString & fileName )
 {
+	{
+		PropertiesManagerTag tag;
+
+		try {
+			QtConfFile::readQtConfFile( tag, fileName,
+				QTextCodec::codecForName( "UTF-8" ) );
+		}
+		catch( const QtConfFile::Exception & x )
+		{
+			QMessageBox::critical( this,
+				tr( "Unable to read properties configuration..." ),
+				x.whatAsQString() );
+
+			return;
+		}
+
+		d->m_directoryName = tag.propertiesDirectory();
+		d->m_map = tag.propertiesMap();
+
+		restoreWindowState( tag.windowState(), this );
+	}
+
+	d->m_map.clear();
+
+	if( !d->m_directoryName.endsWith( QChar( '/' ) ) &&
+		!d->m_directoryName.endsWith( QChar( '\\' ) ) )
+			d->m_directoryName.append( QChar( '/' ) );
+
+	QList< PropertiesKey > toRemove;
+
+	for( PropertiesMap::Iterator it = d->m_map.begin(),
+		last = d->m_map.end(); it != last; ++it )
+	{
+		try {
+			PropertiesTag tag;
+
+			QtConfFile::readQtConfFile( tag,
+				d->m_directoryName + it.value().confFileName(),
+				QTextCodec::codecForName( "UTF-8" ) );
+
+			it.value().properties() = tag.properties();
+		}
+		catch( const QtConfFile::Exception & x )
+		{
+			const QMessageBox::StandardButton button =
+				QMessageBox::question( this,
+					tr( "Unable to read properties configuration..." ),
+					tr( "%1\\n\\n"
+						"Do you want to delete this file?" )
+							.arg( x.whatAsQString() ),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Ok );
+
+			toRemove.append( it.key() );
+
+			if( button == QMessageBox::Ok )
+			{
+				QFile file( d->m_directoryName + it.value().confFileName() );
+				file.remove();
+			}
+		}
+	}
+
+	foreach( const PropertiesKey & key, toRemove )
+		d->m_map.remove( key );
+
+	initModelAndView();
+}
+
+void
+PropertiesManager::initModelAndView()
+{
+	d->m_ui.m_directory->setText( d->m_directoryName );
+	d->m_model->initModel( d->m_map );
+}
+
+void
+PropertiesManager::closeEvent( QCloseEvent * event )
+{
+	hide();
+
+	event->accept();
 }
 
 } /* namespace Globe */

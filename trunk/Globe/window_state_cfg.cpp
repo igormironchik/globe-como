@@ -31,6 +31,11 @@
 // Globe include.
 #include <Globe/window_state_cfg.hpp>
 
+// Qt include.
+#include <QtGui/QWidget>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QApplication>
+
 // C++ include.
 #include <limits>
 
@@ -128,6 +133,81 @@ void
 WindowStateCfg::setActive( bool on )
 {
 	m_isActive = on;
+}
+
+
+//
+// windowState
+//
+
+static inline WindowState state( const QWidget * w )
+{
+	Qt::WindowStates st = w->windowState();
+
+	if( w->isHidden() )
+		return HiddenWindow;
+	else if( st & Qt::WindowNoState )
+		return NormalWindow;
+	else if( st & Qt::WindowMinimized )
+		return MinimizedWindow;
+	else if( st & Qt::WindowMaximized )
+		return MaximizedWindow;
+	else
+		return NormalWindow;
+}
+
+WindowStateCfg
+windowStateCfg( const QWidget * window )
+{
+	WindowStateCfg cfg;
+
+	cfg.setPos( window->pos() );
+	cfg.setSize( QSize( window->width(), window->height() ) );
+	cfg.setState( state( window ) );
+	cfg.setActive( window->isActiveWindow() );
+
+	return cfg;
+}
+
+
+//
+// restoreWindowState
+//
+
+void
+restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
+{
+	static const QRect screenGeometry =
+		QApplication::desktop()->availableGeometry();
+
+	QPoint pos = cfg.pos();
+
+	if( !screenGeometry.contains( pos ) )
+	{
+		if( pos.x() < screenGeometry.x() )
+			pos.setX( screenGeometry.x() + 10 );
+		else if( pos.x() >= screenGeometry.x() + screenGeometry.width() )
+			pos.setX( screenGeometry.x() + 10 );
+
+		if( pos.y() < screenGeometry.y() )
+			pos.setY( screenGeometry.y() + 10 );
+		else if( pos.y() >= screenGeometry.y() + screenGeometry.height() )
+			pos.setY( screenGeometry.y() + 10 );
+	}
+
+	window->move( pos );
+
+	if( cfg.size().isValid() )
+		window->resize( cfg.size() );
+
+	if( cfg.state() == HiddenWindow )
+		window->hide();
+	else if( cfg.state() == MinimizedWindow )
+		window->showMinimized();
+	else if( cfg.state() == MaximizedWindow )
+		window->showMaximized();
+	else
+		window->show();
 }
 
 

@@ -228,13 +228,18 @@ public:
 	void removeProperties( const PropertiesKey & key );
 
 	//! Save properties manager configuration.
-	void saveConfiguration( const QString & fileName ) const;
+	void saveConfiguration( const QString & fileName );
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
+
+protected:
+	void closeEvent( QCloseEvent * event );
 
 private:
 	//! Init.
 	void init();
+	//! Init model.
+	void initModelAndView();
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

@@ -38,20 +38,6 @@
 
 namespace Globe {
 
-WindowState state( QWidget * w )
-{
-	Qt::WindowStates st = w->windowState();
-
-	if( st & Qt::WindowNoState )
-		return NormalWindow;
-	else if( st & Qt::WindowMinimized )
-		return MinimizedWindow;
-	else if( st & Qt::WindowMaximized )
-		return MaximizedWindow;
-	else
-		return NormalWindow;
-}
-
 QString relativeFilePath( const QString & fileName )
 {
 	static QDir dir( "./" );

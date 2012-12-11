@@ -37,9 +37,6 @@
 
 namespace Globe {
 
-//! \return Window's state.
-WindowState state( QWidget * w );
-
 //! \return Path to the specified file.
 QString relativeFilePath( const QString & fileName );
 

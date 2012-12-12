@@ -66,6 +66,8 @@ public:
 public slots:
 	//! Init.
 	void init();
+	//! Show properties.
+	void showProperties();
 
 private slots:
 	//! About to quit.

@@ -43,6 +43,7 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QMessageBox>
 #include <QtGui/QCloseEvent>
+#include <QtGui/QApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -418,6 +419,9 @@ PropertiesManager::init()
 	d->m_ui.m_view->setRootIsDecorated( false );
 
 	d->m_ui.m_directory->setText( d->m_directoryName );
+
+	connect( d->m_ui.m_quitAction, SIGNAL( triggered() ),
+		qApp, SLOT( quit() ) );
 }
 
 const Properties *

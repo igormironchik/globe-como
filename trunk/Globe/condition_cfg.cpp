@@ -67,6 +67,7 @@ static const QString error = QLatin1String( "error" );
 static const QString warning = QLatin1String( "warning" );
 static const QString debug = QLatin1String( "debug" );
 static const QString info = QLatin1String( "info" );
+static const QString none = QLatin1String( "none" );
 
 ConditionTag::ConditionTag( const QString & name, bool isMandatory )
 	:	QtConfFile::TagNoValue( name, isMandatory )
@@ -83,6 +84,7 @@ ConditionTag::ConditionTag( const QString & name, bool isMandatory )
 	m_levelConstraint.addValue( warning );
 	m_levelConstraint.addValue( debug );
 	m_levelConstraint.addValue( info );
+	m_levelConstraint.addValue( none );
 
 	m_level.setConstraint( &m_levelConstraint );
 }
@@ -96,6 +98,7 @@ static inline QString levelToString( Level l )
 		case Warning : return warning;
 		case Debug : return debug;
 		case Info : return info;
+		case None : return none;
 		default : return QString();
 	}
 }
@@ -112,13 +115,15 @@ static inline Level levelFromString( const QString & str )
 		return Debug;
 	else if( str == info )
 		return Info;
+	else if( str == none )
+		return None;
 	else
 		return Critical;
 }
 
 ConditionTag::ConditionTag( const Condition & cond, const QString & name,
 	bool isMandatory )
-:	QtConfFile::TagNoValue( name, isMandatory )
+	:	QtConfFile::TagNoValue( name, isMandatory )
 	,	m_greaterOrEqual( *this, QLatin1String( ">=" ), false )
 	,	m_greater( *this, QLatin1String( ">" ), false )
 	,	m_equal( *this, QLatin1String( "==" ), false )
@@ -132,6 +137,7 @@ ConditionTag::ConditionTag( const Condition & cond, const QString & name,
 	m_levelConstraint.addValue( warning );
 	m_levelConstraint.addValue( debug );
 	m_levelConstraint.addValue( info );
+	m_levelConstraint.addValue( none );
 
 	m_level.setConstraint( &m_levelConstraint );
 
@@ -256,6 +262,63 @@ ConditionTag::onFinish( const QtConfFile::ParserInfo & info )
 				.arg( info.lineNumber() ) );
 
 	QtConfFile::TagNoValue::onFinish( info );
+}
+
+
+//
+// OtherwiseTag
+//
+
+OtherwiseTag::OtherwiseTag( QtConfFile::Tag & owner, const QString & name,
+	bool isMandatory )
+	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	,	m_level( *this, QLatin1String( "level" ), true )
+	,	m_message( *this, QLatin1String( "message" ), false )
+{
+	m_levelConstraint.addValue( critical );
+	m_levelConstraint.addValue( error );
+	m_levelConstraint.addValue( warning );
+	m_levelConstraint.addValue( debug );
+	m_levelConstraint.addValue( info );
+	m_levelConstraint.addValue( none );
+
+	m_level.setConstraint( &m_levelConstraint );
+}
+
+OtherwiseTag::OtherwiseTag( const Condition & cond, QtConfFile::Tag & owner,
+	const QString & name, bool isMandatory )
+	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	,	m_level( *this, QLatin1String( "level" ), true )
+	,	m_message( *this, QLatin1String( "message" ), false )
+{
+	m_levelConstraint.addValue( critical );
+	m_levelConstraint.addValue( error );
+	m_levelConstraint.addValue( warning );
+	m_levelConstraint.addValue( debug );
+	m_levelConstraint.addValue( info );
+	m_levelConstraint.addValue( none );
+
+	m_level.setConstraint( &m_levelConstraint );
+
+	m_level.setValue( levelToString( cond.level() ) );
+
+	if( !cond.message().isEmpty() )
+		m_message.setValue( cond.message() );
+
+	setDefined();
+}
+
+Condition
+OtherwiseTag::value() const
+{
+	Condition c;
+
+	c.setLevel( levelFromString( m_level.value() ) );
+
+	if( m_message.isDefined() )
+		c.setMessage( m_message.value() );
+
+	return c;
 }
 
 } /* namespace Globe */

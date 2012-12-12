@@ -70,18 +70,18 @@ public:
 	Condition & conditionAt( int index );
 	//! \return Condition with the given index.
 	const Condition & conditionAt( int index ) const;
+	//! \return Otherwise condition.
+	Condition & otherwise();
+	//! \return Otherwise condition.
+	const Condition & otherwise() const;
 	//! Insert new condition to the new place with \arg index.
 	void insertCondition( const Condition & cond, int index );
 	//! Remove condition with the \arg index.
 	void removeCondition( int index );
 	//! Swap to conditions in the list.
 	void swapConditions( int i, int j );
-	/*!
-		Check conditions for the given value.
-		\return Index of the found condition.
-		\retval -1 if there is no corresopnding condition for the given value.
-	*/
-	int checkConditions( const QVariant & value,
+	//! \return Condition for the given value.
+	const Condition & checkConditions( const QVariant & value,
 		Como::Source::Type valueType ) const;
 
 	// Save properties configuration.
@@ -94,6 +94,8 @@ private:
 	int m_priority;
 	//! List of conditions for this source.
 	QList< Condition > m_conditions;
+	//! Otherwise condition.
+	Condition m_otherwise;
 }; // class Properties
 
 

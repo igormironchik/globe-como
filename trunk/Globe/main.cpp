@@ -42,6 +42,9 @@
 #include <Globe/db.hpp>
 #include <Globe/properties.hpp>
 
+// Como include.
+#include <Como/Source>
+
 
 static inline void printHelp( char * appName )
 {
@@ -58,6 +61,8 @@ static inline QString cfgFileName( char ** argv )
 
 int main( int argc, char ** argv )
 {
+	qRegisterMetaType< Como::Source > ( "Como::Source" );
+
 	QString cfgFile;
 
 	if( argc == 2 )

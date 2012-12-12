@@ -501,6 +501,8 @@ ChannelsManager::createChannel(	const QString & name,
 		d->m_channels.insert( name, ChannelAndThread( ch, thread ) );
 		thread->start();
 
+		emit channelCreated( ch );
+
 		return ch;
 	}
 	else
@@ -559,6 +561,8 @@ ChannelsManager::removeChannel( const QString & name )
 		Q_UNUSED( deleter )
 
 		channelAndThread.channel()->disconnectFromHost();
+
+		emit channelRemoved( channelAndThread.channel() );
 	}
 }
 

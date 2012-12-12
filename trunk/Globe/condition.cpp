@@ -39,6 +39,8 @@ namespace Globe {
 //
 
 Condition::Condition()
+	:	m_exprType( IfEqual )
+	,	m_level( None )
 {
 }
 

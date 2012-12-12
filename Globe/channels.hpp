@@ -170,6 +170,12 @@ class ChannelsManager
 {
 	Q_OBJECT
 
+signals:
+	//! New channel created.
+	void channelCreated( Channel * );
+	//! Channel was removed.
+	void channelRemoved( Channel * );
+
 public:
 	explicit ChannelsManager( DB * db );
 	~ChannelsManager();

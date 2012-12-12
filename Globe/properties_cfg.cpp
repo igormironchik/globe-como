@@ -42,7 +42,8 @@ namespace Globe {
 PropertiesTag::PropertiesTag()
 	:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
 	,	m_priority( *this, QLatin1String( "priority" ), false )
-	,	m_conditions( *this, QLatin1String( "condition" ), false )
+	,	m_conditions( *this, QLatin1String( "if" ), false )
+	,	m_otherwise( *this, QLatin1String( "otherwise" ), false )
 	,	m_priorityConstraint( 0, 999 )
 {
 	m_priority.setConstraint( &m_priorityConstraint );
@@ -51,7 +52,9 @@ PropertiesTag::PropertiesTag()
 PropertiesTag::PropertiesTag( const Properties & properties )
 	:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
 	,	m_priority( *this, QLatin1String( "priority" ), false )
-	,	m_conditions( *this, QLatin1String( "condition" ), false )
+	,	m_conditions( *this, QLatin1String( "if" ), false )
+	,	m_otherwise( properties.otherwise(), *this,
+			QLatin1String( "otherwise" ), false )
 	,	m_priorityConstraint( 0, 999 )
 {
 	m_priority.setConstraint( &m_priorityConstraint );
@@ -85,6 +88,9 @@ PropertiesTag::properties() const
 		for( int i = 0; i < m_conditions.size(); ++i )
 			p.insertCondition( m_conditions.at( i ).condition(), i );
 	}
+
+	if( m_otherwise.isDefined() )
+		p.otherwise() = m_otherwise.value();
 
 	return p;
 }

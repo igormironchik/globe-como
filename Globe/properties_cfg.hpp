@@ -68,6 +68,8 @@ private:
 	QtConfFile::TagScalar< int > m_priority;
 	//! Conditions.
 	QtConfFile::TagVectorOfTags< ConditionTag > m_conditions;
+	//! Otherwise condition.
+	OtherwiseTag m_otherwise;
 	//! Constraint for the priority.
 	QtConfFile::ConstraintMinMax< int > m_priorityConstraint;
 }; // class PropertiesTag

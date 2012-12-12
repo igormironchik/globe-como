@@ -63,6 +63,7 @@ Properties::Properties()
 Properties::Properties( const Properties & other )
 	:	m_priority( other.priority() )
 	,	m_conditions( other.m_conditions )
+	,	m_otherwise( other.m_otherwise )
 {
 }
 
@@ -73,6 +74,7 @@ Properties::operator = ( const Properties & other )
 	{
 		m_priority = other.priority();
 		m_conditions = other.m_conditions;
+		m_otherwise = other.m_otherwise;
 	}
 
 	return *this;
@@ -108,6 +110,18 @@ Properties::conditionAt( int index ) const
 	return m_conditions.at( index );
 }
 
+Condition &
+Properties::otherwise()
+{
+	return m_otherwise;
+}
+
+const Condition &
+Properties::otherwise() const
+{
+	return m_otherwise;
+}
+
 void
 Properties::insertCondition( const Condition & cond, int index )
 {
@@ -126,25 +140,17 @@ Properties::swapConditions( int i, int j )
 	m_conditions.swap( i, j );
 }
 
-int
+const Condition &
 Properties::checkConditions( const QVariant & value,
 	Como::Source::Type valueType ) const
 {
-	int index = -1;
-	int i = 0;
-
 	foreach( const Condition & c, m_conditions )
 	{
 		if( c.check( value, valueType ) )
-		{
-			index = i;
-			break;
-		}
-
-		++i;
+			return c;
 	}
 
-	return index;
+	return m_otherwise;
 }
 
 void

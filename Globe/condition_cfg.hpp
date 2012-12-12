@@ -109,6 +109,34 @@ private:
 	QtConfFile::TagScalar< QString > m_message;
 }; // class ConditionTag
 
+
+//
+// OtherwiseTag
+//
+
+//! Configuration's tag for otherwise condition.
+class OtherwiseTag
+	:	public QtConfFile::TagNoValue
+{
+public:
+	OtherwiseTag( QtConfFile::Tag & owner, const QString & name,
+		bool isMandatory = false );
+
+	OtherwiseTag( const Condition & cond, QtConfFile::Tag & owner,
+		const QString & name, bool isMandatory = false );
+
+	//! \return Condition.
+	Condition value() const;
+
+private:
+	//! Level.
+	QtConfFile::TagScalar< QString > m_level;
+	//! Constraint for level.
+	QtConfFile::ConstraintOneOf< QString > m_levelConstraint;
+	//! Message.
+	QtConfFile::TagScalar< QString > m_message;
+}; // class OtherwiseTag
+
 } /* namespace Globe */
 
 #endif // GLOBE__CONDITION_CFG_HPP__INCLUDED

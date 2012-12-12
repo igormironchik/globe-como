@@ -25,6 +25,10 @@ HEADERS += application_cfg.hpp \
            properties_cfg.hpp \
            properties_model.hpp \
            properties_widget.hpp \
+           sources.hpp \
+           sources_dialog.hpp \
+           sources_mainwindow.hpp \
+           sources_widget.hpp \
            window_state_cfg.hpp \
            utils.hpp
 
@@ -47,6 +51,10 @@ SOURCES += application_cfg.cpp \
            properties_cfg.cpp \
            properties_model.cpp \
            properties_widget.cpp \
+           sources.cpp \
+           sources_dialog.cpp \
+           sources_mainwindow.cpp \
+           sources_widget.cpp \
            window_state_cfg.cpp \
            utils.cpp
 

@@ -128,6 +128,10 @@ MainWindow::init()
 	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
 		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
 
+	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
+	toolsMenu->addAction( tr( "&Properties" ), this, SLOT( showProperties() ),
+		QKeySequence( tr( "Ctrl+P" ) ) );
+
 	readAppCfg( d->m_cfgFileName );
 
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
@@ -137,6 +141,18 @@ MainWindow::init()
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
 	show();
+}
+
+void
+MainWindow::showProperties()
+{
+	if( d->m_propertiesManager->isHidden() )
+	{
+		d->m_propertiesManager->show();
+		d->m_propertiesManager->activateWindow();
+	}
+	else
+		d->m_propertiesManager->activateWindow();
 }
 
 void

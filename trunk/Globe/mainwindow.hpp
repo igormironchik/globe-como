@@ -69,11 +69,16 @@ public slots:
 	//! Show properties.
 	void showProperties();
 
+protected:
+	void closeEvent( QCloseEvent * event );
+
 private slots:
 	//! About to quit.
 	void aboutToQuit();
 
 private:
+	//! Save configuration.
+	void saveConfiguration();
 	//! Read application's configuration.
 	void readAppCfg( const QString & cfgFileName );
 	//! Read main window's configuration and init main window.

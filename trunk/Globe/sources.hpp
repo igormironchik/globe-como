@@ -71,7 +71,7 @@ public:
 		QObject * parent = 0 );
 
 	//! \return List of names of available channels.
-	const QList< QString > & channelsNames() const;
+	QList< QString > channelsNames() const;
 
 	//! \return List of sources in the given \arg channel channel.
 	const QList< Como::Source > & sources( const QString & channelName ) const;

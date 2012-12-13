@@ -28,6 +28,7 @@ HEADERS += application_cfg.hpp \
            sources.hpp \
            sources_dialog.hpp \
            sources_mainwindow.hpp \
+           sources_model.hpp \
            sources_widget.hpp \
            window_state_cfg.hpp \
            utils.hpp
@@ -54,6 +55,7 @@ SOURCES += application_cfg.cpp \
            sources.cpp \
            sources_dialog.cpp \
            sources_mainwindow.cpp \
+           sources_model.cpp \
            sources_widget.cpp \
            window_state_cfg.cpp \
            utils.cpp

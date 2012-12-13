@@ -32,6 +32,10 @@
 #include <Globe/sources.hpp>
 #include <Globe/channels.hpp>
 
+// Qt include.
+#include <QtCore/QMap>
+#include <QtCore/QList>
+
 
 namespace Globe {
 
@@ -48,6 +52,8 @@ public:
 
 	//! Channels manager.
 	ChannelsManager * m_channelsManager;
+	//! Map of sources.
+	QMap< QString, QList< Como::Source > > m_map;
 }; // class SourcesManagerPrivate
 
 
@@ -60,31 +66,64 @@ SourcesManager::SourcesManager( ChannelsManager * channelsManager,
 	:	QObject( parent )
 	,	d( new SourcesManagerPrivate( channelsManager ) )
 {
+	connect( channelsManager, SIGNAL( channelCreated( Channel * ) ),
+		this, SLOT( channelCreated( Channel * ) ) );
+	connect( channelsManager, SIGNAL( channelRemoved( Channel * ) ),
+		this, SLOT( channelRemoved( Channel * ) ) );
 }
 
-const QList< QString > &
+QList< QString >
 SourcesManager::channelsNames() const
 {
+	return d->m_map.keys();
 }
 
 const QList< Como::Source > &
 SourcesManager::sources( const QString & channelName ) const
 {
+	return d->m_map[ channelName ];
 }
 
 void
 SourcesManager::sourceUpdated( const Como::Source & source )
 {
+	Channel * channel = qobject_cast< Channel* > ( sender() );
+
+	QMap< QString, QList< Como::Source > >::Iterator it =
+		d->m_map.find( channel->name() );
+
+	const int index = it.value().indexOf( source );
+
+	if( index == -1 )
+	{
+		it.value().push_back( source );
+
+		emit newSource( source, channel->name() );
+	}
 }
 
 void
 SourcesManager::channelCreated( Channel * channel )
 {
+	if( d->m_map.find( channel->name() ) == d->m_map.end() )
+		d->m_map.insert( channel->name(), QList< Como::Source > () );
+
+	connect( channel, SIGNAL( sourceUpdated( const Como::Source & ) ),
+		this, SLOT( sourceUpdated( const Como::Source & ) ) );
 }
 
 void
 SourcesManager::channelRemoved( Channel * channel )
 {
+	QMap< QString, QList< Como::Source > >::ConstIterator it =
+		d->m_map.find( channel->name() );
+
+	if( it != d->m_map.end() )
+	{
+		d->m_map.remove( it.key() );
+
+		disconnect( channel, 0, 0, 0 );
+	}
 }
 
 } /* namespace Globe */

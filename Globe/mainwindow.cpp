@@ -50,6 +50,7 @@
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
 #include <QtGui/QAction>
+#include <QtGui/QCloseEvent>
 
 
 namespace Globe {
@@ -78,6 +79,7 @@ public:
 		,	m_list( 0 )
 		,	m_appCfgWasLoaded( false )
 		,	m_propertiesManager( propertiesManager )
+		,	m_cfgWasSaved( false )
 	{
 	}
 
@@ -97,6 +99,8 @@ public:
 	bool m_appCfgWasLoaded;
 	//! Properties manager.
 	PropertiesManager * m_propertiesManager;
+	//! Flag that shows was configuration saved or not.
+	bool m_cfgWasSaved;
 }; // class MainWindowPrivate
 
 
@@ -156,15 +160,36 @@ MainWindow::showProperties()
 }
 
 void
+MainWindow::closeEvent( QCloseEvent * event )
+{
+	event->accept();
+
+	saveConfiguration();
+
+	QApplication::quit();
+}
+
+void
 MainWindow::aboutToQuit()
 {
-	savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
+	saveConfiguration();
+}
 
-	saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
+void
+MainWindow::saveConfiguration()
+{
+	if( !d->m_cfgWasSaved )
+	{
+		savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
-	saveMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+		saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
-	saveAppCfg( d->m_cfgFileName );
+		saveMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+
+		saveAppCfg( d->m_cfgFileName );
+
+		d->m_cfgWasSaved = true;
+	}
 }
 
 void

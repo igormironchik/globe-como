@@ -42,6 +42,7 @@ class ChannelsManager;
 class DB;
 class WindowStateCfg;
 class PropertiesManager;
+class ToolWindowObject;
 
 class MainWindowPrivate;
 
@@ -59,6 +60,7 @@ public:
 	MainWindow( const QString & cfgFileName,
 		ChannelsManager * channelsManager, DB * db,
 		PropertiesManager * propertiesManager,
+		const QList< ToolWindowObject* > & toolWindows,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~MainWindow();
@@ -66,8 +68,6 @@ public:
 public slots:
 	//! Init.
 	void init();
-	//! Show properties.
-	void showProperties();
 
 protected:
 	void closeEvent( QCloseEvent * event );

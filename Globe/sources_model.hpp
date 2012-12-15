@@ -58,10 +58,16 @@ public:
 	~SourcesModel();
 
 	//! Init model with the sources list.
-	void initModel( const QList< Como::Sources > & sources );
+	void initModel( const QList< Como::Source > & sources );
+
+	//! Add item.
+	void addItem( const Como::Source & source );
 
 	//! Clear model.
 	void clear();
+
+	//! \return Como source for the given index.
+	const Como::Source & source( const QModelIndex & index ) const;
 
 	//! \return Count of the rows.
 	int rowCount( const QModelIndex & parent = QModelIndex() ) const;

@@ -35,12 +35,14 @@
 #include <QtCore/QTextStream>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
+#include <QtCore/QList>
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
 #include <Globe/properties.hpp>
+#include <Globe/tool_window_object.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -85,8 +87,11 @@ int main( int argc, char ** argv )
 
 	Globe::PropertiesManager propertiesManager;
 
+	QList< Globe::ToolWindowObject* > toolWindows;
+	toolWindows.append( propertiesManager.toolWindowObject() );
+
 	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
-		&propertiesManager );
+		&propertiesManager, toolWindows );
 
 	QTimer::singleShot( 0, &mainWindow, SLOT( init() ) );
 

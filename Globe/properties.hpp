@@ -46,6 +46,9 @@
 
 namespace Globe {
 
+class ToolWindowObject;
+
+
 //
 // Properties
 //
@@ -233,6 +236,15 @@ public:
 	void saveConfiguration( const QString & fileName );
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
+
+	//! \return Tool window object.
+	ToolWindowObject * toolWindowObject();
+
+protected:
+	friend class MainWindow;
+
+	//! Init tools menu.
+	void initToolsMenu( const QList< ToolWindowObject* > & toolWindows );
 
 protected:
 	void closeEvent( QCloseEvent * event );

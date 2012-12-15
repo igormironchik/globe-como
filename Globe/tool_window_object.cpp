@@ -28,32 +28,45 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
-#define GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
+// Globe include
+#include <Globe/tool_window_object.hpp>
 
 // Qt include.
+#include <QtGui/QAction>
 #include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
 
 
 namespace Globe {
 
 //
-// SourcesMainWindow
+// ToolWindowObject
 //
 
-class SourcesMainWindowPrivate;
-
-//! Main window with all sources available in the application.
-class SourcesMainWindow
-	:	public QMainWindow
+ToolWindowObject::ToolWindowObject( QAction * action, QMainWindow * toolWindow,
+	QObject * parent )
+	:	QObject( parent )
+	,	m_toolWindow( toolWindow )
+	,	m_action( action )
 {
-	Q_OBJECT
+	connect( action, SIGNAL( triggered() ), this, SLOT( showToolWindow() ) );
+}
 
-public:
-	SourcesMainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
-}; // class SourcesMainWindow
+QAction *
+ToolWindowObject::menuEntity()
+{
+	return m_action;
+}
+
+void
+ToolWindowObject::showToolWindow()
+{
+	if( m_toolWindow->isHidden() )
+	{
+		m_toolWindow->show();
+		m_toolWindow->activateWindow();
+	}
+	else
+		m_toolWindow->activateWindow();
+}
 
 } /* namespace Globe */
-
-#endif // GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED

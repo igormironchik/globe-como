@@ -73,10 +73,23 @@ SourcesModel::initModel( const QList< Como::Source > & sources )
 
 	insertRows( 0, sources.size(), QModelIndex() );
 
-	d->m_data.append( sources );
+	d->m_data = sources;
 
 	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
 		QAbstractTableModel::index( sources.size() - 1, valueTypeColumn ) );
+}
+
+void
+SourcesModel::addItem( const Como::Source & source )
+{
+	insertRow( d->m_data.size() );
+
+	const int row = d->m_data.size() - 1;
+
+	d->m_data[ row ] = source;
+
+	emit dataChanged( QAbstractTableModel::index( row, sourceNameColumn ),
+		QAbstractTableModel::index( row, valueTypeColumn ) );
 }
 
 void
@@ -85,6 +98,12 @@ SourcesModel::clear()
 	beginResetModel();
 	d->m_data.clear();
 	endResetModel();
+}
+
+const Como::Source &
+SourcesModel::source( const QModelIndex & index ) const
+{
+	return d->m_data.at( index.row() );
 }
 
 int

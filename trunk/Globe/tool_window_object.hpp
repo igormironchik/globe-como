@@ -28,71 +28,51 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_WIDGET_HPP__INCLUDED
-#define GLOBE__SOURCES_WIDGET_HPP__INCLUDED
+#ifndef GLOBE__TOOL_WINDOW_OBJECT_HPP__INCLUDED
+#define GLOBE__TOOL_WINDOW_OBJECT_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
-
-// Como include.
-#include <Como/Source>
+#include <QtCore/QObject>
 
 QT_BEGIN_NAMESPACE
-class QModelIndex;
+class QAction;
+class QMainWindow;
 QT_END_NAMESPACE
 
 
 namespace Globe {
 
-class SourcesManager;
-class ChannelsManager;
-class Channel;
-
-
 //
-// SourcesWidget
+// ToolWindowObject
 //
 
-class SourcesWidgetPrivate;
-
-//! Widget that will display available sources.
-class SourcesWidget
-	:	public QWidget
+/*!
+	This type of object provides information for the tools menu
+	and is for the shown'hide operations of the tool window.
+*/
+class ToolWindowObject
+	:	public QObject
 {
 	Q_OBJECT
 
-signals:
-	//! Source was selected.
-	void sourceSelected( const Como::Source & );
-
 public:
-	SourcesWidget( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ToolWindowObject( QAction * action, QMainWindow * toolWindow,
+		QObject * parent = 0 );
 
-private:
-	//! Init.
-	void init();
+	//! \return Action for the menu.
+	QAction * menuEntity();
 
 private slots:
-	//! New source.
-	void newSource( const Como::Source & source, const QString & channelName );
-	//! Channel created.
-	void channelCreated( Channel * channel );
-	//! Channel removed.
-	void channelRemoved( Channel * channel );
-	//! Channel selected.
-	void channelSelected( const QString & channelName );
-	//! Item activated.
-	void itemActivated( const QModelIndex & index );
+	//! Show window.
+	void showToolWindow();
 
 private:
-	Q_DISABLE_COPY( SourcesWidget )
-
-	QScopedPointer< SourcesWidgetPrivate > d;
-}; // class SourcesWidget
+	//! Tool window.
+	QMainWindow * m_toolWindow;
+	//! Action.
+	QAction * m_action;
+}; // class ToolWindowObject
 
 } /* namespace Globe */
 
-#endif // GLOBE__SOURCES_WIDGET_HPP__INCLUDED
+#endif // GLOBE__TOOL_WINDOW_OBJECT_HPP__INCLUDED

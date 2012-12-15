@@ -100,6 +100,11 @@ SourcesManager::sourceUpdated( const Como::Source & source )
 
 		emit newSource( source, channel->name() );
 	}
+	else
+	{
+		it.value()[ index ].setValue( source.value() );
+		it.value()[ index ].setDateTime( source.dateTime() );
+	}
 }
 
 void

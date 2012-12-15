@@ -34,6 +34,7 @@
 #include <Globe/properties_model.hpp>
 #include <Globe/properties_cfg.hpp>
 #include <Globe/window_state_cfg.hpp>
+#include <Globe/tool_window_object.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -346,6 +347,7 @@ public:
 	PropertiesManagerPrivate()
 		:	m_model( 0 )
 		,	m_directoryName( defaultConfigurationDirectory )
+		,	m_toolWindowObject( 0 )
 	{
 	}
 
@@ -392,6 +394,8 @@ public:
 	Ui::PropertiesMainWindow m_ui;
 	//! Model for the properties in the view.
 	PropertiesModel * m_model;
+	//! Tool window object.
+	ToolWindowObject * m_toolWindowObject;
 }; // class PropertiesManagerPrivate
 
 
@@ -423,11 +427,25 @@ PropertiesManager::init()
 	d->m_ui.m_view->setModel( sortModel );
 	d->m_ui.m_view->setSortingEnabled( true );
 	d->m_ui.m_view->setRootIsDecorated( false );
+	d->m_ui.m_view->setAlternatingRowColors( true );
 
 	d->m_ui.m_directory->setText( d->m_directoryName );
 
+	QAction * showAction = new QAction( tr( "&Properties" ), this );
+	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
+
 	connect( d->m_ui.m_quitAction, SIGNAL( triggered() ),
 		qApp, SLOT( quit() ) );
+}
+
+void
+PropertiesManager::initToolsMenu( const QList< ToolWindowObject* > & toolWindows )
+{
+	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
+
+	foreach( ToolWindowObject * obj, toolWindows )
+		if( obj != d->m_toolWindowObject )
+			toolsMenu->addAction( obj->menuEntity() );
 }
 
 const Properties *
@@ -608,6 +626,12 @@ PropertiesManager::readConfiguration( const QString & fileName )
 		d->m_map.remove( key );
 
 	initModelAndView();
+}
+
+ToolWindowObject *
+PropertiesManager::toolWindowObject()
+{
+	return d->m_toolWindowObject;
 }
 
 void

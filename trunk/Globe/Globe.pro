@@ -31,6 +31,7 @@ HEADERS += application_cfg.hpp \
            sources_model.hpp \
            sources_widget.hpp \
            window_state_cfg.hpp \
+           tool_window_object.hpp \
            utils.hpp
 
 SOURCES += application_cfg.cpp \
@@ -58,11 +59,13 @@ SOURCES += application_cfg.cpp \
            sources_model.cpp \
            sources_widget.cpp \
            window_state_cfg.cpp \
+           tool_window_object.cpp \
            utils.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui \
-           properties_mainwindow.ui
+           properties_mainwindow.ui \
+           sources_widget.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo

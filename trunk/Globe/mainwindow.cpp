@@ -39,6 +39,7 @@
 #include <Globe/utils.hpp>
 #include <Globe/window_state_cfg.hpp>
 #include <Globe/properties.hpp>
+#include <Globe/tool_window_object.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -72,7 +73,8 @@ class MainWindowPrivate {
 public:
 	MainWindowPrivate( const QString & cfgFileName,
 		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager )
+		PropertiesManager * propertiesManager,
+		const QList< ToolWindowObject* > & toolWindows )
 		:	m_cfgFileName( cfgFileName )
 		,	m_channelsManager( channelsManager )
 		,	m_db( db )
@@ -80,6 +82,7 @@ public:
 		,	m_appCfgWasLoaded( false )
 		,	m_propertiesManager( propertiesManager )
 		,	m_cfgWasSaved( false )
+		,	m_toolWindows( toolWindows )
 	{
 	}
 
@@ -101,6 +104,8 @@ public:
 	PropertiesManager * m_propertiesManager;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
+	//! Tool window objects.
+	QList< ToolWindowObject* > m_toolWindows;
 }; // class MainWindowPrivate
 
 
@@ -111,10 +116,11 @@ public:
 MainWindow::MainWindow( const QString & cfgFileName,
 	ChannelsManager * channelsManager, DB * db,
 	PropertiesManager * propertiesManager,
+	const QList< ToolWindowObject* > & toolWindows,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
 	,	d( new MainWindowPrivate( cfgFileName, channelsManager, db,
-			propertiesManager ) )
+			propertiesManager, toolWindows ) )
 {
 }
 
@@ -133,8 +139,11 @@ MainWindow::init()
 		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
-	toolsMenu->addAction( tr( "&Properties" ), this, SLOT( showProperties() ),
-		QKeySequence( tr( "Ctrl+P" ) ) );
+
+	foreach( ToolWindowObject * obj, d->m_toolWindows )
+		toolsMenu->addAction( obj->menuEntity() );
+
+	d->m_propertiesManager->initToolsMenu( d->m_toolWindows );
 
 	readAppCfg( d->m_cfgFileName );
 
@@ -145,18 +154,6 @@ MainWindow::init()
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
 	show();
-}
-
-void
-MainWindow::showProperties()
-{
-	if( d->m_propertiesManager->isHidden() )
-	{
-		d->m_propertiesManager->show();
-		d->m_propertiesManager->activateWindow();
-	}
-	else
-		d->m_propertiesManager->activateWindow();
 }
 
 void

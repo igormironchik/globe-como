@@ -70,6 +70,8 @@ public:
 	explicit SourcesManager( ChannelsManager * channelsManager,
 		QObject * parent = 0 );
 
+	~SourcesManager();
+
 	//! \return List of names of available channels.
 	QList< QString > channelsNames() const;
 

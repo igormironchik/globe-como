@@ -119,6 +119,12 @@ ChannelsList::shownChannelsMode() const
 	return d->m_widget->shownChannelsMode();
 }
 
+void
+ChannelsList::setShownChannelsMode( ShownChannels mode )
+{
+	d->m_widget->setShownChannelsMode( mode );
+}
+
 
 //
 // ChannelWidgetAndLine
@@ -452,6 +458,12 @@ ShownChannels
 ChannelsListWidget::shownChannelsMode() const
 {
 	return d->m_channelsToShowWidget->shownChannelsMode();
+}
+
+void
+ChannelsListWidget::setShownChannelsMode( ShownChannels mode )
+{
+	d->m_channelsToShowWidget->setShownChannelsMode( mode );
 }
 
 void

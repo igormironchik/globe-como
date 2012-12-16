@@ -18,6 +18,7 @@ HEADERS += application_cfg.hpp \
            condition.hpp \
            condition_cfg.hpp \
            condition_widget.hpp \
+           configuration.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
@@ -45,6 +46,7 @@ SOURCES += application_cfg.cpp \
            condition.cpp \
            condition_cfg.cpp \
            condition_widget.cpp \
+           configuration.cpp \
            db.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \

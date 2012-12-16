@@ -93,7 +93,7 @@ int main( int argc, char ** argv )
 	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
 		&propertiesManager, toolWindows );
 
-	QTimer::singleShot( 0, &mainWindow, SLOT( init() ) );
+	QTimer::singleShot( 0, &mainWindow, SLOT( start() ) );
 
 	return app.exec();
 }

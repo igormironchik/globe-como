@@ -52,6 +52,8 @@ class SourcesMainWindow
 
 public:
 	SourcesMainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+
+	~SourcesMainWindow();
 }; // class SourcesMainWindow
 
 } /* namespace Globe */

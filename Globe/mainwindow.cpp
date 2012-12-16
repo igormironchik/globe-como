@@ -30,24 +30,13 @@
 
 // Globe include.
 #include <Globe/mainwindow.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/db.hpp>
 #include <Globe/channels_list.hpp>
-#include <Globe/application_cfg.hpp>
-#include <Globe/channels_cfg.hpp>
-#include <Globe/mainwindow_cfg.hpp>
-#include <Globe/utils.hpp>
-#include <Globe/window_state_cfg.hpp>
-#include <Globe/properties.hpp>
 #include <Globe/tool_window_object.hpp>
-
-// QtConfFile include.
-#include <QtConfFile/Utils>
-#include <QtConfFile/Exceptions>
+#include <Globe/configuration.hpp>
+#include <Globe/properties.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
-#include <QtGui/QMessageBox>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
 #include <QtGui/QAction>
@@ -56,15 +45,6 @@
 
 namespace Globe {
 
-static const QString defaultAppCfgFileName =
-	QLatin1String( "./etc/Globe.cfg" );
-static const QString defaultMainWindowCfgFileName =
-	QLatin1String( "./etc/MainWindow.cfg" );
-static const QString defaultChannelsCfgFileName =
-	QLatin1String( "./etc/Channels.cfg" );
-static const QString defaultPropertiesCfgFileName =
-	QLatin1String( "./etc/Properties.cfg" );
-
 //
 // MainWindowPrivate
 //
@@ -72,40 +52,35 @@ static const QString defaultPropertiesCfgFileName =
 class MainWindowPrivate {
 public:
 	MainWindowPrivate( const QString & cfgFileName,
+		MainWindow * mainWindow,
 		ChannelsManager * channelsManager, DB * db,
 		PropertiesManager * propertiesManager,
 		const QList< ToolWindowObject* > & toolWindows )
-		:	m_cfgFileName( cfgFileName )
-		,	m_channelsManager( channelsManager )
+		:	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_list( 0 )
-		,	m_appCfgWasLoaded( false )
 		,	m_propertiesManager( propertiesManager )
 		,	m_cfgWasSaved( false )
 		,	m_toolWindows( toolWindows )
+		,	m_cfg( cfgFileName, mainWindow, channelsManager,
+				db, propertiesManager )
 	{
 	}
 
-	//! Configuration's file name.
-	QString m_cfgFileName;
 	//! Channels manager.
 	ChannelsManager * m_channelsManager;
 	//! Database.
 	DB * m_db;
-	//! Application's configuration.
-	ApplicationCfg m_appCfg;
 	//! List with channels.
 	ChannelsList * m_list;
-	//! Main window's configuration.
-	MainWindowCfg m_mainWindowCfg;
-	//! Was application's configuration loaded?
-	bool m_appCfgWasLoaded;
 	//! Properties manager.
 	PropertiesManager * m_propertiesManager;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
 	//! Tool window objects.
 	QList< ToolWindowObject* > m_toolWindows;
+	//! Configuration.
+	Configuration m_cfg;
 }; // class MainWindowPrivate
 
 
@@ -119,13 +94,20 @@ MainWindow::MainWindow( const QString & cfgFileName,
 	const QList< ToolWindowObject* > & toolWindows,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new MainWindowPrivate( cfgFileName, channelsManager, db,
+	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
 			propertiesManager, toolWindows ) )
 {
+	init();
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+ChannelsList *
+MainWindow::list()
+{
+	return d->m_list;
 }
 
 void
@@ -143,15 +125,18 @@ MainWindow::init()
 	foreach( ToolWindowObject * obj, d->m_toolWindows )
 		toolsMenu->addAction( obj->menuEntity() );
 
+	d->m_list = new ChannelsList( d->m_channelsManager,
+		ShowAll, Qt::AscendingOrder, this );
+
+	setCentralWidget( d->m_list );
+
 	d->m_propertiesManager->initToolsMenu( d->m_toolWindows );
+}
 
-	readAppCfg( d->m_cfgFileName );
-
-	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
-
-	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
-	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
+void
+MainWindow::start()
+{
+	d->m_cfg.loadConfiguration();
 
 	show();
 }
@@ -177,252 +162,10 @@ MainWindow::saveConfiguration()
 {
 	if( !d->m_cfgWasSaved )
 	{
-		savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
-
-		saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
-		saveMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
-
-		saveAppCfg( d->m_cfgFileName );
+		d->m_cfg.saveConfiguration();
 
 		d->m_cfgWasSaved = true;
 	}
-}
-
-void
-MainWindow::readAppCfg( const QString & cfgFileName )
-{
-	if( cfgFileName.isEmpty() )
-		d->m_cfgFileName = defaultAppCfgFileName;
-
-	try {
-		ApplicationCfgTag appCfgTag;
-
-		QtConfFile::readQtConfFile( appCfgTag,
-			d->m_cfgFileName, QTextCodec::codecForName( "UTF-8" ) );
-
-		d->m_appCfg = appCfgTag.cfg();
-
-		d->m_appCfgWasLoaded = true;
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to load Globe's configuration file..." ),
-			x.whatAsQString() );
-	}
-}
-
-void
-MainWindow::readMainWindowCfg( const QString & cfgFileName )
-{
-	try {
-		if( !cfgFileName.isEmpty() )
-		{
-			MainWindowCfgTag tag;
-
-			QtConfFile::readQtConfFile( tag, cfgFileName,
-				QTextCodec::codecForName( "UTF-8" ) );
-
-			d->m_mainWindowCfg = tag.cfg();
-		}
-		else
-		{
-			d->m_appCfg.setMainWindowCfgFile( defaultMainWindowCfgFileName );
-
-			if( d->m_appCfgWasLoaded )
-				QMessageBox::warning( this,
-					tr( "Error in application's configuration..." ),
-					tr( "Not specified main window's configuration file.\n"
-						"Main window's configuration will not be loaded.\n"
-						"At exit configuration of the main window will be saved\n"
-						"in \"%1\" file." )
-							.arg( defaultMainWindowCfgFileName ) );
-		}
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to load main window's configuration..." ),
-			x.whatAsQString() );
-	}
-
-	d->m_list = new ChannelsList( d->m_channelsManager,
-		d->m_mainWindowCfg.shownChannels(), Qt::AscendingOrder, this );
-
-	setCentralWidget( d->m_list );
-
-	restoreWindowState( d->m_mainWindowCfg.windowState(), this );
-}
-
-void
-MainWindow::readChannelsCfg( const QString & cfgFileName )
-{
-	AvailableChannelsCfg cfg;
-
-	try {
-		if( !cfgFileName.isEmpty() )
-		{
-			AvailableChannelsCfgTag tag;
-
-			QtConfFile::readQtConfFile( tag, cfgFileName,
-				QTextCodec::codecForName( "UTF-8" ) );
-
-			cfg = tag.cfg();
-		}
-		else
-		{
-			d->m_appCfg.setChannelsCfgFile( defaultChannelsCfgFileName );
-
-			if( d->m_appCfgWasLoaded )
-				QMessageBox::warning( this,
-					tr( "Error in application's configuration..." ),
-					tr( "Not specified channel's configuration file.\n"
-						"Channel's configuration will not be loaded.\n"
-						"At exit channels configuration will be saved\n"
-						"in \"%1\" file." )
-							.arg( defaultChannelsCfgFileName ) );
-		}
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to load channels configuration..." ),
-			x.whatAsQString() );
-	}
-
-	foreach( const ChannelCfg & channelCfg, cfg )
-	{
-		Channel * channel = d->m_channelsManager->createChannel( channelCfg.name(),
-			channelCfg.address(), channelCfg.port() );
-
-		if( channel )
-		{
-			d->m_list->addChannel( channel );
-
-			if( channelCfg.timeout() )
-				channel->updateTimeout( channelCfg.timeout() );
-
-			if( channelCfg.isMustBeConnected() )
-				channel->connectToHost();
-		}
-		else if( !d->m_channelsManager->isNameUnique( channelCfg.name() ) )
-			QMessageBox::critical( this, tr( "Unable to create new channel..." ),
-				tr( "Channel with name \"%1\" already exists." )
-					.arg( channelCfg.name() ) );
-		else if( !d->m_channelsManager->isAddressAndPortUnique(
-			channelCfg.address(), channelCfg.port() ) )
-				QMessageBox::critical( this, tr( "Unable to create new channel..." ),
-					tr( "Channel with address \"%1\" and port %2 already exists." )
-						.arg( channelCfg.address().toString() )
-						.arg( QString::number( channelCfg.port() ) ) );
-	}
-}
-
-void
-MainWindow::readPropertiesCfg( const QString & cfgFileName )
-{
-	if( !cfgFileName.isEmpty() )
-		d->m_propertiesManager->readConfiguration( cfgFileName );
-	else
-	{
-		d->m_appCfg.setPropertiesCfgFile( defaultPropertiesCfgFileName );
-
-		if( d->m_appCfgWasLoaded )
-			QMessageBox::warning( this,
-				tr( "Error in application's configuration..." ),
-				tr( "Not specified properties configuration file.\n"
-					"Properties configuration will not be loaded.\n"
-					"At exit properties configuration will be saved\n"
-					"in \"%1\" file." )
-						.arg( defaultPropertiesCfgFileName ) );
-	}
-}
-
-void
-MainWindow::saveAppCfg( const QString & cfgFileName )
-{
-	ApplicationCfg appCfg;
-
-	appCfg.setMainWindowCfgFile( relativeFilePath(
-		d->m_appCfg.mainWindowCfgFile() ) );
-	appCfg.setChannelsCfgFile( relativeFilePath(
-		d->m_appCfg.channelsCfgFile() ) );
-	appCfg.setPropertiesCfgFile( relativeFilePath(
-		d->m_appCfg.propertiesCfgFile() ) );
-
-	ApplicationCfgTag tag( appCfg );
-
-	try {
-		QtConfFile::writeQtConfFile( tag, cfgFileName,
-			QTextCodec::codecForName( "UTF-8" ) );
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to save application's configuration..." ),
-			x.whatAsQString() );
-	}
-}
-
-void
-MainWindow::saveMainWindowCfg( const QString & cfgFileName )
-{
-	ShownChannels shownChannels = d->m_list->shownChannelsMode();
-
-	MainWindowCfg mainWindowCfg( windowStateCfg( this ), shownChannels );
-
-	MainWindowCfgTag tag( mainWindowCfg );
-
-	try {
-		QtConfFile::writeQtConfFile( tag, cfgFileName,
-			QTextCodec::codecForName( "UTF-8" ) );
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to save main window's configuration..." ),
-			x.whatAsQString() );
-	}
-}
-
-void
-MainWindow::saveChannelsCfg( const QString & cfgFileName )
-{
-	QList< Channel* > channels = d->m_channelsManager->channels();
-	AvailableChannelsCfg channelsCfg;
-
-	foreach( Channel * channel, channels )
-	{
-		ChannelCfg chCfg;
-
-		chCfg.setName( channel->name() );
-		chCfg.setAddress( channel->hostAddress() );
-		chCfg.setPort( channel->portNumber() );
-		chCfg.setMustBeConnected( channel->isMustBeConnected() );
-		chCfg.setTimeout( channel->timeout() );
-
-		channelsCfg.append( chCfg );
-	}
-
-	AvailableChannelsCfgTag tag( channelsCfg );
-
-	try {
-		QtConfFile::writeQtConfFile( tag, cfgFileName,
-			QTextCodec::codecForName( "UTF-8" ) );
-	}
-	catch( const QtConfFile::Exception & x )
-	{
-		QMessageBox::critical( this,
-			tr( "Unable to save channels configuration..." ),
-			x.whatAsQString() );
-	}
-}
-
-void
-MainWindow::savePropertiesCfg( const QString & cfgFileName )
-{
-	d->m_propertiesManager->saveConfiguration( cfgFileName );
 }
 
 } /* namespace Globe */

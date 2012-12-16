@@ -77,6 +77,8 @@ public:
 
 	//! \return Shown channels mode.
 	ShownChannels shownChannelsMode() const;
+	//! Set shown channels mode.
+	void setShownChannelsMode( ShownChannels mode );
 
 private slots:
 	//! User changed the display mode.

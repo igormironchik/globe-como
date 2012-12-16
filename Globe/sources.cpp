@@ -72,6 +72,10 @@ SourcesManager::SourcesManager( ChannelsManager * channelsManager,
 		this, SLOT( channelRemoved( Channel * ) ) );
 }
 
+SourcesManager::~SourcesManager()
+{
+}
+
 QList< QString >
 SourcesManager::channelsNames() const
 {

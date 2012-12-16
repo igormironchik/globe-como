@@ -75,18 +75,10 @@ ChannelsToShow::init()
 {
 	d->m_ui.setupUi( this );
 
-	switch( d->m_shownChannels )
-	{
-		case ShowAll : d->m_ui.m_shownChannels->setCurrentIndex( 0 );
-			break;
-		case ShowConnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 1 );
-			break;
-		case ShowDisconnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 2 );
-			break;
-	}
-
 	connect( d->m_ui.m_shownChannels, SIGNAL( currentIndexChanged( int ) ),
 		this, SLOT( displayModeChanged( int ) ) );
+
+	setShownChannelsMode( d->m_shownChannels );
 }
 
 ShownChannels
@@ -112,6 +104,22 @@ ChannelsToShow::displayModeChanged( int index )
 			d->m_shownChannels = ShowDisconnectedOnly;
 			emit displayDisconnectedChannels();
 		} break;
+	}
+}
+
+void
+ChannelsToShow::setShownChannelsMode( ShownChannels mode )
+{
+	d->m_shownChannels = mode;
+
+	switch( d->m_shownChannels )
+	{
+		case ShowAll : d->m_ui.m_shownChannels->setCurrentIndex( 0 );
+			break;
+		case ShowConnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 1 );
+			break;
+		case ShowDisconnectedOnly : d->m_ui.m_shownChannels->setCurrentIndex( 2 );
+			break;
 	}
 }
 

@@ -70,6 +70,8 @@ public:
 
 	//! \return Shown channels mode.
 	ShownChannels shownChannelsMode() const;
+	//! Set shown channels mode.
+	void setShownChannelsMode( ShownChannels mode );
 
 protected:
 	void resizeEvent( QResizeEvent * event );
@@ -116,6 +118,8 @@ public:
 
 	//! \return Shown channels mode.
 	ShownChannels shownChannelsMode() const;
+	//! Set shown channels mode.
+	void setShownChannelsMode( ShownChannels mode );
 
 protected:
 	void contextMenuEvent( QContextMenuEvent * event );

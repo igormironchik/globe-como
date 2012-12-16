@@ -28,11 +28,11 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__MAINWINDOW_HPP__INCLUDED
-#define GLOBE__MAINWINDOW_HPP__INCLUDED
+#ifndef GLOBE__CONFIGURATION_HPP__INCLUDED
+#define GLOBE__CONFIGURATION_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QMainWindow>
+#include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
 
 
@@ -40,58 +40,59 @@ namespace Globe {
 
 class ChannelsManager;
 class DB;
-class WindowStateCfg;
 class PropertiesManager;
-class ToolWindowObject;
-class ChannelsList;
+class MainWindow;
 
-class MainWindowPrivate;
 
 //
-// MainWindow
+// Configuration
 //
 
-//! Main window of the application.
-class MainWindow
-	:	public QMainWindow
+class ConfigurationPrivate;
+
+//! Configuration loader/restorer.
+class Configuration
+	:	public QObject
 {
 	Q_OBJECT
 
 public:
-	MainWindow( const QString & cfgFileName,
-		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager,
-		const QList< ToolWindowObject* > & toolWindows,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	Configuration( const QString & cfgFileName,
+		MainWindow * mainWindow, ChannelsManager * channelsManager,
+		DB * db, PropertiesManager * propertiesManager );
 
-	~MainWindow();
+	~Configuration();
 
-	//! \return List with channels.
-	ChannelsList * list();
+	//! Load configuration.
+	void loadConfiguration();
 
-public slots:
-	//! Start.
-	void start();
-
-protected:
-	void closeEvent( QCloseEvent * event );
-
-private slots:
-	//! About to quit.
-	void aboutToQuit();
-
-private:
-	//! Init.
-	void init();
 	//! Save configuration.
 	void saveConfiguration();
 
 private:
-	Q_DISABLE_COPY( MainWindow )
+	//! Read application's configuration.
+	void readAppCfg( const QString & cfgFileName );
+	//! Read main window's configuration and init main window.
+	void readMainWindowCfg( const QString & cfgFileName );
+	//! Read channels configuration.
+	void readChannelsCfg( const QString & cfgFileName );
+	//! Read properties configuration.
+	void readPropertiesCfg( const QString & cfgFileName );
+	//! Save application's configuration.
+	void saveAppCfg( const QString & cfgFileName );
+	//! Save main window's configuration.
+	void saveMainWindowCfg( const QString & cfgFileName );
+	//! Save channels configuration.
+	void saveChannelsCfg( const QString & cfgFileName );
+	//! Save properties configuration.
+	void savePropertiesCfg( const QString & cfgFileName );
 
-	QScopedPointer< MainWindowPrivate > d;
-}; // class MainWindow
+private:
+	Q_DISABLE_COPY( Configuration )
+
+	QScopedPointer< ConfigurationPrivate > d;
+}; // class Configuration
 
 } /* namespace Globe */
 
-#endif // GLOBE__MAINWINDOW_HPP__INCLUDED
+#endif // GLOBE__CONFIGURATION_HPP__INCLUDED

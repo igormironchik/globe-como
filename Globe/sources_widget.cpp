@@ -114,6 +114,21 @@ SourcesWidget::init()
 		this, SLOT( channelSelected( const QString & ) ) );
 }
 
+QString
+SourcesWidget::channelName() const
+{
+	return d->m_ui.m_channel->currentText();
+}
+
+void
+SourcesWidget::setChannelName( const QString & channelName )
+{
+	const int index = d->m_ui.m_channel->findText( channelName );
+
+	if( index != -1 )
+		d->m_ui.m_channel->setCurrentIndex( index );
+}
+
 void
 SourcesWidget::newSource( const Como::Source & source,
 	const QString & channelName )
@@ -150,6 +165,8 @@ SourcesWidget::channelSelected( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
 		d->m_model->initModel( d->m_sourcesManager->sources( channelName ) );
+
+	emit channelSelected( channelName );
 }
 
 void

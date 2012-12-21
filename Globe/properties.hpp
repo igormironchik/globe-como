@@ -47,6 +47,8 @@
 namespace Globe {
 
 class ToolWindowObject;
+class SourcesManager;
+class ChannelsManager;
 
 
 //
@@ -211,7 +213,9 @@ class PropertiesManager
 	Q_OBJECT
 
 public:
-	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	PropertiesManager( SourcesManager * sourcesManager,
+		ChannelsManager * channelsManager,
+		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~PropertiesManager();
 
@@ -228,7 +232,8 @@ public:
 	const Properties * findProperties( const PropertiesKey & key ) const;
 	//! Add new properties.
 	void addProperties( const PropertiesKey & key, const Properties & props,
-		const Como::Source::Type & type );
+		const Como::Source::Type & type,
+		const QString & cfgFileName );
 	//! Remove properties for the given \arg source source.
 	void removeProperties( const PropertiesKey & key );
 

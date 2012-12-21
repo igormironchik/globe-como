@@ -40,6 +40,77 @@
 namespace Globe {
 
 //
+// MapValue.
+//
+
+//! Value in the map of sources.
+class MapValue {
+public:
+	MapValue()
+		:	m_registered( false )
+	{
+	}
+
+	explicit MapValue( const Como::Source & source, bool registered = true )
+		:	m_source( source )
+		,	m_registered( registered )
+	{
+	}
+
+	MapValue( const MapValue & other )
+		:	m_source( other.source() )
+		,	m_registered( other.isRegistered() )
+	{
+	}
+
+	MapValue & operator = ( const MapValue & other )
+	{
+		if( this != &other )
+		{
+			m_source = other.source();
+			m_registered = other.isRegistered();
+		}
+
+		return *this;
+	}
+
+	//! \return Source.
+	Como::Source & source()
+	{
+		return m_source;
+	}
+
+	//! \return Source.
+	const Como::Source & source() const
+	{
+		return m_source;
+	}
+
+	//! \return Is registered?
+	bool isRegistered() const
+	{
+		return m_registered;
+	}
+	//! Set "is registered".
+	void setRegistered( bool on = true )
+	{
+		m_registered = on;
+	}
+
+private:
+	//! Source.
+	Como::Source m_source;
+	//! Is registered?
+	bool m_registered;
+}; // class MapValue
+
+bool operator == ( const MapValue & v1, const MapValue & v2 )
+{
+	return v1.source() == v2.source();
+}
+
+
+//
 // SourcesManagerPrivate
 //
 
@@ -50,10 +121,63 @@ public:
 	{
 	}
 
+	//! \return Registered sources.
+	QList< Como::Source > registeredSources( const QString & channelName )
+	{
+		QList< Como::Source > result;
+
+		QMap< QString, QList< MapValue > >::ConstIterator it =
+			m_map.find( channelName );
+
+		if( it != m_map.end() )
+		{
+			foreach( const MapValue & value, it.value() )
+				if( value.isRegistered() )
+					result.append( value.source() );
+		}
+
+		return result;
+	}
+
+	//! \return Deregistered sources.
+	QList< Como::Source > deregisteredSources( const QString & channelName )
+	{
+		QList< Como::Source > result;
+
+		QMap< QString, QList< MapValue > >::ConstIterator it =
+			m_map.find( channelName );
+
+		if( it != m_map.end() )
+		{
+			foreach( const MapValue & value, it.value() )
+				if( !value.isRegistered() )
+					result.append( value.source() );
+		}
+
+		return result;
+	}
+
+	//! \return All sources.
+	QList< Como::Source > allSources( const QString & channelName )
+	{
+		QList< Como::Source > result;
+
+		QMap< QString, QList< MapValue > >::ConstIterator it =
+			m_map.find( channelName );
+
+		if( it != m_map.end() )
+		{
+			foreach( const MapValue & value, it.value() )
+				result.append( value.source() );
+		}
+
+		return result;
+	}
+
 	//! Channels manager.
 	ChannelsManager * m_channelsManager;
-	//! Map of sources.
-	QMap< QString, QList< Como::Source > > m_map;
+	//! Map of registered sources.
+	QMap< QString, QList< MapValue > > m_map;
 }; // class SourcesManagerPrivate
 
 
@@ -82,10 +206,22 @@ SourcesManager::channelsNames() const
 	return d->m_map.keys();
 }
 
-const QList< Como::Source > &
+QList< Como::Source >
 SourcesManager::sources( const QString & channelName ) const
 {
-	return d->m_map[ channelName ];
+	return d->allSources( channelName );
+}
+
+QList< Como::Source >
+SourcesManager::registeredSources( const QString & channelName ) const
+{
+	return d->registeredSources( channelName );
+}
+
+QList< Como::Source >
+SourcesManager::deregisteredSources( const QString & channelName ) const
+{
+	return d->deregisteredSources( channelName );
 }
 
 void
@@ -93,21 +229,58 @@ SourcesManager::sourceUpdated( const Como::Source & source )
 {
 	Channel * channel = qobject_cast< Channel* > ( sender() );
 
-	QMap< QString, QList< Como::Source > >::Iterator it =
+	QMap< QString, QList< MapValue > >::Iterator it =
 		d->m_map.find( channel->name() );
 
-	const int index = it.value().indexOf( source );
-
-	if( index == -1 )
+	if( it != d->m_map.end() )
 	{
-		it.value().push_back( source );
+		const int index = it.value().indexOf( MapValue( source ) );
 
-		emit newSource( source, channel->name() );
+		if( index != -1 )
+			it.value()[ index ] = MapValue( source );
+		else
+		{
+			it.value().append( MapValue( source ) );
+
+			emit newSource( source, channel->name() );
+		}
 	}
 	else
 	{
-		it.value()[ index ].setValue( source.value() );
-		it.value()[ index ].setDateTime( source.dateTime() );
+		QMap< QString, QList< MapValue > >::Iterator it =
+			d->m_map.insert( channel->name(), QList< MapValue > () );
+
+		it.value().append( MapValue( source ) );
+	}
+}
+
+void
+SourcesManager::sourceDeregistered( const Como::Source & source )
+{
+	Channel * channel = qobject_cast< Channel* > ( sender() );
+
+	QMap< QString, QList< MapValue > >::Iterator it =
+		d->m_map.find( channel->name() );
+
+	if( it != d->m_map.end() )
+	{
+		const int index = it.value().indexOf( MapValue( source ) );
+
+		if( index != -1 )
+			it.value()[ index ].setRegistered( false );
+		else
+		{
+			it.value().append( MapValue( source, false ) );
+
+			emit newSource( source, channel->name() );
+		}
+	}
+	else
+	{
+		QMap< QString, QList< MapValue > >::Iterator it =
+			d->m_map.insert( channel->name(), QList< MapValue > () );
+
+		it.value().append( MapValue( source, false ) );
 	}
 }
 
@@ -115,24 +288,21 @@ void
 SourcesManager::channelCreated( Channel * channel )
 {
 	if( d->m_map.find( channel->name() ) == d->m_map.end() )
-		d->m_map.insert( channel->name(), QList< Como::Source > () );
+		d->m_map.insert( channel->name(), QList< MapValue > () );
 
 	connect( channel, SIGNAL( sourceUpdated( const Como::Source & ) ),
 		this, SLOT( sourceUpdated( const Como::Source & ) ) );
+
+	connect( channel, SIGNAL( sourceDeregistered( const Como::Source & ) ),
+		this, SLOT( sourceDeregistered( const Como::Source & ) ) );
 }
 
 void
 SourcesManager::channelRemoved( Channel * channel )
 {
-	QMap< QString, QList< Como::Source > >::ConstIterator it =
-		d->m_map.find( channel->name() );
+	d->m_map.remove( channel->name() );
 
-	if( it != d->m_map.end() )
-	{
-		d->m_map.remove( it.key() );
-
-		disconnect( channel, 0, 0, 0 );
-	}
+	disconnect( channel, 0, 0, 0 );
 }
 
 } /* namespace Globe */

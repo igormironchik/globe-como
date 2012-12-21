@@ -24,11 +24,13 @@ HEADERS += application_cfg.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
            properties_cfg.hpp \
+           properties_cfg_filename_dialog.hpp \
            properties_model.hpp \
            properties_widget.hpp \
            sources.hpp \
            sources_dialog.hpp \
            sources_mainwindow.hpp \
+           sources_mainwindow_cfg.hpp \
            sources_model.hpp \
            sources_widget.hpp \
            window_state_cfg.hpp \
@@ -53,11 +55,13 @@ SOURCES += application_cfg.cpp \
            main.cpp \
            properties.cpp \
            properties_cfg.cpp \
+           properties_cfg_filename_dialog.cpp \
            properties_model.cpp \
            properties_widget.cpp \
            sources.cpp \
            sources_dialog.cpp \
            sources_mainwindow.cpp \
+           sources_mainwindow_cfg.cpp \
            sources_model.cpp \
            sources_widget.cpp \
            window_state_cfg.cpp \
@@ -67,7 +71,8 @@ SOURCES += application_cfg.cpp \
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui \
            properties_mainwindow.ui \
-           sources_widget.ui
+           sources_widget.ui \
+           properties_cfg_filename_dialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo

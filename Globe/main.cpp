@@ -43,6 +43,8 @@
 #include <Globe/db.hpp>
 #include <Globe/properties.hpp>
 #include <Globe/tool_window_object.hpp>
+#include <Globe/sources.hpp>
+#include <Globe/sources_mainwindow.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -85,13 +87,18 @@ int main( int argc, char ** argv )
 
 	Globe::ChannelsManager channelsManager( &db );
 
-	Globe::PropertiesManager propertiesManager;
+	Globe::SourcesManager sourcesManager( &channelsManager );
+
+	Globe::PropertiesManager propertiesManager( &sourcesmanager, &channelsManager );
+
+	Globe::SourcesMainWindow sourcesMainWindow( &sourcesManager, &channelsManager );
 
 	QList< Globe::ToolWindowObject* > toolWindows;
 	toolWindows.append( propertiesManager.toolWindowObject() );
+	toolWindows.append( sourcesMainWindow.toolWindowObject() );
 
 	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
-		&propertiesManager, toolWindows );
+		&propertiesManager, &sourcesMainWindow, toolWindows );
 
 	QTimer::singleShot( 0, &mainWindow, SLOT( start() ) );
 

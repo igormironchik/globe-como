@@ -28,72 +28,44 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__MAINWINDOW_HPP__INCLUDED
-#define GLOBE__MAINWINDOW_HPP__INCLUDED
-
-// Qt include.
-#include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
+// Globe include.
+#include <Globe/sources_mainwindow_cfg.hpp>
 
 
 namespace Globe {
 
-class ChannelsManager;
-class DB;
-class WindowStateCfg;
-class PropertiesManager;
-class ToolWindowObject;
-class ChannelsList;
-class SourcesMainWindow;
-
-class MainWindowPrivate;
-
 //
-// MainWindow
+// SourcesMainWindowTag
 //
 
-//! Main window of the application.
-class MainWindow
-	:	public QMainWindow
+SourcesMainWindowTag::SourcesMainWindowTag()
+	:	QtConfFile::TagNoValue( QLatin1String( "sourcesMainWindow" ), true )
+	,	m_channelName( *this, QLatin1String( "channelName" ), true )
+	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 {
-	Q_OBJECT
+}
 
-public:
-	MainWindow( const QString & cfgFileName,
-		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow,
-		const QList< ToolWindowObject* > & toolWindows,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+SourcesMainWindowTag::SourcesMainWindowTag( const QString & channelName,
+	const WindowStateCfg & windowState )
+	:	QtConfFile::TagNoValue( QLatin1String( "sourcesMainWindow" ), true )
+	,	m_channelName( *this, QLatin1String( "channelName" ), true )
+	,	m_windowState( windowState, *this, QLatin1String( "windowState" ), true )
+{
+	m_channelName.setValue( channelName );
 
-	~MainWindow();
+	setDefined();
+}
 
-	//! \return List with channels.
-	ChannelsList * list();
+QString
+SourcesMainWindowTag::channelName() const
+{
+	return m_channelName.value();
+}
 
-public slots:
-	//! Start.
-	void start();
-
-protected:
-	void closeEvent( QCloseEvent * event );
-
-private slots:
-	//! About to quit.
-	void aboutToQuit();
-
-private:
-	//! Init.
-	void init();
-	//! Save configuration.
-	void saveConfiguration();
-
-private:
-	Q_DISABLE_COPY( MainWindow )
-
-	QScopedPointer< MainWindowPrivate > d;
-}; // class MainWindow
+WindowStateCfg
+SourcesMainWindowTag::windowState() const
+{
+	return m_windowState.cfg();
+}
 
 } /* namespace Globe */
-
-#endif // GLOBE__MAINWINDOW_HPP__INCLUDED

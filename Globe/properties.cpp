@@ -35,6 +35,9 @@
 #include <Globe/properties_cfg.hpp>
 #include <Globe/window_state_cfg.hpp>
 #include <Globe/tool_window_object.hpp>
+#include <Globe/channels.hpp>
+#include <Globe/sources.hpp>
+#include <Globe/sources_dialog.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -344,10 +347,13 @@ static const QString defaultConfigurationDirectory =
 
 class PropertiesManagerPrivate {
 public:
-	PropertiesManagerPrivate()
+	PropertiesManagerPrivate(SourcesManager * sourcesManager,
+		ChannelsManager * channelsManager )
 		:	m_model( 0 )
 		,	m_directoryName( defaultConfigurationDirectory )
 		,	m_toolWindowObject( 0 )
+		,	m_sourcesManager( sourcesManager )
+		,	m_channelsManager( channelsManager )
 	{
 	}
 
@@ -396,6 +402,10 @@ public:
 	PropertiesModel * m_model;
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
+	//! Sources manager.
+	SourcesManager * m_sourcesManager;
+	//! Channels manager.
+	ChannelsManager * m_channelsManager;
 }; // class PropertiesManagerPrivate
 
 
@@ -403,9 +413,11 @@ public:
 // PropertiesManager
 //
 
-PropertiesManager::PropertiesManager( QWidget * parent, Qt::WindowFlags flags )
+PropertiesManager::PropertiesManager( SourcesManager * sourcesManager,
+		ChannelsManager * channelsManager,
+		QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new PropertiesManagerPrivate )
+	,	d( new PropertiesManagerPrivate( sourcesManager, channelsManager ) )
 {
 	init();
 }
@@ -504,7 +516,8 @@ PropertiesManager::findProperties( const PropertiesKey & key ) const
 
 void
 PropertiesManager::addProperties( const PropertiesKey & key,
-	const Properties & props, const Como::Source::Type & type )
+	const Properties & props, const Como::Source::Type & type,
+	const QString & cfgFileName )
 {
 	PropertiesMap::Iterator it = d->m_map.find( key );
 
@@ -515,8 +528,7 @@ PropertiesManager::addProperties( const PropertiesKey & key,
 	}
 	else
 	{
-		PropertiesValue value( d->generateFileName( key ),
-			type, props );
+		PropertiesValue value( cfgFileName, type, props );
 
 		props.saveConfiguration( value.confFileName() );
 
@@ -530,12 +542,7 @@ PropertiesManager::removeProperties( const PropertiesKey & key )
 	PropertiesMap::ConstIterator it = d->m_map.find( key );
 
 	if( it != d->m_map.end() )
-	{
-		QFile confFile( it.value().confFileName() );
-		confFile.remove();
-
 		d->m_map.remove( key );
-	}
 }
 
 void

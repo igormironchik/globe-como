@@ -28,72 +28,46 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__MAINWINDOW_HPP__INCLUDED
-#define GLOBE__MAINWINDOW_HPP__INCLUDED
+#ifndef GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
+#define GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
 
-// Qt include.
-#include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
+// QtConfFile include.
+#include <QtConfFile/TagNoValue>
+#include <QtConfFile/TagScalar>
+
+// Globe include.
+#include <Globe/window_state_cfg.hpp>
 
 
 namespace Globe {
 
-class ChannelsManager;
-class DB;
-class WindowStateCfg;
-class PropertiesManager;
-class ToolWindowObject;
-class ChannelsList;
-class SourcesMainWindow;
-
-class MainWindowPrivate;
-
 //
-// MainWindow
+// SourcesMainWindowTag
 //
 
-//! Main window of the application.
-class MainWindow
-	:	public QMainWindow
+//! Tag with configuration of the sources main window.
+class SourcesMainWindowTag
+	:	public QtConfFile::TagNoValue
 {
-	Q_OBJECT
-
 public:
-	MainWindow( const QString & cfgFileName,
-		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow,
-		const QList< ToolWindowObject* > & toolWindows,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	SourcesMainWindowTag();
 
-	~MainWindow();
+	SourcesMainWindowTag( const QString & channelName,
+		const WindowStateCfg & windowState );
 
-	//! \return List with channels.
-	ChannelsList * list();
+	//! \return Channel's name.
+	QString channelName() const;
 
-public slots:
-	//! Start.
-	void start();
-
-protected:
-	void closeEvent( QCloseEvent * event );
-
-private slots:
-	//! About to quit.
-	void aboutToQuit();
+	//! \return Window state.
+	WindowStateCfg windowState() const;
 
 private:
-	//! Init.
-	void init();
-	//! Save configuration.
-	void saveConfiguration();
-
-private:
-	Q_DISABLE_COPY( MainWindow )
-
-	QScopedPointer< MainWindowPrivate > d;
-}; // class MainWindow
+	//! Channel's name.
+	QtConfFile::TagScalar< QString > m_channelName;
+	//! State of the window.
+	WindowStateCfgTag m_windowState;
+}; // class SourcesMainWindowTag
 
 } /* namespace Globe */
 
-#endif // GLOBE__MAINWINDOW_HPP__INCLUDED
+#endif // GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED

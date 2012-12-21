@@ -42,6 +42,7 @@ class ChannelsManager;
 class DB;
 class PropertiesManager;
 class MainWindow;
+class SourcesMainWindow;
 
 
 //
@@ -59,7 +60,8 @@ class Configuration
 public:
 	Configuration( const QString & cfgFileName,
 		MainWindow * mainWindow, ChannelsManager * channelsManager,
-		DB * db, PropertiesManager * propertiesManager );
+		DB * db, PropertiesManager * propertiesManager,
+		SourcesMainWindow * sourcesMainWindow );
 
 	~Configuration();
 
@@ -78,6 +80,8 @@ private:
 	void readChannelsCfg( const QString & cfgFileName );
 	//! Read properties configuration.
 	void readPropertiesCfg( const QString & cfgFileName );
+	//! Read sources main window configuration.
+	void readSourcesMainWindowCfg( const QString & cfgFileName );
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.
@@ -86,6 +90,8 @@ private:
 	void saveChannelsCfg( const QString & cfgFileName );
 	//! Save properties configuration.
 	void savePropertiesCfg( const QString & cfgFileName );
+	//! Save sources main window configuration.
+	void saveSourcesMainWindowCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

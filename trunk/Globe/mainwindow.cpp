@@ -34,6 +34,7 @@
 #include <Globe/tool_window_object.hpp>
 #include <Globe/configuration.hpp>
 #include <Globe/properties.hpp>
+#include <Globe/sources_mainwindow.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
@@ -55,15 +56,17 @@ public:
 		MainWindow * mainWindow,
 		ChannelsManager * channelsManager, DB * db,
 		PropertiesManager * propertiesManager,
+		SourcesMainWindow * sourcesMainWindow,
 		const QList< ToolWindowObject* > & toolWindows )
 		:	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_list( 0 )
 		,	m_propertiesManager( propertiesManager )
+		,	m_sourcesMainWindow( sourcesMainWindow )
 		,	m_cfgWasSaved( false )
 		,	m_toolWindows( toolWindows )
 		,	m_cfg( cfgFileName, mainWindow, channelsManager,
-				db, propertiesManager )
+				db, propertiesManager, sourcesMainWindow )
 	{
 	}
 
@@ -75,6 +78,8 @@ public:
 	ChannelsList * m_list;
 	//! Properties manager.
 	PropertiesManager * m_propertiesManager;
+	//! Sources main window.
+	SourcesMainWindow * m_sourcesMainWindow;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
 	//! Tool window objects.
@@ -91,11 +96,12 @@ public:
 MainWindow::MainWindow( const QString & cfgFileName,
 	ChannelsManager * channelsManager, DB * db,
 	PropertiesManager * propertiesManager,
+	SourcesMainWindow * sourcesMainWindow,
 	const QList< ToolWindowObject* > & toolWindows,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
 	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
-			propertiesManager, toolWindows ) )
+			propertiesManager, sourcesMainWindow, toolWindows ) )
 {
 	init();
 }
@@ -131,6 +137,7 @@ MainWindow::init()
 	setCentralWidget( d->m_list );
 
 	d->m_propertiesManager->initToolsMenu( d->m_toolWindows );
+	d->m_sourcesMainWindow->initToolsMenu( d->m_toolWindows );
 }
 
 void

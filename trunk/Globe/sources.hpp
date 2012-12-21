@@ -76,11 +76,19 @@ public:
 	QList< QString > channelsNames() const;
 
 	//! \return List of sources in the given \arg channel channel.
-	const QList< Como::Source > & sources( const QString & channelName ) const;
+	QList< Como::Source > sources( const QString & channelName ) const;
+
+	//! \return List of registered sources in the given \arg channel channel.
+	QList< Como::Source > registeredSources( const QString & channelName ) const;
+
+	//! \return List of deregistered sources in the given \arg channel channel.
+	QList< Como::Source > deregisteredSources( const QString & channelName ) const;
 
 private slots:
 	//! Source updated or registered.
 	void sourceUpdated( const Como::Source & source );
+	//! Source deregistered.
+	void sourceDeregistered( const Como::Source & source );
 	//! Channel created.
 	void channelCreated( Channel * channel );
 	//! Channel removed.

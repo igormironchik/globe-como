@@ -41,6 +41,7 @@
 #include <Globe/channels_cfg.hpp>
 #include <Globe/mainwindow_cfg.hpp>
 #include <Globe/channels_list.hpp>
+#include <Globe/sources_mainwindow.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -60,6 +61,8 @@ static const QString defaultChannelsCfgFileName =
 	QLatin1String( "./etc/Channels.cfg" );
 static const QString defaultPropertiesCfgFileName =
 	QLatin1String( "./etc/Properties.cfg" );
+static const QString defaultSourcesMainWindowCfgFileName =
+	QLatin1String( "./etc/SourcesMainWindow.cfg" );
 
 
 //
@@ -70,12 +73,14 @@ class ConfigurationPrivate {
 public:
 	ConfigurationPrivate( const QString & cfgFileName,
 		MainWindow * mainWindow, ChannelsManager * channelsManager,
-		DB * db, PropertiesManager * propertiesManager )
+		DB * db, PropertiesManager * propertiesManager,
+		SourcesMainWindow * sourcesMainWindow )
 		:	m_mainWindow( mainWindow )
 		,	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_cfgFileName( cfgFileName )
 		,	m_propertiesManager( propertiesManager )
+		,	m_sourcesMainWindow( sourcesMainWindow )
 		,	m_appCfgWasLoaded( false )
 	{
 	}
@@ -84,6 +89,7 @@ public:
 	ChannelsManager * m_channelsManager;
 	DB * m_db;
 	PropertiesManager * m_propertiesManager;
+	SourcesMainWindow * m_sourcesMainWindow;
 
 	//! Configuration's file name.
 	QString m_cfgFileName;
@@ -100,9 +106,10 @@ public:
 
 Configuration::Configuration( const QString & cfgFileName,
 	MainWindow * mainWindow, ChannelsManager * channelsManager,
-	DB * db, PropertiesManager * propertiesManager )
+	DB * db, PropertiesManager * propertiesManager,
+	SourcesMainWindow * sourcesMainWindow )
 	:	d( new ConfigurationPrivate( cfgFileName, mainWindow, channelsManager, db,
-			propertiesManager ) )
+			propertiesManager, sourcesMainWindow ) )
 {
 }
 
@@ -120,11 +127,15 @@ Configuration::loadConfiguration()
 	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
+
+	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 }
 
 void
 Configuration::saveConfiguration()
 {
+	saveSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
+
 	savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
 	saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
@@ -285,6 +296,27 @@ Configuration::readPropertiesCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readSourcesMainWindowCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		d->m_sourcesMainWindow->readConfiguration( cfgFileName );
+	else
+	{
+		d->m_appCfg.setSourcesMainWindowCfgFile(
+			defaultSourcesMainWindowCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+			QMessageBox::warning( d->m_mainWindow,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified sources main window configuration file.\n"
+					"Sources main window configuration will not be loaded.\n"
+					"At exit sources main window configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultSourcesMainWindowCfgFileName ) );
+	}
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	ApplicationCfgTag tag( d->m_appCfg );
@@ -359,6 +391,12 @@ void
 Configuration::savePropertiesCfg( const QString & cfgFileName )
 {
 	d->m_propertiesManager->saveConfiguration( cfgFileName );
+}
+
+void
+Configuration::saveSourcesMainWindowCfg( const QString & cfgFileName )
+{
+	d->m_sourcesMainWindow->saveConfiguration( cfgFileName );
 }
 
 } /* namespace Globe */

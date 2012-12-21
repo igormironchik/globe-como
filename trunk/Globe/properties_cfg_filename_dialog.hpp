@@ -28,59 +28,12 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_DIALOG_HPP__INCLUDED
-#define GLOBE__SOURCES_DIALOG_HPP__INCLUDED
-
-// Qt include.
-#include <QtGui/QDialog>
-#include <QtCore/QScopedPointer>
-
-// Como include.
-#include <Como/Source>
+#ifndef GLOBE__PROPERTIES_CFG_FILENAME_DIALOG_HPP__INCLUDED
+#define GLOBE__PROPERTIES_CFG_FILENAME_DIALOG_HPP__INCLUDED
 
 
 namespace Globe {
 
-class SourcesManager;
-class ChannelsManager;
-
-
-//
-// SourcesDialog
-//
-
-class SourcesDialogPrivate;
-
-//! Dialog for selecting the source.
-class SourcesDialog
-	:	public QDialog
-{
-	Q_OBJECT
-
-public:
-	SourcesDialog( Como::Source & source, QString & channelName,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
-
-	~SourcesDialog();
-
-private:
-	//! Init.
-	void init();
-
-private slots:
-	//! Source selected.
-	void sourceSelected( const Como::Source & source );
-	//! Channel selected.
-	void channelSelected( const QString & channelName );
-
-private:
-	Q_DISABLE_COPY( SourcesDialog )
-
-	QScopedPointer< SourcesDialogPrivate > d;
-}; // class SourcesDialog
-
 } /* namespace Globe */
 
-#endif // GLOBE__SOURCES_DIALOG_HPP__INCLUDED
+#endif // GLOBE__PROPERTIES_CFG_FILENAME_DIALOG_HPP__INCLUDED

@@ -72,6 +72,11 @@ public:
 	//! Set file name of the properties configuration.
 	void setPropertiesCfgFile( const QString & fileName );
 
+	//! \return File name of the sources main window configuration.
+	const QString & sourcesMainWindowCfgFile() const;
+	//! Set file name of the sources main window configuration.
+	void setSourcesMainWindowCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -79,6 +84,8 @@ private:
 	QString m_channelsCfgFileName;
 	//! File name of the properties configuration.
 	QString m_propertiesCfgFileName;
+	//! File name of the sources main window configuration.
+	QString m_sourcesMainWindowCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -105,6 +112,8 @@ private:
 	QtConfFile::TagScalar< QString > m_channelsCfgFileName;
 	//! File name of the properties configuration.
 	QtConfFile::TagScalar< QString > m_propertiesCfgFileName;
+	//! File name of the sources main window configuration.
+	QtConfFile::TagScalar< QString > m_sourcesMainWindowCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

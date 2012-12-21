@@ -65,11 +65,18 @@ class SourcesWidget
 signals:
 	//! Source was selected.
 	void sourceSelected( const Como::Source & );
+	//! Channel was selected.
+	void channelSelected( const QString & );
 
 public:
 	SourcesWidget( SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+
+	//! \return Name of the current channel.
+	QString channelName() const;
+	//! Set channel name.
+	void setChannelName( const QString & channelName );
 
 private:
 	//! Init.

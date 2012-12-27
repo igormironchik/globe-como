@@ -142,9 +142,10 @@ PropertiesModel::clear()
 int
 PropertiesModel::rowCount( const QModelIndex & parent ) const
 {
-	Q_UNUSED( parent )
-
-	return d->m_data.size();
+	if( !parent.isValid() )
+		return d->m_data.size();
+	else
+		return 0;
 }
 
 int

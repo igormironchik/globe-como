@@ -28,71 +28,67 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CONDITION_WIDGET_HPP__INCLUDED
-#define GLOBE__CONDITION_WIDGET_HPP__INCLUDED
+#ifndef GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED
+#define GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QWidget>
+#include <QtGui/QDialog>
 #include <QtCore/QScopedPointer>
-
-// Globe include.
-#include <Globe/condition.hpp>
-
-// Como include.
-#include <Como/Source>
 
 
 namespace Globe {
 
 //
-// ConditionWidget
+// PropertiesKeyType
 //
 
-class ConditionWidgetPrivate;
+//! Enum with properties key type.
+enum PropertiesKeyType {
+	//! Not defined.
+	NotDefinedKeyType,
+	//! Exactly this source.
+	ExactlyThisSource,
+	//! Exactly this source but from any channel.
+	ExactlyThisSourceInAnyChannel,
+	//! Exactly this type of source with any name.
+	ExactlyThisTypeOfSource,
+	//! Exactly this type of source with any name from any channel.
+	ExactlyThisTypeOfSourceInAnyChannel
+}; // enum PropertiesKeyType
 
-//! Widget that displays condition.
-class ConditionWidget
-	:	public QWidget
+
+//
+// PropertiesKeyTypeDialog
+//
+
+class PropertiesKeyTypeDialogPrivate;
+
+//! Dialog for setting properties key type.
+class PropertiesKeyTypeDialog
+	:	public QDialog
 {
 	Q_OBJECT
 
-signals:
-	//! Emitted on changes.
-	void changed();
-	//! Emitted on wrong condition.
-	void wrongCondition();
-
 public:
-	explicit ConditionWidget( Como::Source::Type type,
+	explicit PropertiesKeyTypeDialog( PropertiesKeyType & type,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
-	~ConditionWidget();
-
-	//! Set condition.
-	void setCondition( const Condition & c );
-	//! \return Condition.
-	Condition condition() const;
+	~PropertiesKeyTypeDialog();
 
 private:
 	//! Init.
 	void init();
 
 private slots:
-	//! Equaltion changed.
-	void expressionChanged( int index );
-	//! Value changed.
-	void valueChanged( const QString & text );
-	//! Level changed.
-	void levelChanged( int index );
-	//! Message changed.
-	void messageChanged( bool on );
+	//! Accepted.
+	void accepted();
 
 private:
-	Q_DISABLE_COPY( ConditionWidget )
+	Q_DISABLE_COPY( PropertiesKeyTypeDialog )
 
-	QScopedPointer< ConditionWidgetPrivate > d;
-}; // class ConditionWidget
+	QScopedPointer< PropertiesKeyTypeDialogPrivate > d;
+}; // class PropertiesKeyTypeDialog
 
 } /* namespace Globe */
 
-#endif // GLOBE__CONDITION_WIDGET_HPP__INCLUDED
+#endif // GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED

@@ -234,6 +234,9 @@ public:
 	void addProperties( const PropertiesKey & key, const Properties & props,
 		const Como::Source::Type & type,
 		const QString & cfgFileName );
+	//! Add new properties.
+	void addProperties( const Como::Source & source,
+		const QString & channelName );
 	//! Remove properties for the given \arg source source.
 	void removeProperties( const PropertiesKey & key );
 
@@ -259,6 +262,10 @@ private:
 	void init();
 	//! Init model.
 	void initModelAndView();
+
+private slots:
+	//! Add propertie.
+	void addProperties();
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

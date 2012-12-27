@@ -111,7 +111,13 @@ SourcesWidget::init()
 		this, SLOT( channelRemoved( Channel * ) ) );
 
 	connect( d->m_ui.m_channel, SIGNAL( currentIndexChanged( const QString & ) ),
-		this, SLOT( channelSelected( const QString & ) ) );
+		this, SLOT( selectChannel( const QString & ) ) );
+
+	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
+		this, SLOT( itemActivated( const QModelIndex & ) ) );
+
+	foreach( const QString & channelName, d->m_sourcesManager->channelsNames() )
+		d->m_ui.m_channel->addItem( channelName );
 }
 
 QString
@@ -161,7 +167,7 @@ SourcesWidget::channelRemoved( Channel * channel )
 }
 
 void
-SourcesWidget::channelSelected( const QString & channelName )
+SourcesWidget::selectChannel( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
 		d->m_model->initModel( d->m_sourcesManager->sources( channelName ) );

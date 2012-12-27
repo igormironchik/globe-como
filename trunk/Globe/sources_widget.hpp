@@ -90,7 +90,7 @@ private slots:
 	//! Channel removed.
 	void channelRemoved( Channel * channel );
 	//! Channel selected.
-	void channelSelected( const QString & channelName );
+	void selectChannel( const QString & channelName );
 	//! Item activated.
 	void itemActivated( const QModelIndex & index );
 

@@ -28,19 +28,61 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__UTILS_HPP__INCLUDED
-#define GLOBE__UTILS_HPP__INCLUDED
+#ifndef GLOBE__SOURCE_MANUAL_DIALOG_HPP__INCLUDED
+#define GLOBE__SOURCE_MANUAL_DIALOG_HPP__INCLUDED
 
-// Globe include.
-#include <Globe/window_state_cfg.hpp>
+// Qt include.
+#include <QtGui/QDialog>
+#include <QtCore/QScopedPointer>
+
+// Como include.
+#include <Como/Source>
 
 
 namespace Globe {
 
-//! \return Path to the specified file.
-QString relativeFilePath( const QString & fileName,
-	const QString & path = QLatin1String( "./" ) );
+class SourcesManager;
+
+
+//
+// SourceManualDialog
+//
+
+class SourceManualDialogPrivate;
+
+//! Dialog for setting source parameters.
+class SourceManualDialog
+	:	public QDialog
+{
+	Q_OBJECT
+
+public:
+	SourceManualDialog( Como::Source & source, QString & channelName,
+		SourcesManager * sourcesManager,
+		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+
+	~SourceManualDialog();
+
+private:
+	//! Init.
+	void init();
+
+private slots:
+	//! Accepted.
+	void accepted();
+	//! Channel was set.
+	void channelWasSet( int index );
+	//! Name was set.
+	void nameWasSet( const QString & text );
+	//! Type was set.
+	void typeWasSet( const QString & text );
+
+private:
+	Q_DISABLE_COPY( SourceManualDialog )
+
+	QScopedPointer< SourceManualDialogPrivate > d;
+}; // class SourceManualDialog
 
 } /* namespace Globe */
 
-#endif // GLOBE__UTILS_HPP__INCLUDED
+#endif // GLOBE__SOURCE_MANUAL_DIALOG_HPP__INCLUDED

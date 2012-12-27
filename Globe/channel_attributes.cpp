@@ -37,6 +37,8 @@
 #include <QtNetwork/QHostAddress>
 #include <QtGui/QPushButton>
 #include <QtGui/QColor>
+#include <QtGui/QPushButton>
+#include <QtGui/QToolTip>
 #include <QtCore/QRegExp>
 
 
@@ -124,9 +126,11 @@ public:
 		:	m_attributes( attributes )
 		,	m_channelsManager( channelsManager )
 		,	m_isNameSet( false )
+		,	m_isNameUnique( false )
 		,	m_isIPSet( false )
 		,	m_isPortSet( true )
 		,	m_parent( parent )
+		,	m_checkButton( 0 )
 	{
 	}
 
@@ -142,22 +146,24 @@ public:
 	{
 		m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
-		if( !m_isNameSet )
+		if( m_isNameSet && !m_isNameUnique )
 		{
-			m_ui.m_message->setText( m_parent->tr(
-				"Enter name of the channel." ) );
+			m_message = m_parent->tr( "Channel with the given name already exists." );
+			return;
+		}
+		else if( !m_isNameSet )
+		{
+			m_message = m_parent->tr( "Enter name of the channel." );
 			return;
 		}
 		else if( !m_isIPSet )
 		{
-			m_ui.m_message->setText( m_parent->tr(
-				"Enter IP address of the channel." ) );
+			m_message = m_parent->tr( "Enter IP address of the channel." );
 			return;
 		}
 		else if( !m_isPortSet )
 		{
-			m_ui.m_message->setText( m_parent->tr(
-				"Enter port number." ) );
+			m_message = m_parent->tr( "Enter port number." );
 			return;
 		}
 
@@ -168,8 +174,8 @@ public:
 				highlightError( m_ui.m_ip );
 				highlightError( m_ui.m_port );
 
-				m_ui.m_message->setText( m_parent->tr(
-					"Channel with the given IP and port already exists." ) );
+				m_message = m_parent->tr(
+					"Channel with the given IP and port already exists." );
 
 				return;
 			}
@@ -178,8 +184,7 @@ public:
 				highlightNormal( m_ui.m_ip );
 				highlightNormal( m_ui.m_port );
 
-				m_ui.m_message->setText( m_parent->tr(
-					"All is OK." ) );
+				m_message = m_parent->tr( "All is OK." );
 			}
 		}
 
@@ -222,12 +227,18 @@ public:
 	QColor m_textColor;
 	//! Is name was set.
 	bool m_isNameSet;
+	//! Is name unique.
+	bool m_isNameUnique;
 	//! Is IP was set.
 	bool m_isIPSet;
 	//! Is port was set.
 	bool m_isPortSet;
 	//! Parent.
 	QDialog * m_parent;
+	//! Message.
+	QString m_message;
+	//! Check button.
+	QPushButton * m_checkButton;
 }; // class ChannelAttributesDialogPrivate
 
 
@@ -253,6 +264,10 @@ ChannelAttributesDialog::init()
 {
 	d->m_ui.setupUi( this );
 
+	d->m_checkButton = new QPushButton( tr( "Check" ), this );
+	d->m_ui.m_buttons->addButton( d->m_checkButton,
+		QDialogButtonBox::HelpRole );
+
 	d->m_textColor = d->m_ui.m_name->palette().color( QPalette::Text );
 
 	d->stateChanged();
@@ -265,6 +280,8 @@ ChannelAttributesDialog::init()
 		this, SLOT( portEdited( int ) ) );
 	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
 		this, SLOT( accepted() ) );
+	connect( d->m_checkButton, SIGNAL( clicked() ),
+		this, SLOT( checkFields() ) );
 }
 
 void
@@ -275,13 +292,15 @@ ChannelAttributesDialog::nameEdited( const QString & text )
 		if( !d->m_channelsManager->isNameUnique( text ) )
 		{
 			d->highlightError( d->m_ui.m_name );
-			d->m_isNameSet = false;
+			d->m_isNameSet = true;
+			d->m_isNameUnique = false;
 			d->stateChanged();
 		}
 		else
 		{
 			d->highlightNormal( d->m_ui.m_name );
 			d->m_isNameSet = true;
+			d->m_isNameUnique = true;
 			d->stateChanged();
 		}
 	}
@@ -289,6 +308,7 @@ ChannelAttributesDialog::nameEdited( const QString & text )
 	{
 		d->highlightError( d->m_ui.m_name );
 		d->m_isNameSet = false;
+		d->m_isNameUnique = false;
 		d->stateChanged();
 	}
 }
@@ -350,6 +370,13 @@ ChannelAttributesDialog::accepted()
 	d->m_attributes.setPort( d->m_ui.m_port->value() );
 
 	accept();
+}
+
+void
+ChannelAttributesDialog::checkFields()
+{
+	QToolTip::showText( mapToGlobal( d->m_checkButton->pos() ),
+		d->m_message, this );
 }
 
 } /* namespace Globe */

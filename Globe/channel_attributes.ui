@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>362</width>
-    <height>221</height>
+    <height>169</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Enter channel's attributes</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <widget class="QGroupBox" name="groupBox">
      <property name="title">
       <string>Channel's attributes</string>
      </property>
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <layout class="QVBoxLayout" name="verticalLayout">
       <item>
        <layout class="QGridLayout" name="gridLayout">
         <item row="0" column="0">
@@ -60,22 +60,6 @@
          </widget>
         </item>
        </layout>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QGroupBox" name="m_messageBox">
-     <property name="title">
-      <string>Message</string>
-     </property>
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QLabel" name="m_message">
-        <property name="text">
-         <string>Enter name of the channel</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>

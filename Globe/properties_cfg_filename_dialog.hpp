@@ -31,8 +31,49 @@
 #ifndef GLOBE__PROPERTIES_CFG_FILENAME_DIALOG_HPP__INCLUDED
 #define GLOBE__PROPERTIES_CFG_FILENAME_DIALOG_HPP__INCLUDED
 
+// Qt include.
+#include <QtGui/QDialog>
+#include <QtCore/QScopedPointer>
+
 
 namespace Globe {
+
+//
+// PropertiesCfgFileNameDialog
+//
+
+class PropertiesCfgFileNameDialogPrivate;
+
+//! Dialog for properties configuration file name.
+class PropertiesCfgFileNameDialog
+	:	public QDialog
+{
+	Q_OBJECT
+
+public:
+	PropertiesCfgFileNameDialog( QString & fileName,
+		const QString & path,
+		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+
+	~PropertiesCfgFileNameDialog();
+
+private:
+	//! Init.
+	void init();
+
+private slots:
+	//! Select file.
+	void selectFile();
+	//! Accepted.
+	void accepted();
+	//! File name changed.
+	void fileNameChanged( const QString & text );
+
+private:
+	Q_DISABLE_COPY( PropertiesCfgFileNameDialog )
+
+	QScopedPointer< PropertiesCfgFileNameDialogPrivate > d;
+}; // class PropertiesCfgFileNameDialog
 
 } /* namespace Globe */
 

@@ -33,6 +33,7 @@
 #include <Globe/channels.hpp>
 #include <Globe/sources.hpp>
 #include <Globe/sources_widget.hpp>
+#include <Globe/source_manual_dialog.hpp>
 
 // Qt include.
 #include <QtGui/QDialogButtonBox>
@@ -40,6 +41,7 @@
 #include <QtGui/QFrame>
 #include <QtGui/QPushButton>
 #include <QtGui/QSpacerItem>
+#include <QtGui/QPushButton>
 
 
 namespace Globe {
@@ -59,6 +61,7 @@ public:
 		,	m_channelsManager( channelsManager )
 		,	m_widget( 0 )
 		,	m_buttons( 0 )
+		,	m_setManuallyButton( 0 )
 	{
 	}
 
@@ -74,6 +77,8 @@ public:
 	SourcesWidget * m_widget;
 	//! Buttons.
 	QDialogButtonBox * m_buttons;
+	//! Set source manually button.
+	QPushButton * m_setManuallyButton;
 }; // class SourcesDialogPrivate
 
 
@@ -118,6 +123,10 @@ SourcesDialog::init()
 	d->m_buttons->button( QDialogButtonBox::Ok )->setDefault( true );
 	d->m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
+	d->m_setManuallyButton = new QPushButton( tr( "Set Manually" ), this );
+	d->m_buttons->addButton( d->m_setManuallyButton,
+		QDialogButtonBox::ActionRole );
+
 	layout->addWidget( d->m_widget );
 	layout->addSpacerItem( spacer );
 	layout->addWidget( line );
@@ -131,6 +140,8 @@ SourcesDialog::init()
 		this, SLOT( accept() ) );
 	connect( d->m_buttons, SIGNAL( rejected() ),
 		this, SLOT( reject() ) );
+	connect( d->m_setManuallyButton, SIGNAL( clicked() ),
+		this, SLOT( setSourceManually() ) );
 }
 
 void
@@ -145,7 +156,19 @@ SourcesDialog::sourceSelected( const Como::Source & source )
 void
 SourcesDialog::channelSelected( const QString & channelName )
 {
+	Q_UNUSED( channelName )
+
 	d->m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
+}
+
+void
+SourcesDialog::setSourceManually()
+{
+	SourceManualDialog dialog( d->m_source, d->m_channelName,
+		d->m_sourcesManager, this );
+
+	if( dialog.exec() == QDialog::Accepted )
+		accept();
 }
 
 } /* namespace Globe */

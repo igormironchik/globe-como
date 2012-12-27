@@ -74,6 +74,8 @@ private slots:
 	void sourceSelected( const Como::Source & source );
 	//! Channel selected.
 	void channelSelected( const QString & channelName );
+	//! Set source manually.
+	void setSourceManually();
 
 private:
 	Q_DISABLE_COPY( SourcesDialog )

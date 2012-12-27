@@ -38,6 +38,8 @@
 #include <Globe/channels.hpp>
 #include <Globe/sources.hpp>
 #include <Globe/sources_dialog.hpp>
+#include <Globe/properties_cfg_filename_dialog.hpp>
+#include <Globe/properties_key_type_dialog.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -448,6 +450,8 @@ PropertiesManager::init()
 
 	connect( d->m_ui.m_quitAction, SIGNAL( triggered() ),
 		qApp, SLOT( quit() ) );
+	connect( d->m_ui.m_addAction, SIGNAL( triggered() ),
+		this, SLOT( addProperties() ) );
 }
 
 void
@@ -533,6 +537,38 @@ PropertiesManager::addProperties( const PropertiesKey & key,
 		props.saveConfiguration( value.confFileName() );
 
 		d->m_map.insert( key, value );
+	}
+}
+
+static inline PropertiesKey createKey( PropertiesKeyType type,
+	const Como::Source & source, const QString & channelName )
+{
+	switch( type )
+	{
+		case ExactlyThisSource :
+			return PropertiesKey( source.name(), source.typeName(), channelName );
+		case ExactlyThisSourceInAnyChannel :
+			return PropertiesKey( source.name(), source.typeName(), QString() );
+		case ExactlyThisTypeOfSource :
+			return PropertiesKey( QString(), source.typeName(), channelName );
+		case ExactlyThisTypeOfSourceInAnyChannel :
+			return PropertiesKey( QString(), source.typeName(), QString() );
+		default :
+			return PropertiesKey( QString(), QString(), QString() );
+	}
+}
+
+void
+PropertiesManager::addProperties( const Como::Source & source,
+	const QString & channelName )
+{
+	PropertiesKeyType type = NotDefinedKeyType;
+
+	PropertiesKeyTypeDialog	dialog( type, this );
+
+	if( dialog.exec() == QDialog::Accepted )
+	{
+		PropertiesKey key = createKey( type, source, channelName );
 	}
 }
 
@@ -654,6 +690,19 @@ PropertiesManager::closeEvent( QCloseEvent * event )
 	hide();
 
 	event->accept();
+}
+
+void
+PropertiesManager::addProperties()
+{
+	Como::Source source;
+	QString channelName;
+
+	SourcesDialog sourcesDialog( source, channelName, d->m_sourcesManager,
+		d->m_channelsManager, this );
+
+	if( sourcesDialog.exec() == QDialog::Accepted )
+		addProperties( source, channelName );
 }
 
 } /* namespace Globe */

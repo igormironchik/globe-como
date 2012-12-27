@@ -106,6 +106,9 @@ private slots:
 	void portEdited( int val );
 	//! Accepted.
 	void accepted();
+	//! Check fields.
+	void checkFields();
+
 
 private:
 	//! Init.

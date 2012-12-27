@@ -38,9 +38,9 @@
 
 namespace Globe {
 
-QString relativeFilePath( const QString & fileName )
+QString relativeFilePath( const QString & fileName, const QString & path )
 {
-	static QDir dir( "./" );
+	static QDir dir( path );
 
 	return dir.relativeFilePath( fileName );
 }

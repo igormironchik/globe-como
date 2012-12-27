@@ -89,7 +89,7 @@ int main( int argc, char ** argv )
 
 	Globe::SourcesManager sourcesManager( &channelsManager );
 
-	Globe::PropertiesManager propertiesManager( &sourcesmanager, &channelsManager );
+	Globe::PropertiesManager propertiesManager( &sourcesManager, &channelsManager );
 
 	Globe::SourcesMainWindow sourcesMainWindow( &sourcesManager, &channelsManager );
 

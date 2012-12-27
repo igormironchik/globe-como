@@ -22,9 +22,11 @@ HEADERS += application_cfg.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
+           otherwise_condition_widget.hpp \
            properties.hpp \
            properties_cfg.hpp \
            properties_cfg_filename_dialog.hpp \
+           properties_dialog.hpp \
            properties_key_type_dialog.hpp \
            properties_model.hpp \
            properties_widget.hpp \
@@ -55,9 +57,11 @@ SOURCES += application_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
+           otherwise_condition_widget.cpp \
            properties.cpp \
            properties_cfg.cpp \
            properties_cfg_filename_dialog.cpp \
+           properties_dialog.cpp \
            properties_key_type_dialog.cpp \
            properties_model.cpp \
            properties_widget.cpp \
@@ -75,11 +79,12 @@ SOURCES += application_cfg.cpp \
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui \
            condition_widget.ui \
+           otherwise_condition_widget.ui \
            properties_mainwindow.ui \
-           source_manual_dialog.ui \
-           sources_widget.ui \
            properties_cfg_filename_dialog.ui \
-           properties_key_type_dialog.ui
+           properties_key_type_dialog.ui \
+           source_manual_dialog.ui \
+           sources_widget.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo

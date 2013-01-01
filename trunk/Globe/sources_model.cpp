@@ -4,7 +4,7 @@
 
 	\author Igor Mironchik (igor.mironchik at gmail dot com).
 
-	Copyright (c) 2012 Igor Mironchik
+	Copyright (c) 2012 - 2013 Igor Mironchik
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -142,8 +142,6 @@ static inline QString valueTypeToString( Como::Source::Type type )
 QVariant
 SourcesModel::data( const QModelIndex & index, int role ) const
 {
-	static const QString anyNameOrChannel = tr( "any" );
-
 	const int column = index.column();
 
 	if( role == Qt::DisplayRole )

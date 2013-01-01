@@ -4,7 +4,7 @@
 
 	\author Igor Mironchik (igor.mironchik at gmail dot com).
 
-	Copyright (c) 2012 Igor Mironchik
+	Copyright (c) 2012 - 2013 Igor Mironchik
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -46,85 +46,6 @@
 
 
 namespace Globe {
-
-//
-// ChannelsListPrivate
-//
-
-class ChannelsListPrivate {
-public:
-	ChannelsListPrivate( ChannelsManager * channelsManager,
-		QWidget * parent,
-		ShownChannels shownChannels,
-		Qt::SortOrder sortOrder )
-		:	m_widget( new ChannelsListWidget( channelsManager,
-				shownChannels, sortOrder, parent ) )
-	{
-	}
-
-	//! Widget.
-	ChannelsListWidget * m_widget;
-}; // class ChannelsListPrivate
-
-
-//
-// ChannelsList
-//
-
-
-ChannelsList::ChannelsList( ChannelsManager * channelsManager,
-	ShownChannels shownChannels,
-	Qt::SortOrder sortOrder,
-	QWidget * parent )
-	:	QScrollArea( parent )
-	,	d( new ChannelsListPrivate( channelsManager,
-			this, shownChannels, sortOrder ) )
-{
-	init();
-}
-
-ChannelsList::~ChannelsList()
-{
-}
-
-void
-ChannelsList::resizeEvent( QResizeEvent * event )
-{
-	d->m_widget->resizeWidget( event->size() );
-
-	QScrollArea::resizeEvent( event );
-}
-
-void
-ChannelsList::init()
-{
-	setWidget( d->m_widget );
-}
-
-void
-ChannelsList::addChannel( Channel * channel )
-{
-	d->m_widget->addChannel( channel );
-}
-
-void
-ChannelsList::removeChannel( Channel * channel )
-{
-	d->m_widget->removeChannel( channel );
-}
-
-ShownChannels
-ChannelsList::shownChannelsMode() const
-{
-	return d->m_widget->shownChannelsMode();
-}
-
-void
-ChannelsList::setShownChannelsMode( ShownChannels mode )
-{
-	d->m_widget->setShownChannelsMode( mode );
-}
-
 
 //
 // ChannelWidgetAndLine
@@ -178,9 +99,9 @@ const int channelWidgetPadding = 5;
 const int linePadding = 10;
 const int spaceBetweenChannelWidgets = 4;
 
-class ChannelsListWidgetPrivate {
+class ChannelsListPrivate {
 public:
-	ChannelsListWidgetPrivate( ChannelsManager * channelsManager,
+	ChannelsListPrivate( ChannelsManager * channelsManager,
 		QWidget * widget,
 		ShownChannels shownChannels,
 		Qt::SortOrder sortOrder )
@@ -335,31 +256,31 @@ public:
 	int m_currentWidgetIndex;
 	//! Channels manager.
 	ChannelsManager * m_channelsManager;
-}; // class ChannelsListWidgetPrivate
+}; // class ChannelsListPrivate
 
 
 //
-// ChannelsListWidget
+// ChannelsList
 //
 
-ChannelsListWidget::ChannelsListWidget( ChannelsManager * channelsManager,
+ChannelsList::ChannelsList( ChannelsManager * channelsManager,
 	ShownChannels shownChannels,
 	Qt::SortOrder sortOrder,
 	QWidget * parent,
 	Qt::WindowFlags f )
-	:	QWidget( parent, f )
-	,	d( new ChannelsListWidgetPrivate( channelsManager,
+	:	ScrolledWidget( parent, f )
+	,	d( new ChannelsListPrivate( channelsManager,
 			this, shownChannels, sortOrder ) )
 {
 	init();
 }
 
-ChannelsListWidget::~ChannelsListWidget()
+ChannelsList::~ChannelsList()
 {
 }
 
 void
-ChannelsListWidget::init()
+ChannelsList::init()
 {
 	d->m_addChannelAction = new QAction( QIcon( ":/img/add_22x22.png" ),
 		tr( "Add Channel" ), this );
@@ -379,7 +300,7 @@ ChannelsListWidget::init()
 }
 
 void
-ChannelsListWidget::addChannel( Channel * channel )
+ChannelsList::addChannel( Channel * channel )
 {
 	if( channel )
 	{
@@ -434,7 +355,7 @@ ChannelsListWidget::addChannel( Channel * channel )
 }
 
 void
-ChannelsListWidget::removeChannel( Channel * channel )
+ChannelsList::removeChannel( Channel * channel )
 {
 	if( channel )
 	{
@@ -455,19 +376,19 @@ ChannelsListWidget::removeChannel( Channel * channel )
 }
 
 ShownChannels
-ChannelsListWidget::shownChannelsMode() const
+ChannelsList::shownChannelsMode() const
 {
 	return d->m_channelsToShowWidget->shownChannelsMode();
 }
 
 void
-ChannelsListWidget::setShownChannelsMode( ShownChannels mode )
+ChannelsList::setShownChannelsMode( ShownChannels mode )
 {
 	d->m_channelsToShowWidget->setShownChannelsMode( mode );
 }
 
 void
-ChannelsListWidget::contextMenuEvent( QContextMenuEvent * event )
+ChannelsList::contextMenuEvent( QContextMenuEvent * event )
 {
 	d->m_currentWidgetIndex = d->indexOfChannelWidget( event->pos() );
 
@@ -501,7 +422,7 @@ public:
 }; // class ChannelWidgetGreaterThenFunction
 
 void
-ChannelsListWidget::sort( Qt::SortOrder order )
+ChannelsList::sort( Qt::SortOrder order )
 {
 	d->m_sortOrder = order;
 
@@ -520,7 +441,7 @@ ChannelsListWidget::sort( Qt::SortOrder order )
 }
 
 void
-ChannelsListWidget::showConnectedOnly()
+ChannelsList::showConnectedOnly()
 {
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 		if( !w.widget()->channel()->isConnected() )
@@ -538,7 +459,7 @@ ChannelsListWidget::showConnectedOnly()
 }
 
 void
-ChannelsListWidget::showDisconnectedOnly()
+ChannelsList::showDisconnectedOnly()
 {
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 		if( w.widget()->channel()->isConnected() )
@@ -556,7 +477,7 @@ ChannelsListWidget::showDisconnectedOnly()
 }
 
 void
-ChannelsListWidget::showAll()
+ChannelsList::showAll()
 {
 	foreach( const ChannelWidgetAndLine & w, d->m_widgets )
 	{
@@ -571,7 +492,7 @@ ChannelsListWidget::showAll()
 }
 
 void
-ChannelsListWidget::resizeWidget( const QSize & size )
+ChannelsList::resizeWidget( const QSize & size )
 {
 	d->resizeWidgets( size );
 
@@ -582,7 +503,7 @@ ChannelsListWidget::resizeWidget( const QSize & size )
 }
 
 void
-ChannelsListWidget::connected()
+ChannelsList::connected()
 {
 	Channel * ch = qobject_cast< Channel* > ( sender() );
 	const ChannelWidgetAndLine & w = d->findWidget( ch );
@@ -605,7 +526,7 @@ ChannelsListWidget::connected()
 }
 
 void
-ChannelsListWidget::disconnected()
+ChannelsList::disconnected()
 {
 	Channel * ch = qobject_cast< Channel* > ( sender() );
 	const ChannelWidgetAndLine & w = d->findWidget( ch );
@@ -628,7 +549,7 @@ ChannelsListWidget::disconnected()
 }
 
 void
-ChannelsListWidget::addChannel()
+ChannelsList::addChannel()
 {
 	ChannelAttributes attributes;
 
@@ -653,7 +574,7 @@ ChannelsListWidget::addChannel()
 }
 
 void
-ChannelsListWidget::delChannel()
+ChannelsList::delChannel()
 {
 	if( d->m_currentWidgetIndex != -1 )
 	{

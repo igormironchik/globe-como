@@ -28,46 +28,68 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
-#define GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
+#ifndef GLOBE__SCROLLED_WIDGET_HPP__INCLUDED
+#define GLOBE__SCROLLED_WIDGET_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-
-// Globe include.
-#include <Globe/window_state_cfg.hpp>
+// Qt include.
+#include <QtGui/QScrollArea>
+#include <QtGui/QWidget>
 
 
 namespace Globe {
 
 //
-// SourcesMainWindowTag
+// ScrolledWidget
 //
 
-//! Tag with configuration of the sources main window.
-class SourcesMainWindowTag
-	:	public QtConfFile::TagNoValue
+//! Scrolled widget.
+class ScrolledWidget
+	:	public QWidget
 {
+	Q_OBJECT
+
+	friend class ScrolledView;
+
 public:
-	SourcesMainWindowTag();
+	ScrolledWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
-	SourcesMainWindowTag( const QString & channelName,
-		const WindowStateCfg & windowState );
+	virtual ~ScrolledWidget();
 
-	//! \return Channel's name.
-	QString channelName() const;
-
-	//! \return Window state.
-	WindowStateCfg windowState() const;
+protected:
+	//! Resize widget.
+	virtual void resizeWidget( const QSize & size ) = 0;
 
 private:
-	//! Channel's name.
-	QtConfFile::TagScalar< QString > m_channelName;
-	//! State of the window.
-	WindowStateCfgTag m_windowState;
-}; // class SourcesMainWindowTag
+	Q_DISABLE_COPY( ScrolledWidget )
+}; // class ScrolledWidget
+
+
+//
+// ScrolledView
+//
+
+//! Scrolled view.
+class ScrolledView
+	:	public QScrollArea
+{
+	Q_OBJECT
+
+public:
+	ScrolledView( QWidget * parent = 0 );
+	~ScrolledView();
+
+	//! Set widget to scroll.
+	void setWidget( ScrolledWidget * w );
+
+protected:
+	void resizeEvent( QResizeEvent * event );
+
+private:
+	Q_DISABLE_COPY( ScrolledView )
+
+	ScrolledWidget * m_widget;
+}; // class ScrolledView
 
 } /* namespace Globe */
 
-#endif // GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
+#endif // GLOBE__SCROLLED_WIDGET_HPP__INCLUDED

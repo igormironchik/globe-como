@@ -4,7 +4,7 @@
 
 	\author Igor Mironchik (igor.mironchik at gmail dot com).
 
-	Copyright (c) 2012 Igor Mironchik
+	Copyright (c) 2012 - 2013 Igor Mironchik
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -32,35 +32,41 @@
 #define GLOBE__CHANNELS_LIST_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QScrollArea>
 #include <QtCore/QScopedPointer>
-#include <QtGui/QWidget>
 
 // Globe include.
 #include <Globe/channels_to_show.hpp>
+#include <Globe/scrolled_widget.hpp>
 
 
 namespace Globe {
 
 class Channel;
 class ChannelsManager;
+
+
 class ChannelsListPrivate;
 
 //
 // ChannelsList
 //
 
-//! List with channel's widgets.
+/*!
+	Widget with list of channel widgets.
+	This widget is used in ChannelsList to present
+	list of channel widgets.
+*/
 class ChannelsList
-	:	public QScrollArea
+	:	public ScrolledWidget
 {
 	Q_OBJECT
 
 public:
-	explicit ChannelsList( ChannelsManager * channelsManager,
+	ChannelsList( ChannelsManager * channelsManager,
 		ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder,
-		QWidget * parent = 0 );
+		QWidget * parent = 0,
+		Qt::WindowFlags f = 0 );
 	~ChannelsList();
 
 	//! Add channel.
@@ -74,55 +80,9 @@ public:
 	void setShownChannelsMode( ShownChannels mode );
 
 protected:
-	void resizeEvent( QResizeEvent * event );
-
-private:
-	//! Init.
-	void init();
-
-private:
-	Q_DISABLE_COPY( ChannelsList )
-
-	QScopedPointer< ChannelsListPrivate > d;
-}; // class ChannelsList
-
-
-class ChannelsListWidgetPrivate;
-
-//
-// ChannelsListWidget
-//
-
-/*!
-	Widget with list of channel widgets.
-	This widget is used in ChannelsList to present
-	list of channel widgets.
-*/
-class ChannelsListWidget
-	:	public QWidget
-{
-	Q_OBJECT
-
-public:
-	ChannelsListWidget( ChannelsManager * channelsManager,
-		ShownChannels shownChannels = ShowAll,
-		Qt::SortOrder sortOrder = Qt::AscendingOrder,
-		QWidget * parent = 0,
-		Qt::WindowFlags f = 0 );
-	~ChannelsListWidget();
-
-	//! Add channel.
-	void addChannel( Channel * channel );
-	//! Remove channel.
-	void removeChannel( Channel * channel );
-
-	//! \return Shown channels mode.
-	ShownChannels shownChannelsMode() const;
-	//! Set shown channels mode.
-	void setShownChannelsMode( ShownChannels mode );
-
-protected:
 	void contextMenuEvent( QContextMenuEvent * event );
+	//! Resize widget.
+	void resizeWidget( const QSize & size );
 
 public slots:
 	//! Sort channels in the given order.
@@ -133,8 +93,6 @@ public slots:
 	void showDisconnectedOnly();
 	//! Show all channels.
 	void showAll();
-	//! Resize widget.
-	void resizeWidget( const QSize & size );
 
 private slots:
 	//! Channel connected.
@@ -151,10 +109,10 @@ private:
 	void init();
 
 private:
-	Q_DISABLE_COPY( ChannelsListWidget )
+	Q_DISABLE_COPY( ChannelsList )
 
-	QScopedPointer< ChannelsListWidgetPrivate > d;
-}; // class ChannelsListWidget
+	QScopedPointer< ChannelsListPrivate > d;
+}; // class ChannelsList
 
 } /* namespace Globe */
 

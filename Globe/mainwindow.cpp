@@ -4,7 +4,7 @@
 
 	\author Igor Mironchik (igor.mironchik at gmail dot com).
 
-	Copyright (c) 2012 Igor Mironchik
+	Copyright (c) 2012 - 2013 Igor Mironchik
 
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -35,6 +35,7 @@
 #include <Globe/configuration.hpp>
 #include <Globe/properties.hpp>
 #include <Globe/sources_mainwindow.hpp>
+#include <Globe/scrolled_widget.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
@@ -131,10 +132,14 @@ MainWindow::init()
 	foreach( ToolWindowObject * obj, d->m_toolWindows )
 		toolsMenu->addAction( obj->menuEntity() );
 
+	ScrolledView * area = new ScrolledView( this );
+
 	d->m_list = new ChannelsList( d->m_channelsManager,
 		ShowAll, Qt::AscendingOrder, this );
 
-	setCentralWidget( d->m_list );
+	area->setWidget( d->m_list );
+
+	setCentralWidget( area );
 
 	d->m_propertiesManager->initToolsMenu( d->m_toolWindows );
 	d->m_sourcesMainWindow->initToolsMenu( d->m_toolWindows );

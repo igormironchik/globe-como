@@ -28,46 +28,57 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
-#define GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
-
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-
 // Globe include.
-#include <Globe/window_state_cfg.hpp>
+#include <Globe/scrolled_widget.hpp>
+
+// Qt include.
+#include <QtGui/QResizeEvent>
 
 
 namespace Globe {
 
 //
-// SourcesMainWindowTag
+// ScrolledWidget
 //
 
-//! Tag with configuration of the sources main window.
-class SourcesMainWindowTag
-	:	public QtConfFile::TagNoValue
+ScrolledWidget::ScrolledWidget( QWidget * parent, Qt::WindowFlags f )
+	:	QWidget( parent, f )
 {
-public:
-	SourcesMainWindowTag();
+}
 
-	SourcesMainWindowTag( const QString & channelName,
-		const WindowStateCfg & windowState );
+ScrolledWidget::~ScrolledWidget()
+{
+}
 
-	//! \return Channel's name.
-	QString channelName() const;
 
-	//! \return Window state.
-	WindowStateCfg windowState() const;
+//
+// ScrolledView
+//
 
-private:
-	//! Channel's name.
-	QtConfFile::TagScalar< QString > m_channelName;
-	//! State of the window.
-	WindowStateCfgTag m_windowState;
-}; // class SourcesMainWindowTag
+ScrolledView::ScrolledView( QWidget * parent )
+	:	QScrollArea( parent )
+	,	m_widget( 0 )
+{
+}
+
+ScrolledView::~ScrolledView()
+{
+}
+
+void
+ScrolledView::setWidget( ScrolledWidget * w )
+{
+	m_widget = w;
+
+	QScrollArea::setWidget( m_widget );
+}
+
+void
+ScrolledView::resizeEvent( QResizeEvent * event )
+{
+	m_widget->resizeWidget( event->size() );
+
+	QScrollArea::resizeEvent( event );
+}
 
 } /* namespace Globe */
-
-#endif // GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED

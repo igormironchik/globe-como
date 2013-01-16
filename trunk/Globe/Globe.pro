@@ -15,15 +15,12 @@ HEADERS += application_cfg.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
-           color_frame_widget.hpp \
            condition.hpp \
            condition_cfg.hpp \
-           condition_widget.hpp \
            configuration.hpp \
            db.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
-           otherwise_condition_widget.hpp \
            properties.hpp \
            properties_cfg.hpp \
            properties_cfg_filename_dialog.hpp \
@@ -51,16 +48,13 @@ SOURCES += application_cfg.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
-           color_frame_widget.cpp \
            condition.cpp \
            condition_cfg.cpp \
-           condition_widget.cpp \
            configuration.cpp \
            db.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
-           otherwise_condition_widget.cpp \
            properties.cpp \
            properties_cfg.cpp \
            properties_cfg_filename_dialog.cpp \
@@ -82,8 +76,6 @@ SOURCES += application_cfg.cpp \
 
 FORMS	 = channels_to_show.ui \
            channel_attributes.ui \
-           condition_widget.ui \
-           otherwise_condition_widget.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \
            properties_key_type_dialog.ui \

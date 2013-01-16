@@ -40,12 +40,13 @@
 #include <Globe/sources_dialog.hpp>
 #include <Globe/properties_cfg_filename_dialog.hpp>
 #include <Globe/properties_key_type_dialog.hpp>
+#include <Globe/properties_dialog.hpp>
+#include <Globe/properties_widget.hpp>
 
 #include "ui_properties_mainwindow.h"
 
 // Qt include.
 #include <QtCore/QFile>
-#include <QtCore/QDateTime>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QMessageBox>
 #include <QtGui/QCloseEvent>
@@ -359,31 +360,6 @@ public:
 	{
 	}
 
-	//! Generate unique file name for the given key.
-	QString generateFileName( const PropertiesKey & key )
-	{
-		QString fileName;
-
-		QDateTime now = QDateTime::currentDateTime();
-
-		for( QString::ConstIterator it = key.typeName().begin(),
-			last = key.typeName().end(); it != last; ++it )
-		{
-			fileName += QString::number( it->unicode() );
-		}
-
-		fileName += QString::number( now.date().year() );
-		fileName += QString::number( now.date().month() );
-		fileName += QString::number( now.date().day() );
-		fileName += QString::number( now.time().hour() );
-		fileName += QString::number( now.time().minute() );
-		fileName += QString::number( now.time().second() );
-
-		fileName += QLatin1String( ".cfg" );
-
-		return fileName;
-	}
-
 	//! Set directory for the properties configuration files.
 	void setDirectory( const QString & dir )
 	{
@@ -518,28 +494,6 @@ PropertiesManager::findProperties( const PropertiesKey & key ) const
 		return 0;
 }
 
-void
-PropertiesManager::addProperties( const PropertiesKey & key,
-	const Properties & props, const Como::Source::Type & type,
-	const QString & cfgFileName )
-{
-	PropertiesMap::Iterator it = d->m_map.find( key );
-
-	if( it != d->m_map.end() )
-	{
-		it.value().properties() = props;
-		it.value().properties().saveConfiguration( it.value().confFileName() );
-	}
-	else
-	{
-		PropertiesValue value( cfgFileName, type, props );
-
-		props.saveConfiguration( value.confFileName() );
-
-		d->m_map.insert( key, value );
-	}
-}
-
 static inline PropertiesKey createKey( PropertiesKeyType type,
 	const Como::Source & source, const QString & channelName )
 {
@@ -569,6 +523,44 @@ PropertiesManager::addProperties( const Como::Source & source,
 	if( dialog.exec() == QDialog::Accepted )
 	{
 		PropertiesKey key = createKey( type, source, channelName );
+
+		PropertiesMap::Iterator it = d->m_map.find( key );
+
+		PropertiesDialog propertiesDialog( source.type(), this );
+
+		const bool propertiesExists = ( it != d->m_map.end() );
+
+		if( propertiesExists )
+			propertiesDialog.list()->setProperties( it.value().properties() );
+
+		if( propertiesDialog.exec() == QDialog::Accepted )
+		{
+			if( propertiesExists )
+			{
+				it.value().properties() = propertiesDialog.list()->properties();
+
+				it.value().properties().saveConfiguration( d->m_directoryName +
+					it.value().confFileName() );
+			}
+			else
+			{
+				QString fileName;
+
+				PropertiesCfgFileNameDialog fileNameDialog( fileName,
+					d->m_directoryName, this );
+
+				if( fileNameDialog.exec() == QDialog::Accepted )
+				{
+					const Properties properties =
+						propertiesDialog.list()->properties();
+
+					d->m_map.insert( key, PropertiesValue( fileName,
+						source.type(), properties ) );
+
+					properties.saveConfiguration( d->m_directoryName + fileName );
+				}
+			}
+		}
 	}
 }
 
@@ -618,7 +610,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 			return;
 		}
 
-		d->m_directoryName = tag.propertiesDirectory();
+		d->setDirectory( tag.propertiesDirectory() );
 		d->m_map = tag.propertiesMap();
 
 		restoreWindowState( tag.windowState(), this );

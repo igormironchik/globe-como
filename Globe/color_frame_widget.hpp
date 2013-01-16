@@ -28,74 +28,62 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CONDITION_WIDGET_HPP__INCLUDED
-#define GLOBE__CONDITION_WIDGET_HPP__INCLUDED
+#ifndef GLOBE__COLOR_FRAME_WIDGET_HPP__INCLUDED
+#define GLOBE__COLOR_FRAME_WIDGET_HPP__INCLUDED
 
 // Qt include.
 #include <QtGui/QWidget>
 #include <QtCore/QScopedPointer>
 
-// Globe include.
-#include <Globe/condition.hpp>
-
-// Como include.
-#include <Como/Source>
-
 
 namespace Globe {
 
 //
-// ConditionWidget
+// ColorFrameWidget
 //
 
-class ConditionWidgetPrivate;
+class ColorFrameWidgetPrivate;
 
-//! Widget that displays condition.
-class ConditionWidget
+//! Widget with colored frame.
+class ColorFrameWidget
 	:	public QWidget
 {
 	Q_OBJECT
 
-signals:
-	//! Emitted on changes.
-	void changed();
-	//! Emitted on wrong condition.
-	void wrongCondition();
-
 public:
-	explicit ConditionWidget( Como::Source::Type type,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ColorFrameWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	~ColorFrameWidget();
 
-	~ConditionWidget();
+	//! Set child widget.
+	void setWidget( QWidget * w );
 
-	//! Set condition.
-	void setCondition( const Condition & c );
-	//! \return Condition.
-	Condition condition() const;
+	QSize minimumSizeHint() const;
+	QSize sizeHint() const;
 
-	//! \return Is condition set?
-	bool isConditionOk() const;
+public slots:
+	//! Highlight as current widget.
+	void highlightAsCurrent( bool doUpdate = true );
+	//! Remove "current" highlight.
+	void removeCurrentHighlightMode( bool doUpdate = true );
+	//! Highlight as "context menu requested".
+	void highlightAsContextMenuRequested( bool doUpdate = true );
+	//! Remove "context menu requested" highlight.
+	void removeContextMenuRequestedHighlight( bool doUpdate = true );
+	//! Highlight as "wrong" widget.
+	void highlightAsWrong( bool doUpdate = true );
+	//! Highlight as normal widget.
+	void highlightAsNormal( bool doUpdate = true );
+
+protected:
+	void resizeEvent( QResizeEvent * event );
+	void paintEvent( QPaintEvent * event );
 
 private:
-	//! Init.
-	void init();
+	Q_DISABLE_COPY( ColorFrameWidget )
 
-private slots:
-	//! Equaltion changed.
-	void expressionChanged( int index );
-	//! Value changed.
-	void valueChanged( const QString & text );
-	//! Level changed.
-	void levelChanged( int index );
-	//! Message changed.
-	void messageChanged( bool on );
-
-private:
-	Q_DISABLE_COPY( ConditionWidget )
-
-	QScopedPointer< ConditionWidgetPrivate > d;
-}; // class ConditionWidget
+	QScopedPointer< ColorFrameWidgetPrivate > d;
+}; // class ColorFrameWidget
 
 } /* namespace Globe */
 
-#endif // GLOBE__CONDITION_WIDGET_HPP__INCLUDED
+#endif // GLOBE__COLOR_FRAME_WIDGET_HPP__INCLUDED

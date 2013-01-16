@@ -8,5 +8,7 @@
         <file>img/add_22x22.png</file>
         <file>img/remove_22x22.png</file>
         <file>img/exit_22x22.png</file>
+        <file>img/up_22x22.png</file>
+        <file>img/down_22x22.png</file>
     </qresource>
 </RCC>

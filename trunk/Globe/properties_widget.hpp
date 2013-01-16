@@ -57,8 +57,15 @@ class PropertiesList
 {
 	Q_OBJECT
 
+signals:
+	//! Wrong properties.
+	void wrongProperties();
+	//! Changed.
+	void changed();
+
 public:
-	PropertiesList( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	explicit PropertiesList( Como::Source::Type valueType,
+		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 	~PropertiesList();
 
 	//! \return Properties.
@@ -66,14 +73,50 @@ public:
 	//! Set properties.
 	void setProperties( const Properties & p );
 
+	//! \return Index of the current frame.
+	int currentFrameIndex() const;
+	//! \return Count of frames.
+	int framesCount() const;
+	//! \return Is otherwise condition exists?
+	bool isOtherwiseConditionExists() const;
+	//! \return Is all properties set.
+	bool isPropertiesOk() const;
+
+public slots:
+	//! Move current item up.
+	void moveCurrentUp();
+	//! Move current item down.
+	void moveCurrentDown();
+	//! Delete current item.
+	void deleteCurrent();
+	//! Add new condition.
+	void addCondition();
+	//! Add otherwise condition.
+	void addOtherwiseCondition();
+
+private slots:
+	//! There is wrong condition.
+	void wrongCondition();
+	//! Condition changed.
+	void conditionChanged();
+	//! Otherwise condition changed.
+	void otherwiseConditionChanged();
+	//! Move under cursor up.
+	void moveUnderCursorUp();
+	//! Move under cursor down.
+	void moveUnderCursorDown();
+	//! Delete under cursor.
+	void deleteUnderCursor();
+
 protected:
+	//! Mouse press event.
+	void mousePressEvent( QMouseEvent * event );
+	//! Mouse move event.
+	void mouseMoveEvent( QMouseEvent * event );
+	//! Context menu event.
 	void contextMenuEvent( QContextMenuEvent * event );
 	//! Resize widget.
 	void resizeWidget( const QSize & size );
-
-private:
-	//! Init.
-	void init();
 
 private:
 	Q_DISABLE_COPY( PropertiesList )

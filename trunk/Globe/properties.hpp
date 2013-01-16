@@ -231,10 +231,6 @@ public:
 	*/
 	const Properties * findProperties( const PropertiesKey & key ) const;
 	//! Add new properties.
-	void addProperties( const PropertiesKey & key, const Properties & props,
-		const Como::Source::Type & type,
-		const QString & cfgFileName );
-	//! Add new properties.
 	void addProperties( const Como::Source & source,
 		const QString & channelName );
 	//! Remove properties for the given \arg source source.

@@ -15,6 +15,7 @@ HEADERS += application_cfg.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
            channel_widget.hpp \
+           color_frame_widget.hpp \
            condition.hpp \
            condition_cfg.hpp \
            condition_widget.hpp \
@@ -50,6 +51,7 @@ SOURCES += application_cfg.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
            channel_widget.cpp \
+           color_frame_widget.cpp \
            condition.cpp \
            condition_cfg.cpp \
            condition_widget.cpp \

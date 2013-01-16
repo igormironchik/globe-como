@@ -109,6 +109,9 @@ public:
 	//! Set message for this condition.
 	void setMessage( const QString & msg );
 
+	//! \return Is condition valid?
+	bool isValid() const;
+
 private:
 	//! Expression type.
 	Expression m_exprType;

@@ -127,6 +127,59 @@ ConditionWidget::setCondition( const Condition & c )
 	d->m_ui.m_message->setPlainText( c.message() );
 }
 
+static inline bool checkIntValue( const QString & text )
+{
+	bool ok = false;
+
+	text.toInt( &ok );
+
+	return ok;
+}
+
+static inline bool checkDoubleValue( const QString & text )
+{
+	bool ok = false;
+
+	text.toDouble( &ok );
+
+	return ok;
+}
+
+static inline bool checkStringValue( const QString & text )
+{
+	Q_UNUSED( text )
+
+	return true;
+}
+
+bool
+ConditionWidget::isConditionOk() const
+{
+	if( d->m_type == Como::Source::Int )
+	{
+		if( !checkIntValue( d->m_ui.m_value->text() ) )
+			return false;
+	}
+	else if( d->m_type == Como::Source::Double )
+	{
+		if( !checkDoubleValue( d->m_ui.m_value->text() ) )
+			return false;
+	}
+	else
+	{
+		if( !checkStringValue( d->m_ui.m_value->text() ) )
+			return false;
+	}
+
+	if( d->m_ui.m_expression->currentIndex() == -1 )
+		return false;
+
+	if( d->m_ui.m_level->currentIndex() == -1 )
+		return false;
+
+	return true;
+}
+
 static inline Expression expressionFromIndex( int index )
 {
 	switch( index )
@@ -214,31 +267,6 @@ ConditionWidget::expressionChanged( int index )
 		emit changed();
 	else
 		emit wrongCondition();
-}
-
-static inline bool checkIntValue( const QString & text )
-{
-	bool ok = false;
-
-	text.toInt( &ok );
-
-	return ok;
-}
-
-static inline bool checkDoubleValue( const QString & text )
-{
-	bool ok = false;
-
-	text.toDouble( &ok );
-
-	return ok;
-}
-
-static inline bool checkStringValue( const QString & text )
-{
-	Q_UNUSED( text )
-
-	return true;
 }
 
 void

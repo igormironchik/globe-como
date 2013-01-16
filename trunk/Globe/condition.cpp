@@ -168,4 +168,10 @@ Condition::setMessage( const QString & msg )
 	m_message = msg;
 }
 
+bool
+Condition::isValid() const
+{
+	return ( m_level != None && !m_message.isEmpty() );
+}
+
 } /* namespace Globe */

@@ -28,8 +28,8 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__PROPERTIES_MODEL_HPP__INCLUDED
-#define GLOBE__PROPERTIES_MODEL_HPP__INCLUDED
+#ifndef GLOBE__PROPERTIES_WIDGET_MODEL_HPP__INCLUDED
+#define GLOBE__PROPERTIES_WIDGET_MODEL_HPP__INCLUDED
 
 // Qt include.
 #include <QtCore/QAbstractTableModel>
@@ -42,33 +42,45 @@
 namespace Globe {
 
 //
-// PropertiesModel
+// PropertiesListModel
 //
 
-class PropertiesModelPrivate;
+class PropertiesListModelPrivate;
 
 //! Model with Como::Source sources.
-class PropertiesModel
+class PropertiesListModel
 	:	public QAbstractTableModel
 {
 	Q_OBJECT
 
+signals:
+	//! Wrong properties.
+	void wrongProperties();
+	//! Changed.
+	void changed();
+
 public:
-	PropertiesModel( QObject * parent = 0 );
-	~PropertiesModel();
+	explicit PropertiesListModel( Como::Source::Type valueType,
+		QObject * parent = 0 );
+	~PropertiesListModel();
 
-	//! Init model with the properties map.
-	void initModel( const PropertiesMap & map );
-
-	//! \return Properties key for the given row.
-	PropertiesKey key( int row ) const;
-	// Add propertie.
-	void addPropertie( const PropertiesKey & key, const PropertiesValue & value );
-	//! Remove propertie.
-	void removePropertie( int row );
+	//! \return Properties.
+	Properties properties() const;
+	//! Init model with the properties.
+	void setProperties( const Properties & props );
 
 	//! Clear model.
 	void clear();
+
+	//! \return Is otherwise condition exists?
+	bool isOtherwiseConditionExists() const;
+
+	//! Add condition.
+	void addCondition();
+	//! Add otherwise condition.
+	void addOtherwiseCondition();
+	//! Remove condition.
+	void removeCondition( int row );
 
 	//! \return Count of the rows.
 	int rowCount( const QModelIndex & parent = QModelIndex() ) const;
@@ -93,11 +105,11 @@ public:
 		int role = Qt::DisplayRole ) const;
 
 private:
-	Q_DISABLE_COPY( PropertiesModel )
+	Q_DISABLE_COPY( PropertiesListModel )
 
-	QScopedPointer< PropertiesModelPrivate > d;
-}; // class PropertiesModel
+	QScopedPointer< PropertiesListModelPrivate > d;
+}; // class PropertiesListModel
 
 } /* namespace Globe */
 
-#endif // GLOBE__PROPERTIES_MODEL_HPP__INCLUDED
+#endif // GLOBE__PROPERTIES_WIDGET_MODEL_HPP__INCLUDED

@@ -287,6 +287,11 @@ bool operator == ( const PropertiesKey & k1, const PropertiesKey & k2 )
 // PropertiesValue
 //
 
+PropertiesValue::PropertiesValue()
+	:	m_valueType( Como::Source::String )
+{
+}
+
 PropertiesValue::PropertiesValue( const QString & confFileName,
 	const Como::Source::Type & type,
 	const Properties & props )
@@ -353,6 +358,7 @@ public:
 	PropertiesManagerPrivate(SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager )
 		:	m_model( 0 )
+		,	m_sortModel( 0 )
 		,	m_directoryName( defaultConfigurationDirectory )
 		,	m_toolWindowObject( 0 )
 		,	m_sourcesManager( sourcesManager )
@@ -378,6 +384,8 @@ public:
 	Ui::PropertiesMainWindow m_ui;
 	//! Model for the properties in the view.
 	PropertiesModel * m_model;
+	//! Sort model.
+	QSortFilterProxyModel * m_sortModel;
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
 	//! Sources manager.
@@ -410,11 +418,11 @@ PropertiesManager::init()
 	d->m_ui.setupUi( this );
 
 	d->m_model = new PropertiesModel( this );
-	QSortFilterProxyModel * sortModel = new QSortFilterProxyModel( this );
+	d->m_sortModel = new QSortFilterProxyModel( this );
 
-	sortModel->setSourceModel( d->m_model );
+	d->m_sortModel->setSourceModel( d->m_model );
 
-	d->m_ui.m_view->setModel( sortModel );
+	d->m_ui.m_view->setModel( d->m_sortModel );
 	d->m_ui.m_view->setSortingEnabled( true );
 	d->m_ui.m_view->setRootIsDecorated( false );
 	d->m_ui.m_view->setAlternatingRowColors( true );
@@ -428,6 +436,10 @@ PropertiesManager::init()
 		qApp, SLOT( quit() ) );
 	connect( d->m_ui.m_addAction, SIGNAL( triggered() ),
 		this, SLOT( addProperties() ) );
+	connect( d->m_ui.m_removeAction, SIGNAL( triggered() ),
+		this, SLOT( removeProperties() ) );
+	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
+		this, SLOT( itemSelected( const QModelIndex & ) ) );
 }
 
 void
@@ -554,8 +566,12 @@ PropertiesManager::addProperties( const Como::Source & source,
 					const Properties properties =
 						propertiesDialog.list()->properties();
 
-					d->m_map.insert( key, PropertiesValue( fileName,
-						source.type(), properties ) );
+					PropertiesValue value( fileName,
+						source.type(), properties );
+
+					d->m_map.insert( key, value );
+
+					d->m_model->addPropertie( key, value );
 
 					properties.saveConfiguration( d->m_directoryName + fileName );
 				}
@@ -615,8 +631,6 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 		restoreWindowState( tag.windowState(), this );
 	}
-
-	d->m_map.clear();
 
 	if( !d->m_directoryName.endsWith( QChar( '/' ) ) &&
 		!d->m_directoryName.endsWith( QChar( '\\' ) ) )
@@ -695,6 +709,57 @@ PropertiesManager::addProperties()
 
 	if( sourcesDialog.exec() == QDialog::Accepted )
 		addProperties( source, channelName );
+}
+
+void
+PropertiesManager::removeProperties()
+{
+	const QModelIndex index = d->m_sortModel->mapToSource(
+		d->m_ui.m_view->currentIndex() );
+
+	if( index.isValid() )
+	{
+		QMessageBox::StandardButton deletePropertieButton =
+			QMessageBox::question( this, tr( "Deletion of the propertie..." ),
+				tr( "You are about to delete propertie. Are you sure?" ),
+				QMessageBox::Ok | QMessageBox::Cancel,
+				QMessageBox::Ok );
+
+		if( deletePropertieButton == QMessageBox::Ok )
+		{
+			const int row = index.row();
+
+			PropertiesKey key = d->m_model->key( row );
+
+			PropertiesValue value( d->m_map.value( key ) );
+
+			removeProperties( key );
+
+			d->m_model->removePropertie( row );
+
+			QMessageBox::StandardButton deleteFileButton =
+				QMessageBox::question( this, tr( "Deletion of the propertie..." ),
+					tr( "Delete the file \"%1\" with propertie defenitions?" )
+						.arg( value.confFileName() ),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Ok );
+
+			if( deleteFileButton == QMessageBox::Ok )
+			{
+				QFile confFile( d->m_directoryName + value.confFileName() );
+				confFile.remove();
+			}
+
+			d->m_ui.m_removeAction->setEnabled( false );
+		}
+	}
+}
+
+void
+PropertiesManager::itemSelected( const QModelIndex & index )
+{
+	if( index.isValid() )
+		d->m_ui.m_removeAction->setEnabled( true );
 }
 
 } /* namespace Globe */

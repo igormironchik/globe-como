@@ -38,16 +38,16 @@
 namespace Globe {
 
 //
-// Data
+// PropertiesModelData
 //
 
-class Data {
+class PropertiesModelData {
 public:
-	Data()
+	PropertiesModelData()
 	{
 	}
 
-	Data( const PropertiesKey & key, const PropertiesValue & value )
+	PropertiesModelData( const PropertiesKey & key, const PropertiesValue & value )
 		:	m_sourceName( key.name() )
 		,	m_typeName( key.typeName() )
 		,	m_channelName( key.channelName() )
@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	Data & operator = ( const Data & other )
+	PropertiesModelData & operator = ( const PropertiesModelData & other )
 	{
 		if( this != &other )
 		{
@@ -80,7 +80,7 @@ public:
 	Como::Source::Type m_valueType;
 	//! Conf file name.
 	QString m_confFileName;
-}; // class Data
+}; // class PropertiesModelData
 
 
 //
@@ -89,8 +89,8 @@ public:
 
 class PropertiesModelPrivate {
 public:
-	//! Data.
-	QList< Data > m_data;
+	//! PropertiesModelData.
+	QList< PropertiesModelData > m_data;
 }; // class PropertiesPropertiesModelPrivate
 
 
@@ -125,10 +125,41 @@ PropertiesModel::initModel( const PropertiesMap & map )
 
 	for( PropertiesMap::ConstIterator it = map.begin(),
 		last = map.end(); it != last; ++it, ++i )
-			d->m_data[ i ] = Data( it.key(), it.value() );
+			d->m_data[ i ] = PropertiesModelData( it.key(), it.value() );
 
 	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
 		QAbstractTableModel::index( i - 1, confFileColumn ) );
+}
+
+PropertiesKey
+PropertiesModel::key( int row ) const
+{
+	const PropertiesModelData & data = d->m_data.at( row );
+
+	PropertiesKey key( data.m_sourceName, data.m_typeName,
+		data.m_channelName );
+
+	return key;
+}
+
+void
+PropertiesModel::addPropertie( const PropertiesKey & key,
+	const PropertiesValue & value )
+{
+	const int where = d->m_data.size();
+
+	insertRow( where );
+
+	d->m_data[ where ] = PropertiesModelData( key, value );
+
+	emit dataChanged( QAbstractTableModel::index( where, sourceNameColumn ),
+		QAbstractTableModel::index( where, confFileColumn ) );
+}
+
+void
+PropertiesModel::removePropertie( int row )
+{
+	removeRow( row );
 }
 
 void
@@ -211,7 +242,7 @@ PropertiesModel::insertRows( int row, int count, const QModelIndex & parent )
 	beginInsertRows( QModelIndex(), row, row + count - 1 );
 
 	for( int i = 0; i < count; ++i )
-		d->m_data.insert( row + i, Data() );
+		d->m_data.insert( row + i, PropertiesModelData() );
 
 	endInsertRows();
 

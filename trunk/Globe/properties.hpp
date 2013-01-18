@@ -43,6 +43,10 @@
 // Globe include.
 #include <Globe/condition.hpp>
 
+QT_BEGIN_NAMESPACE
+class QModelIndex;
+QT_END_NAMESPACE
+
 
 namespace Globe {
 
@@ -166,6 +170,8 @@ bool operator == ( const PropertiesKey & k1, const PropertiesKey & k2 );
 //! The value for the map of properties.
 class PropertiesValue {
 public:
+	PropertiesValue();
+
 	PropertiesValue( const QString & confFileName,
 		const Como::Source::Type & type,
 		const Properties & props );
@@ -262,6 +268,10 @@ private:
 private slots:
 	//! Add propertie.
 	void addProperties();
+	//! Remove properties.
+	void removeProperties();
+	//! Item selected.
+	void itemSelected( const QModelIndex & index );
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

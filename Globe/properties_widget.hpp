@@ -32,11 +32,11 @@
 #define GLOBE__PROPERTIES_WIDGET_HPP__INCLUDED
 
 // Qt include.
+#include <QtGui/QTreeView>
 #include <QtCore/QScopedPointer>
 
 // Globe include.
 #include <Globe/properties.hpp>
-#include <Globe/scrolled_widget.hpp>
 
 
 namespace Globe {
@@ -53,7 +53,7 @@ class PropertiesListPrivate;
 	list of condition widgets.
 */
 class PropertiesList
-	:	public ScrolledWidget
+	:	public QTreeView
 {
 	Q_OBJECT
 
@@ -65,7 +65,7 @@ signals:
 
 public:
 	explicit PropertiesList( Como::Source::Type valueType,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0 );
 	~PropertiesList();
 
 	//! \return Properties.
@@ -73,10 +73,10 @@ public:
 	//! Set properties.
 	void setProperties( const Properties & p );
 
-	//! \return Index of the current frame.
-	int currentFrameIndex() const;
-	//! \return Count of frames.
-	int framesCount() const;
+	//! \return Index of the current item.
+	int currentItemIndex() const;
+	//! \return Count of items.
+	int itemsCount() const;
 	//! \return Is otherwise condition exists?
 	bool isOtherwiseConditionExists() const;
 	//! \return Is all properties set.
@@ -95,12 +95,10 @@ public slots:
 	void addOtherwiseCondition();
 
 private slots:
-	//! There is wrong condition.
-	void wrongCondition();
-	//! Condition changed.
-	void conditionChanged();
-	//! Otherwise condition changed.
-	void otherwiseConditionChanged();
+	//! Properties changed.
+	void propertiesChanged();
+	//! Wrong properties.
+	void propertiesWrong();
 	//! Move under cursor up.
 	void moveUnderCursorUp();
 	//! Move under cursor down.
@@ -109,14 +107,12 @@ private slots:
 	void deleteUnderCursor();
 
 protected:
-	//! Mouse press event.
-	void mousePressEvent( QMouseEvent * event );
-	//! Mouse move event.
-	void mouseMoveEvent( QMouseEvent * event );
 	//! Context menu event.
 	void contextMenuEvent( QContextMenuEvent * event );
-	//! Resize widget.
-	void resizeWidget( const QSize & size );
+
+private:
+	//! Init.
+	void init();
 
 private:
 	Q_DISABLE_COPY( PropertiesList )

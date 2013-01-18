@@ -66,7 +66,7 @@ PropertiesTag::PropertiesTag( const Properties & properties )
 	{
 		QtConfFile::TagVectorOfTags< ConditionTag >::PointerToTag tag(
 			new ConditionTag( properties.conditionAt( i ),
-				QLatin1String( "condition" ), true ) );
+				QLatin1String( "if" ), true ) );
 
 		m_conditions.setValue( tag );
 	}

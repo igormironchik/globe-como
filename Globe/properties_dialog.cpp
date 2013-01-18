@@ -88,7 +88,7 @@ PropertiesDialog::list()
 void
 PropertiesDialog::init()
 {
-	resize( 250, 500 );
+	resize( 450, 250 );
 	setWindowTitle( tr( "Properties Dialog" ) );
 
 	QVBoxLayout * layout = new QVBoxLayout( this );

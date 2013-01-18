@@ -28,6 +28,7 @@ HEADERS += application_cfg.hpp \
            properties_key_type_dialog.hpp \
            properties_model.hpp \
            properties_widget.hpp \
+           properties_widget_model.hpp \
            scrolled_widget.hpp \
            source_manual_dialog.hpp \
            sources.hpp \
@@ -62,6 +63,7 @@ SOURCES += application_cfg.cpp \
            properties_key_type_dialog.cpp \
            properties_model.cpp \
            properties_widget.cpp \
+           properties_widget_model.cpp \
            scrolled_widget.cpp \
            source_manual_dialog.cpp \
            sources.cpp \

@@ -57,7 +57,7 @@ public:
 	//! Type of the value.
 	Como::Source::Type m_valueType;
 	//! Properties widget.
-	PropertiesList * m_properties;
+	PropertiesWidget * m_properties;
 	//! Buttons.
 	QDialogButtonBox * m_buttons;
 }; // class PropertiesDialogPrivate
@@ -79,8 +79,8 @@ PropertiesDialog::~PropertiesDialog()
 {
 }
 
-PropertiesList *
-PropertiesDialog::list()
+PropertiesWidget *
+PropertiesDialog::propertiesWidget()
 {
 	return d->m_properties;
 }
@@ -93,7 +93,7 @@ PropertiesDialog::init()
 
 	QVBoxLayout * layout = new QVBoxLayout( this );
 
-	d->m_properties = new PropertiesList( d->m_valueType, this );
+	d->m_properties = new PropertiesWidget( d->m_valueType, this );
 
 	layout->addWidget( d->m_properties );
 

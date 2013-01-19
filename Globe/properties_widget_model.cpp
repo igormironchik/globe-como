@@ -34,7 +34,6 @@
 
 // Qt include.
 #include <QtCore/QList>
-#include <QtCore/QDebug>
 
 
 namespace Globe {
@@ -259,7 +258,7 @@ PropertiesListModel::setProperties( const Properties & props )
 	{
 		const Condition & c = props.otherwise();
 
-		d->m_data[ rowsCount ] = PropertiesListModelData( OtherwiseCondition, c.type(),
+		d->m_data[ rowsCount - 1 ] = PropertiesListModelData( OtherwiseCondition, c.type(),
 			c.value(), c.level(), c.message() );
 
 		d->m_otherwiseConditionExists = true;
@@ -324,13 +323,64 @@ PropertiesListModel::addOtherwiseCondition()
 	}
 }
 
-void
+bool
 PropertiesListModel::removeCondition( int row )
 {
+	if( row < 0 || row >= d->m_data.size() )
+		return false;
+
 	if( d->m_otherwiseConditionExists && row == d->m_data.size() - 1 )
 		d->m_otherwiseConditionExists = false;
 
 	removeRow( row );
+
+	return true;
+}
+
+bool
+PropertiesListModel::moveConditionUp( int row )
+{
+	if( row < 0 || row >= d->m_data.size() )
+		return false;
+
+	if( d->m_otherwiseConditionExists && row == d->m_data.size() - 1 )
+		return false;
+
+	if( row == 0 )
+		return false;
+
+	d->m_data.swap( row, row - 1 );
+
+	emit dataChanged( QAbstractTableModel::index( row - 1, conditionTypeColumn ),
+		QAbstractTableModel::index( row, messageColumn ) );
+
+	emit changed();
+
+	return true;
+}
+
+bool
+PropertiesListModel::moveConditionDown( int row )
+{
+	if( row < 0 || row >= d->m_data.size() )
+		return false;
+
+	if( d->m_otherwiseConditionExists )
+	{
+		if( row == d->m_data.size() - 1 || row == d->m_data.size() - 2 )
+			return false;
+	}
+	else if( row == d->m_data.size() - 1 )
+		return false;
+
+	d->m_data.swap( row, row + 1 );
+
+	emit dataChanged( QAbstractTableModel::index( row, conditionTypeColumn ),
+		QAbstractTableModel::index( row + 1, messageColumn ) );
+
+	emit changed();
+
+	return true;
 }
 
 int

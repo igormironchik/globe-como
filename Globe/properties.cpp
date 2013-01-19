@@ -55,6 +55,13 @@
 // QtConfFile include.
 #include <QtConfFile/Utils>
 
+#ifdef DEBUG
+
+// ModelTest include.
+#include <modeltest.h>
+
+#endif
+
 
 namespace Globe {
 
@@ -418,6 +425,11 @@ PropertiesManager::init()
 	d->m_ui.setupUi( this );
 
 	d->m_model = new PropertiesModel( this );
+
+#ifdef DEBUG
+	new ModelTest( d->m_model, this );
+#endif
+
 	d->m_sortModel = new QSortFilterProxyModel( this );
 
 	d->m_sortModel->setSourceModel( d->m_model );
@@ -543,13 +555,15 @@ PropertiesManager::addProperties( const Como::Source & source,
 		const bool propertiesExists = ( it != d->m_map.end() );
 
 		if( propertiesExists )
-			propertiesDialog.list()->setProperties( it.value().properties() );
+			propertiesDialog.propertiesWidget()->
+				setProperties( it.value().properties() );
 
 		if( propertiesDialog.exec() == QDialog::Accepted )
 		{
 			if( propertiesExists )
 			{
-				it.value().properties() = propertiesDialog.list()->properties();
+				it.value().properties() =
+					propertiesDialog.propertiesWidget()->properties();
 
 				it.value().properties().saveConfiguration( d->m_directoryName +
 					it.value().confFileName() );
@@ -564,7 +578,7 @@ PropertiesManager::addProperties( const Como::Source & source,
 				if( fileNameDialog.exec() == QDialog::Accepted )
 				{
 					const Properties properties =
-						propertiesDialog.list()->properties();
+						propertiesDialog.propertiesWidget()->properties();
 
 					PropertiesValue value( fileName,
 						source.type(), properties );

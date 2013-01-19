@@ -41,7 +41,7 @@
 
 namespace Globe {
 
-class PropertiesList;
+class PropertiesWidget;
 
 //
 // PropertiesDialog
@@ -60,8 +60,8 @@ public:
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 	~PropertiesDialog();
 
-	//! \return Properties list.
-	PropertiesList * list();
+	//! \return Properties widget.
+	PropertiesWidget * propertiesWidget();
 
 private:
 	//! Init.

@@ -39,6 +39,17 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QStyledItemDelegate>
 #include <QtGui/QComboBox>
+#include <QtGui/QSpinBox>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+
+#ifdef DEBUG
+
+// ModelTest include.
+#include <modeltest.h>
+
+#endif
 
 
 namespace Globe {
@@ -134,20 +145,45 @@ public:
 	{
 		if( index == -1 )
 			return;
+
+		m_model->removeCondition( index );
+
+		if( opMode == OperationForItemUnderCursor )
+			m_contextMenuRequestedIndex = -1;
 	}
 
 	//! Move condition up.
-	void moveConditionUp( int index, OperationMode opMode )
+	bool moveConditionUp( int index, OperationMode opMode )
 	{
 		if( index == -1 )
-			return;
+			return false;
+
+		bool ok = false;
+
+		if( m_model->moveConditionUp( index ) )
+			ok = true;
+
+		if( opMode == OperationForItemUnderCursor )
+			m_contextMenuRequestedIndex = -1;
+
+		return ok;
 	}
 
 	//! Move condition down.
-	void moveConditionDown( int index, OperationMode opMode )
+	bool moveConditionDown( int index, OperationMode opMode )
 	{
 		if( index == -1 )
-			return;
+			return false;
+
+		bool ok = false;
+
+		if( m_model->moveConditionDown( index ) )
+			ok = true;
+
+		if( opMode == OperationForItemUnderCursor )
+			m_contextMenuRequestedIndex = -1;
+
+		return ok;
 	}
 
 	//! Value type.
@@ -182,6 +218,10 @@ void
 PropertiesList::init()
 {
 	d->m_model = new PropertiesListModel( d->m_valueType, this );
+
+#ifdef DEBUG
+	new ModelTest( d->m_model, this );
+#endif
 
 	d->m_expressionDelegate = new ComboBoxDelegate(
 		QStringList() << "<" << "<=" << "==" << ">=" << ">", this );
@@ -248,15 +288,25 @@ PropertiesList::isPropertiesOk() const
 void
 PropertiesList::moveCurrentUp()
 {
-	d->moveConditionUp( currentItemIndex(),
-		PropertiesListPrivate::OperationForCurrentItem );
+	if( d->moveConditionUp( currentItemIndex(),
+		PropertiesListPrivate::OperationForCurrentItem ) )
+	{
+		const QModelIndex index = currentIndex();
+
+		setCurrentIndex( d->m_model->index( index.row() - 1, index.column() ) );
+	}
 }
 
 void
 PropertiesList::moveCurrentDown()
 {
-	d->moveConditionDown( currentItemIndex(),
-		PropertiesListPrivate::OperationForCurrentItem );
+	if( d->moveConditionDown( currentItemIndex(),
+		PropertiesListPrivate::OperationForCurrentItem ) )
+	{
+		const QModelIndex index = currentIndex();
+
+		setCurrentIndex( d->m_model->index( index.row() + 1, index.column() ) );
+	}
 }
 
 void
@@ -293,15 +343,25 @@ PropertiesList::propertiesWrong()
 void
 PropertiesList::moveUnderCursorUp()
 {
-	d->moveConditionUp( d->m_contextMenuRequestedIndex,
-		PropertiesListPrivate::OperationForItemUnderCursor );
+	if( d->moveConditionUp( d->m_contextMenuRequestedIndex,
+		PropertiesListPrivate::OperationForItemUnderCursor ) )
+	{
+		const QModelIndex index = currentIndex();
+
+		setCurrentIndex( d->m_model->index( index.row() - 1, index.column() ) );
+	}
 }
 
 void
 PropertiesList::moveUnderCursorDown()
 {
-	d->moveConditionDown( d->m_contextMenuRequestedIndex,
-		PropertiesListPrivate::OperationForItemUnderCursor );
+	if( d->moveConditionDown( d->m_contextMenuRequestedIndex,
+		PropertiesListPrivate::OperationForItemUnderCursor ) )
+	{
+		const QModelIndex index = currentIndex();
+
+		setCurrentIndex( d->m_model->index( index.row() + 1, index.column() ) );
+	}
 }
 
 void
@@ -363,6 +423,127 @@ PropertiesList::contextMenuEvent( QContextMenuEvent * event )
 	menu.exec( event->globalPos() );
 
 	event->accept();
+}
+
+
+//
+// PropertiesWidgetPrivate
+//
+
+class PropertiesWidgetPrivate {
+public:
+	explicit PropertiesWidgetPrivate( Como::Source::Type valueType )
+		:	m_valueType( valueType )
+		,	m_conditions( 0 )
+		,	m_priority( 0 )
+	{
+	}
+
+	//! Type of the value.
+	Como::Source::Type m_valueType;
+	//! List with conditions.
+	PropertiesList * m_conditions;
+	//! Priority.
+	QSpinBox * m_priority;
+}; // class PropertiesWidgetPrivate
+
+
+//
+// PropertiesWidget
+//
+
+PropertiesWidget::PropertiesWidget( Como::Source::Type valueType,
+	QWidget * parent, Qt::WindowFlags f )
+	:	QWidget( parent, f )
+	,	d( new PropertiesWidgetPrivate( valueType ) )
+{
+	init();
+}
+
+PropertiesWidget::~PropertiesWidget()
+{
+}
+
+Properties
+PropertiesWidget::properties() const
+{
+	Properties props = d->m_conditions->properties();
+
+	props.setPriority( d->m_priority->value() );
+
+	return props;
+}
+
+void
+PropertiesWidget::setProperties( const Properties & p )
+{
+	d->m_priority->setValue( p.priority() );
+
+	d->m_conditions->setProperties( p );
+}
+
+PropertiesList *
+PropertiesWidget::conditionsList()
+{
+	return d->m_conditions;
+}
+
+void
+PropertiesWidget::propertiesChanged()
+{
+	emit changed();
+}
+
+void
+PropertiesWidget::propertiesWrong()
+{
+	emit wrongProperties();
+}
+
+void
+PropertiesWidget::priorityChanged( int p )
+{
+	Q_UNUSED( p )
+
+	if( d->m_conditions->isPropertiesOk() )
+		emit changed();
+}
+
+void
+PropertiesWidget::init()
+{
+	QVBoxLayout * vBox = new QVBoxLayout( this );
+
+	QHBoxLayout * hBox = new QHBoxLayout();
+
+	QLabel * label = new QLabel( this );
+	label->setText( tr( "Priority" ) );
+	hBox->addWidget(label);
+
+	d->m_priority = new QSpinBox( this );
+	d->m_priority->setMinimum(0 );
+	d->m_priority->setMaximum( 999 );
+	d->m_priority->setSingleStep( 1 );
+
+	hBox->addWidget( d->m_priority );
+
+	QSpacerItem * spacer = new QSpacerItem( 20, 20, QSizePolicy::Expanding,
+		QSizePolicy::Minimum );
+
+	hBox->addItem( spacer );
+
+	vBox->addLayout( hBox );
+
+	d->m_conditions = new PropertiesList( d->m_valueType, this );
+
+	vBox->addWidget( d->m_conditions );
+
+	connect( d->m_conditions, SIGNAL( wrongProperties() ),
+		this, SLOT( propertiesWrong() ) );
+	connect( d->m_conditions, SIGNAL( changed() ),
+		this, SLOT( propertiesChanged() ) );
+	connect( d->m_priority, SIGNAL( valueChanged(int) ),
+		this, SLOT( priorityChanged( int ) ) );
 }
 
 } /* namespace Globe */

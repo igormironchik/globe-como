@@ -171,7 +171,7 @@ Condition::setMessage( const QString & msg )
 bool
 Condition::isValid() const
 {
-	return ( m_level != None && !m_message.isEmpty() );
+	return ( m_level != None || !m_message.isEmpty() );
 }
 
 } /* namespace Globe */

@@ -79,8 +79,12 @@ public:
 	void addCondition();
 	//! Add otherwise condition.
 	void addOtherwiseCondition();
-	//! Remove condition.
-	void removeCondition( int row );
+	//! Remove condition. \return Is operation completed successfully?
+	bool removeCondition( int row );
+	//! Move condition up. \return Is operation completed successfully?
+	bool moveConditionUp( int row );
+	//! Move condition down. \return Is operation completed successfully?
+	bool moveConditionDown( int row );
 
 	//! \return Count of the rows.
 	int rowCount( const QModelIndex & parent = QModelIndex() ) const;

@@ -424,6 +424,8 @@ PropertiesManager::init()
 {
 	d->m_ui.setupUi( this );
 
+	setWindowTitle( tr( "Properties Manager" ) );
+
 	d->m_model = new PropertiesModel( this );
 
 #ifdef DEBUG

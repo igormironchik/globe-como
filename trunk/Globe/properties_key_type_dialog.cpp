@@ -78,6 +78,8 @@ PropertiesKeyTypeDialog::init()
 {
 	d->m_ui.setupUi( this );
 
+	setWindowTitle( tr( "Select propertie's type..." ) );
+
 	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
 		this, SLOT( accepted() ) );
 }

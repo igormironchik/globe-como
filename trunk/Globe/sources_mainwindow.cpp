@@ -119,6 +119,8 @@ SourcesMainWindow::closeEvent( QCloseEvent * event )
 void
 SourcesMainWindow::init()
 {
+	setWindowTitle( tr( "Sources Manager" ) );
+
 	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
 	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
 		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );

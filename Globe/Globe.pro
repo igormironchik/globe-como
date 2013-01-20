@@ -101,3 +101,4 @@ else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtCo
 else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../lib/libQtConfFile.a $$OUT_PWD/../lib/libComo.a
 
 include( ../modeltest/modeltest.pri )
+include ( ../QtArg/qtarg.pri )

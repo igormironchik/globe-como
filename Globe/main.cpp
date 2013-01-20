@@ -36,6 +36,7 @@
 #include <QtCore/QString>
 #include <QtCore/QTimer>
 #include <QtCore/QList>
+#include <QtCore/QDebug>
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>
@@ -49,18 +50,11 @@
 // Como include.
 #include <Como/Source>
 
-
-static inline void printHelp( char * appName )
-{
-	QTextStream out( stdout );
-
-	out << "Usage: " << appName << " [confFileName]";
-}
-
-static inline QString cfgFileName( char ** argv )
-{
-	return QString( argv[ 1 ] );
-}
+// QtArg include.
+#include <QtArg/CmdLine>
+#include <QtArg/Arg>
+#include <QtArg/Exceptions>
+#include <QtArg/Help>
 
 
 int main( int argc, char ** argv )
@@ -69,11 +63,34 @@ int main( int argc, char ** argv )
 
 	QString cfgFile;
 
-	if( argc == 2 )
-		cfgFile = cfgFileName( argv );
-	else if( argc > 2 )
+	try{
+		QtArgCmdLine cmdLine( argc, argv );
+
+		QtArg cfgFileArg( QChar( 'c' ), QLatin1String( "conf-file" ),
+			QLatin1String( "Configuration file of the application." ),
+			false, true );
+
+		QtArgHelp helpArg( &cmdLine );
+		helpArg.printer()->setProgramDescription( "Tool for viewieng sources "
+			"in the remote applications" );
+		helpArg.printer()->setExecutableName( argv[0] );
+
+		cmdLine.addArg( &cfgFileArg );
+		cmdLine.addArg( & helpArg );
+
+		cmdLine.parse();
+
+		if( cfgFileArg.isDefined() )
+			cfgFile = cfgFileArg.value().toString();
+	}
+	catch( const QtArgHelpHasPrintedEx & )
 	{
-		printHelp( argv[ 0 ] );
+		return 0;
+	}
+	catch( const QtArgBaseException & x )
+	{
+		qDebug() << x.what();
+
 		return 1;
 	}
 

@@ -10,5 +10,6 @@
         <file>img/exit_22x22.png</file>
         <file>img/up_22x22.png</file>
         <file>img/down_22x22.png</file>
+        <file>img/edit_22x22.png</file>
     </qresource>
 </RCC>

@@ -452,6 +452,8 @@ PropertiesManager::init()
 		this, SLOT( removeProperties() ) );
 	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
 		this, SLOT( itemSelected( const QModelIndex & ) ) );
+	connect( d->m_ui.m_editAction, SIGNAL( triggered() ),
+		this, SLOT( editProperties() ) );
 }
 
 void
@@ -765,6 +767,7 @@ PropertiesManager::removeProperties()
 			}
 
 			d->m_ui.m_removeAction->setEnabled( false );
+			d->m_ui.m_editAction->setEnabled( false );
 		}
 	}
 }
@@ -773,7 +776,38 @@ void
 PropertiesManager::itemSelected( const QModelIndex & index )
 {
 	if( index.isValid() )
+	{
 		d->m_ui.m_removeAction->setEnabled( true );
+		d->m_ui.m_editAction->setEnabled( true );
+	}
+}
+
+void
+PropertiesManager::editProperties()
+{
+	const QModelIndex index = d->m_sortModel->mapToSource(
+		d->m_ui.m_view->currentIndex() );
+
+	if( index.isValid() )
+	{
+		const PropertiesKey key = d->m_model->key( index.row() );
+
+		PropertiesMap::Iterator it = d->m_map.find( key );
+
+		PropertiesDialog propertiesDialog( it.value().valueType(), this );
+
+		propertiesDialog.propertiesWidget()->
+			setProperties( it.value().properties() );
+
+		if( propertiesDialog.exec() == QDialog::Accepted )
+		{
+			it.value().properties() =
+				propertiesDialog.propertiesWidget()->properties();
+
+			it.value().properties().saveConfiguration( d->m_directoryName +
+				it.value().confFileName() );
+		}
+	}
 }
 
 } /* namespace Globe */

@@ -192,18 +192,33 @@ Properties::readConfiguration( const QString & fileName )
 // PropertiesKey
 //
 
+PropertiesKey::PropertiesKey()
+	:	m_keyType( NotDefinedKeyType )
+{
+}
+
 PropertiesKey::PropertiesKey( const QString & name,
 	const QString & typeName, const QString & channelName )
 	:	m_name( name )
 	,	m_typeName( typeName )
 	,	m_channelName( channelName )
+	,	m_keyType( NotDefinedKeyType )
 {
+	if( m_channelName.isEmpty() && m_name.isEmpty() )
+		m_keyType = ExactlyThisTypeOfSourceInAnyChannel;
+	else if( m_name.isEmpty() )
+		m_keyType = ExactlyThisTypeOfSource;
+	else if( m_channelName.isEmpty() )
+		m_keyType = ExactlyThisSourceInAnyChannel;
+	else
+		m_keyType = ExactlyThisSource;
 }
 
 PropertiesKey::PropertiesKey( const PropertiesKey & other )
 	:	m_name( other.name() )
 	,	m_typeName( other.typeName() )
 	,	m_channelName( other.channelName() )
+	,	m_keyType( other.keyType() )
 {
 }
 
@@ -215,6 +230,7 @@ PropertiesKey::operator = ( const PropertiesKey & other )
 		m_name = other.name();
 		m_typeName = other.typeName();
 		m_channelName = other.channelName();
+		m_keyType = other.keyType();
 	}
 
 	return *this;
@@ -238,48 +254,30 @@ PropertiesKey::channelName() const
 	return m_channelName;
 }
 
+PropertiesKeyType
+PropertiesKey::keyType() const
+{
+	return m_keyType;
+}
+
 bool operator < ( const PropertiesKey & k1, const PropertiesKey & k2 )
 {
-	const bool k1ChannelNameDefined = !k1.channelName().isEmpty();
-	const bool k1SourceNameDefined = !k1.name().isEmpty();
-
-	const bool k2ChannelNameDefined = !k2.channelName().isEmpty();
-	const bool k2SourceNameDefined = !k2.name().isEmpty();
-
-	if( k2ChannelNameDefined && k2SourceNameDefined &&
-		( !k1ChannelNameDefined || !k1SourceNameDefined ) )
-			return true;
-	else if( k2ChannelNameDefined && k1ChannelNameDefined &&
-		k2SourceNameDefined && !k1SourceNameDefined )
-			return true;
-	else if( k2SourceNameDefined && k1SourceNameDefined &&
-		k2ChannelNameDefined && !k1ChannelNameDefined )
-			return true;
-	else if( k1ChannelNameDefined && k1SourceNameDefined &&
-		k2ChannelNameDefined && k2SourceNameDefined )
+	switch( k1.keyType() )
 	{
-		return ( ( k1.name() + k1.typeName() + k1.channelName() ) <
-			( k2.name() + k2.typeName() + k2.channelName() ) );
-	}
-	else if( k1ChannelNameDefined && k2ChannelNameDefined &&
-		!k1SourceNameDefined && !k2SourceNameDefined )
-	{
-		return ( ( k1.typeName() + k1.channelName() ) <
-			( k2.typeName() + k2.channelName() ) );
-	}
-	else if( k1SourceNameDefined && k2SourceNameDefined &&
-		!k1ChannelNameDefined && !k2ChannelNameDefined )
-	{
-		return ( ( k1.name() + k1.typeName() ) <
+		case ExactlyThisSource :
+			return ( ( k1.name() + k1.typeName() + k1.channelName() ) <
+				( k2.name() + k2.typeName() + k2.channelName() ) );
+		case ExactlyThisSourceInAnyChannel :
+			return ( ( k1.name() + k1.typeName() ) <
 			( k2.name() + k2.typeName() ) );
+		case ExactlyThisTypeOfSource :
+			return ( ( k1.typeName() + k1.channelName() ) <
+			( k2.typeName() + k2.channelName() ) );
+		case ExactlyThisTypeOfSourceInAnyChannel :
+			return ( k1.typeName() < k2.typeName() );
+
+		default : return false;
 	}
-	else if( !k1SourceNameDefined && !k2SourceNameDefined &&
-		!k1ChannelNameDefined && !k2ChannelNameDefined )
-	{
-		return ( k1.typeName() < k2.typeName() );
-	}
-	else
-		return false;
 }
 
 bool operator == ( const PropertiesKey & k1, const PropertiesKey & k2 )
@@ -383,8 +381,58 @@ public:
 				m_directoryName.append( QChar( '/' ) );
 	}
 
-	//! Properties map.
-	PropertiesMap m_map;
+	//! Find and initialize iterator for the given key.
+	void findByKey( const PropertiesKey & key,
+		PropertiesMap::Iterator * it, bool * keyExists )
+	{
+		if( key.keyType() == ExactlyThisSource )
+		{
+			*it = m_exactlyThisSourceMap.find( key );
+
+			if( *it != m_exactlyThisSourceMap.end() )
+				*keyExists = true;
+
+			return;
+		}
+		else if( key.keyType() == ExactlyThisSourceInAnyChannel )
+		{
+			*it = m_exactlyThisSourceInAnyChannelMap.find( key );
+
+			if( *it != m_exactlyThisSourceInAnyChannelMap.end() )
+				*keyExists = true;
+
+			return;
+		}
+		else if( key.keyType() == ExactlyThisTypeOfSource )
+		{
+			*it = m_exactlyThisTypeOfSourceMap.find( key );
+
+			if( *it != m_exactlyThisTypeOfSourceMap.end() )
+				*keyExists = true;
+
+			return;
+		}
+		else
+		{
+			*it = m_exactlyThisTypeOfSourceInAnyChannelMap.find( key );
+
+			if( *it != m_exactlyThisTypeOfSourceInAnyChannelMap.end() )
+				*keyExists = true;
+
+			return;
+		}
+
+		*keyExists = false;
+	}
+
+	//! Properties map for "ExactlyThisSource" key's type.
+	PropertiesMap m_exactlyThisSourceMap;
+	//! Properties map for "ExactlyThisSourceInAnyChannel" key's type.
+	PropertiesMap m_exactlyThisSourceInAnyChannelMap;
+	//! Properties map for "ExactlyThisTypeOfSource" key's type.
+	PropertiesMap m_exactlyThisTypeOfSourceMap;
+	//! Properties map for "ExactlyThisTypeOfSourceInAnyChannel" key's type.
+	PropertiesMap m_exactlyThisTypeOfSourceInAnyChannelMap;
 	//! Directory name with properties configuration.
 	QString m_directoryName;
 	//! UI.
@@ -470,56 +518,68 @@ PropertiesManager::initToolsMenu( const QList< ToolWindowObject* > & toolWindows
 
 const Properties *
 PropertiesManager::findProperties( const Como::Source & source,
-	const QString & channelName ) const
+	const QString & channelName, PropertiesKey * resultedKey ) const
 {
 	{
 		PropertiesKey key( source.name(), source.typeName(), channelName );
 
-		PropertiesMap::ConstIterator it = d->m_map.find( key );
+		PropertiesMap::ConstIterator it = d->m_exactlyThisSourceMap.find( key );
 
-		if( it != d->m_map.end() )
+		if( it != d->m_exactlyThisSourceMap.end() )
+		{
+			if( resultedKey )
+				*resultedKey = key;
+
 			return &it.value().properties();
-	}
-
-	{
-		PropertiesKey key( QString(), source.typeName(), channelName );
-
-		PropertiesMap::ConstIterator it = d->m_map.find( key );
-
-		if( it != d->m_map.end() )
-			return &it.value().properties();
+		}
 	}
 
 	{
 		PropertiesKey key( source.name(), source.typeName(), QString() );
 
-		PropertiesMap::ConstIterator it = d->m_map.find( key );
+		PropertiesMap::ConstIterator it =
+			d->m_exactlyThisSourceInAnyChannelMap.find( key );
 
-		if( it != d->m_map.end() )
+		if( it != d->m_exactlyThisSourceInAnyChannelMap.end() )
+		{
+			if( resultedKey )
+				*resultedKey = key;
+
 			return &it.value().properties();
+		}
+	}
+
+	{
+		PropertiesKey key( QString(), source.typeName(), channelName );
+
+		PropertiesMap::ConstIterator it =
+			d->m_exactlyThisTypeOfSourceMap.find( key );
+
+		if( it != d->m_exactlyThisTypeOfSourceMap.end() )
+		{
+			if( resultedKey )
+				*resultedKey = key;
+
+			return &it.value().properties();
+		}
 	}
 
 	{
 		PropertiesKey key( QString(), source.typeName(), QString() );
 
-		PropertiesMap::ConstIterator it = d->m_map.find( key );
+		PropertiesMap::ConstIterator it =
+			d->m_exactlyThisTypeOfSourceInAnyChannelMap.find( key );
 
-		if( it != d->m_map.end() )
+		if( it != d->m_exactlyThisTypeOfSourceInAnyChannelMap.end() )
+		{
+			if( resultedKey )
+				*resultedKey = key;
+
 			return &it.value().properties();
+		}
 	}
 
 	return 0;
-}
-
-const Properties *
-PropertiesManager::findProperties( const PropertiesKey & key ) const
-{
-	PropertiesMap::ConstIterator it = d->m_map.find( key );
-
-	if( it != d->m_map.end() )
-		return &it.value().properties();
-	else
-		return 0;
 }
 
 static inline PropertiesKey createKey( PropertiesKeyType type,
@@ -552,11 +612,12 @@ PropertiesManager::addProperties( const Como::Source & source,
 	{
 		PropertiesKey key = createKey( type, source, channelName );
 
-		PropertiesMap::Iterator it = d->m_map.find( key );
+		PropertiesMap::Iterator it;
+		bool propertiesExists = false;
+
+		d->findByKey( key, &it, &propertiesExists );
 
 		PropertiesDialog propertiesDialog( source.type(), this );
-
-		const bool propertiesExists = ( it != d->m_map.end() );
 
 		if( propertiesExists )
 			propertiesDialog.propertiesWidget()->
@@ -587,7 +648,14 @@ PropertiesManager::addProperties( const Como::Source & source,
 					PropertiesValue value( fileName,
 						source.type(), properties );
 
-					d->m_map.insert( key, value );
+					if( type == ExactlyThisSource )
+						d->m_exactlyThisSourceMap.insert( key, value );
+					else if( type == ExactlyThisSourceInAnyChannel )
+						d->m_exactlyThisSourceInAnyChannelMap.insert( key, value );
+					else if( type == ExactlyThisTypeOfSource )
+						d->m_exactlyThisTypeOfSourceMap.insert( key, value );
+					else
+						d->m_exactlyThisTypeOfSourceInAnyChannelMap.insert( key, value );
 
 					d->m_model->addPropertie( key, value );
 
@@ -601,17 +669,51 @@ PropertiesManager::addProperties( const Como::Source & source,
 void
 PropertiesManager::removeProperties( const PropertiesKey & key )
 {
-	PropertiesMap::ConstIterator it = d->m_map.find( key );
+	if( key.keyType() == ExactlyThisSource )
+		d->m_exactlyThisSourceMap.remove( key );
+	else if( key.keyType() == ExactlyThisSourceInAnyChannel )
+		d->m_exactlyThisSourceInAnyChannelMap.remove( key );
+	else if( key.keyType() == ExactlyThisTypeOfSource )
+		d->m_exactlyThisTypeOfSourceMap.remove( key );
+	else
+		d->m_exactlyThisTypeOfSourceInAnyChannelMap.remove( key );
+}
 
-	if( it != d->m_map.end() )
-		d->m_map.remove( key );
+void
+PropertiesManager::editProperties( const PropertiesKey & key )
+{
+	PropertiesMap::Iterator it;
+	bool propertiesExists = false;
+
+	d->findByKey( key, &it, &propertiesExists );
+
+	if( propertiesExists )
+	{
+		PropertiesDialog propertiesDialog( it.value().valueType(), this );
+
+		propertiesDialog.propertiesWidget()->
+			setProperties( it.value().properties() );
+
+		if( propertiesDialog.exec() == QDialog::Accepted )
+		{
+			it.value().properties() =
+				propertiesDialog.propertiesWidget()->properties();
+
+			it.value().properties().saveConfiguration( d->m_directoryName +
+				it.value().confFileName() );
+		}
+	}
 }
 
 void
 PropertiesManager::saveConfiguration( const QString & fileName )
 {
 	PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
-		d->m_map, windowStateCfg( this ) );
+		d->m_exactlyThisSourceMap,
+		d->m_exactlyThisSourceInAnyChannelMap,
+		d->m_exactlyThisTypeOfSourceMap,
+		d->m_exactlyThisTypeOfSourceInAnyChannelMap,
+		windowStateCfg( this ) );
 
 	try {
 		QtConfFile::writeQtConfFile( tag, fileName,
@@ -626,38 +728,12 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 }
 
 void
-PropertiesManager::readConfiguration( const QString & fileName )
+PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 {
-	{
-		PropertiesManagerTag tag;
-
-		try {
-			QtConfFile::readQtConfFile( tag, fileName,
-				QTextCodec::codecForName( "UTF-8" ) );
-		}
-		catch( const QtConfFile::Exception & x )
-		{
-			QMessageBox::critical( this,
-				tr( "Unable to read properties configuration..." ),
-				x.whatAsQString() );
-
-			return;
-		}
-
-		d->setDirectory( tag.propertiesDirectory() );
-		d->m_map = tag.propertiesMap();
-
-		restoreWindowState( tag.windowState(), this );
-	}
-
-	if( !d->m_directoryName.endsWith( QChar( '/' ) ) &&
-		!d->m_directoryName.endsWith( QChar( '\\' ) ) )
-			d->m_directoryName.append( QChar( '/' ) );
-
 	QList< PropertiesKey > toRemove;
 
-	for( PropertiesMap::Iterator it = d->m_map.begin(),
-		last = d->m_map.end(); it != last; ++it )
+	for( PropertiesMap::Iterator it = map.begin(),
+		last = map.end(); it != last; ++it )
 	{
 		try {
 			PropertiesTag tag;
@@ -690,7 +766,49 @@ PropertiesManager::readConfiguration( const QString & fileName )
 	}
 
 	foreach( const PropertiesKey & key, toRemove )
-		d->m_map.remove( key );
+		map.remove( key );
+}
+
+void
+PropertiesManager::readConfiguration( const QString & fileName )
+{
+	{
+		PropertiesManagerTag tag;
+
+		try {
+			QtConfFile::readQtConfFile( tag, fileName,
+				QTextCodec::codecForName( "UTF-8" ) );
+		}
+		catch( const QtConfFile::Exception & x )
+		{
+			QMessageBox::critical( this,
+				tr( "Unable to read properties configuration..." ),
+				x.whatAsQString() );
+
+			return;
+		}
+
+		d->setDirectory( tag.propertiesDirectory() );
+
+		d->m_exactlyThisSourceMap = tag.exactlyThisSourceMap();
+		d->m_exactlyThisSourceInAnyChannelMap =
+			tag.exactlyThisSourceInAnyChannelMap();
+		d->m_exactlyThisTypeOfSourceMap =
+			tag.exactlyThisTypeOfSourceMap();
+		d->m_exactlyThisTypeOfSourceInAnyChannelMap =
+			tag.exactlyThisTypeOfSourceInAnyChannelMap();
+
+		restoreWindowState( tag.windowState(), this );
+	}
+
+	if( !d->m_directoryName.endsWith( QChar( '/' ) ) &&
+		!d->m_directoryName.endsWith( QChar( '\\' ) ) )
+			d->m_directoryName.append( QChar( '/' ) );
+
+	readPropertiesConfigs( d->m_exactlyThisSourceMap );
+	readPropertiesConfigs( d->m_exactlyThisSourceInAnyChannelMap );
+	readPropertiesConfigs( d->m_exactlyThisTypeOfSourceMap );
+	readPropertiesConfigs( d->m_exactlyThisTypeOfSourceInAnyChannelMap );
 
 	initModelAndView();
 }
@@ -705,7 +823,11 @@ void
 PropertiesManager::initModelAndView()
 {
 	d->m_ui.m_directory->setText( d->m_directoryName );
-	d->m_model->initModel( d->m_map );
+
+	d->m_model->initModel( d->m_exactlyThisSourceMap,
+		d->m_exactlyThisSourceInAnyChannelMap,
+		d->m_exactlyThisTypeOfSourceMap,
+		d->m_exactlyThisTypeOfSourceInAnyChannelMap );
 }
 
 void
@@ -749,23 +871,29 @@ PropertiesManager::removeProperties()
 
 			PropertiesKey key = d->m_model->key( row );
 
-			PropertiesValue value( d->m_map.value( key ) );
+			PropertiesMap::Iterator it;
+			bool propertiesExists = false;
+
+			d->findByKey( key, &it, &propertiesExists );
 
 			removeProperties( key );
 
 			d->m_model->removePropertie( row );
 
-			QMessageBox::StandardButton deleteFileButton =
-				QMessageBox::question( this, tr( "Deletion of the propertie..." ),
-					tr( "Delete the file \"%1\" with propertie defenitions?" )
-						.arg( value.confFileName() ),
-					QMessageBox::Ok | QMessageBox::Cancel,
-					QMessageBox::Ok );
-
-			if( deleteFileButton == QMessageBox::Ok )
+			if( propertiesExists )
 			{
-				QFile confFile( d->m_directoryName + value.confFileName() );
-				confFile.remove();
+				QMessageBox::StandardButton deleteFileButton =
+					QMessageBox::question( this, tr( "Deletion of the propertie..." ),
+						tr( "Delete the file \"%1\" with propertie defenitions?" )
+							.arg( it.value().confFileName() ),
+						QMessageBox::Ok | QMessageBox::Cancel,
+						QMessageBox::Ok );
+
+				if( deleteFileButton == QMessageBox::Ok )
+				{
+					QFile confFile( d->m_directoryName + it.value().confFileName() );
+					confFile.remove();
+				}
 			}
 
 			d->m_ui.m_removeAction->setEnabled( false );
@@ -791,25 +919,7 @@ PropertiesManager::editProperties()
 		d->m_ui.m_view->currentIndex() );
 
 	if( index.isValid() )
-	{
-		const PropertiesKey key = d->m_model->key( index.row() );
-
-		PropertiesMap::Iterator it = d->m_map.find( key );
-
-		PropertiesDialog propertiesDialog( it.value().valueType(), this );
-
-		propertiesDialog.propertiesWidget()->
-			setProperties( it.value().properties() );
-
-		if( propertiesDialog.exec() == QDialog::Accepted )
-		{
-			it.value().properties() =
-				propertiesDialog.propertiesWidget()->properties();
-
-			it.value().properties().saveConfiguration( d->m_directoryName +
-				it.value().confFileName() );
-		}
-	}
+		editProperties( d->m_model->key( index.row() ) );
 }
 
 } /* namespace Globe */

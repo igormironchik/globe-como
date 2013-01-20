@@ -31,31 +31,15 @@
 #ifndef GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED
 #define GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED
 
+// Globe include.
+#include <Globe/properties.hpp>
+
 // Qt include.
 #include <QtGui/QDialog>
 #include <QtCore/QScopedPointer>
 
 
 namespace Globe {
-
-//
-// PropertiesKeyType
-//
-
-//! Enum with properties key type.
-enum PropertiesKeyType {
-	//! Not defined.
-	NotDefinedKeyType,
-	//! Exactly this source.
-	ExactlyThisSource,
-	//! Exactly this source but from any channel.
-	ExactlyThisSourceInAnyChannel,
-	//! Exactly this type of source with any name.
-	ExactlyThisTypeOfSource,
-	//! Exactly this type of source with any name from any channel.
-	ExactlyThisTypeOfSourceInAnyChannel
-}; // enum PropertiesKeyType
-
 
 //
 // PropertiesKeyTypeDialog

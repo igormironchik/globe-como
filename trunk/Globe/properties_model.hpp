@@ -58,7 +58,10 @@ public:
 	~PropertiesModel();
 
 	//! Init model with the properties map.
-	void initModel( const PropertiesMap & map );
+	void initModel( const PropertiesMap & exactlyThisSourceMap,
+		const PropertiesMap & exactlyThisSourceInAnyChannelMap,
+		const PropertiesMap & exactlyThisTypeOfSourceMap,
+		const PropertiesMap & exactlyThisTypeOfSourceInAnyChannelMap );
 
 	//! \return Properties key for the given row.
 	PropertiesKey key( int row ) const;

@@ -33,6 +33,8 @@
 #include <Globe/sources.hpp>
 #include <Globe/sources_model.hpp>
 #include <Globe/channels.hpp>
+#include <Globe/properties.hpp>
+
 #include "ui_sources_widget.h"
 
 // Qt include.
@@ -102,13 +104,10 @@ SourcesWidget::init()
 #endif
 
 	d->m_sortModel = new QSortFilterProxyModel( this );
-
 	d->m_sortModel->setSourceModel( d->m_model );
 
 	d->m_ui.m_view->setModel( d->m_sortModel );
-	d->m_ui.m_view->setSortingEnabled( true );
-	d->m_ui.m_view->setRootIsDecorated( false );
-	d->m_ui.m_view->setAlternatingRowColors( true );
+	d->m_ui.m_view->setSourcesAndSortModels( d->m_model, d->m_sortModel );
 
 	d->m_ui.m_channel->setInsertPolicy( QComboBox::InsertAlphabetically );
 
@@ -148,6 +147,12 @@ SourcesWidget::setChannelName( const QString & channelName )
 }
 
 void
+SourcesWidget::setPropertiesManager( PropertiesManager * propertiesManager )
+{
+	d->m_ui.m_view->setPropertiesManager( propertiesManager );
+}
+
+void
 SourcesWidget::newSource( const Como::Source & source,
 	const QString & channelName )
 {
@@ -182,9 +187,12 @@ void
 SourcesWidget::selectChannel( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
+	{
 		d->m_model->initModel( d->m_sourcesManager->sources( channelName ) );
+		d->m_ui.m_view->setChannelName( channelName );
 
-	emit channelSelected( channelName );
+		emit channelSelected( channelName );
+	}
 }
 
 void

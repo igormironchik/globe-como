@@ -109,6 +109,25 @@ private:
 
 
 //
+// PropertiesKeyType
+//
+
+//! Enum with properties key type.
+enum PropertiesKeyType {
+	//! Not defined.
+	NotDefinedKeyType,
+	//! Exactly this source.
+	ExactlyThisSource,
+	//! Exactly this source but from any channel.
+	ExactlyThisSourceInAnyChannel,
+	//! Exactly this type of source with any name.
+	ExactlyThisTypeOfSource,
+	//! Exactly this type of source with any name from any channel.
+	ExactlyThisTypeOfSourceInAnyChannel
+}; // enum PropertiesKeyType
+
+
+//
 // PropertiesKey
 //
 
@@ -134,6 +153,8 @@ private:
 */
 class PropertiesKey {
 public:
+	PropertiesKey();
+
 	PropertiesKey( const QString & name,
 		const QString & typeName, const QString & channelName );
 
@@ -150,6 +171,9 @@ public:
 	//! \return Channel's name.
 	const QString & channelName() const;
 
+	//! \return Type of the key.
+	PropertiesKeyType keyType() const;
+
 private:
 	//! Source's name.
 	QString m_name;
@@ -157,6 +181,8 @@ private:
 	QString m_typeName;
 	//! Channel's name.
 	QString m_channelName;
+	//! Key type.
+	PropertiesKeyType m_keyType;
 }; // class PropertiesKey
 
 bool operator < ( const PropertiesKey & k1, const PropertiesKey & k2 );
@@ -230,17 +256,14 @@ public:
 		\retval NULL if there is no properties for the given source.
 	*/
 	const Properties * findProperties( const Como::Source & source,
-		const QString & channelName ) const;
-	/*!
-		\return Properties for the given key.
-		\retval NULL if there is no properties for the given key.
-	*/
-	const Properties * findProperties( const PropertiesKey & key ) const;
+		const QString & channelName, PropertiesKey * resultedkey ) const;
 	//! Add new properties.
 	void addProperties( const Como::Source & source,
 		const QString & channelName );
 	//! Remove properties for the given \arg source source.
 	void removeProperties( const PropertiesKey & key );
+	//! Edit properties.
+	void editProperties( const PropertiesKey & key );
 
 	//! Save properties manager configuration.
 	void saveConfiguration( const QString & fileName );
@@ -264,6 +287,8 @@ private:
 	void init();
 	//! Init model.
 	void initModelAndView();
+	//! Read properties configurations.
+	void readPropertiesConfigs( PropertiesMap & map );
 
 private slots:
 	//! Add propertie.

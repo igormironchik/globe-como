@@ -259,11 +259,11 @@ public:
 		const QString & channelName, PropertiesKey * resultedkey ) const;
 	//! Add new properties.
 	void addProperties( const Como::Source & source,
-		const QString & channelName );
+		const QString & channelName, QWidget * parent = 0 );
 	//! Remove properties for the given \arg source source.
-	void removeProperties( const PropertiesKey & key );
+	void removeProperties( const PropertiesKey & key, QWidget * parent = 0 );
 	//! Edit properties.
-	void editProperties( const PropertiesKey & key );
+	void editProperties( const PropertiesKey & key, QWidget * parent = 0 );
 
 	//! Save properties manager configuration.
 	void saveConfiguration( const QString & fileName );

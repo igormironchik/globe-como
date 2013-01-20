@@ -602,11 +602,11 @@ static inline PropertiesKey createKey( PropertiesKeyType type,
 
 void
 PropertiesManager::addProperties( const Como::Source & source,
-	const QString & channelName )
+	const QString & channelName, QWidget * parent )
 {
 	PropertiesKeyType type = NotDefinedKeyType;
 
-	PropertiesKeyTypeDialog	dialog( type, this );
+	PropertiesKeyTypeDialog	dialog( type, ( parent ? parent : this ) );
 
 	if( dialog.exec() == QDialog::Accepted )
 	{
@@ -617,7 +617,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 
 		d->findByKey( key, &it, &propertiesExists );
 
-		PropertiesDialog propertiesDialog( source.type(), this );
+		PropertiesDialog propertiesDialog( source.type(),
+			( parent ? parent : this ) );
 
 		if( propertiesExists )
 			propertiesDialog.propertiesWidget()->
@@ -638,7 +639,7 @@ PropertiesManager::addProperties( const Como::Source & source,
 				QString fileName;
 
 				PropertiesCfgFileNameDialog fileNameDialog( fileName,
-					d->m_directoryName, this );
+					d->m_directoryName, ( parent ? parent : this ) );
 
 				if( fileNameDialog.exec() == QDialog::Accepted )
 				{
@@ -667,8 +668,11 @@ PropertiesManager::addProperties( const Como::Source & source,
 }
 
 void
-PropertiesManager::removeProperties( const PropertiesKey & key )
+PropertiesManager::removeProperties( const PropertiesKey & key,
+	QWidget * parent )
 {
+	Q_UNUSED( parent )
+
 	if( key.keyType() == ExactlyThisSource )
 		d->m_exactlyThisSourceMap.remove( key );
 	else if( key.keyType() == ExactlyThisSourceInAnyChannel )
@@ -680,7 +684,7 @@ PropertiesManager::removeProperties( const PropertiesKey & key )
 }
 
 void
-PropertiesManager::editProperties( const PropertiesKey & key )
+PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 {
 	PropertiesMap::Iterator it;
 	bool propertiesExists = false;
@@ -689,7 +693,8 @@ PropertiesManager::editProperties( const PropertiesKey & key )
 
 	if( propertiesExists )
 	{
-		PropertiesDialog propertiesDialog( it.value().valueType(), this );
+		PropertiesDialog propertiesDialog( it.value().valueType(),
+			( parent ? parent : this ) );
 
 		propertiesDialog.propertiesWidget()->
 			setProperties( it.value().properties() );

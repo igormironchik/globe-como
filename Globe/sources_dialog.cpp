@@ -105,6 +105,8 @@ SourcesDialog::~SourcesDialog()
 void
 SourcesDialog::init()
 {
+	setWindowTitle( tr( "Select source..." ) );
+
 	QVBoxLayout * layout = new QVBoxLayout( this );
 
 	d->m_widget = new SourcesWidget( d->m_sourcesManager, d->m_channelsManager,

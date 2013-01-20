@@ -48,6 +48,7 @@ namespace Globe {
 class SourcesManager;
 class ChannelsManager;
 class Channel;
+class PropertiesManager;
 
 
 //
@@ -77,6 +78,9 @@ public:
 	QString channelName() const;
 	//! Set channel name.
 	void setChannelName( const QString & channelName );
+
+	//! Set properties manager.
+	void setPropertiesManager( PropertiesManager * propertiesManager );
 
 private:
 	//! Init.

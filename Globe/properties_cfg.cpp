@@ -202,7 +202,11 @@ PropertiesManagerTag::PropertiesManagerTag()
 }
 
 PropertiesManagerTag::PropertiesManagerTag( const QString & propsPath,
-	const PropertiesMap & map, const WindowStateCfg & windowState )
+	const PropertiesMap & exactlyThisSourceMap,
+	const PropertiesMap & exactlyThisSourceInAnyChannelMap,
+	const PropertiesMap & exactlyThisTypeOfSourceMap,
+	const PropertiesMap & exactlyThisTypeOfSourceInAnyChannelMap,
+	const WindowStateCfg & windowState )
 	:	QtConfFile::TagNoValue( QLatin1String( "propertiesManager" ), true )
 	,	m_directory( *this, QLatin1String( "confDirectory" ), true )
 	,	m_map( *this, QLatin1String( "record" ), false )
@@ -210,8 +214,38 @@ PropertiesManagerTag::PropertiesManagerTag( const QString & propsPath,
 {
 	m_directory.setValue( propsPath );
 
-	for( PropertiesMap::ConstIterator it = map.begin(),
-		last = map.end(); it != last; ++it )
+	for( PropertiesMap::ConstIterator it = exactlyThisSourceMap.begin(),
+		last = exactlyThisSourceMap.end(); it != last; ++it )
+	{
+		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
+			new PropertiesMapRecordTag( it.key(), it.value(),
+				QLatin1String( "record" ) ) );
+
+		m_map.setValue( p );
+	}
+
+	for( PropertiesMap::ConstIterator it = exactlyThisSourceInAnyChannelMap.begin(),
+		last = exactlyThisSourceInAnyChannelMap.end(); it != last; ++it )
+	{
+		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
+			new PropertiesMapRecordTag( it.key(), it.value(),
+				QLatin1String( "record" ) ) );
+
+		m_map.setValue( p );
+	}
+
+	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceMap.begin(),
+		last = exactlyThisTypeOfSourceMap.end(); it != last; ++it )
+	{
+		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
+			new PropertiesMapRecordTag( it.key(), it.value(),
+				QLatin1String( "record" ) ) );
+
+		m_map.setValue( p );
+	}
+
+	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceInAnyChannelMap.begin(),
+		last = exactlyThisTypeOfSourceInAnyChannelMap.end(); it != last; ++it )
 	{
 		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
 			new PropertiesMapRecordTag( it.key(), it.value(),
@@ -230,7 +264,7 @@ PropertiesManagerTag::propertiesDirectory() const
 }
 
 PropertiesMap
-PropertiesManagerTag::propertiesMap() const
+PropertiesManagerTag::exactlyThisSourceMap() const
 {
 	PropertiesMap map;
 
@@ -241,9 +275,69 @@ PropertiesManagerTag::propertiesMap() const
 		const PropertiesMapRecordTag & tag = m_map.at( i );
 
 		const PropertiesKey key = tag.key();
-		const PropertiesValue value = tag.value();
 
-		map.insert( key, value );
+		if( key.keyType() == ExactlyThisSource )
+			map.insert( key, tag.value() );
+	}
+
+	return map;
+}
+
+PropertiesMap
+PropertiesManagerTag::exactlyThisSourceInAnyChannelMap() const
+{
+	PropertiesMap map;
+
+	const int propsSize = m_map.size();
+
+	for( int i = 0; i < propsSize; ++i )
+	{
+		const PropertiesMapRecordTag & tag = m_map.at( i );
+
+		const PropertiesKey key = tag.key();
+
+		if( key.keyType() == ExactlyThisSourceInAnyChannel )
+			map.insert( key, tag.value() );
+	}
+
+	return map;
+}
+
+PropertiesMap
+PropertiesManagerTag::exactlyThisTypeOfSourceMap() const
+{
+	PropertiesMap map;
+
+	const int propsSize = m_map.size();
+
+	for( int i = 0; i < propsSize; ++i )
+	{
+		const PropertiesMapRecordTag & tag = m_map.at( i );
+
+		const PropertiesKey key = tag.key();
+
+		if( key.keyType() == ExactlyThisTypeOfSource )
+			map.insert( key, tag.value() );
+	}
+
+	return map;
+}
+
+PropertiesMap
+PropertiesManagerTag::exactlyThisTypeOfSourceInAnyChannelMap() const
+{
+	PropertiesMap map;
+
+	const int propsSize = m_map.size();
+
+	for( int i = 0; i < propsSize; ++i )
+	{
+		const PropertiesMapRecordTag & tag = m_map.at( i );
+
+		const PropertiesKey key = tag.key();
+
+		if( key.keyType() == ExactlyThisTypeOfSourceInAnyChannel )
+			map.insert( key, tag.value() );
 	}
 
 	return map;

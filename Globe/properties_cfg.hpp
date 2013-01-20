@@ -124,14 +124,26 @@ public:
 	PropertiesManagerTag();
 
 	PropertiesManagerTag( const QString & propsPath,
-		const PropertiesMap & map,
+		const PropertiesMap & exactlyThisSourceMap,
+		const PropertiesMap & exactlyThisSourceInAnyChannelMap,
+		const PropertiesMap & exactlyThisTypeOfSourceMap,
+		const PropertiesMap & exactlyThisTypeOfSourceInAnyChannelMap,
 		const WindowStateCfg & windowState );
 
 	//! \return Directory with properties configuration files.
 	QString propertiesDirectory() const;
 
-	//! \return Map of the properties.
-	PropertiesMap propertiesMap() const;
+	//! \return Map of the properties for "ExactlyThisSource".
+	PropertiesMap exactlyThisSourceMap() const;
+
+	//! \return Map of the properties for "ExactlyThisSourceInAnyChannel".
+	PropertiesMap exactlyThisSourceInAnyChannelMap() const;
+
+	//! \return Map of the properties for "ExactlyThisTypeOfSource".
+	PropertiesMap exactlyThisTypeOfSourceMap() const;
+
+	//! \return Map of the properties for "ExactlyThisTypeOfSourceInAnyChannel".
+	PropertiesMap exactlyThisTypeOfSourceInAnyChannelMap() const;
 
 	//! \return Window state.
 	WindowStateCfg windowState() const;

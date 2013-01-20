@@ -115,16 +115,36 @@ PropertiesModel::~PropertiesModel()
 }
 
 void
-PropertiesModel::initModel( const PropertiesMap & map )
+PropertiesModel::initModel( const PropertiesMap & exactlyThisSourceMap,
+		const PropertiesMap & exactlyThisSourceInAnyChannelMap,
+		const PropertiesMap & exactlyThisTypeOfSourceMap,
+		const PropertiesMap & exactlyThisTypeOfSourceInAnyChannelMap )
 {
 	clear();
 
-	insertRows( 0, map.size(), QModelIndex() );
+	const int rowsCount = exactlyThisSourceMap.size() +
+		exactlyThisSourceInAnyChannelMap.size() +
+		exactlyThisTypeOfSourceMap.size() +
+		exactlyThisTypeOfSourceInAnyChannelMap.size();
+
+	insertRows( 0, rowsCount, QModelIndex() );
 
 	int i = 0;
 
-	for( PropertiesMap::ConstIterator it = map.begin(),
-		last = map.end(); it != last; ++it, ++i )
+	for( PropertiesMap::ConstIterator it = exactlyThisSourceMap.begin(),
+		last = exactlyThisSourceMap.end(); it != last; ++it, ++i )
+			d->m_data[ i ] = PropertiesModelData( it.key(), it.value() );
+
+	for( PropertiesMap::ConstIterator it = exactlyThisSourceInAnyChannelMap.begin(),
+		last = exactlyThisSourceInAnyChannelMap.end(); it != last; ++it, ++i )
+			d->m_data[ i ] = PropertiesModelData( it.key(), it.value() );
+
+	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceMap.begin(),
+		last = exactlyThisTypeOfSourceMap.end(); it != last; ++it, ++i )
+			d->m_data[ i ] = PropertiesModelData( it.key(), it.value() );
+
+	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceInAnyChannelMap.begin(),
+		last = exactlyThisTypeOfSourceInAnyChannelMap.end(); it != last; ++it, ++i )
 			d->m_data[ i ] = PropertiesModelData( it.key(), it.value() );
 
 	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),

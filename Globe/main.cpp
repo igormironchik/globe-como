@@ -109,6 +109,7 @@ int main( int argc, char ** argv )
 	Globe::PropertiesManager propertiesManager( &sourcesManager, &channelsManager );
 
 	Globe::SourcesMainWindow sourcesMainWindow( &sourcesManager, &channelsManager );
+	sourcesMainWindow.setPropertiesManager( &propertiesManager );
 
 	QList< Globe::ToolWindowObject* > toolWindows;
 	toolWindows.append( propertiesManager.toolWindowObject() );

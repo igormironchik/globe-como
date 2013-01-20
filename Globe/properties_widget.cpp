@@ -217,6 +217,8 @@ PropertiesList::~PropertiesList()
 void
 PropertiesList::init()
 {
+	setAlternatingRowColors( true );
+
 	d->m_model = new PropertiesListModel( d->m_valueType, this );
 
 #ifdef DEBUG

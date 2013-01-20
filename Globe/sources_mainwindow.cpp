@@ -175,4 +175,10 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 	restoreWindowState( tag.windowState(), this );
 }
 
+void
+SourcesMainWindow::setPropertiesManager( PropertiesManager * propertiesManager )
+{
+	d->m_widget->setPropertiesManager( propertiesManager );
+}
+
 } /* namespace Globe */

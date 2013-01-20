@@ -41,6 +41,7 @@ HEADERS += application_cfg.hpp \
            sources_mainwindow_cfg.hpp \
            sources_model.hpp \
            sources_widget.hpp \
+           sources_widget_view.hpp \
            window_state_cfg.hpp \
            tool_window_object.hpp \
            utils.hpp
@@ -76,6 +77,7 @@ SOURCES += application_cfg.cpp \
            sources_mainwindow_cfg.cpp \
            sources_model.cpp \
            sources_widget.cpp \
+           sources_widget_view.cpp \
            window_state_cfg.cpp \
            tool_window_object.cpp \
            utils.cpp

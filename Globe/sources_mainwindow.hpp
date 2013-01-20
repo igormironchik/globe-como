@@ -41,6 +41,7 @@ namespace Globe {
 class ToolWindowObject;
 class SourcesManager;
 class ChannelsManager;
+class PropertiesManager;
 
 
 //
@@ -69,6 +70,9 @@ public:
 	void saveConfiguration( const QString & fileName );
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
+
+	//! Set properties manager.
+	void setPropertiesManager( PropertiesManager * propertiesManager );
 
 protected:
 	friend class MainWindow;

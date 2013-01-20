@@ -79,6 +79,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="m_addAction"/>
+   <addaction name="m_editAction"/>
    <addaction name="m_removeAction"/>
   </widget>
   <action name="m_quitAction">
@@ -118,6 +119,21 @@
    </property>
    <property name="toolTip">
     <string>Remove Selected Propertie</string>
+   </property>
+  </action>
+  <action name="m_editAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/img/edit_22x22.png</normaloff>:/img/edit_22x22.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit</string>
+   </property>
+   <property name="toolTip">
+    <string>Edit Properties</string>
    </property>
   </action>
  </widget>

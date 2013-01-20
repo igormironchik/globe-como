@@ -1,8 +1,8 @@
 
 /*
 	Modifications:
-	 * line 116: Q_ASSERT(flags == Qt::ItemIsDropEnabled || flags == 0);
-	   to Q_ASSERT(flags == Qt::ItemIsDropEnabled); date: 19.01.2013
+	 * line 91: Q_ASSERT(flags == Qt::ItemIsDropEnabled || flags == 0);
+	   changed to Q_ASSERT(flags == Qt::ItemIsDropEnabled); date: 19.01.2013
 */
 
 #include "modeltest.h"

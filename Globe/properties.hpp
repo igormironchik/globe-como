@@ -272,6 +272,8 @@ private slots:
 	void removeProperties();
 	//! Item selected.
 	void itemSelected( const QModelIndex & index );
+	//! Edit properties.
+	void editProperties();
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

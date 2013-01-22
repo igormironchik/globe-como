@@ -207,16 +207,23 @@ PropertiesListModel::properties() const
 
 	for( int i = 0; i < conditionsCount; ++i )
 	{
-		const PropertiesListModelData & PropertiesListModelData = d->m_data.at( i );
+		const PropertiesListModelData & data = d->m_data.at( i );
 
-		if( PropertiesListModelData.m_type == IfCondition )
+		if( data.m_type == IfCondition )
 		{
 			Condition c;
 
-			c.setType( PropertiesListModelData.m_expression );
-			c.setValue( PropertiesListModelData.m_value );
-			c.setLevel( PropertiesListModelData.m_level );
-			c.setMessage( PropertiesListModelData.m_message );
+			c.setType( data.m_expression );
+
+			if( d->m_valueType == Como::Source::Int )
+				c.setValue( QVariant( data.m_value.toInt() ) );
+			else if( d->m_valueType == Como::Source::Double )
+				c.setValue( QVariant( data.m_value.toDouble() ) );
+			else
+				c.setValue( data.m_value );
+
+			c.setLevel( data.m_level );
+			c.setMessage( data.m_message );
 
 			p.insertCondition( c, i );
 		}
@@ -224,8 +231,8 @@ PropertiesListModel::properties() const
 		{
 			Condition c;
 
-			c.setLevel( PropertiesListModelData.m_level );
-			c.setMessage( PropertiesListModelData.m_message );
+			c.setLevel( data.m_level );
+			c.setMessage( data.m_message );
 
 			p.otherwise() = c;
 		}

@@ -89,7 +89,7 @@ public:
 
 class PropertiesModelPrivate {
 public:
-	//! PropertiesModelData.
+	//! Data.
 	QList< PropertiesModelData > m_data;
 }; // class PropertiesPropertiesModelPrivate
 

@@ -43,6 +43,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
+#include <QtGui/QGroupBox>
 
 #ifdef DEBUG
 
@@ -516,7 +517,9 @@ PropertiesWidget::init()
 {
 	QVBoxLayout * vBox = new QVBoxLayout( this );
 
-	QHBoxLayout * hBox = new QHBoxLayout();
+	QGroupBox * box = new QGroupBox( this );
+
+	QHBoxLayout * hBox = new QHBoxLayout( box );
 
 	QLabel * label = new QLabel( this );
 	label->setText( tr( "Priority" ) );
@@ -534,7 +537,7 @@ PropertiesWidget::init()
 
 	hBox->addItem( spacer );
 
-	vBox->addLayout( hBox );
+	vBox->addWidget( box );
 
 	d->m_conditions = new PropertiesList( d->m_valueType, this );
 

@@ -18,6 +18,10 @@ HEADERS += application_cfg.hpp \
            channels_list.hpp \
            channel_timeout_widget.hpp \
            channels_to_show.hpp \
+           channel_view.hpp \
+           channel_view_window.hpp \
+           channel_view_window_cfg.hpp \
+           channel_view_window_model.hpp \
            channel_widget.hpp \
            condition.hpp \
            condition_cfg.hpp \
@@ -53,6 +57,10 @@ SOURCES += application_cfg.cpp \
            channels_list.cpp \
            channel_timeout_widget.cpp \
            channels_to_show.cpp \
+           channel_view.cpp \
+           channel_view_window.cpp \
+           channel_view_window_cfg.cpp \
+           channel_view_window_model.cpp \
            channel_widget.cpp \
            condition.cpp \
            condition_cfg.cpp \

@@ -113,7 +113,7 @@ class ChannelTag
 	:	public QtConfFile::TagScalar< QString >
 {
 public:
-	ChannelTag( const QString & name, bool isMandatory = false );
+	explicit ChannelTag( const QString & name, bool isMandatory = false );
 
 	ChannelTag( QtConfFile::Tag & owner, const QString & name,
 		bool isMandatory = false );

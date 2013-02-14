@@ -45,7 +45,7 @@ class SourcesModelPrivate {
 public:
 	//! Data.
 	QList< Como::Source > m_data;
-}; // class PropertiesSourcesModelPrivate
+}; // class SourcesModelPrivate
 
 
 //

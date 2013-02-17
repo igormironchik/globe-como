@@ -35,7 +35,9 @@
 #include <Globe/configuration.hpp>
 #include <Globe/properties.hpp>
 #include <Globe/sources_mainwindow.hpp>
+#include <Globe/sources.hpp>
 #include <Globe/scrolled_widget.hpp>
+#include <Globe/channel_view_window.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
@@ -58,17 +60,30 @@ public:
 		ChannelsManager * channelsManager, DB * db,
 		PropertiesManager * propertiesManager,
 		SourcesMainWindow * sourcesMainWindow,
+		SourcesManager * sourcesManager,
 		const QList< ToolWindowObject* > & toolWindows )
 		:	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_list( 0 )
 		,	m_propertiesManager( propertiesManager )
 		,	m_sourcesMainWindow( sourcesMainWindow )
+		,	m_sourcesManager( sourcesManager )
 		,	m_cfgWasSaved( false )
 		,	m_toolWindows( toolWindows )
 		,	m_cfg( cfgFileName, mainWindow, channelsManager,
 				db, propertiesManager, sourcesMainWindow )
+		,	m_fileMenu( 0 )
 	{
+	}
+
+	//! \return Channel view window for the given \arg channelName channel.
+	ChannelViewWindow * channelViewWindow( const QString & channelName )
+	{
+		foreach( ChannelViewWindow * window, m_channelViewWindows )
+			if( window->channel() == channelName )
+				return window;
+
+		return 0;
 	}
 
 	//! Channels manager.
@@ -81,12 +96,18 @@ public:
 	PropertiesManager * m_propertiesManager;
 	//! Sources main window.
 	SourcesMainWindow * m_sourcesMainWindow;
+	//! Sources manager.
+	SourcesManager * m_sourcesManager;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
 	//! Tool window objects.
 	QList< ToolWindowObject* > m_toolWindows;
 	//! Configuration.
 	Configuration m_cfg;
+	//! Channel view windows.
+	QList< ChannelViewWindow* > m_channelViewWindows;
+	//! File menu.
+	QMenu * m_fileMenu;
 }; // class MainWindowPrivate
 
 
@@ -98,11 +119,13 @@ MainWindow::MainWindow( const QString & cfgFileName,
 	ChannelsManager * channelsManager, DB * db,
 	PropertiesManager * propertiesManager,
 	SourcesMainWindow * sourcesMainWindow,
+	SourcesManager * sourcesManager,
 	const QList< ToolWindowObject* > & toolWindows,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
 	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
-			propertiesManager, sourcesMainWindow, toolWindows ) )
+			propertiesManager, sourcesMainWindow, sourcesManager,
+			toolWindows ) )
 {
 	init();
 }
@@ -123,8 +146,17 @@ MainWindow::init()
 	connect( qApp, SIGNAL( aboutToQuit() ),
 		this, SLOT( aboutToQuit() ) );
 
-	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
-	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
+	d->m_fileMenu = menuBar()->addMenu( tr( "&File" ) );
+
+	QMenu * newMenu = d->m_fileMenu->addMenu( QIcon( ":/img/new_22x22.png" ),
+		tr( "New" ) );
+
+	newMenu->addAction( tr( "Channel View" ), this,
+		SLOT( newChannelView() ) );
+
+	d->m_fileMenu->addSeparator();
+
+	d->m_fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
 		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
@@ -134,15 +166,15 @@ MainWindow::init()
 
 	ScrolledView * area = new ScrolledView( this );
 
-	d->m_list = new ChannelsList( d->m_channelsManager,
+	d->m_list = new ChannelsList( this, d->m_channelsManager,
 		ShowAll, Qt::AscendingOrder, this );
 
 	area->setWidget( d->m_list );
 
 	setCentralWidget( area );
 
-	d->m_propertiesManager->initToolsMenu( d->m_toolWindows );
-	d->m_sourcesMainWindow->initToolsMenu( d->m_toolWindows );
+	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_toolWindows );
+	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_toolWindows );
 }
 
 void
@@ -151,6 +183,35 @@ MainWindow::start()
 	d->m_cfg.loadConfiguration();
 
 	show();
+}
+
+void
+MainWindow::showChannelView( const QString & channelName )
+{
+	ChannelViewWindow * window = d->channelViewWindow( channelName );
+
+	if( window )
+	{
+		if( window->isMinimized() )
+			window->showNormal();
+		else
+			window->show();
+
+		window->activateWindow();
+	}
+	else
+	{
+		window = new ChannelViewWindow( d->m_propertiesManager,
+			d->m_sourcesManager, d->m_channelsManager );
+
+		d->m_channelViewWindows.append( window );
+
+		window->setChannel( channelName );
+
+		window->initMenu( d->m_fileMenu, d->m_toolWindows );
+
+		window->show();
+	}
 }
 
 void
@@ -167,6 +228,12 @@ void
 MainWindow::aboutToQuit()
 {
 	saveConfiguration();
+}
+
+void
+MainWindow::newChannelView()
+{
+
 }
 
 void

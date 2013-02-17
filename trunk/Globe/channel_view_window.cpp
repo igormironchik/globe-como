@@ -32,6 +32,11 @@
 #include <Globe/channel_view_window.hpp>
 #include <Globe/channel_view.hpp>
 #include <Globe/channel_view_window_model.hpp>
+#include <Globe/tool_window_object.hpp>
+
+// Qt include.
+#include <QtGui/QMenuBar>
+#include <QtGui/QMenu>
 
 
 namespace Globe {
@@ -124,6 +129,18 @@ ChannelViewWindow::init()
 		d->m_sourcesManager, d->m_channelsManager, this );
 
 	setCentralWidget( d->m_view );
+}
+
+void
+ChannelViewWindow::initMenu( QMenu * fileMenu,
+	const QList< ToolWindowObject* > & toolWindows )
+{
+	menuBar()->addMenu( fileMenu );
+
+	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
+
+	foreach( ToolWindowObject * obj, toolWindows )
+		toolsMenu->addAction( obj->menuEntity() );
 }
 
 } /* namespace Globe */

@@ -116,7 +116,8 @@ int main( int argc, char ** argv )
 	toolWindows.append( sourcesMainWindow.toolWindowObject() );
 
 	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
-		&propertiesManager, &sourcesMainWindow, toolWindows );
+		&propertiesManager, &sourcesMainWindow, &sourcesManager,
+		toolWindows );
 
 	QTimer::singleShot( 0, &mainWindow, SLOT( start() ) );
 

@@ -77,6 +77,8 @@ signals:
 	void aboutToDisconnectFromHost();
 	//! About to reconnect to host.
 	void aboutToReconnectToHost();
+	//! About to change update timeout.
+	void aboutToChangeUpdateTimeout();
 	//! Rate of the messages per second.
 	void messagesRate( int );
 
@@ -150,6 +152,8 @@ private slots:
 	void updateSourcesValue();
 	//! Socket's error.
 	void socketError( QAbstractSocket::SocketError socketError );
+	//! Change update timeout.
+	void changeUpdateTimeoutImplementation();
 
 private:
 	Q_DISABLE_COPY( Channel )

@@ -42,7 +42,6 @@
 #include <QtCore/QMutexLocker>
 #include <QtCore/QThread>
 #include <QtCore/QMap>
-#include <QtCore/QEventLoop>
 
 
 namespace Globe {
@@ -119,6 +118,10 @@ Channel::Channel( const QString & name,
 
 	connect( this, SIGNAL( aboutToReconnectToHost() ),
 		this, SLOT( reconnectToHostImplementation() ),
+		Qt::QueuedConnection );
+
+	connect( this, SIGNAL( aboutToChangeUpdateTimeout() ),
+		this, SLOT( changeUpdateTimeoutImplementation() ),
 		Qt::QueuedConnection );
 
 	connect( d->m_socket, SIGNAL( connected() ),
@@ -221,12 +224,7 @@ Channel::updateTimeout( int msecs )
 
 	d->m_updateTimeout = msecs;
 
-	d->m_updateTimer->stop();
-
-	if( d->m_updateTimeout > 0 )
-		d->m_updateTimer->start( d->m_updateTimeout );
-	else
-		updateSourcesValue();
+	emit aboutToChangeUpdateTimeout();
 }
 
 void
@@ -312,6 +310,19 @@ Channel::socketError( QAbstractSocket::SocketError socketError )
 		if( !d->m_isDisconnectedByUser )
 			d->m_socket->connectToHost( d->m_address, d->m_port );
 	}
+}
+
+void
+Channel::changeUpdateTimeoutImplementation()
+{
+	QMutexLocker lock( &d->m_mutex );
+
+	d->m_updateTimer->stop();
+
+	if( d->m_updateTimeout > 0 )
+		d->m_updateTimer->start( d->m_updateTimeout );
+	else
+		updateSourcesValue();
 }
 
 void

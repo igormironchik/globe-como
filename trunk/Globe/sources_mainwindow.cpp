@@ -99,8 +99,11 @@ SourcesMainWindow::toolWindowObject()
 }
 
 void
-SourcesMainWindow::initToolsMenu( const QList< ToolWindowObject* > & toolWindows )
+SourcesMainWindow::initMenu( QMenu * fileMenu,
+	const QList< ToolWindowObject* > & toolWindows )
 {
+	menuBar()->addMenu( fileMenu );
+
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
 	foreach( ToolWindowObject * obj, toolWindows )
@@ -120,10 +123,6 @@ void
 SourcesMainWindow::init()
 {
 	setWindowTitle( tr( "Sources Manager" ) );
-
-	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
-	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
-		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
 
 	QAction * showAction = new QAction( tr( "&Sources" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );

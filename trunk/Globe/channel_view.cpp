@@ -35,6 +35,13 @@
 #include <Globe/channel_view.hpp>
 #include <Globe/channel_view_window_model.hpp>
 
+#ifdef DEBUG
+
+// ModelTest include.
+#include <modeltest.h>
+
+#endif
+
 
 namespace Globe {
 
@@ -114,6 +121,10 @@ ChannelView::init()
 
 	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
 		d->m_sourcesManager, d->m_channelsManager, this );
+
+#ifdef DEBUG
+	new ModelTest( d->m_model, this );
+#endif
 
 	d->m_sortModel = new QSortFilterProxyModel( this );
 	d->m_sortModel->setSourceModel( d->m_model );

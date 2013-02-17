@@ -50,7 +50,7 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QMessageBox>
 #include <QtGui/QCloseEvent>
-#include <QtGui/QApplication>
+#include <QtGui/QMenuBar>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -494,8 +494,6 @@ PropertiesManager::init()
 	QAction * showAction = new QAction( tr( "&Properties" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
-	connect( d->m_ui.m_quitAction, SIGNAL( triggered() ),
-		qApp, SLOT( quit() ) );
 	connect( d->m_ui.m_addAction, SIGNAL( triggered() ),
 		this, SLOT( addProperties() ) );
 	connect( d->m_ui.m_removeAction, SIGNAL( triggered() ),
@@ -507,8 +505,11 @@ PropertiesManager::init()
 }
 
 void
-PropertiesManager::initToolsMenu( const QList< ToolWindowObject* > & toolWindows )
+PropertiesManager::initMenu( QMenu * fileMenu,
+	const QList< ToolWindowObject* > & toolWindows )
 {
+	menuBar()->addMenu( fileMenu );
+
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
 	foreach( ToolWindowObject * obj, toolWindows )

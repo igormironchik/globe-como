@@ -59,7 +59,7 @@ MainWindowCfg::MainWindowCfg( const MainWindowCfg & other )
 MainWindowCfg &
 MainWindowCfg::operator = ( const MainWindowCfg & other )
 {
-	if( this != & other )
+	if( this != &other )
 	{
 		m_windowState = other.windowState();
 		m_shownChannels = other.shownChannels();

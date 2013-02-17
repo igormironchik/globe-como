@@ -61,12 +61,11 @@ void
 ToolWindowObject::showToolWindow()
 {
 	if( m_toolWindow->isHidden() )
-	{
 		m_toolWindow->show();
-		m_toolWindow->activateWindow();
-	}
-	else
-		m_toolWindow->activateWindow();
+	else if( m_toolWindow->isMinimized() )
+		m_toolWindow->showNormal();
+
+	m_toolWindow->activateWindow();
 }
 
 } /* namespace Globe */

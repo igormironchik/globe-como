@@ -33,6 +33,7 @@
 #include <Globe/channel_widget.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/channel_attributes.hpp>
+#include <Globe/mainwindow.hpp>
 
 // Qt include.
 #include <QtCore/QList>
@@ -103,9 +104,11 @@ class ChannelsListPrivate {
 public:
 	ChannelsListPrivate( ChannelsManager * channelsManager,
 		QWidget * widget,
+		MainWindow * mainWindow,
 		ShownChannels shownChannels,
 		Qt::SortOrder sortOrder )
 		:	m_widget( widget )
+		,	m_mainWindow( mainWindow )
 		,	m_sortOrder( sortOrder )
 		,	m_minWidth( 0 )
 		,	m_minHeight( 0 )
@@ -115,6 +118,7 @@ public:
 		,	m_channelsToShowWidgetHeight( m_channelsToShowWidget->height() )
 		,	m_addChannelAction( 0 )
 		,	m_delChannelAction( 0 )
+		,	m_showChannelViewAction( 0 )
 		,	m_currentWidgetIndex( -1 )
 		,	m_channelsManager( channelsManager )
 	{
@@ -232,6 +236,8 @@ public:
 
 	//! Widget.
 	QWidget * m_widget;
+	//! Main window.
+	MainWindow * m_mainWindow;
 	//! Sort order.
 	Qt::SortOrder m_sortOrder;
 	//! List with child widgets.
@@ -250,8 +256,10 @@ public:
 	int m_channelsToShowWidgetHeight;
 	//! Add new channel action.
 	QAction * m_addChannelAction;
-	//!Remove channel action.
+	//! Remove channel action.
 	QAction * m_delChannelAction;
+	//! Show channel view.
+	QAction * m_showChannelViewAction;
 	//! Index of current ChannelWidget.
 	int m_currentWidgetIndex;
 	//! Channels manager.
@@ -263,14 +271,15 @@ public:
 // ChannelsList
 //
 
-ChannelsList::ChannelsList( ChannelsManager * channelsManager,
+ChannelsList::ChannelsList( MainWindow * mainWindow,
+	ChannelsManager * channelsManager,
 	ShownChannels shownChannels,
 	Qt::SortOrder sortOrder,
 	QWidget * parent,
 	Qt::WindowFlags f )
 	:	ScrolledWidget( parent, f )
 	,	d( new ChannelsListPrivate( channelsManager,
-			this, shownChannels, sortOrder ) )
+			this, mainWindow, shownChannels, sortOrder ) )
 {
 	init();
 }
@@ -286,6 +295,7 @@ ChannelsList::init()
 		tr( "Add Channel" ), this );
 	d->m_delChannelAction = new QAction( QIcon( ":/img/remove_22x22.png" ),
 		tr( "Delete Channel" ), this );
+	d->m_showChannelViewAction = new QAction( tr( "Show Channel View" ), this );
 
 	connect( d->m_channelsToShowWidget, SIGNAL( displayAllChannels() ),
 		this, SLOT( showAll() ) );
@@ -297,6 +307,8 @@ ChannelsList::init()
 		this, SLOT( addChannel() ) );
 	connect( d->m_delChannelAction, SIGNAL( triggered() ),
 		this, SLOT( delChannel() ) );
+	connect( d->m_showChannelViewAction, SIGNAL( triggered() ),
+		this, SLOT( showChannelView() ) );
 }
 
 void
@@ -396,7 +408,11 @@ ChannelsList::contextMenuEvent( QContextMenuEvent * event )
 	menu.addAction( d->m_addChannelAction );
 
 	if( d->m_currentWidgetIndex != -1 )
+	{
 		menu.addAction( d->m_delChannelAction );
+		menu.addSeparator();
+		menu.addAction( d->m_showChannelViewAction );
+	}
 
 	menu.exec( event->globalPos() );
 
@@ -593,6 +609,21 @@ ChannelsList::delChannel()
 		d->m_currentWidgetIndex = -1;
 
 		d->updateWidgetsPosition();
+	}
+}
+
+void
+ChannelsList::showChannelView()
+{
+	if( d->m_currentWidgetIndex != -1 )
+	{
+		const ChannelWidgetAndLine & widgetAndLine =
+			d->m_widgets.at( d->m_currentWidgetIndex );
+
+		d->m_currentWidgetIndex = -1;
+
+		d->m_mainWindow->showChannelView(
+			widgetAndLine.widget()->channel()->name() );
 	}
 }
 

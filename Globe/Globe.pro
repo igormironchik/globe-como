@@ -9,6 +9,10 @@ debug {
 	DEFINE+=DEBUG
 }
 
+win32 {
+    RC_FILE = globe.rc
+}
+
 RESOURCES = resources.qrc
 
 HEADERS += application_cfg.hpp \

@@ -45,6 +45,7 @@ class PropertiesManager;
 class ToolWindowObject;
 class ChannelsList;
 class SourcesMainWindow;
+class SourcesManager;
 
 class MainWindowPrivate;
 
@@ -63,6 +64,7 @@ public:
 		ChannelsManager * channelsManager, DB * db,
 		PropertiesManager * propertiesManager,
 		SourcesMainWindow * sourcesMainWindow,
+		SourcesManager * sourcesManager,
 		const QList< ToolWindowObject* > & toolWindows,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
@@ -74,6 +76,8 @@ public:
 public slots:
 	//! Start.
 	void start();
+	//! Show channel view.
+	void showChannelView( const QString & channelName );
 
 protected:
 	void closeEvent( QCloseEvent * event );
@@ -81,6 +85,8 @@ protected:
 private slots:
 	//! About to quit.
 	void aboutToQuit();
+	//! New channel view.
+	void newChannelView();
 
 private:
 	//! Init.

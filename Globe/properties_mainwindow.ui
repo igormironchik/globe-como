@@ -51,23 +51,6 @@
    <zorder>m_view</zorder>
    <zorder>groupBox</zorder>
   </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>683</width>
-     <height>21</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>&amp;File</string>
-    </property>
-    <addaction name="m_quitAction"/>
-   </widget>
-   <addaction name="menuFile"/>
-  </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -82,18 +65,6 @@
    <addaction name="m_editAction"/>
    <addaction name="m_removeAction"/>
   </widget>
-  <action name="m_quitAction">
-   <property name="icon">
-    <iconset resource="resources.qrc">
-     <normaloff>:/img/exit_22x22.png</normaloff>:/img/exit_22x22.png</iconset>
-   </property>
-   <property name="text">
-    <string>E&amp;xit</string>
-   </property>
-   <property name="shortcut">
-    <string>Ctrl+Q</string>
-   </property>
-  </action>
   <action name="m_addAction">
    <property name="icon">
     <iconset resource="resources.qrc">

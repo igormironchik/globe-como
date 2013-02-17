@@ -77,8 +77,9 @@ public:
 protected:
 	friend class MainWindow;
 
-	//! Init tools menu.
-	void initToolsMenu( const QList< ToolWindowObject* > & toolWindows );
+	//! Init menu.
+	void initMenu( QMenu * fileMenu,
+		const QList< ToolWindowObject* > & toolWindows );
 
 protected:
 	void closeEvent( QCloseEvent * event );

@@ -44,6 +44,7 @@ namespace Globe {
 class PropertiesManager;
 class SourcesManager;
 class ChannelsManager;
+class ToolWindowObject;
 
 
 //
@@ -75,6 +76,13 @@ public:
 	ChannelViewWindowCfg cfg() const;
 	//! Set configuration.
 	void setCfg( const ChannelViewWindowCfg & c );
+
+protected:
+	friend class MainWindow;
+
+	//! Init menu.
+	void initMenu( QMenu * fileMenu,
+		const QList< ToolWindowObject* > & toolWindows );
 
 private:
 	//! Init.

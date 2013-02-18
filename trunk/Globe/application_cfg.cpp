@@ -54,6 +54,7 @@ ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	,	m_channelsCfgFileName( other.channelsCfgFile() )
 	,	m_propertiesCfgFileName( other.propertiesCfgFile() )
 	,	m_sourcesMainWindowCfgFileName( other.sourcesMainWindowCfgFile() )
+	,	m_windowsCfgFileName( other.windowsCfgFile() )
 {
 }
 
@@ -66,6 +67,7 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 		m_channelsCfgFileName = other.channelsCfgFile();
 		m_propertiesCfgFileName = other.propertiesCfgFile();
 		m_sourcesMainWindowCfgFileName = other.sourcesMainWindowCfgFile();
+		m_windowsCfgFileName = other.windowsCfgFile();
 	}
 
 	return *this;
@@ -119,6 +121,18 @@ ApplicationCfg::setSourcesMainWindowCfgFile( const QString & fileName )
 	m_sourcesMainWindowCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::windowsCfgFile() const
+{
+	return m_windowsCfgFileName;
+}
+
+void
+ApplicationCfg::setWindowsCfgFile( const QString & fileName )
+{
+	m_windowsCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -134,6 +148,8 @@ ApplicationCfgTag::ApplicationCfgTag()
 			true )
 	,	m_sourcesMainWindowCfgFileName( *this,
 			QLatin1String( "sourcesMainWindowCfgFileName" ), true )
+	,	m_windowsCfgFileName( *this,
+			QLatin1String( "windowsCfgFileName" ), true )
 {
 }
 
@@ -147,11 +163,14 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			true )
 	,	m_sourcesMainWindowCfgFileName( *this,
 			QLatin1String( "sourcesMainWindowCfgFileName" ), true )
+	,	m_windowsCfgFileName( *this,
+			QLatin1String( "windowsCfgFileName" ), true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
 	m_propertiesCfgFileName.setValue( cfg.propertiesCfgFile() );
 	m_sourcesMainWindowCfgFileName.setValue( cfg.sourcesMainWindowCfgFile() );
+	m_windowsCfgFileName.setValue( cfg.windowsCfgFile() );
 
 	setDefined();
 }
@@ -165,6 +184,7 @@ ApplicationCfgTag::cfg() const
 	cfg.setChannelsCfgFile( m_channelsCfgFileName.value() );
 	cfg.setPropertiesCfgFile( m_propertiesCfgFileName.value() );
 	cfg.setSourcesMainWindowCfgFile( m_sourcesMainWindowCfgFileName.value() );
+	cfg.setWindowsCfgFile( m_windowsCfgFileName.value() );
 
 	return cfg;
 }

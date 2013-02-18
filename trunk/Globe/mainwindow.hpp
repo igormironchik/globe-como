@@ -35,6 +35,9 @@
 #include <QtGui/QMainWindow>
 #include <QtCore/QScopedPointer>
 
+// Globe include.
+#include <Globe/windows_cfg.hpp>
+
 
 namespace Globe {
 
@@ -80,7 +83,14 @@ public slots:
 	void showChannelView( const QString & channelName );
 
 protected:
+	friend class Configuration;
+
 	void closeEvent( QCloseEvent * event );
+
+	//! \return Windows configuration.
+	WindowsCfg windowsCfg() const;
+	//! Restore windows from configuration.
+	void restoreWindows( const WindowsCfg & cfg );
 
 private slots:
 	//! About to quit.

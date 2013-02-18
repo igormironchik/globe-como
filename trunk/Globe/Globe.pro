@@ -17,6 +17,7 @@ RESOURCES = resources.qrc
 
 HEADERS += application_cfg.hpp \
            channel_attributes.hpp \
+           channel_name_dialog.hpp \
            channels.hpp \
            channels_cfg.hpp \
            channels_list.hpp \
@@ -51,11 +52,13 @@ HEADERS += application_cfg.hpp \
            sources_widget.hpp \
            sources_widget_view.hpp \
            window_state_cfg.hpp \
+           windows_cfg.hpp \
            tool_window_object.hpp \
            utils.hpp
 
 SOURCES += application_cfg.cpp \
            channel_attributes.cpp \
+           channel_name_dialog.cpp \
            channels.cpp \
            channels_cfg.cpp \
            channels_list.cpp \
@@ -91,10 +94,12 @@ SOURCES += application_cfg.cpp \
            sources_widget.cpp \
            sources_widget_view.cpp \
            window_state_cfg.cpp \
+           windows_cfg.cpp \
            tool_window_object.cpp \
            utils.cpp
 
 FORMS	 = channels_to_show.ui \
+           channel_name_dialog.ui \
            channel_attributes.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \

@@ -42,6 +42,7 @@
 #include <Globe/mainwindow_cfg.hpp>
 #include <Globe/channels_list.hpp>
 #include <Globe/sources_mainwindow.hpp>
+#include <Globe/windows_cfg.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -63,6 +64,8 @@ static const QString defaultPropertiesCfgFileName =
 	QLatin1String( "./etc/Properties.cfg" );
 static const QString defaultSourcesMainWindowCfgFileName =
 	QLatin1String( "./etc/SourcesMainWindow.cfg" );
+static const QString defaultWindowsCfgFileName =
+	QLatin1String( "./etc/Windows.cfg" );
 
 
 //
@@ -124,11 +127,13 @@ Configuration::loadConfiguration()
 
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
 
-	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
 	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
+
+	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
+
+	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 }
 
 void
@@ -141,6 +146,8 @@ Configuration::saveConfiguration()
 	saveChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	saveMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+
+	saveWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
 	saveAppCfg( d->m_cfgFileName );
 }
@@ -317,6 +324,45 @@ Configuration::readSourcesMainWindowCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readWindowsCfg( const QString & cfgFileName )
+{
+	WindowsCfg cfg;
+
+	try {
+		if( !cfgFileName.isEmpty() )
+		{
+			WindowsTag tag;
+
+			QtConfFile::readQtConfFile( tag, cfgFileName,
+				QTextCodec::codecForName( "UTF-8" ) );
+
+			cfg = tag.cfg();
+		}
+		else
+		{
+			d->m_appCfg.setWindowsCfgFile( defaultWindowsCfgFileName );
+
+			if( d->m_appCfgWasLoaded )
+				QMessageBox::warning( d->m_mainWindow,
+					tr( "Error in application's configuration..." ),
+					tr( "Not specified windows configuration file.\n"
+						"Windows configuration will not be loaded.\n"
+						"At exit configuration of the windows will be saved\n"
+						"in \"%1\" file." )
+							.arg( defaultWindowsCfgFileName ) );
+		}
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to load windows configuration..." ),
+			x.whatAsQString() );
+	}
+
+	d->m_mainWindow->restoreWindows( cfg );
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	ApplicationCfgTag tag( d->m_appCfg );
@@ -397,6 +443,25 @@ void
 Configuration::saveSourcesMainWindowCfg( const QString & cfgFileName )
 {
 	d->m_sourcesMainWindow->saveConfiguration( cfgFileName );
+}
+
+void
+Configuration::saveWindowsCfg( const QString & cfgFileName )
+{
+	WindowsCfg cfg = d->m_mainWindow->windowsCfg();
+
+	WindowsTag tag( cfg );
+
+	try {
+		QtConfFile::writeQtConfFile( tag, cfgFileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to save windows configuration..." ),
+			x.whatAsQString() );
+	}
 }
 
 } /* namespace Globe */

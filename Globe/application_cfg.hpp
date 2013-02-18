@@ -77,6 +77,11 @@ public:
 	//! Set file name of the sources main window configuration.
 	void setSourcesMainWindowCfgFile( const QString & fileName );
 
+	//! \return File name of the windows configuration.
+	const QString & windowsCfgFile() const;
+	//! Set file name of the windows configuration.
+	void setWindowsCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -86,6 +91,8 @@ private:
 	QString m_propertiesCfgFileName;
 	//! File name of the sources main window configuration.
 	QString m_sourcesMainWindowCfgFileName;
+	//! File name of the windows configuration.
+	QString m_windowsCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -114,6 +121,8 @@ private:
 	QtConfFile::TagScalar< QString > m_propertiesCfgFileName;
 	//! File name of the sources main window configuration.
 	QtConfFile::TagScalar< QString > m_sourcesMainWindowCfgFileName;
+	//! File name of the windows configuration.
+	QtConfFile::TagScalar< QString > m_windowsCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

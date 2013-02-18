@@ -82,6 +82,8 @@ private:
 	void readPropertiesCfg( const QString & cfgFileName );
 	//! Read sources main window configuration.
 	void readSourcesMainWindowCfg( const QString & cfgFileName );
+	//! Read windows configuration.
+	void readWindowsCfg( const QString & cfgFileName );
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.
@@ -92,6 +94,8 @@ private:
 	void savePropertiesCfg( const QString & cfgFileName );
 	//! Save sources main window configuration.
 	void saveSourcesMainWindowCfg( const QString & cfgFileName );
+	//! Save windows configuration.
+	void saveWindowsCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

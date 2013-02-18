@@ -38,6 +38,8 @@
 #include <Globe/sources.hpp>
 #include <Globe/scrolled_widget.hpp>
 #include <Globe/channel_view_window.hpp>
+#include <Globe/channel_name_dialog.hpp>
+#include <Globe/channels.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
@@ -224,6 +226,27 @@ MainWindow::closeEvent( QCloseEvent * event )
 	QApplication::quit();
 }
 
+WindowsCfg
+MainWindow::windowsCfg() const
+{
+	WindowsCfg cfg;
+
+	QList< ChannelViewWindowCfg > channelViewWindows;
+
+	foreach( ChannelViewWindow * window, d->m_channelViewWindows )
+		channelViewWindows.append( window->cfg() );
+
+	cfg.setChannelViewWindows( channelViewWindows );
+
+	return cfg;
+}
+
+void
+MainWindow::restoreWindows( const WindowsCfg & cfg )
+{
+
+}
+
 void
 MainWindow::aboutToQuit()
 {
@@ -233,7 +256,13 @@ MainWindow::aboutToQuit()
 void
 MainWindow::newChannelView()
 {
+	QString channel;
 
+	ChannelNameDialog dlg( channel, d->m_sourcesManager->channelsNames(),
+		this );
+
+	if( QDialog::Accepted == dlg.exec() )
+		showChannelView( channel );
 }
 
 void

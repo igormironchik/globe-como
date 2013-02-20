@@ -45,6 +45,7 @@ class PropertiesManager;
 class SourcesManager;
 class ChannelsManager;
 class ToolWindowObject;
+class MainWindow;
 
 
 //
@@ -63,19 +64,20 @@ public:
 	ChannelViewWindow( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
+		MainWindow * mainWindow,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~ChannelViewWindow();
 
 	//! \return Name of the current channel.
 	const QString & channel() const;
-	//! Set channel.
-	void setChannel( const QString & channelName );
+	//! \return Is channel was set successfully. Set channel.
+	bool setChannel( const QString & channelName );
 
 	//! \return Configuration.
 	ChannelViewWindowCfg cfg() const;
-	//! Set configuration.
-	void setCfg( const ChannelViewWindowCfg & c );
+	//! Set window configuration.
+	void setWindowCfg( const ChannelViewWindowCfg & c );
 
 protected:
 	friend class MainWindow;
@@ -84,9 +86,15 @@ protected:
 	void initMenu( QMenu * fileMenu,
 		const QList< ToolWindowObject* > & toolWindows );
 
+	void closeEvent( QCloseEvent * event );
+
 private:
 	//! Init.
 	void init();
+	//! \return Configuration of the header.
+	ViewHeaderCfg viewHeaderCfg() const;
+	//! Restore header from configuration.
+	void restoreHeader( const ViewHeaderCfg & cfg );
 
 private:
 	Q_DISABLE_COPY( ChannelViewWindow )

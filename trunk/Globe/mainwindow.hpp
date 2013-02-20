@@ -49,6 +49,7 @@ class ToolWindowObject;
 class ChannelsList;
 class SourcesMainWindow;
 class SourcesManager;
+class ChannelViewWindow;
 
 class MainWindowPrivate;
 
@@ -75,6 +76,9 @@ public:
 
 	//! \return List with channels.
 	ChannelsList * list();
+
+	//! Channel view window was closed.
+	void channelViewWindowClosed( ChannelViewWindow * window );
 
 public slots:
 	//! Start.

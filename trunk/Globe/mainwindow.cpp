@@ -110,6 +110,8 @@ public:
 	QList< ChannelViewWindow* > m_channelViewWindows;
 	//! File menu.
 	QMenu * m_fileMenu;
+	//! Map of the channel view windows configuration.
+	QMap< QString, ChannelViewWindowCfg > m_channelViewWindowsCfg;
 }; // class MainWindowPrivate
 
 
@@ -188,6 +190,20 @@ MainWindow::start()
 }
 
 void
+MainWindow::channelViewWindowClosed( ChannelViewWindow * window )
+{
+	ChannelViewWindowCfg cfg = window->cfg();
+
+	if( d->m_channelViewWindowsCfg.find( cfg.channelName() ) !=
+		d->m_channelViewWindowsCfg.end() )
+			d->m_channelViewWindowsCfg[ cfg.channelName() ] = cfg;
+	else
+		d->m_channelViewWindowsCfg.insert( cfg.channelName(), cfg );
+
+	d->m_channelViewWindows.removeAll( window );
+}
+
+void
 MainWindow::showChannelView( const QString & channelName )
 {
 	ChannelViewWindow * window = d->channelViewWindow( channelName );
@@ -204,15 +220,23 @@ MainWindow::showChannelView( const QString & channelName )
 	else
 	{
 		window = new ChannelViewWindow( d->m_propertiesManager,
-			d->m_sourcesManager, d->m_channelsManager );
-
-		d->m_channelViewWindows.append( window );
-
-		window->setChannel( channelName );
+			d->m_sourcesManager, d->m_channelsManager, this );
 
 		window->initMenu( d->m_fileMenu, d->m_toolWindows );
 
-		window->show();
+		if( !window->setChannel( channelName ) )
+			window->deleteLater();
+		else
+		{
+			d->m_channelViewWindows.append( window );
+
+			if( d->m_channelViewWindowsCfg.find( channelName ) !=
+				d->m_channelViewWindowsCfg.end() )
+					window->setWindowCfg(
+						d->m_channelViewWindowsCfg[ channelName ] );
+			else
+				window->show();
+		}
 	}
 }
 
@@ -244,7 +268,12 @@ MainWindow::windowsCfg() const
 void
 MainWindow::restoreWindows( const WindowsCfg & cfg )
 {
+	foreach( const ChannelViewWindowCfg & c, cfg.channelViewWindows() )
+	{
+		d->m_channelViewWindowsCfg.insert( c.channelName(), c );
 
+		showChannelView( c.channelName() );
+	}
 }
 
 void

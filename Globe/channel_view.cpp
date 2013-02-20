@@ -30,6 +30,7 @@
 
 // Qt include.
 #include <QtGui/QSortFilterProxyModel>
+#include <QtGui/QHeaderView>
 
 // Globe include.
 #include <Globe/channel_view.hpp>
@@ -118,6 +119,8 @@ ChannelView::init()
 {
 	setRootIsDecorated( false );
 	setSortingEnabled( true );
+
+	header()->setStretchLastSection( false );
 
 	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
 		d->m_sourcesManager, d->m_channelsManager, this );

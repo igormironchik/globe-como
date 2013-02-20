@@ -365,9 +365,9 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
-	ApplicationCfgTag tag( d->m_appCfg );
-
 	try {
+		ApplicationCfgTag tag( d->m_appCfg );
+
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}
@@ -386,9 +386,9 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 
 	MainWindowCfg mainWindowCfg( windowStateCfg( d->m_mainWindow ), shownChannels );
 
-	MainWindowCfgTag tag( mainWindowCfg );
-
 	try {
+		MainWindowCfgTag tag( mainWindowCfg );
+
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}
@@ -419,9 +419,9 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 		channelsCfg.append( chCfg );
 	}
 
-	AvailableChannelsCfgTag tag( channelsCfg );
-
 	try {
+		AvailableChannelsCfgTag tag( channelsCfg );
+
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}
@@ -450,9 +450,9 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 {
 	WindowsCfg cfg = d->m_mainWindow->windowsCfg();
 
-	WindowsTag tag( cfg );
-
 	try {
+		WindowsTag tag( cfg );
+
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}

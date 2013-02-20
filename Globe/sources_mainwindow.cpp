@@ -136,10 +136,10 @@ SourcesMainWindow::init()
 void
 SourcesMainWindow::saveConfiguration( const QString & fileName )
 {
-	SourcesMainWindowTag tag( d->m_widget->channelName(),
-		windowStateCfg( this ) );
-
 	try {
+		SourcesMainWindowTag tag( d->m_widget->channelName(),
+			windowStateCfg( this ) );
+
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}

@@ -714,14 +714,14 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 void
 PropertiesManager::saveConfiguration( const QString & fileName )
 {
-	PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
-		d->m_exactlyThisSourceMap,
-		d->m_exactlyThisSourceInAnyChannelMap,
-		d->m_exactlyThisTypeOfSourceMap,
-		d->m_exactlyThisTypeOfSourceInAnyChannelMap,
-		windowStateCfg( this ) );
-
 	try {
+		PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
+			d->m_exactlyThisSourceMap,
+			d->m_exactlyThisSourceInAnyChannelMap,
+			d->m_exactlyThisTypeOfSourceMap,
+			d->m_exactlyThisTypeOfSourceInAnyChannelMap,
+			windowStateCfg( this ) );
+
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 	}

@@ -46,6 +46,7 @@ class SourcesManager;
 class ChannelsManager;
 class ToolWindowObject;
 class MainWindow;
+class ColorForLevel;
 
 
 //
@@ -65,6 +66,7 @@ public:
 		SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
 		MainWindow * mainWindow,
+		ColorForLevel * colorForLevel,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~ChannelViewWindow();

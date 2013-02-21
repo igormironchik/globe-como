@@ -55,12 +55,14 @@ public:
 	ChannelViewWindowPrivate( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
-		MainWindow * mainWindow )
+		MainWindow * mainWindow,
+		ColorForLevel * colorForLevel )
 		:	m_view( 0 )
 		,	m_propertiesManager( propertiesManager )
 		,	m_sourcesManager( sourcesManager )
 		,	m_channelsManager( channelsManager )
 		,	m_mainWindow( mainWindow )
+		,	m_colorForLevel( colorForLevel )
 	{
 	}
 
@@ -76,6 +78,8 @@ public:
 	ChannelsManager * m_channelsManager;
 	//! Main window.
 	MainWindow * m_mainWindow;
+	//! Correspondence between level and color.
+	ColorForLevel * m_colorForLevel;
 }; // class ChannelViewWindowPrivate
 
 
@@ -87,10 +91,11 @@ ChannelViewWindow::ChannelViewWindow( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
 		MainWindow * mainWindow,
+		ColorForLevel * colorForLevel,
 		QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
 	,	d( new ChannelViewWindowPrivate( propertiesManager, sourcesManager,
-			channelsManager, mainWindow ) )
+			channelsManager, mainWindow, colorForLevel ) )
 {
 	init();
 }
@@ -230,7 +235,8 @@ void
 ChannelViewWindow::init()
 {
 	d->m_view = new ChannelView( d->m_propertiesManager,
-		d->m_sourcesManager, d->m_channelsManager, this );
+		d->m_sourcesManager, d->m_channelsManager,
+		d->m_colorForLevel, this );
 
 	setCentralWidget( d->m_view );
 }

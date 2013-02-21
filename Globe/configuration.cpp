@@ -43,6 +43,7 @@
 #include <Globe/channels_list.hpp>
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/windows_cfg.hpp>
+#include <Globe/color_for_level.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -66,6 +67,8 @@ static const QString defaultSourcesMainWindowCfgFileName =
 	QLatin1String( "./etc/SourcesMainWindow.cfg" );
 static const QString defaultWindowsCfgFileName =
 	QLatin1String( "./etc/Windows.cfg" );
+static const QString defaultColorsCfgFilename =
+	QLatin1String( "./etc/Colors.cfg" );
 
 
 //
@@ -85,6 +88,7 @@ public:
 		,	m_propertiesManager( propertiesManager )
 		,	m_sourcesMainWindow( sourcesMainWindow )
 		,	m_appCfgWasLoaded( false )
+		,	m_colorForLevel( new ColorForLevel( m_mainWindow ) )
 	{
 	}
 
@@ -100,6 +104,8 @@ public:
 	ApplicationCfg m_appCfg;
 	//! Was application's configuration loaded?
 	bool m_appCfgWasLoaded;
+	//! Correspondence between level and color.
+	ColorForLevel * m_colorForLevel;
 }; // class ConfigurationPrivate
 
 
@@ -133,6 +139,8 @@ Configuration::loadConfiguration()
 
 	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
+	readColorsCfg( d->m_appCfg.colorsCfgFile() );
+
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 }
 
@@ -149,7 +157,15 @@ Configuration::saveConfiguration()
 
 	saveWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
+	saveColorsCfg( d->m_appCfg.colorsCfgFile() );
+
 	saveAppCfg( d->m_cfgFileName );
+}
+
+ColorForLevel *
+Configuration::colorForLevel() const
+{
+	return d->m_colorForLevel;
 }
 
 void
@@ -363,6 +379,26 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readColorsCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		d->m_colorForLevel->readCfg( cfgFileName );
+	else
+	{
+		d->m_appCfg.setColorsCfgFile( defaultColorsCfgFilename );
+
+		if( d->m_appCfgWasLoaded )
+			QMessageBox::warning( d->m_mainWindow,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified colors configuration file.\n"
+					"Colors configuration will not be loaded.\n"
+					"At exit colors configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultColorsCfgFilename ) );
+	}
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	try {
@@ -462,6 +498,12 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 			tr( "Unable to save windows configuration..." ),
 			x.whatAsQString() );
 	}
+}
+
+void
+Configuration::saveColorsCfg( const QString & cfgFileName )
+{
+	d->m_colorForLevel->saveCfg( cfgFileName );
 }
 
 } /* namespace Globe */

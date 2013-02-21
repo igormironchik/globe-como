@@ -31,9 +31,6 @@
 // Globe include
 #include <Globe/application_cfg.hpp>
 
-// C++ include.
-#include <limits>
-
 
 namespace Globe {
 
@@ -55,6 +52,7 @@ ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	,	m_propertiesCfgFileName( other.propertiesCfgFile() )
 	,	m_sourcesMainWindowCfgFileName( other.sourcesMainWindowCfgFile() )
 	,	m_windowsCfgFileName( other.windowsCfgFile() )
+	,	m_colorsCfgFileName( other.colorsCfgFile() )
 {
 }
 
@@ -68,6 +66,7 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 		m_propertiesCfgFileName = other.propertiesCfgFile();
 		m_sourcesMainWindowCfgFileName = other.sourcesMainWindowCfgFile();
 		m_windowsCfgFileName = other.windowsCfgFile();
+		m_colorsCfgFileName = other.colorsCfgFile();
 	}
 
 	return *this;
@@ -133,6 +132,18 @@ ApplicationCfg::setWindowsCfgFile( const QString & fileName )
 	m_windowsCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::colorsCfgFile() const
+{
+	return m_colorsCfgFileName;
+}
+
+void
+ApplicationCfg::setColorsCfgFile( const QString & fileName )
+{
+	m_colorsCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -150,6 +161,8 @@ ApplicationCfgTag::ApplicationCfgTag()
 			QLatin1String( "sourcesMainWindowCfgFileName" ), true )
 	,	m_windowsCfgFileName( *this,
 			QLatin1String( "windowsCfgFileName" ), true )
+	,	m_colorsCfgFileName( *this,
+			QLatin1String( "colorsCfgFileName" ), true )
 {
 }
 
@@ -165,12 +178,15 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			QLatin1String( "sourcesMainWindowCfgFileName" ), true )
 	,	m_windowsCfgFileName( *this,
 			QLatin1String( "windowsCfgFileName" ), true )
+	,	m_colorsCfgFileName( *this,
+			QLatin1String( "colorsCfgFileName" ), true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
 	m_propertiesCfgFileName.setValue( cfg.propertiesCfgFile() );
 	m_sourcesMainWindowCfgFileName.setValue( cfg.sourcesMainWindowCfgFile() );
 	m_windowsCfgFileName.setValue( cfg.windowsCfgFile() );
+	m_colorsCfgFileName.setValue( cfg.colorsCfgFile() );
 
 	setDefined();
 }
@@ -185,6 +201,7 @@ ApplicationCfgTag::cfg() const
 	cfg.setPropertiesCfgFile( m_propertiesCfgFileName.value() );
 	cfg.setSourcesMainWindowCfgFile( m_sourcesMainWindowCfgFileName.value() );
 	cfg.setWindowsCfgFile( m_windowsCfgFileName.value() );
+	cfg.setColorsCfgFile( m_colorsCfgFileName.value() );
 
 	return cfg;
 }

@@ -28,6 +28,8 @@ HEADERS += application_cfg.hpp \
            channel_view_window_cfg.hpp \
            channel_view_window_model.hpp \
            channel_widget.hpp \
+           color_for_level.hpp \
+           color_for_level_cfg.hpp \
            condition.hpp \
            condition_cfg.hpp \
            configuration.hpp \
@@ -69,6 +71,8 @@ SOURCES += application_cfg.cpp \
            channel_view_window_cfg.cpp \
            channel_view_window_model.cpp \
            channel_widget.cpp \
+           color_for_level.cpp \
+           color_for_level_cfg.cpp \
            condition.cpp \
            condition_cfg.cpp \
            configuration.cpp \

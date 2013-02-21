@@ -31,10 +31,12 @@
 // Qt include.
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QHeaderView>
+#include <QtGui/QPainter>
 
 // Globe include.
 #include <Globe/channel_view.hpp>
 #include <Globe/channel_view_window_model.hpp>
+#include <Globe/color_for_level.hpp>
 
 #ifdef DEBUG
 
@@ -54,12 +56,14 @@ class ChannelViewPrivate {
 public:
 	ChannelViewPrivate( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager )
+		ChannelsManager * channelsManager,
+		ColorForLevel * colorForLevel )
 		:	m_model( 0 )
 		,	m_sortModel( 0 )
 		,	m_propertiesManager( propertiesManager )
 		,	m_sourcesManager( sourcesManager )
 		,	m_channelsManager( channelsManager )
+		,	m_colorForLevel( colorForLevel )
 	{
 	}
 
@@ -73,6 +77,8 @@ public:
 	SourcesManager * m_sourcesManager;
 	//! Channels manager.
 	ChannelsManager * m_channelsManager;
+	//! Correspondence between level and color.
+	ColorForLevel * m_colorForLevel;
 }; // class ChannelViewPrivate
 
 
@@ -83,10 +89,11 @@ public:
 ChannelView::ChannelView( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager,
 		ChannelsManager * channelsManager,
+		ColorForLevel * colorForLevel,
 		QWidget * parent )
 	:	QTreeView( parent )
 	,	d( new ChannelViewPrivate( propertiesManager, sourcesManager,
-			channelsManager ) )
+			channelsManager, colorForLevel ) )
 {
 	init();
 }
@@ -110,7 +117,22 @@ ChannelView::sortModel()
 void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
-{
+{	
+	if( !d->m_model->isConnected() )
+		painter->fillRect( option.rect,
+			d->m_colorForLevel->disconnectedColor() );
+	else
+	{
+		const QModelIndex actualIndex = d->m_sortModel->mapToSource( index );
+
+		if( !d->m_model->isRegistered( actualIndex ) )
+			painter->fillRect( option.rect,
+				d->m_colorForLevel->deregisteredColor() );
+		else
+			painter->fillRect( option.rect,
+				d->m_colorForLevel->color( d->m_model->level( actualIndex ) ) );
+	}
+
 	QTreeView::drawRow( painter, option, index );
 }
 

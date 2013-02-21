@@ -12,5 +12,8 @@
         <file>img/down_22x22.png</file>
         <file>img/edit_22x22.png</file>
         <file>img/new_22x22.png</file>
+        <file>img/edit_copy_22x22.png</file>
+        <file>img/edit_select_all_22x22.png</file>
+        <file>img/fill_color_22x22.png</file>
     </qresource>
 </RCC>

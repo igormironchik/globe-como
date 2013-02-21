@@ -70,6 +70,7 @@ public:
 		,	m_colorForLevel( colorForLevel )
 		,	m_copyAction( 0 )
 		,	m_selectAllAction( 0 )
+		,	m_fillColorAction( 0 )
 	{
 	}
 
@@ -89,6 +90,8 @@ public:
 	QAction * m_copyAction;
 	//! Select all action.
 	QAction * m_selectAllAction;
+	//! Action for turning on/off coloring of view.
+	QAction * m_fillColorAction;
 }; // class ChannelViewPrivate
 
 
@@ -124,8 +127,38 @@ ChannelView::sortModel()
 	return d->m_sortModel;
 }
 
+QAction *
+ChannelView::copyAction() const
+{
+	return d->m_copyAction;
+}
+
+QAction *
+ChannelView::selectAllAction() const
+{
+	return d->m_selectAllAction;
+}
+
+QAction *
+ChannelView::fillColorAction() const
+{
+	return d->m_fillColorAction;
+}
+
 void
-ChannelView::selectAllAction()
+ChannelView::selectionChanged ( const QItemSelection & selected,
+	const QItemSelection & deselected )
+{
+	if( !selected.isEmpty() )
+		d->m_copyAction->setEnabled( true );
+	else
+		d->m_copyAction->setEnabled( false );
+
+	QTreeView::selectionChanged( selected, deselected );
+}
+
+void
+ChannelView::selectAllImplementation()
 {
 	selectAll();
 }
@@ -139,7 +172,7 @@ static QString boolToString( bool value )
 }
 
 void
-ChannelView::copyAction()
+ChannelView::copyImplementation()
 {
 	QModelIndexList indexes = selectionModel()->selectedRows();
 
@@ -189,22 +222,31 @@ ChannelView::copyAction()
 }
 
 void
+ChannelView::fillWithColorChanged()
+{
+	update();
+}
+
+void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
-{	
-	if( !d->m_model->isConnected() )
-		painter->fillRect( option.rect,
-			d->m_colorForLevel->disconnectedColor() );
-	else
+{
+	if( d->m_fillColorAction->isChecked() )
 	{
-		const QModelIndex actualIndex = d->m_sortModel->mapToSource( index );
-
-		if( !d->m_model->isRegistered( actualIndex ) )
+		if( !d->m_model->isConnected() )
 			painter->fillRect( option.rect,
-				d->m_colorForLevel->deregisteredColor() );
+				d->m_colorForLevel->disconnectedColor() );
 		else
-			painter->fillRect( option.rect,
-				d->m_colorForLevel->color( d->m_model->level( actualIndex ) ) );
+		{
+			const QModelIndex actualIndex = d->m_sortModel->mapToSource( index );
+
+			if( !d->m_model->isRegistered( actualIndex ) )
+				painter->fillRect( option.rect,
+					d->m_colorForLevel->deregisteredColor() );
+			else
+				painter->fillRect( option.rect,
+					d->m_colorForLevel->color( d->m_model->level( actualIndex ) ) );
+		}
 	}
 
 	QTreeView::drawRow( painter, option, index );
@@ -218,19 +260,30 @@ ChannelView::init()
 	setSelectionMode( QAbstractItemView::ExtendedSelection );
 	setSelectionBehavior( QAbstractItemView::SelectRows );
 
-	d->m_copyAction= new QAction( this );
+	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
+		tr( "Copy" ), this );
 	d->m_copyAction->setShortcut( QKeySequence( "Ctrl+C" ) );
+	d->m_copyAction->setEnabled( false );
 
-	d->m_selectAllAction = new QAction( this );
+	d->m_selectAllAction = new QAction( QIcon( ":/img/edit_select_all_22x22.png" ),
+		tr( "Select All" ), this );
 	d->m_selectAllAction->setShortcut( QKeySequence( "Ctrl+A" ) );
+
+	d->m_fillColorAction = new QAction( QIcon( ":/img/fill_color_22x22.png" ),
+		tr( "Fill With Color" ), this );
+	d->m_fillColorAction->setShortcut( QKeySequence( "Ctrl+F" ) );
+	d->m_fillColorAction->setCheckable( true );
+	d->m_fillColorAction->setChecked( true );
 
 	addAction( d->m_copyAction );
 	addAction( d->m_selectAllAction );
 
 	connect( d->m_copyAction, SIGNAL( triggered() ),
-		this, SLOT( copyAction() ) );
+		this, SLOT( copyImplementation() ) );
 	connect( d->m_selectAllAction, SIGNAL( triggered() ),
-		this, SLOT( selectAllAction() ) );
+		this, SLOT( selectAllImplementation() ) );
+	connect( d->m_fillColorAction, SIGNAL( changed() ),
+		this, SLOT( fillWithColorChanged() ) );
 
 	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
 		d->m_sourcesManager, d->m_channelsManager, this );

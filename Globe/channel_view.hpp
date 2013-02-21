@@ -75,11 +75,27 @@ public:
 	//! \return Sort model.
 	QSortFilterProxyModel * sortModel();
 
+	//! \return Action for copy.
+	QAction * copyAction() const;
+
+	//! \return Action for selecting all rows.
+	QAction * selectAllAction() const;
+
+	//! \return Action for turning on/off coloring of view.
+	QAction * fillColorAction() const;
+
+protected slots:
+	//! Selection changed.
+	void selectionChanged ( const QItemSelection & selected,
+		const QItemSelection & deselected );
+
 private slots:
 	//! Select all.
-	void selectAllAction();
+	void selectAllImplementation();
 	//! Copy.
-	void copyAction();
+	void copyImplementation();
+	//! Fill with color changed.
+	void fillWithColorChanged();
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

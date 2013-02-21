@@ -42,6 +42,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QCloseEvent>
 #include <QtGui/QHeaderView>
+#include <QtGui/QToolBar>
 
 
 namespace Globe {
@@ -239,6 +240,14 @@ ChannelViewWindow::init()
 		d->m_colorForLevel, this );
 
 	setCentralWidget( d->m_view );
+
+	QToolBar * toolBar = new QToolBar( this );
+	addToolBar( Qt::TopToolBarArea, toolBar );
+
+	toolBar->addAction( d->m_view->copyAction() );
+	toolBar->addAction( d->m_view->selectAllAction() );
+	toolBar->addSeparator();
+	toolBar->addAction( d->m_view->fillColorAction() );
 }
 
 void

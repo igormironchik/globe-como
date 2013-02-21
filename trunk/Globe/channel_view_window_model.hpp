@@ -82,6 +82,8 @@ public:
 	bool isRegistered( const QModelIndex & index ) const;
 	//! \return Level.
 	Level level( const QModelIndex & index ) const;
+	//! \return Priority.
+	int priority( const QModelIndex & index ) const;
 
 	//! \return Is channel connected?
 	bool isConnected() const;

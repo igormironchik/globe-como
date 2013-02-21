@@ -43,6 +43,7 @@ class DB;
 class PropertiesManager;
 class MainWindow;
 class SourcesMainWindow;
+class ColorForLevel;
 
 
 //
@@ -71,6 +72,9 @@ public:
 	//! Save configuration.
 	void saveConfiguration();
 
+	//! \return Correspondence between level and color.
+	ColorForLevel * colorForLevel() const;
+
 private:
 	//! Read application's configuration.
 	void readAppCfg( const QString & cfgFileName );
@@ -84,6 +88,8 @@ private:
 	void readSourcesMainWindowCfg( const QString & cfgFileName );
 	//! Read windows configuration.
 	void readWindowsCfg( const QString & cfgFileName );
+	//! Read colors cfg.
+	void readColorsCfg( const QString & cfgFileName );
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.
@@ -96,6 +102,8 @@ private:
 	void saveSourcesMainWindowCfg( const QString & cfgFileName );
 	//! Save windows configuration.
 	void saveWindowsCfg( const QString & cfgFileName );
+	//! Save colors cfg.
+	void saveColorsCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

@@ -28,67 +28,54 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CHANNEL_VIEW_HPP__INCLUDED
-#define GLOBE__CHANNEL_VIEW_HPP__INCLUDED
+#ifndef GLOBE__COLOR_FOR_LEVEL_CFG_HPP__INCLUDED
+#define GLOBE__COLOR_FOR_LEVEL_CFG_HPP__INCLUDED
 
-// Qt include.
-#include <QtGui/QTreeView>
-#include <QtCore/QScopedPointer>
-
-QT_BEGIN_NAMESPACE
-class QSortFilterProxyModel;
-QT_END_NAMESPACE
+// QtConfFile include.
+#include <QtConfFile/TagNoValue>
+#include <QtConfFile/TagScalar>
 
 
 namespace Globe {
 
-class ChannelViewWindowModel;
-class PropertiesManager;
-class SourcesManager;
-class ChannelsManager;
 class ColorForLevel;
 
 
 //
-// ChannelView
+// ColorForLevelTag
 //
 
-class ChannelViewPrivate;
-
-//! View with channel's sources.
-class ChannelView
-	:	public QTreeView
+//! Tag with corresondence between level and color.
+class ColorForLevelTag
+	:	public QtConfFile::TagNoValue
 {
-	Q_OBJECT
-
 public:
-	ChannelView( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		ColorForLevel * colorForLevel,
-		QWidget * parent = 0 );
-	~ChannelView();
+	ColorForLevelTag();
 
-	//! \return Model.
-	ChannelViewWindowModel * model();
+	explicit ColorForLevelTag( ColorForLevel * colorForLevel );
 
-	//! \return Sort model.
-	QSortFilterProxyModel * sortModel();
-
-protected:
-	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,
-		const QModelIndex & index ) const;
+	//! Init correspondence from configuration.
+	void initColorForLevel( ColorForLevel * colorForLevel );
 
 private:
-	//! Init.
-	void init();
-
-private:
-	Q_DISABLE_COPY( ChannelView )
-
-	QScopedPointer< ChannelViewPrivate > d;
-}; // class ChannelView
+	//! Color for "none" level.
+	QtConfFile::TagScalar< QString > m_noneColor;
+	//! Color for "critical" level.
+	QtConfFile::TagScalar< QString > m_criticalColor;
+	//! Color for "error" level.
+	QtConfFile::TagScalar< QString > m_errorColor;
+	//! Color for "warning" level.
+	QtConfFile::TagScalar< QString > m_warningColor;
+	//! Color for "debug" level.
+	QtConfFile::TagScalar< QString > m_debugColor;
+	//! Color for "info" level.
+	QtConfFile::TagScalar< QString > m_infoColor;
+	//! Color for deregistered sources.
+	QtConfFile::TagScalar< QString > m_deregisteredColor;
+	//! Color for disconected sources.
+	QtConfFile::TagScalar< QString > m_disconnectedColor;
+}; // class ColorForLevelTag
 
 } /* namespace Globe */
 
-#endif // GLOBE__CHANNEL_VIEW_HPP__INCLUDED
+#endif // GLOBE__COLOR_FOR_LEVEL_CFG_HPP__INCLUDED

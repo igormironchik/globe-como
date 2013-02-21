@@ -28,67 +28,77 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__CHANNEL_VIEW_HPP__INCLUDED
-#define GLOBE__CHANNEL_VIEW_HPP__INCLUDED
+#ifndef GLOBE__COLOR_FOR_LEVEL_HPP__INCLUDED
+#define GLOBE__COLOR_FOR_LEVEL_HPP__INCLUDED
+
+// Globe include.
+#include <Globe/condition.hpp>
 
 // Qt include.
-#include <QtGui/QTreeView>
+#include <QtCore/QObject>
+#include <QtGui/QColor>
 #include <QtCore/QScopedPointer>
-
-QT_BEGIN_NAMESPACE
-class QSortFilterProxyModel;
-QT_END_NAMESPACE
 
 
 namespace Globe {
 
-class ChannelViewWindowModel;
-class PropertiesManager;
-class SourcesManager;
-class ChannelsManager;
-class ColorForLevel;
+class MainWindow;
 
 
 //
-// ChannelView
+// ColorForLevel
 //
 
-class ChannelViewPrivate;
+class ColorForLevelPrivate;
 
-//! View with channel's sources.
-class ChannelView
-	:	public QTreeView
+//! Correspondence between level and color.
+class ColorForLevel
+	:	public QObject
 {
 	Q_OBJECT
 
+signals:
+	//! Changed.
+	void changed();
+
 public:
-	ChannelView( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		ColorForLevel * colorForLevel,
-		QWidget * parent = 0 );
-	~ChannelView();
+	explicit ColorForLevel( MainWindow * mainWindow );
 
-	//! \return Model.
-	ChannelViewWindowModel * model();
+	~ColorForLevel();
 
-	//! \return Sort model.
-	QSortFilterProxyModel * sortModel();
+	//! \return Color for the given \arg level level.
+	const QColor & color( Level level ) const;
+
+	//! \return Color for deregistered sources.
+	const QColor & deregisteredColor() const;
+
+	//! \return Color for disconnected sources.
+	const QColor & disconnectedColor() const;
+
+	//! Set colors.
+	void setColors( const QColor & none,
+		const QColor & critical,
+		const QColor & error,
+		const QColor & warning,
+		const QColor & debug,
+		const QColor & info,
+		const QColor & deregistered,
+		const QColor & disconnected );
 
 protected:
-	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,
-		const QModelIndex & index ) const;
+	friend class Configuration;
+
+	//! Save configuration.
+	void saveCfg( const QString & fileName );
+	//! Read configuration.
+	void readCfg( const QString & fileName );
 
 private:
-	//! Init.
-	void init();
+	Q_DISABLE_COPY( ColorForLevel )
 
-private:
-	Q_DISABLE_COPY( ChannelView )
-
-	QScopedPointer< ChannelViewPrivate > d;
-}; // class ChannelView
+	QScopedPointer< ColorForLevelPrivate > d;
+}; // class ColorForLevel
 
 } /* namespace Globe */
 
-#endif // GLOBE__CHANNEL_VIEW_HPP__INCLUDED
+#endif // GLOBE__COLOR_FOR_LEVEL_HPP__INCLUDED

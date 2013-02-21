@@ -83,7 +83,7 @@ bool checkIfStatement( const T & a, const T & b, Expression expr )
 bool
 Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 {
-	if( valueType = Como::Source::Int )
+	if( valueType == Como::Source::Int )
 	{
 		bool ok = false;
 
@@ -97,9 +97,9 @@ Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 		if( !ok )
 			return false;
 
-		return checkIfStatement< int > ( a, b, m_exprType );
+		return checkIfStatement< int > ( b, a, m_exprType );
 	}
-	else if( valueType = Como::Source::Double )
+	else if( valueType == Como::Source::Double )
 	{
 		bool ok = false;
 
@@ -113,11 +113,11 @@ Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 		if( !ok )
 			return false;
 
-		return checkIfStatement< double > ( a, b, m_exprType );
+		return checkIfStatement< double > ( b, a, m_exprType );
 	}
 	else
-		return checkIfStatement< QString > ( m_value.toString(),
-			val.toString(), m_exprType );
+		return checkIfStatement< QString > ( val.toString(),
+			m_value.toString(), m_exprType );
 }
 
 Expression

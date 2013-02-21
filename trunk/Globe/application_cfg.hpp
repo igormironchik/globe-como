@@ -82,6 +82,11 @@ public:
 	//! Set file name of the windows configuration.
 	void setWindowsCfgFile( const QString & fileName );
 
+	//! \return File name of the colors correspondence configuration.
+	const QString & colorsCfgFile() const;
+	//! Set file name of the colors correspondence configuration.
+	void setColorsCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -93,6 +98,8 @@ private:
 	QString m_sourcesMainWindowCfgFileName;
 	//! File name of the windows configuration.
 	QString m_windowsCfgFileName;
+	//! File name of the colors correspondence configuration.
+	QString m_colorsCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -123,6 +130,8 @@ private:
 	QtConfFile::TagScalar< QString > m_sourcesMainWindowCfgFileName;
 	//! File name of the windows configuration.
 	QtConfFile::TagScalar< QString > m_windowsCfgFileName;
+	//! File name of the colors correspondence configuration.
+	QtConfFile::TagScalar< QString > m_colorsCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

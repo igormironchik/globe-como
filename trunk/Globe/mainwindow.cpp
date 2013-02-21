@@ -220,7 +220,8 @@ MainWindow::showChannelView( const QString & channelName )
 	else
 	{
 		window = new ChannelViewWindow( d->m_propertiesManager,
-			d->m_sourcesManager, d->m_channelsManager, this );
+			d->m_sourcesManager, d->m_channelsManager, this,
+			d->m_cfg.colorForLevel() );
 
 		window->initMenu( d->m_fileMenu, d->m_toolWindows );
 

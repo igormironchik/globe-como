@@ -38,6 +38,9 @@
 // Como include.
 #include <Como/Source>
 
+// Globe include.
+#include <Globe/condition.hpp>
+
 
 namespace Globe {
 
@@ -75,6 +78,13 @@ public:
 
 	//! \return Como source for the given index.
 	const Como::Source & source( const QModelIndex & index ) const;
+	//! \return Is source registered?
+	bool isRegistered( const QModelIndex & index ) const;
+	//! \return Level.
+	Level level( const QModelIndex & index ) const;
+
+	//! \return Is channel connected?
+	bool isConnected() const;
 
 	//! \return Count of the rows.
 	int rowCount( const QModelIndex & parent = QModelIndex() ) const;

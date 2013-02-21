@@ -49,14 +49,16 @@ public:
 	ChannelViewWindowModelData()
 		:	m_priority( 0 )
 		,	m_isRegistered( false )
+		,	m_level( None )
 	{
 	}
 
 	ChannelViewWindowModelData( const Como::Source & source,
-		int priority, bool isRegistered )
+		int priority, bool isRegistered, Level level )
 		:	m_source( source )
 		,	m_priority( priority )
 		,	m_isRegistered( isRegistered )
+		,	m_level( level )
 	{
 	}
 
@@ -66,6 +68,8 @@ public:
 	int m_priority;
 	//! Is source registered?
 	bool m_isRegistered;
+	//! Level.
+	Level m_level;
 }; // class ChannelViewWindowModelData
 
 
@@ -183,12 +187,18 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 					d->m_channelName, 0 );
 
 				int priority = 0;
+				Level level = None;
 
 				if( props )
+				{
 					priority = props->priority();
 
+					level = props->checkConditions( source.value(),
+						source.type() ).level();
+				}
+
 				d->m_data.insert( i, ChannelViewWindowModelData( source, priority,
-					true ) );
+					true, level ) );
 			}
 
 			for( int i = 0; i < deregisteredCount; ++i )
@@ -199,19 +209,23 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 					d->m_channelName, 0 );
 
 				int priority = 0;
+				Level level = None;
 
 				if( props )
+				{
 					priority = props->priority();
 
+					level = props->checkConditions( source.value(),
+						source.type() ).level();
+				}
+
 				d->m_data.insert( registeredCount + i,
-					ChannelViewWindowModelData( source, priority, false ) );
+					ChannelViewWindowModelData( source, priority,
+						false, level ) );
 			}
 
 			endInsertRows();
 		}
-
-//		emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
-//			QAbstractTableModel::index( rows - 1, priorityColumn ) );
 	}
 }
 
@@ -256,12 +270,18 @@ ChannelViewWindowModel::addItem( const Como::Source & source, bool isRegistered 
 		d->m_channelName, 0 );
 
 	int priority = 0;
+	Level level = None;
 
 	if( props )
+	{
 		priority = props->priority();
 
+		level = props->checkConditions( source.value(),
+			source.type() ).level();
+	}
+
 	d->m_data.insert( size, ChannelViewWindowModelData( source, priority,
-		isRegistered ) );
+		isRegistered, level ) );
 
 	endInsertRows();
 }
@@ -270,6 +290,24 @@ const Como::Source &
 ChannelViewWindowModel::source( const QModelIndex & index ) const
 {
 	return d->m_data.at( index.row() ).m_source;
+}
+
+bool
+ChannelViewWindowModel::isRegistered( const QModelIndex & index ) const
+{
+	return d->m_data.at( index.row() ).m_isRegistered;
+}
+
+Level
+ChannelViewWindowModel::level( const QModelIndex & index ) const
+{
+	return d->m_data.at( index.row() ).m_level;
+}
+
+bool
+ChannelViewWindowModel::isConnected() const
+{
+	return d->m_isConnected;
 }
 
 void
@@ -287,11 +325,19 @@ ChannelViewWindowModel::sourceUpdated( const Como::Source & source )
 			d->m_channelName, 0 );
 
 		int priority = 0;
+		Level level = None;
 
 		if( props )
+		{
 			priority = props->priority();
 
+			level = props->checkConditions( source.value(),
+				source.type() ).level();
+		}
+
 		data.m_priority = priority;
+		data.m_level = level;
+		data.m_isRegistered = true;
 
 		emit dataChanged( QAbstractTableModel::index( index, sourceNameColumn ),
 			QAbstractTableModel::index( index, priorityColumn ) );
@@ -393,36 +439,6 @@ ChannelViewWindowModel::data( const QModelIndex & index, int role ) const
 	else
 		return QVariant();
 }
-
-//bool
-//ChannelViewWindowModel::insertRows( int row, int count, const QModelIndex & parent )
-//{
-//	Q_UNUSED( parent );
-
-//	beginInsertRows( QModelIndex(), row, row + count - 1 );
-
-//	for( int i = 0; i < count; ++i )
-//		d->m_data.insert( row + i, ChannelViewWindowModelData() );
-
-//	endInsertRows();
-
-//	return true;
-//}
-
-//bool
-//ChannelViewWindowModel::removeRows( int row, int count, const QModelIndex & parent )
-//{
-//	Q_UNUSED( parent );
-
-//	beginRemoveRows( QModelIndex(), row, row + count - 1 );
-
-//	for( int i = 0; i < count; ++i )
-//		d->m_data.removeAt( row );
-
-//	endRemoveRows();
-
-//	return true;
-//}
 
 bool
 ChannelViewWindowModel::setData( const QModelIndex & index, const QVariant & value, int role )

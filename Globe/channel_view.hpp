@@ -75,6 +75,12 @@ public:
 	//! \return Sort model.
 	QSortFilterProxyModel * sortModel();
 
+private slots:
+	//! Select all.
+	void selectAllAction();
+	//! Copy.
+	void copyAction();
+
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 		const QModelIndex & index ) const;

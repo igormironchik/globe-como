@@ -32,6 +32,10 @@
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QHeaderView>
 #include <QtGui/QPainter>
+#include <QtGui/QAction>
+#include <QtGui/QItemSelectionModel>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
 
 // Globe include.
 #include <Globe/channel_view.hpp>
@@ -64,6 +68,8 @@ public:
 		,	m_sourcesManager( sourcesManager )
 		,	m_channelsManager( channelsManager )
 		,	m_colorForLevel( colorForLevel )
+		,	m_copyAction( 0 )
+		,	m_selectAllAction( 0 )
 	{
 	}
 
@@ -79,6 +85,10 @@ public:
 	ChannelsManager * m_channelsManager;
 	//! Correspondence between level and color.
 	ColorForLevel * m_colorForLevel;
+	//! Copy action.
+	QAction * m_copyAction;
+	//! Select all action.
+	QAction * m_selectAllAction;
 }; // class ChannelViewPrivate
 
 
@@ -115,6 +125,70 @@ ChannelView::sortModel()
 }
 
 void
+ChannelView::selectAllAction()
+{
+	selectAll();
+}
+
+static QString boolToString( bool value )
+{
+	if( value )
+		return QLatin1String( "true" );
+	else
+		return QLatin1String( "false" );
+}
+
+void
+ChannelView::copyAction()
+{
+	QModelIndexList indexes = selectionModel()->selectedRows();
+
+	const int size = indexes.size();
+
+	for( int i = 0; i < size; ++i )
+		indexes[ i ] = d->m_sortModel->mapToSource( indexes[ i ] );
+
+	QClipboard * clipboard = QApplication::clipboard();
+
+	QString text;
+
+	for( int i = 0; i < d->m_model->columnCount(); ++i )
+	{
+		text.append( d->m_model->headerData( i, Qt::Horizontal,
+			Qt::DisplayRole ).toString() );
+
+		text.append( QLatin1String( ";" ) );
+	}
+
+	text.append( tr( "Registered" ) );
+	text.append( QLatin1String( ";\n" ) );
+
+	for( int i = 0; i < size; ++i )
+	{
+		const Como::Source & source = d->m_model->source( indexes[ i ] );
+		const bool isRegistered = d->m_model->isRegistered( indexes[ i ] );
+		const int priority = d->m_model->priority( indexes[ i ] );
+
+		text.append( source.name() );
+		text.append( QLatin1String( ";" ) );
+		text.append( source.typeName() );
+		text.append( QLatin1String( ";" ) );
+		text.append( source.value().toString() );
+		text.append( QLatin1String( ";" ) );
+		text.append( source.dateTime().toString() );
+		text.append( QLatin1String( ";" ) );
+		text.append( QString::number( priority ) );
+		text.append( QLatin1String( ";" ) );
+		text.append( boolToString( isRegistered ) );
+		text.append( QLatin1String( ";\n" ) );
+	}
+
+	clipboard->setText( text );
+
+	clearSelection();
+}
+
+void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
 {	
@@ -141,8 +215,22 @@ ChannelView::init()
 {
 	setRootIsDecorated( false );
 	setSortingEnabled( true );
+	setSelectionMode( QAbstractItemView::ExtendedSelection );
+	setSelectionBehavior( QAbstractItemView::SelectRows );
 
-	header()->setStretchLastSection( false );
+	d->m_copyAction= new QAction( this );
+	d->m_copyAction->setShortcut( QKeySequence( "Ctrl+C" ) );
+
+	d->m_selectAllAction = new QAction( this );
+	d->m_selectAllAction->setShortcut( QKeySequence( "Ctrl+A" ) );
+
+	addAction( d->m_copyAction );
+	addAction( d->m_selectAllAction );
+
+	connect( d->m_copyAction, SIGNAL( triggered() ),
+		this, SLOT( copyAction() ) );
+	connect( d->m_selectAllAction, SIGNAL( triggered() ),
+		this, SLOT( selectAllAction() ) );
 
 	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
 		d->m_sourcesManager, d->m_channelsManager, this );

@@ -304,6 +304,12 @@ ChannelViewWindowModel::level( const QModelIndex & index ) const
 	return d->m_data.at( index.row() ).m_level;
 }
 
+int
+ChannelViewWindowModel::priority( const QModelIndex & index ) const
+{
+	return d->m_data.at( index.row() ).m_priority;
+}
+
 bool
 ChannelViewWindowModel::isConnected() const
 {

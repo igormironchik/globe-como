@@ -118,6 +118,20 @@ ChannelViewWindow::setChannel( const QString & channelName )
 
 	if( channel )
 	{
+		if( !channel->isMustBeConnected() && !channel->isConnected() )
+		{
+			const QMessageBox::StandardButton button =
+				QMessageBox::question( this, tr( "Channel is not connected..." ),
+					tr( "Channel \"%1\" is not connected.\n"
+						"Do you want to connect it?" )
+							.arg( channelName ),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Ok );
+
+			if( button == QMessageBox::Ok )
+				channel->connectToHost();
+		}
+
 		d->m_channelName = channelName;
 
 		d->m_view->model()->initModel( d->m_channelName );

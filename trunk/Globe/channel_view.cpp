@@ -277,6 +277,7 @@ ChannelView::init()
 
 	addAction( d->m_copyAction );
 	addAction( d->m_selectAllAction );
+	addAction( d->m_fillColorAction );
 
 	connect( d->m_copyAction, SIGNAL( triggered() ),
 		this, SLOT( copyImplementation() ) );

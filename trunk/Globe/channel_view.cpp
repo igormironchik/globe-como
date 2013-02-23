@@ -228,6 +228,12 @@ ChannelView::fillWithColorChanged()
 }
 
 void
+ChannelView::colorForLevelChanged()
+{
+	update();
+}
+
+void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
 {
@@ -285,6 +291,8 @@ ChannelView::init()
 		this, SLOT( selectAllImplementation() ) );
 	connect( d->m_fillColorAction, SIGNAL( changed() ),
 		this, SLOT( fillWithColorChanged() ) );
+	connect( d->m_colorForLevel, SIGNAL( changed() ),
+		this, SLOT( colorForLevelChanged() ) );
 
 	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
 		d->m_sourcesManager, d->m_channelsManager, this );

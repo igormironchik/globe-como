@@ -86,7 +86,7 @@ public:
 
 protected slots:
 	//! Selection changed.
-	void selectionChanged ( const QItemSelection & selected,
+	void selectionChanged( const QItemSelection & selected,
 		const QItemSelection & deselected );
 
 private slots:
@@ -96,6 +96,8 @@ private slots:
 	void copyImplementation();
 	//! Fill with color changed.
 	void fillWithColorChanged();
+	//! Color for level correspondence changed.
+	void colorForLevelChanged();
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

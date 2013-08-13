@@ -34,12 +34,12 @@
 #include "ui_channel_attributes.h"
 
 // Qt include.
-#include <QtNetwork/QHostAddress>
-#include <QtGui/QPushButton>
-#include <QtGui/QColor>
-#include <QtGui/QPushButton>
-#include <QtGui/QToolTip>
-#include <QtCore/QRegExp>
+#include <QHostAddress>
+#include <QPushButton>
+#include <QColor>
+#include <QPushButton>
+#include <QToolTip>
+#include <QRegExp>
 
 
 namespace Globe {

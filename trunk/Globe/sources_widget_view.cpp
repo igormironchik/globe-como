@@ -34,9 +34,9 @@
 #include <Globe/sources_model.hpp>
 
 // Qt include.
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QMenu>
-#include <QtGui/QSortFilterProxyModel>
+#include <QContextMenuEvent>
+#include <QMenu>
+#include <QSortFilterProxyModel>
 
 
 namespace Globe {

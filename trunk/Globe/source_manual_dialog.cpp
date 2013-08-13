@@ -35,7 +35,7 @@
 #include "ui_source_manual_dialog.h"
 
 // Qt include.
-#include <QtGui/QPushButton>
+#include <QPushButton>
 
 
 namespace Globe {

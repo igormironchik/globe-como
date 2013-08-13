@@ -32,9 +32,9 @@
 #include <Globe/window_state_cfg.hpp>
 
 // Qt include.
-#include <QtGui/QWidget>
-#include <QtGui/QDesktopWidget>
-#include <QtGui/QApplication>
+#include <QWidget>
+#include <QDesktopWidget>
+#include <QApplication>
 
 // C++ include.
 #include <limits>

@@ -37,11 +37,11 @@
 #include <Globe/sources_mainwindow_cfg.hpp>
 
 // Qt include.
-#include <QtGui/QCloseEvent>
-#include <QtGui/QApplication>
-#include <QtGui/QMenu>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMessageBox>
+#include <QCloseEvent>
+#include <QApplication>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMessageBox>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>

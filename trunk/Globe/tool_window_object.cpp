@@ -32,8 +32,8 @@
 #include <Globe/tool_window_object.hpp>
 
 // Qt include.
-#include <QtGui/QAction>
-#include <QtGui/QMainWindow>
+#include <QAction>
+#include <QMainWindow>
 
 
 namespace Globe {

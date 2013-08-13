@@ -33,17 +33,17 @@
 #include <Globe/properties_widget_model.hpp>
 
 // Qt include.
-#include <QtGui/QContextMenuEvent>
-#include <QtGui/QAction>
-#include <QtGui/QMenu>
-#include <QtGui/QHeaderView>
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QComboBox>
-#include <QtGui/QSpinBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QGroupBox>
+#include <QContextMenuEvent>
+#include <QAction>
+#include <QMenu>
+#include <QHeaderView>
+#include <QStyledItemDelegate>
+#include <QComboBox>
+#include <QSpinBox>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QGroupBox>
 
 #ifdef DEBUG
 
@@ -236,7 +236,7 @@ PropertiesList::init()
 	setModel( d->m_model );
 	setRootIsDecorated( false );
 	setWordWrap( true );
-	header()->setResizeMode( QHeaderView::ResizeToContents );
+	header()->setSectionResizeMode( QHeaderView::ResizeToContents );
 
 	setItemDelegateForColumn( 1, d->m_expressionDelegate );
 	setItemDelegateForColumn( 3, d->m_levelDelegate );

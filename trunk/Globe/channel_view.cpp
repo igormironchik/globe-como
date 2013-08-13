@@ -29,13 +29,13 @@
 */
 
 // Qt include.
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QHeaderView>
-#include <QtGui/QPainter>
-#include <QtGui/QAction>
-#include <QtGui/QItemSelectionModel>
-#include <QtGui/QApplication>
-#include <QtGui/QClipboard>
+#include <QSortFilterProxyModel>
+#include <QHeaderView>
+#include <QPainter>
+#include <QAction>
+#include <QItemSelectionModel>
+#include <QApplication>
+#include <QClipboard>
 
 // Globe include.
 #include <Globe/channel_view.hpp>

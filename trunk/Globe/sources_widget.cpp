@@ -38,8 +38,8 @@
 #include "ui_sources_widget.h"
 
 // Qt include.
-#include <QtGui/QComboBox>
-#include <QtGui/QSortFilterProxyModel>
+#include <QComboBox>
+#include <QSortFilterProxyModel>
 
 #ifdef DEBUG
 

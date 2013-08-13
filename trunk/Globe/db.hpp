@@ -32,9 +32,9 @@
 #define GLOBE__DB_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
-#include <QtSql/QSqlDatabase>
+#include <QObject>
+#include <QScopedPointer>
+#include <QSqlDatabase>
 
 
 namespace Globe {

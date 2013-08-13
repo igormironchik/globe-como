@@ -50,7 +50,7 @@
 #include <QtConfFile/Exceptions>
 
 // Qt include.
-#include <QtGui/QMessageBox>
+#include <QMessageBox>
 
 
 namespace Globe {

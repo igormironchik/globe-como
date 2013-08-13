@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_VIEW_WINDOW_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QMainWindow>
+#include <QScopedPointer>
 
 // Globe include.
 #include <Globe/channel_view_window_cfg.hpp>

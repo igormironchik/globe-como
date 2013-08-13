@@ -32,8 +32,8 @@
 #define GLOBE__CONDITION_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QVariant>
-#include <QtCore/QString>
+#include <QVariant>
+#include <QString>
 
 // Como include.
 #include <Como/Source>

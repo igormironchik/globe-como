@@ -36,7 +36,7 @@
 #include <QtConfFile/TagVectorOfTags>
 
 // Qt include.
-#include <QtCore/QList>
+#include <QList>
 
 // Globe include.
 #include <Globe/channel_view_window_cfg.hpp>

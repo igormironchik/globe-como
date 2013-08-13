@@ -32,7 +32,7 @@
 #define GLOBE__CHANNELS_LIST_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QScopedPointer>
+#include <QScopedPointer>
 
 // Globe include.
 #include <Globe/channels_to_show.hpp>

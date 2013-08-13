@@ -34,9 +34,9 @@
 #include "ui_channel_name_dialog.h"
 
 // Qt include.
-#include <QtGui/QComboBox>
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
+#include <QComboBox>
+#include <QDialogButtonBox>
+#include <QPushButton>
 
 
 

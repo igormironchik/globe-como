@@ -32,7 +32,7 @@
 #define GLOBE__SOURCES_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QObject>
+#include <QObject>
 
 // Como include.
 #include <Como/Source>

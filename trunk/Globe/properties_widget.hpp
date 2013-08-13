@@ -32,9 +32,9 @@
 #define GLOBE__PROPERTIES_WIDGET_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QTreeView>
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
+#include <QTreeView>
+#include <QWidget>
+#include <QScopedPointer>
 
 // Globe include.
 #include <Globe/properties.hpp>

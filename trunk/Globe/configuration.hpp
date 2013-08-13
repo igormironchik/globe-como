@@ -32,8 +32,8 @@
 #define GLOBE__CONFIGURATION_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
+#include <QObject>
+#include <QScopedPointer>
 
 
 namespace Globe {

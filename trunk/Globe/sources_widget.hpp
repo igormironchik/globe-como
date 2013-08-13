@@ -32,8 +32,8 @@
 #define GLOBE__SOURCES_WIDGET_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
+#include <QWidget>
+#include <QScopedPointer>
 
 // Como include.
 #include <Como/Source>

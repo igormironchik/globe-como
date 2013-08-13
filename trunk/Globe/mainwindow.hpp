@@ -32,8 +32,8 @@
 #define GLOBE__MAINWINDOW_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QMainWindow>
+#include <QScopedPointer>
 
 // Globe include.
 #include <Globe/windows_cfg.hpp>

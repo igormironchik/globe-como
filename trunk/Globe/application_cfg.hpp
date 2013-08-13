@@ -32,7 +32,7 @@
 #define GLOBE__APPLICATION_CFG_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QString>
+#include <QString>
 
 // QtConfFile include.
 #include <QtConfFile/TagNoValue>

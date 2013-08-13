@@ -32,9 +32,9 @@
 #include <Globe/channel_timeout_widget.hpp>
 
 // Qt include.
-#include <QtGui/QPainter>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QToolTip>
+#include <QPainter>
+#include <QMouseEvent>
+#include <QToolTip>
 
 
 namespace Globe {

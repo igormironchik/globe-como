@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_VIEW_WINDOW_MODEL_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QAbstractTableModel>
-#include <QtCore/QScopedPointer>
+#include <QAbstractTableModel>
+#include <QScopedPointer>
 
 // Como include.
 #include <Como/Source>

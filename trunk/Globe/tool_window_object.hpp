@@ -32,7 +32,7 @@
 #define GLOBE__TOOL_WINDOW_OBJECT_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QObject>
+#include <QObject>
 
 QT_BEGIN_NAMESPACE
 class QAction;

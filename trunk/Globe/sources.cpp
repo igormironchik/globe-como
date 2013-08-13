@@ -33,8 +33,8 @@
 #include <Globe/channels.hpp>
 
 // Qt include.
-#include <QtCore/QMap>
-#include <QtCore/QList>
+#include <QMap>
+#include <QList>
 
 
 namespace Globe {

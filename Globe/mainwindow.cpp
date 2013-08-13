@@ -40,6 +40,7 @@
 #include <Globe/channel_view_window.hpp>
 #include <Globe/channel_name_dialog.hpp>
 #include <Globe/channels.hpp>
+#include <Globe/db.hpp>
 
 // Qt include.
 #include <QtGui/QApplication>
@@ -179,6 +180,8 @@ MainWindow::init()
 
 	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_toolWindows );
 	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_toolWindows );
+
+	d->m_db->setMainWindow( this );
 }
 
 void

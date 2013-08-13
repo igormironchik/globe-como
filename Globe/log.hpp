@@ -28,75 +28,39 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__DB_HPP__INCLUDED
-#define GLOBE__DB_HPP__INCLUDED
+#ifndef GLOBE__LOG_HPP__INCLUDED
+#define GLOBE__LOG_HPP__INCLUDED
 
 // Qt include.
 #include <QtCore/QObject>
 #include <QtCore/QScopedPointer>
-#include <QtSql/QSqlDatabase>
 
 
 namespace Globe {
 
-class MainWindow;
-class DBCfg;
-
-
 //
-// DB
+// Log
 //
 
-class DBPrivate;
+class LogPrivate;
 
-//! Database interface.
-class DB
+//! Log.
+class Log
 	:	public QObject
 {
 	Q_OBJECT
 
-signals:
-	//! DB is ready.
-	void ready();
-	//! Error with DB.
-	void error();
-
 public:
-	DB( QObject * parent = 0 );
+	Log( QObject * parent = 0 );
 
-	~DB();
-
-	//! \return Is DB ready?
-	bool isReady() const;
-
-	//! \return Connection.
-	const QSqlDatabase & connection() const;
-
-	//! Set configuration of the DB.
-	void setCfg( const DBCfg & cfg );
-
-protected:
-	friend class Configuration;
-	friend class MainWindow;
-
-	//! Read configuration.
-	void readCfg( const QString & fileName );
-	//! Write configuration.
-	void saveCfg( const QString & fileName );
-
-	//! Set pointer to the main window.
-	void setMainWindow( MainWindow * mainWindow );
+	~Log();
 
 private:
-	//! Init DB.
-	void init( const QString & dbFileName );
+	Q_DISABLE_COPY( Log )
 
-private:
-	Q_DISABLE_COPY( DB )
-
-	QScopedPointer< DBPrivate > d;
-}; // class DB
+	QScopedPointer< LogPrivate > d;
+};
 
 } /* namespace Globe */
 
-#endif // GLOBE__DB_HPP__INCLUDED
+#endif // GLOBE__LOG_HPP__INCLUDED

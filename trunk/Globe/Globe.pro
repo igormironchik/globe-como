@@ -2,7 +2,7 @@
 TEMPLATE = app
 TARGET = Globe
 DESTDIR = ..
-QT += core gui network
+QT += core gui network sql widgets
 CONFIG += console
 
 debug {
@@ -34,6 +34,8 @@ HEADERS += application_cfg.hpp \
            condition_cfg.hpp \
            configuration.hpp \
            db.hpp \
+           db_cfg.hpp \
+           log.hpp\
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -45,6 +47,7 @@ HEADERS += application_cfg.hpp \
            properties_widget.hpp \
            properties_widget_model.hpp \
            scrolled_widget.hpp \
+           sounds.hpp \
            source_manual_dialog.hpp \
            sources.hpp \
            sources_dialog.hpp \
@@ -77,6 +80,8 @@ SOURCES += application_cfg.cpp \
            condition_cfg.cpp \
            configuration.cpp \
            db.cpp \
+           db_cfg.cpp \
+           log.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
@@ -89,6 +94,7 @@ SOURCES += application_cfg.cpp \
            properties_widget.cpp \
            properties_widget_model.cpp \
            scrolled_widget.cpp \
+           sounds.cpp \
            source_manual_dialog.cpp \
            sources.cpp \
            sources_dialog.cpp \

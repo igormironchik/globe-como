@@ -28,75 +28,57 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__DB_HPP__INCLUDED
-#define GLOBE__DB_HPP__INCLUDED
+#ifndef GLOBE__DB_CFG_HPP__INCLUDED
+#define GLOBE__DB_CFG_HPP__INCLUDED
 
-// Qt include.
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
-#include <QtSql/QSqlDatabase>
+// QtConfFile include.
+#include <QtConfFile/TagNoValue>
+#include <QtConfFile/TagScalar>
 
 
 namespace Globe {
 
-class MainWindow;
-class DBCfg;
-
-
 //
-// DB
+// DBCfg
 //
 
-class DBPrivate;
-
-//! Database interface.
-class DB
-	:	public QObject
-{
-	Q_OBJECT
-
-signals:
-	//! DB is ready.
-	void ready();
-	//! Error with DB.
-	void error();
-
+//! Configuration of the DB.
+class DBCfg {
 public:
-	DB( QObject * parent = 0 );
+	DBCfg();
 
-	~DB();
-
-	//! \return Is DB ready?
-	bool isReady() const;
-
-	//! \return Connection.
-	const QSqlDatabase & connection() const;
-
-	//! Set configuration of the DB.
-	void setCfg( const DBCfg & cfg );
-
-protected:
-	friend class Configuration;
-	friend class MainWindow;
-
-	//! Read configuration.
-	void readCfg( const QString & fileName );
-	//! Write configuration.
-	void saveCfg( const QString & fileName );
-
-	//! Set pointer to the main window.
-	void setMainWindow( MainWindow * mainWindow );
+	//! \return Name of the DB file.
+	const QString & dbFileName() const;
+	//! Set name of the DB file.
+	void setDbFileName( const QString & fileName );
 
 private:
-	//! Init DB.
-	void init( const QString & dbFileName );
+	//! Name of the DB file.
+	QString m_dbFileName;
+}; // class DBCfg
+
+
+//
+// DBTag
+//
+
+//! Tag with configuration of the DB.
+class DBTag
+	:	public QtConfFile::TagNoValue
+{
+public:
+	DBTag();
+
+	explicit DBTag( const DBCfg & cfg );
+
+	//! \return Configuration of the DB.
+	DBCfg cfg() const;
 
 private:
-	Q_DISABLE_COPY( DB )
-
-	QScopedPointer< DBPrivate > d;
-}; // class DB
+	//! Name of the DB file.
+	QtConfFile::TagScalar< QString > m_dbFileName;
+}; // class DBTag
 
 } /* namespace Globe */
 
-#endif // GLOBE__DB_HPP__INCLUDED
+#endif // GLOBE__DB_CFG_HPP__INCLUDED

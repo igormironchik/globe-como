@@ -30,6 +30,14 @@
 
 // Globe include.
 #include <Globe/db.hpp>
+#include <Globe/mainwindow.hpp>
+#include <Globe/db_cfg.hpp>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
+
+// Qt include.
+#include <QtGui/QMessageBox>
 
 
 namespace Globe {
@@ -41,8 +49,19 @@ namespace Globe {
 class DBPrivate {
 public:
 	DBPrivate()
+		:	m_isReady( false )
+		,	m_mainWindow( 0 )
 	{
 	}
+
+	//! Is DB ready?
+	bool m_isReady;
+	//! Connection.
+	QSqlDatabase m_connection;
+	//! Main window.
+	MainWindow * m_mainWindow;
+	//! File name of the DB file.
+	QString m_dbFileName;
 }; // class DBPrivate
 
 
@@ -58,6 +77,96 @@ DB::DB( QObject * parent )
 
 DB::~DB()
 {
+}
+
+bool
+DB::isReady() const
+{
+	return d->m_isReady;
+}
+
+const QSqlDatabase &
+DB::connection() const
+{
+	return d->m_connection;
+}
+
+void
+DB::setCfg( const DBCfg & cfg )
+{
+	init( cfg.dbFileName() );
+}
+
+void
+DB::readCfg( const QString & fileName )
+{
+	DBTag tag;
+
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to read DB configuration..." ),
+			x.whatAsQString() );
+
+		return;
+	}
+
+	setCfg( tag.cfg() );
+}
+
+void
+DB::saveCfg( const QString & fileName )
+{
+	try {
+		DBCfg cfg;
+		cfg.setDbFileName( d->m_dbFileName );
+
+		DBTag tag( cfg );
+
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to save DB configuration..." ),
+			x.whatAsQString() );
+	}
+}
+
+void
+DB::setMainWindow( MainWindow * mainWindow )
+{
+	d->m_mainWindow = mainWindow;
+}
+
+void
+DB::init( const QString & dbFileName )
+{
+	d->m_isReady = false;
+	d->m_connection.close();
+
+	d->m_dbFileName = dbFileName;
+
+	d->m_connection = QSqlDatabase::addDatabase( "QSQLITE" );
+	d->m_connection.setDatabaseName( d->m_dbFileName );
+
+	if( !d->m_connection.open() )
+	{
+		d->m_connection.close();
+
+		emit error();
+	}
+	else
+	{
+		d->m_isReady = true;
+
+		emit ready();
+	}
 }
 
 } /* namespace Globe */

@@ -28,75 +28,57 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__DB_HPP__INCLUDED
-#define GLOBE__DB_HPP__INCLUDED
-
-// Qt include.
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
-#include <QtSql/QSqlDatabase>
+// Globe include.
+#include <Globe/db_cfg.hpp>
 
 
 namespace Globe {
 
-class MainWindow;
-class DBCfg;
-
-
 //
-// DB
+// DBCfg
 //
 
-class DBPrivate;
-
-//! Database interface.
-class DB
-	:	public QObject
+DBCfg::DBCfg()
 {
-	Q_OBJECT
+}
 
-signals:
-	//! DB is ready.
-	void ready();
-	//! Error with DB.
-	void error();
+const QString &
+DBCfg::dbFileName() const
+{
+	return m_dbFileName;
+}
 
-public:
-	DB( QObject * parent = 0 );
+void
+DBCfg::setDbFileName( const QString & fileName )
+{
+	m_dbFileName = fileName;
+}
 
-	~DB();
 
-	//! \return Is DB ready?
-	bool isReady() const;
+//
+// DBTag
+//
 
-	//! \return Connection.
-	const QSqlDatabase & connection() const;
+DBTag::DBTag()
+	:	QtConfFile::TagNoValue( QLatin1String( "dbCfg" ), true )
+	,	m_dbFileName( *this, QLatin1String( "dbFileName" ), true )
+{
+}
 
-	//! Set configuration of the DB.
-	void setCfg( const DBCfg & cfg );
+DBTag::DBTag( const DBCfg & cfg )
+	:	QtConfFile::TagNoValue( QLatin1String( "dbCfg" ), true )
+	,	m_dbFileName( *this, QLatin1String( "dbFileName" ), true )
+{
+}
 
-protected:
-	friend class Configuration;
-	friend class MainWindow;
+DBCfg
+DBTag::cfg() const
+{
+	DBCfg cfg;
 
-	//! Read configuration.
-	void readCfg( const QString & fileName );
-	//! Write configuration.
-	void saveCfg( const QString & fileName );
+	cfg.setDbFileName( m_dbFileName.value() );
 
-	//! Set pointer to the main window.
-	void setMainWindow( MainWindow * mainWindow );
-
-private:
-	//! Init DB.
-	void init( const QString & dbFileName );
-
-private:
-	Q_DISABLE_COPY( DB )
-
-	QScopedPointer< DBPrivate > d;
-}; // class DB
+	return cfg;
+}
 
 } /* namespace Globe */
-
-#endif // GLOBE__DB_HPP__INCLUDED

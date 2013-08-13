@@ -32,14 +32,18 @@
 #define GLOBE__WINDOW_STATE_CFG_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QPoint>
-#include <QtCore/QSize>
+#include <QPoint>
+#include <QSize>
 
 // QtConfFile include.
 #include <QtConfFile/TagNoValue>
 #include <QtConfFile/TagScalar>
 #include <QtConfFile/ConstraintOneOf>
 #include <QtConfFile/ConstraintMinMax>
+
+QT_BEGIN_NAMESPACE
+class QWidget;
+QT_END_NAMESPACE
 
 
 namespace Globe {

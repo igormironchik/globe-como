@@ -46,11 +46,11 @@
 #include "ui_properties_mainwindow.h"
 
 // Qt include.
-#include <QtCore/QFile>
-#include <QtGui/QSortFilterProxyModel>
-#include <QtGui/QMessageBox>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QMenuBar>
+#include <QFile>
+#include <QSortFilterProxyModel>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QMenuBar>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>

@@ -34,7 +34,7 @@
 #include "ui_properties_key_type_dialog.h"
 
 // Qt include.
-#include <QtGui/QRadioButton>
+#include <QRadioButton>
 
 
 namespace Globe {

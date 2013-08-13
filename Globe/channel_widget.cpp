@@ -34,12 +34,12 @@
 #include <Globe/channel_timeout_widget.hpp>
 
 // Qt include.
-#include <QtGui/QLabel>
-#include <QtGui/QToolButton>
-#include <QtGui/QHBoxLayout>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QPixmap>
+#include <QLabel>
+#include <QToolButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QSpacerItem>
+#include <QPixmap>
 
 
 namespace Globe {

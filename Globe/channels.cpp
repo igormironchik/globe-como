@@ -36,12 +36,12 @@
 #include <Como/ClientSocket>
 
 // Qt include.
-#include <QtCore/QTimer>
-#include <QtCore/QList>
-#include <QtCore/QMutex>
-#include <QtCore/QMutexLocker>
-#include <QtCore/QThread>
-#include <QtCore/QMap>
+#include <QTimer>
+#include <QList>
+#include <QMutex>
+#include <QMutexLocker>
+#include <QThread>
+#include <QMap>
 
 
 namespace Globe {

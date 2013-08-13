@@ -32,8 +32,8 @@
 #include <Globe/utils.hpp>
 
 //  Globe include.
-#include <QtGui/QWidget>
-#include <QtCore/QDir>
+#include <QWidget>
+#include <QDir>
 
 
 namespace Globe {

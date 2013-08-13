@@ -32,11 +32,11 @@
 #define GLOBE__CHANNELS_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QObject>
-#include <QtCore/QScopedPointer>
-#include <QtCore/QString>
-#include <QtNetwork/QHostAddress>
-#include <QtCore/QList>
+#include <QObject>
+#include <QScopedPointer>
+#include <QString>
+#include <QHostAddress>
+#include <QList>
 
 // Como include.
 #include <Como/Source>

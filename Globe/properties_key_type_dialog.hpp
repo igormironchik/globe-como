@@ -35,8 +35,8 @@
 #include <Globe/properties.hpp>
 
 // Qt include.
-#include <QtGui/QDialog>
-#include <QtCore/QScopedPointer>
+#include <QDialog>
+#include <QScopedPointer>
 
 
 namespace Globe {

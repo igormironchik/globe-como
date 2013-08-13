@@ -32,8 +32,8 @@
 #define GLOBE__SCROLLED_WIDGET_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QScrollArea>
-#include <QtGui/QWidget>
+#include <QScrollArea>
+#include <QWidget>
 
 
 namespace Globe {

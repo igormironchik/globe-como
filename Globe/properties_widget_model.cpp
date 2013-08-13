@@ -33,7 +33,7 @@
 #include <Globe/condition.hpp>
 
 // Qt include.
-#include <QtCore/QList>
+#include <QList>
 
 
 namespace Globe {

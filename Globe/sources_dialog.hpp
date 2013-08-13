@@ -32,8 +32,8 @@
 #define GLOBE__SOURCES_DIALOG_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QDialog>
-#include <QtCore/QScopedPointer>
+#include <QDialog>
+#include <QScopedPointer>
 
 // Como include.
 #include <Como/Source>

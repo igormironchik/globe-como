@@ -29,14 +29,14 @@
 */
 
 // Qt include.
-#include <QtGui/QApplication>
-#include <QtCore/QTranslator>
-#include <QtCore/QLocale>
-#include <QtCore/QTextStream>
-#include <QtCore/QString>
-#include <QtCore/QTimer>
-#include <QtCore/QList>
-#include <QtCore/QDebug>
+#include <QApplication>
+#include <QTranslator>
+#include <QLocale>
+#include <QTextStream>
+#include <QString>
+#include <QTimer>
+#include <QList>
+#include <QDebug>
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>

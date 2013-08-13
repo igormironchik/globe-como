@@ -33,10 +33,10 @@
 #include <Globe/properties_widget.hpp>
 
 // Qt include.
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QFrame>
-#include <QtGui/QPushButton>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
+#include <QFrame>
+#include <QPushButton>
 
 
 namespace Globe {

@@ -35,10 +35,10 @@
 #include <Como/Source>
 
 // Qt include.
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QScopedPointer>
-#include <QtGui/QMainWindow>
+#include <QList>
+#include <QMap>
+#include <QScopedPointer>
+#include <QMainWindow>
 
 // Globe include.
 #include <Globe/condition.hpp>

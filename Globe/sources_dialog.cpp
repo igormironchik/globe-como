@@ -36,12 +36,12 @@
 #include <Globe/source_manual_dialog.hpp>
 
 // Qt include.
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QFrame>
-#include <QtGui/QPushButton>
-#include <QtGui/QSpacerItem>
-#include <QtGui/QPushButton>
+#include <QDialogButtonBox>
+#include <QVBoxLayout>
+#include <QFrame>
+#include <QPushButton>
+#include <QSpacerItem>
+#include <QPushButton>
 
 
 namespace Globe {

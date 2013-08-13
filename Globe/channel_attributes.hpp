@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_ATTRIBUTES_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QDialog>
-#include <QtCore/QScopedPointer>
+#include <QDialog>
+#include <QScopedPointer>
 
 QT_BEGIN_NAMESPACE
 class QHostAddress;

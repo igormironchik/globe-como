@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_NAME_DIALOG_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QDialog>
-#include <QtCore/QScopedPointer>
+#include <QDialog>
+#include <QScopedPointer>
 
 
 namespace Globe {

@@ -32,8 +32,8 @@
 #define GLOBE__PROPERTIES_WIDGET_MODEL_HPP__INCLUDED
 
 // Qt include.
-#include <QtCore/QAbstractTableModel>
-#include <QtCore/QScopedPointer>
+#include <QAbstractTableModel>
+#include <QScopedPointer>
 
 // Globe include.
 #include <Globe/properties.hpp>

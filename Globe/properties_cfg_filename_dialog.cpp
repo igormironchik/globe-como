@@ -35,13 +35,13 @@
 #include "ui_properties_cfg_filename_dialog.h"
 
 // Qt include.
-#include <QtGui/QDialogButtonBox>
-#include <QtGui/QPushButton>
-#include <QtGui/QMessageBox>
-#include <QtGui/QFileDialog>
-#include <QtGui/QLineEdit>
-#include <QtGui/QLabel>
-#include <QtCore/QFile>
+#include <QDialogButtonBox>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QLineEdit>
+#include <QLabel>
+#include <QFile>
 
 
 namespace Globe {

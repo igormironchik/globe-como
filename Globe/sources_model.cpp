@@ -32,7 +32,7 @@
 #include <Globe/sources_model.hpp>
 
 // Qt include.
-#include <QtCore/QList>
+#include <QList>
 
 
 namespace Globe {

@@ -38,9 +38,9 @@
 #include <QtConfFile/TagVectorOfTags>
 
 // Qt include.
-#include <QtNetwork/QHostAddress>
-#include <QtCore/QString>
-#include <QtCore/QList>
+#include <QHostAddress>
+#include <QString>
+#include <QList>
 
 
 namespace Globe {

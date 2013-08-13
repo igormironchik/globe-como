@@ -32,8 +32,8 @@
 #define GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QMainWindow>
-#include <QtCore/QScopedPointer>
+#include <QMainWindow>
+#include <QScopedPointer>
 
 
 namespace Globe {

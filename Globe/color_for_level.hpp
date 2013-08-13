@@ -35,9 +35,9 @@
 #include <Globe/condition.hpp>
 
 // Qt include.
-#include <QtCore/QObject>
-#include <QtGui/QColor>
-#include <QtCore/QScopedPointer>
+#include <QObject>
+#include <QColor>
+#include <QScopedPointer>
 
 
 namespace Globe {

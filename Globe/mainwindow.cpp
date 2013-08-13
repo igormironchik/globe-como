@@ -43,11 +43,11 @@
 #include <Globe/db.hpp>
 
 // Qt include.
-#include <QtGui/QApplication>
-#include <QtGui/QMenuBar>
-#include <QtGui/QMenu>
-#include <QtGui/QAction>
-#include <QtGui/QCloseEvent>
+#include <QApplication>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QCloseEvent>
 
 
 namespace Globe {

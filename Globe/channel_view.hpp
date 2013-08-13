@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_VIEW_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QTreeView>
-#include <QtCore/QScopedPointer>
+#include <QTreeView>
+#include <QScopedPointer>
 
 QT_BEGIN_NAMESPACE
 class QSortFilterProxyModel;

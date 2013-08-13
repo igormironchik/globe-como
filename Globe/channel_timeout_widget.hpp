@@ -32,8 +32,8 @@
 #define GLOBE__CHANNEL_TIMEOUT_WIDGET_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
+#include <QWidget>
+#include <QScopedPointer>
 
 
 namespace Globe {

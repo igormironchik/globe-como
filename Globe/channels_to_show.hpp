@@ -32,8 +32,8 @@
 #define GLOBE__CHANNELS_TO_SHOW_HPP__INCLUDED
 
 // Qt include.
-#include <QtGui/QWidget>
-#include <QtCore/QScopedPointer>
+#include <QWidget>
+#include <QScopedPointer>
 
 
 namespace Globe {

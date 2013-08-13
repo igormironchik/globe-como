@@ -32,7 +32,7 @@
 #include <Globe/scrolled_widget.hpp>
 
 // Qt include.
-#include <QtGui/QResizeEvent>
+#include <QResizeEvent>
 
 
 namespace Globe {

@@ -37,12 +37,12 @@
 #include <Globe/mainwindow.hpp>
 
 // Qt include.
-#include <QtGui/QMenuBar>
-#include <QtGui/QMenu>
-#include <QtGui/QMessageBox>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QHeaderView>
-#include <QtGui/QToolBar>
+#include <QMenuBar>
+#include <QMenu>
+#include <QMessageBox>
+#include <QCloseEvent>
+#include <QHeaderView>
+#include <QToolBar>
 
 
 namespace Globe {

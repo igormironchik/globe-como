@@ -129,6 +129,9 @@ Configuration::~Configuration()
 void
 Configuration::loadConfiguration()
 {
+	checkDirAndCreateIfNotExists( QLatin1String( "./" ),
+		QLatin1String( "etc" ) );
+
 	readAppCfg( d->m_cfgFileName );
 
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );

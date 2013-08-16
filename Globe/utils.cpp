@@ -38,11 +38,41 @@
 
 namespace Globe {
 
+//
+// relativeFilePath
+//
+
 QString relativeFilePath( const QString & fileName, const QString & path )
 {
 	static QDir dir( path );
 
 	return dir.relativeFilePath( fileName );
+}
+
+
+//
+// checkDirAndCreateIfNotExists
+//
+
+void checkDirAndCreateIfNotExists( const QString & path,
+	const QString & dirName )
+{
+	QDir dir( path );
+
+	if( !dir.exists( dirName ) )
+		dir.mkdir( dirName );
+}
+
+
+//
+// checkPathAndCreateIfNotExists
+//
+
+void checkPathAndCreateIfNotExists( const QString & path )
+{
+	QDir dir( QLatin1String( "." ) );
+
+	dir.mkpath( path );
 }
 
 } /* namespace Globe */

@@ -796,6 +796,8 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 		d->setDirectory( tag.propertiesDirectory() );
 
+		checkPathAndCreateIfNotExists( d->m_directoryName );
+
 		d->m_exactlyThisSourceMap = tag.exactlyThisSourceMap();
 		d->m_exactlyThisSourceInAnyChannelMap =
 			tag.exactlyThisSourceInAnyChannelMap();

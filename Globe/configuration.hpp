@@ -52,7 +52,7 @@ class ColorForLevel;
 
 class ConfigurationPrivate;
 
-//! Configuration loader/restorer.
+//! Configuration loader/saver.
 class Configuration
 	:	public QObject
 {

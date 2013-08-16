@@ -50,7 +50,7 @@ class PropertiesManager;
 
 class SourcesMainWindowPrivate;
 
-//! Main window with all sources available in the application.
+//! Main window with show all sources available in the application.
 class SourcesMainWindow
 	:	public QMainWindow
 {

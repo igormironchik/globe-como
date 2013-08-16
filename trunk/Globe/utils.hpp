@@ -37,9 +37,30 @@
 
 namespace Globe {
 
+//
+// relativeFilePath
+//
+
 //! \return Path to the specified file.
 QString relativeFilePath( const QString & fileName,
 	const QString & path = QLatin1String( "./" ) );
+
+
+//
+// checkDirAndCreateIfNotExists
+//
+
+//!	Checks is directory exists and create one if not.
+void checkDirAndCreateIfNotExists( const QString & path,
+	const QString & dirName );
+
+
+//
+// checkPathAndCreateIfNotExists
+//
+
+//! Checks is path exists and create one if not.
+void checkPathAndCreateIfNotExists( const QString & path );
 
 } /* namespace Globe */
 

@@ -44,6 +44,7 @@
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/windows_cfg.hpp>
 #include <Globe/color_for_level.hpp>
+#include <Globe/log.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -69,6 +70,10 @@ static const QString defaultWindowsCfgFileName =
 	QLatin1String( "./etc/Windows.cfg" );
 static const QString defaultColorsCfgFilename =
 	QLatin1String( "./etc/Colors.cfg" );
+static const QString defaultDbCfgFileName =
+	QLatin1String( "./etc/DB.cfg" );
+static const QString defaultLogCfgFileName =
+	QLatin1String( "./etc/Log.cfg" );
 
 
 //
@@ -134,6 +139,10 @@ Configuration::loadConfiguration()
 
 	readAppCfg( d->m_cfgFileName );
 
+	readLogCfg( d->m_appCfg.logCfgFile() );
+
+	readDbCfg( d->m_appCfg.dbCfgFile() );
+
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
 
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
@@ -161,6 +170,10 @@ Configuration::saveConfiguration()
 	saveWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
 	saveColorsCfg( d->m_appCfg.colorsCfgFile() );
+
+	saveDbCfg( d->m_appCfg.dbCfgFile() );
+
+	saveLogCfg( d->m_appCfg.logCfgFile() );
 
 	saveAppCfg( d->m_cfgFileName );
 }
@@ -402,6 +415,46 @@ Configuration::readColorsCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readDbCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		d->m_db->readCfg( cfgFileName );
+	else
+	{
+		d->m_appCfg.setDbCfgFile( defaultDbCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+			QMessageBox::warning( d->m_mainWindow,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified DB configuration file.\n"
+					"DB configuration will not be loaded.\n"
+					"At exit DB configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultDbCfgFileName ) );
+	}
+}
+
+void
+Configuration::readLogCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		Log::instance().readCfg( cfgFileName );
+	else
+	{
+		d->m_appCfg.setLogCfgFile( defaultLogCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+			QMessageBox::warning( d->m_mainWindow,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified log configuration file.\n"
+					"Log configuration will not be loaded.\n"
+					"At exit log configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultLogCfgFileName ) );
+	}
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	try {
@@ -507,6 +560,18 @@ void
 Configuration::saveColorsCfg( const QString & cfgFileName )
 {
 	d->m_colorForLevel->saveCfg( cfgFileName );
+}
+
+void
+Configuration::saveDbCfg( const QString & cfgFileName )
+{
+	d->m_db->saveCfg( cfgFileName );
+}
+
+void
+Configuration::saveLogCfg( const QString & cfgFileName )
+{
+	Log::instance().saveCfg( cfgFileName );
 }
 
 } /* namespace Globe */

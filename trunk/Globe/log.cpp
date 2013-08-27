@@ -1,0 +1,1071 @@
+
+/*!
+	\file
+
+	\author Igor Mironchik (igor.mironchik at gmail dot com).
+
+	Copyright (c) 2012 - 2013 Igor Mironchik
+
+	Permission is hereby granted, free of charge, to any person
+	obtaining a copy of this software and associated documentation
+	files (the "Software"), to deal in the Software without
+	restriction, including without limitation the rights to use,
+	copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the
+	Software is furnished to do so, subject to the following
+	conditions:
+
+	The above copyright notice and this permission notice shall be
+	included in all copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+	OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+	HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+	OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+// Qt include.
+#include <QDateTime>
+#include <QString>
+#include <QVariant>
+#include <QSqlQuery>
+#include <QMessageBox>
+#include <QVector>
+#include <QPair>
+#include <QTimer>
+
+// Globe include.
+#include <Globe/log.hpp>
+#include <Globe/db.hpp>
+#include <Globe/log_cfg.hpp>
+#include <Globe/mainwindow.hpp>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
+
+
+namespace Globe {
+
+//
+// DBState
+//
+
+//! State of the DB.
+enum DBSTate {
+	//! Unknown state.
+	UnknownDBState = 0,
+	//! All is ok in the DB.
+	AllIsOkDBState = 1,
+	//! Error in the DB.
+	ErrorInDBState = 2
+}; // enum DBSTate
+
+
+//
+// LogState
+//
+
+//! SState of the log.
+enum LogState {
+	//! Uninitialized.
+	UninitializedLogState = 0,
+	//! Configuration loaded.
+	ConfigurationLoadedLogState = 1,
+	//! Log is ready.
+	ReadyLogState = 2,
+	//! Error in log.
+	ErrorLogState = 3
+}; // enum LogState
+
+
+//
+// LogPrivate
+//
+
+class LogPrivate {
+public:
+	LogPrivate()
+		:	m_db( 0 )
+		,	m_dbState( UnknownDBState )
+		,	m_logState( UninitializedLogState )
+		,	m_timer( 0 )
+		,	m_mainWindow( 0 )
+	{
+	}
+
+	~LogPrivate()
+	{
+	}
+
+	//! Database.
+	DB * m_db;
+	//! State of the DB.
+	DBSTate m_dbState;
+	//! Configuration.
+	LogCfg m_cfg;
+	//! State of  the log.
+	LogState m_logState;
+	//! Deferred event's log messages.
+	QVector< QPair< QDateTime, QString > > m_deferredEventMessages;
+	//! Timer.
+	QTimer * m_timer;
+	//! Main window.
+	MainWindow * m_mainWindow;
+}; // class LogPrivate
+
+
+//
+// Log
+//
+
+Log::Log( QObject * parent )
+	:	QObject( parent )
+	,	d( new LogPrivate )
+{
+	privateInit();
+}
+
+Log::~Log()
+{
+}
+
+void
+Log::init()
+{
+	static QSqlQuery eventLogTableQuery( QLatin1String(
+		"CREATE TABLE IF NOT EXISTS eventLog ( dateTime TEXT, "
+		"msg TEXT )" ) );
+
+	eventLogTableQuery.exec();
+
+	static QSqlQuery eventLogTableIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS eventLogIdx "
+		"ON eventLog ( dateTime )" ) );
+
+	eventLogTableIndexQuery.exec();
+
+	static QSqlQuery sourcesLogTableQuery( QLatin1String(
+		"CREATE TABLE IF NOT EXISTS sourcesLog( dateTime TEXT, "
+		"channelName TEXT, type INTEGER, sourceName TEXT, "
+		"typeName TEXT, value TEXT, desc TEXT ) " ) );
+
+	sourcesLogTableQuery.exec();
+
+	static QSqlQuery dateTimeIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS sourcesLogDateTimeIdx "
+		"ON sourcesLog( dateTime )" ) );
+
+	dateTimeIndexQuery.exec();
+
+	static QSqlQuery channelNameIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS sourcesLogChannelNameIdx "
+		"ON sourcesLog( channelName )" ) );
+
+	channelNameIndexQuery.exec();
+
+	static QSqlQuery typeIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS sourcesLogTypeIdx "
+		"ON sourcesLog( type )" ) );
+
+	typeIndexQuery.exec();
+
+	static QSqlQuery sourceNameIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS sourcesLogSourceNameIdx "
+		"ON sourcesLog( sourceName )" ) );
+
+	sourceNameIndexQuery.exec();
+
+	static QSqlQuery typeNameIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS sourcesLogTypeNameIdx "
+		"ON sourcesLog( typeName )" ) );
+
+	typeNameIndexQuery.exec();
+
+	for( int i = 0; i < d->m_deferredEventMessages.size(); ++i )
+	{
+		insertMsgIntoEventLog(
+			d->m_deferredEventMessages.at( i ).first,
+			d->m_deferredEventMessages.at( i ).second );
+	}
+
+	d->m_deferredEventMessages.clear();
+
+	d->m_logState = ReadyLogState;
+
+	eraseSourcesLog();
+}
+
+void
+Log::privateInit()
+{
+	d->m_timer = new QTimer( this );
+
+	connect( d->m_timer, SIGNAL( timeout() ),
+		this, SLOT( eraseSourcesLog() ) );
+}
+
+Log &
+Log::instance()
+{
+	static Log log;
+
+	return log;
+}
+
+void
+Log::setDb( DB * db )
+{
+	if( db )
+	{
+		if( d->m_db )
+			disconnect( d->m_db, 0, 0, 0 );
+
+		d->m_dbState = UnknownDBState;
+		d->m_logState = UninitializedLogState;
+
+		d->m_db = db;
+
+		connect( d->m_db, SIGNAL( ready() ), this, SLOT( dbReady() ) );
+		connect( d->m_db, SIGNAL( error() ), this, SLOT( dbError() ) );
+
+		if( d->m_db->isReady() )
+			d->m_dbState = AllIsOkDBState;
+	}
+}
+
+void
+Log::writeMsgToEventLog( const QDateTime & dateTime,
+	const QString & msg )
+{
+	if( d->m_cfg.isEventLogEnabled() )
+	{
+		if( d->m_logState != ReadyLogState &&
+			d->m_dbState != ErrorInDBState )
+		{
+			d->m_deferredEventMessages.push_back(
+				QPair< QDateTime, QString >( dateTime, msg ) );
+		}
+		else if( d->m_logState == ReadyLogState &&
+			d->m_dbState == AllIsOkDBState )
+		{
+			insertMsgIntoEventLog( dateTime, msg );
+		}
+	}
+}
+
+void
+Log::writeMsgToEventLog( const QString & msg )
+{
+	writeMsgToEventLog( QDateTime::currentDateTime(), msg );
+}
+
+void
+Log::writeMsgToSourcesLog( const QDateTime & dateTime,
+	const QString & channelName,
+	Como::Source::Type type,
+	const QString & sourceName,
+	const QString & typeName,
+	const QVariant & value,
+	const QString & desc )
+{
+	if( d->m_cfg.isSourcesLogEnabled() )
+	{
+		if( d->m_logState == ReadyLogState &&
+			d->m_dbState == AllIsOkDBState )
+		{
+			static QSqlQuery insert( QLatin1String(
+				"INSERT INTO sourcesLog ( dateTime, channelName, type, "
+				"sourceName, typeName, value, desc ) "
+				"VALUES ( ?, ?, ?, ?, ?, ?, ? )" ) );
+
+			insert.addBindValue( dateTimeToString( dateTime ) );
+			insert.addBindValue( channelName );
+			insert.addBindValue( (int) type );
+			insert.addBindValue( sourceName );
+			insert.addBindValue( typeName );
+			insert.addBindValue( value.toString() );
+			insert.addBindValue( desc );
+
+			insert.exec();
+		}
+	}
+}
+
+QSqlQuery &
+Log::readAllEventLog()
+{
+	static QSqlQuery select( QLatin1String(
+		"SELECT * FROM eventLog ORDER BY dateTime" ) );
+
+	select.clear();
+
+	if( d->m_dbState == AllIsOkDBState )
+		select.exec();
+
+	return select;
+}
+
+QSqlQuery &
+Log::readEventLog( const QDateTime & from,
+	const QDateTime & to )
+{
+	static QSqlQuery select( QLatin1String(
+		"SELECT * FROM eventLog WHERE dateTime BETWEEN "
+		"? AND ? ORDER BY dateTime" ) );
+
+	select.clear();
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		select.addBindValue( dateTimeToString( from ) );
+		select.addBindValue( dateTimeToString( to ) );
+
+		select.exec();
+	}
+
+	return select;
+}
+
+QSqlQuery &
+Log::readEventLogTo( const QDateTime & to )
+{
+	static QSqlQuery select( QLatin1String(
+		"SELECT * FROM eventLog WHERE dateTime <= ? "
+		"ORDER BY dateTime" ) );
+
+	select.clear();
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		select.addBindValue( dateTimeToString( to ) );
+
+		select.exec();
+	}
+
+	return select;
+}
+
+QSqlQuery &
+Log::readEventLogFrom( const QDateTime & from )
+{
+	static QSqlQuery select( QLatin1String(
+		"SELECT * FROM eventLog WHERE dateTime >= ? "
+		"ORDER BY dateTime" ) );
+
+	select.clear();
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		select.addBindValue( dateTimeToString( from ) );
+
+		select.exec();
+	}
+
+	return select;
+}
+
+QSqlQuery &
+Log::readSourcesLog( const QDateTime & from,
+	const QDateTime & to,
+	const QString & channelName,
+	const QString & sourceName,
+	const QString & typeName )
+{
+	static QSqlQuery dummy;
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND channelName = ? AND sourceName = ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND sourceName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND channelName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND channelName = ? AND sourceName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND channelName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime BETWEEN "
+				"? AND ? AND sourceName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else
+			return dummy;
+	}
+	else
+		return dummy;
+}
+
+QSqlQuery &
+Log::readSourcesLogTo( const QDateTime & to,
+	const QString & channelName,
+	const QString & sourceName,
+	const QString & typeName )
+{
+	static QSqlQuery dummy;
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND channelName = ? AND sourceName = ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND sourceName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND channelName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND channelName = ? AND sourceName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND channelName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( channelName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime <= ? "
+				"AND sourceName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( to ) );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else
+			return dummy;
+	}
+	else
+		return dummy;
+}
+
+QSqlQuery &
+Log::readSourcesLogFrom( const QDateTime & from,
+	const QString & channelName,
+	const QString & sourceName,
+	const QString & typeName )
+{
+	static QSqlQuery dummy;
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND channelName = ? AND sourceName = ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND sourceName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND channelName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( channelName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND channelName = ? AND sourceName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND channelName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( channelName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE dateTime >= ? "
+				"AND sourceName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( dateTimeToString( from ) );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else
+			return dummy;
+	}
+	else
+		return dummy;
+}
+
+QSqlQuery &
+Log::readAllSourcesLog( const QString & channelName,
+	const QString & sourceName,
+	const QString & typeName )
+{
+	static QSqlQuery dummy;
+
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE channelName = ? "
+				"AND sourceName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE "
+				"AND sourceName = ? AND typeName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( sourceName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE channelName = ? "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( channelName );
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE channelName = ? "
+				"AND sourceName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( channelName );
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && sourceName.isEmpty()
+			&& !typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE "
+				"AND typeName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( typeName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( !channelName.isEmpty() && sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE channelName = ? "
+				"ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( channelName );
+
+			select.exec();
+
+			return select;
+		}
+		else if( channelName.isEmpty() && !sourceName.isEmpty()
+			&& typeName.isEmpty() )
+		{
+			static QSqlQuery select( QLatin1String(
+				"SELECT * FROM sourcesLog WHERE "
+				"AND sourceName = ? ORDER BY dateTime" ) );
+
+			select.clear();
+
+			select.addBindValue( sourceName );
+
+			select.exec();
+
+			return select;
+		}
+		else
+			return dummy;
+	}
+	else
+		return dummy;
+}
+
+void
+Log::readCfg( const QString & fileName )
+{
+	LogTag tag;
+
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to read log configuration..." ),
+			x.whatAsQString() );
+
+		d->m_logState = ErrorLogState;
+
+		return;
+	}
+
+	d->m_cfg = tag.cfg();
+
+	d->m_logState = ConfigurationLoadedLogState;
+
+	if( d->m_dbState == AllIsOkDBState )
+		init();
+}
+
+void
+Log::saveCfg( const QString & fileName )
+{
+	try {
+		LogTag tag( d->m_cfg );
+
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		QMessageBox::critical( d->m_mainWindow,
+			tr( "Unable to save log configuration..." ),
+			x.whatAsQString() );
+	}
+}
+
+void
+Log::enableEventsLog( bool on )
+{
+	d->m_cfg.setEventLogEnabled( on );
+}
+
+void
+Log::enableSourcesLog( bool on )
+{
+	d->m_cfg.setSourcesLogEnabled( on );
+}
+
+void
+Log::setSourcesLogDays( int days )
+{
+	d->m_cfg.setSourcesLogDays( days );
+}
+
+void
+Log::clearEventsLog()
+{
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		static QSqlQuery deleteQuery( QLatin1String(
+			"DELETE FROM eventLog" ) )	;
+
+		deleteQuery.exec();
+	}
+}
+
+void
+Log::clearSourcesLog()
+{
+	if( d->m_dbState == AllIsOkDBState )
+	{
+		static QSqlQuery deleteQuery( QLatin1String(
+			"DELETE FROM sourcesLog" ) )	;
+
+		deleteQuery.exec();
+	}
+}
+
+void
+Log::eraseSourcesLog()
+{
+	static const int msecsInDay = 24 * 60 * 60 * 1000;
+
+	d->m_timer->stop();
+
+	QDateTime from = QDateTime::currentDateTime();
+
+	if( d->m_cfg.sourcesLogDays() > 0 )
+		from.addDays( -d->m_cfg.sourcesLogDays() );
+
+	static QSqlQuery eraseQuery( QLatin1String(
+		"DELETE FROM sourcesLog WHERE dateTime < ?" ) );
+
+	eraseQuery.addBindValue( dateTimeToString( from ) );
+
+	eraseQuery.exec();
+
+	d->m_timer->start( msecsInDay );
+}
+
+void
+Log::insertMsgIntoEventLog( const QDateTime & dateTime,
+	const QString & msg )
+{
+	static QSqlQuery insert( QLatin1String(
+		"INSERT INTO eventLog ( dateTime, msg ) "
+		"VALUES ( ?, ? )" ) );
+
+	insert.addBindValue( dateTimeToString( dateTime ) );
+	insert.addBindValue( msg );
+
+	insert.exec();
+}
+
+QString
+Log::dateTimeToString( const QDateTime & dt )
+{
+	return dt.toString( QLatin1String( "yyyy-MM-dd hh:mm:ss.zzz" ) );
+}
+
+void
+Log::dbReady()
+{
+	d->m_dbState = AllIsOkDBState;
+
+	if( d->m_logState == ConfigurationLoadedLogState )
+		init();
+}
+
+void
+Log::dbError()
+{
+	d->m_dbState = ErrorInDBState;
+}
+
+void
+Log::setMainWindow( MainWindow * mainWindow )
+{
+	d->m_mainWindow = mainWindow;
+}
+
+} /* namespace Globe */

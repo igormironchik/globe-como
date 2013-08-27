@@ -28,8 +28,8 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__DB_CFG_HPP__INCLUDED
-#define GLOBE__DB_CFG_HPP__INCLUDED
+#ifndef GLOBE__LOG_CFG_HPP__INCLUDED
+#define GLOBE__LOG_CFG_HPP__INCLUDED
 
 // QtConfFile include.
 #include <QtConfFile/TagNoValue>
@@ -39,50 +39,69 @@
 namespace Globe {
 
 //
-// DBCfg
+// LogCfg
 //
 
-//! Configuration of the DB.
-class DBCfg {
+//! Configuration of the log.
+class LogCfg {
 public:
-	DBCfg();
+	LogCfg();
 
-	DBCfg( const DBCfg & other );
+	LogCfg( const LogCfg & other );
 
-	DBCfg & operator = ( const DBCfg & other );
+	LogCfg & operator = ( const LogCfg & other );
 
-	//! \return Name of the DB file.
-	const QString & dbFileName() const;
-	//! Set name of the DB file.
-	void setDbFileName( const QString & fileName );
+	//! \return Is event's log enabled?
+	bool isEventLogEnabled() const;
+	//! Set is event's log enabled.
+	void setEventLogEnabled( bool on = true );
+
+	//! \return Is source's log enabled?
+	bool isSourcesLogEnabled() const;
+	//! Set is source's log enabled.
+	void setSourcesLogEnabled( bool on = true );
+
+	//! \return Number of days of the source's log.
+	int sourcesLogDays() const;
+	//! Set number of the source's log days.
+	void setSourcesLogDays( int days );
 
 private:
-	//! Name of the DB file.
-	QString m_dbFileName;
-}; // class DBCfg
+	//! Is event's log enabled?
+	bool m_isEventLogEnabled;
+	//! Is source's log enabled?
+	bool m_isSourcesLogEnabled;
+	//! Number of days of the source's log.
+	//! 0 = ongoing log.
+	int m_sourcesLogDays;
+}; // class LogCfg
 
 
 //
-// DBTag
+// LogTag
 //
 
-//! Tag with configuration of the DB.
-class DBTag
+//! Tag with configuration of the log.
+class LogTag
 	:	public QtConfFile::TagNoValue
 {
 public:
-	DBTag();
+	LogTag();
 
-	explicit DBTag( const DBCfg & cfg );
+	explicit LogTag( const LogCfg & cfg );
 
-	//! \return Configuration of the DB.
-	DBCfg cfg() const;
+	//! \return Configuration of the log.
+	LogCfg cfg() const;
 
 private:
-	//! Name of the DB file.
-	QtConfFile::TagScalar< QString > m_dbFileName;
-}; // class DBTag
+	//! Is event's log enabled tag?
+	QtConfFile::TagScalar< bool > m_isEventLogEnabled;
+	//! Is source's log enabled?
+	QtConfFile::TagScalar< bool > m_isSourcesLogEnabled;
+	//! Number of days of the source's log.
+	QtConfFile::TagScalar< int > m_sourcesLogDays;
+}; // class LogTag
 
 } /* namespace Globe */
 
-#endif // GLOBE__DB_CFG_HPP__INCLUDED
+#endif // GLOBE__LOG_CFG_HPP__INCLUDED

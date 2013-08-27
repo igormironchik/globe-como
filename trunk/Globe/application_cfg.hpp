@@ -87,6 +87,16 @@ public:
 	//! Set file name of the colors correspondence configuration.
 	void setColorsCfgFile( const QString & fileName );
 
+	//! \return File name of the DB configuration.
+	const QString & dbCfgFile() const;
+	//! Set file name of the DB configuration.
+	void setDbCfgFile( const QString & fileName );
+
+	//! \return File name of the log configuration.
+	const QString & logCfgFile() const;
+	//! Set file name of the log configuration.
+	void setLogCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -100,6 +110,10 @@ private:
 	QString m_windowsCfgFileName;
 	//! File name of the colors correspondence configuration.
 	QString m_colorsCfgFileName;
+	//! File name of the DB configuration.
+	QString m_dbCfgFileName;
+	//! File name of the log configuration.
+	QString m_logCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -132,6 +146,10 @@ private:
 	QtConfFile::TagScalar< QString > m_windowsCfgFileName;
 	//! File name of the colors correspondence configuration.
 	QtConfFile::TagScalar< QString > m_colorsCfgFileName;
+	//! File name of the DB configuration.
+	QtConfFile::TagScalar< QString > m_dbCfgFileName;
+	//! File name of the log configuration.
+	QtConfFile::TagScalar< QString > m_logCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

@@ -90,6 +90,10 @@ private:
 	void readWindowsCfg( const QString & cfgFileName );
 	//! Read colors cfg.
 	void readColorsCfg( const QString & cfgFileName );
+	//! Read DB cfg.
+	void readDbCfg( const QString & cfgFileName );
+	//! Read log cfg.
+	void readLogCfg( const QString & cfgFileName );
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.
@@ -104,6 +108,10 @@ private:
 	void saveWindowsCfg( const QString & cfgFileName );
 	//! Save colors cfg.
 	void saveColorsCfg( const QString & cfgFileName );
+	//! Save DB cfg.
+	void saveDbCfg( const QString & cfgFileName );
+	//! Save log cfg.
+	void saveLogCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

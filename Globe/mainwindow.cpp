@@ -41,6 +41,7 @@
 #include <Globe/channel_name_dialog.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -182,6 +183,8 @@ MainWindow::init()
 	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_toolWindows );
 
 	d->m_db->setMainWindow( this );
+
+	Log::instance().setMainWindow( this );
 }
 
 void

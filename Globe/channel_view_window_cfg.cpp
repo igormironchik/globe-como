@@ -56,6 +56,18 @@ HeaderColumnCfg::HeaderColumnCfg( const HeaderColumnCfg & other )
 {
 }
 
+HeaderColumnCfg &
+HeaderColumnCfg::operator = ( const HeaderColumnCfg & other )
+{
+	if( this != &other )
+	{
+		m_size = other.size();
+		m_pos = other.pos();
+	}
+
+	return *this;
+}
+
 int
 HeaderColumnCfg::size() const
 {
@@ -117,6 +129,23 @@ ViewHeaderCfg::ViewHeaderCfg( const ViewHeaderCfg & other )
 	,	m_dateTimeColumn( other.dateTimeColumn() )
 	,	m_priorityColumn( other.priorityColumn() )
 {
+}
+
+ViewHeaderCfg &
+ViewHeaderCfg::operator = ( const ViewHeaderCfg & other )
+{
+	if( this != &other )
+	{
+		m_sortColumn = other.sortColumn();
+		m_sortOrder = other.sortOrder();
+		m_sourceNameColumn = other.sourceNameColumn();
+		m_typeNameColumn = other.typeNameColumn();
+		m_valueColumn = other.valueColumn();
+		m_dateTimeColumn = other.dateTimeColumn();
+		m_priorityColumn = other.priorityColumn();
+	}
+
+	return *this;
 }
 
 int
@@ -223,6 +252,26 @@ ChannelViewWindowCfg::ChannelViewWindowCfg( const QString & channelName,
 
 ChannelViewWindowCfg::~ChannelViewWindowCfg()
 {
+}
+
+ChannelViewWindowCfg::ChannelViewWindowCfg( const ChannelViewWindowCfg & other )
+	:	m_channelName( other.channelName() )
+	,	m_windowState( other.windowStateCfg() )
+	,	m_viewHeader( other.viewHeaderCfg() )
+{
+}
+
+ChannelViewWindowCfg &
+ChannelViewWindowCfg::operator = ( const ChannelViewWindowCfg & other )
+{
+	if( this != &other )
+	{
+		m_channelName = other.channelName();
+		m_windowState = other.windowStateCfg();
+		m_viewHeader = other.viewHeaderCfg();
+	}
+
+	return *this;
 }
 
 const QString &

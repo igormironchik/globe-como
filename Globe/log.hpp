@@ -35,8 +35,23 @@
 #include <QObject>
 #include <QScopedPointer>
 
+// Como include.
+#include <Como/Source>
+
+
+QT_BEGIN_NAMESPACE
+class QDateTime;
+class QString;
+class QVariant;
+class QSqlQuery;
+QT_END_NAMESPACE
+
 
 namespace Globe {
+
+class DB;
+class MainWindow;
+
 
 //
 // Log
@@ -51,9 +66,102 @@ class Log
 	Q_OBJECT
 
 public:
+	//! \return Instance of the log.
+	static Log & instance();
+
+	//! Set database engine.
+	void setDb( DB * db );
+
+	//! Write message to the event's log.
+	void writeMsgToEventLog( const QDateTime & dateTime,
+		const QString & msg );
+	//! Write message to the event's log.
+	void writeMsgToEventLog( const QString & msg );
+	//! Write message to the source's log.
+	void writeMsgToSourcesLog( const QDateTime & dateTime,
+		const QString & channelName,
+		Como::Source::Type type,
+		const QString & sourceName,
+		const QString & typeName,
+		const QVariant & value,
+		const QString & desc );
+
+	//! Read all records from the event's log.
+	QSqlQuery & readAllEventLog();
+	//! Read event's log for the given period of time.
+	QSqlQuery & readEventLog( const QDateTime & from,
+		const QDateTime & to );
+	//! Read event's log from the beginning to the given time.
+	QSqlQuery & readEventLogTo( const QDateTime & to );
+	//! Read event's log from the given time to the end.
+	QSqlQuery & readEventLogFrom( const QDateTime & from );
+	//! Read source's log for the given period of time.
+	QSqlQuery & readSourcesLog( const QDateTime & from,
+		const QDateTime & to,
+		const QString & channelName = QString(),
+		const QString & sourceName = QString(),
+		const QString & typeName = QString() );
+	//! Read source's log from the beginning to the given time.
+	QSqlQuery & readSourcesLogTo( const QDateTime & to,
+		const QString & channelName = QString(),
+		const QString & sourceName = QString(),
+		const QString & typeName = QString() );
+	//! Read source's log from the given time to the end.
+	QSqlQuery & readSourcesLogFrom( const QDateTime & from,
+		const QString & channelName = QString(),
+		const QString & sourceName = QString(),
+		const QString & typeName = QString() );
+	//! Read all records from the source's log.
+	QSqlQuery & readAllSourcesLog( const QString & channelName = QString(),
+		const QString & sourceName = QString(),
+		const QString & typeName = QString() );
+
+	//! Read configuration.
+	void readCfg( const QString & fileName );
+	//! Save configuration.
+	void saveCfg( const QString & fileName );
+
+	//! Enable/disable event's log.
+	void enableEventsLog( bool on = true );
+	//! Enable/disable source's log.
+	void enableSourcesLog( bool on = true );
+	//! Set sources' log days.
+	void setSourcesLogDays( int days );
+
+	//! Clear all records from event's log.
+	void clearEventsLog();
+	//! Clear all records from source's log.
+	void clearSourcesLog();
+
+private:
 	Log( QObject * parent = 0 );
 
 	~Log();
+
+	//! Initialize.
+	void init();
+	//! Private initialization.
+	void privateInit();
+
+	//! Insert record into event's log.
+	void insertMsgIntoEventLog( const QDateTime & dateTime,
+		const QString & msg );
+	//! Convert QDateTime into string.
+	QString dateTimeToString( const QDateTime & dt );
+
+private slots:
+	//! DB is ready.
+	void dbReady();
+	//! Error in DB.
+	void dbError();
+	//! Erase outdated recrods from source's log.
+	void eraseSourcesLog();
+
+protected:
+	friend class MainWindow;
+
+	//! Set pointer to the main window.
+	void setMainWindow( MainWindow * mainWindow );
 
 private:
 	Q_DISABLE_COPY( Log )

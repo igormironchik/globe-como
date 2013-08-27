@@ -42,6 +42,22 @@ DBCfg::DBCfg()
 {
 }
 
+DBCfg::DBCfg( const DBCfg & other )
+	:	m_dbFileName( other.dbFileName() )
+{
+}
+
+DBCfg &
+DBCfg::operator =( const DBCfg & other )
+{
+	if( this != &other )
+	{
+		m_dbFileName = other.dbFileName();
+	}
+
+	return *this;
+}
+
 const QString &
 DBCfg::dbFileName() const
 {
@@ -69,6 +85,9 @@ DBTag::DBTag( const DBCfg & cfg )
 	:	QtConfFile::TagNoValue( QLatin1String( "dbCfg" ), true )
 	,	m_dbFileName( *this, QLatin1String( "dbFileName" ), true )
 {
+	m_dbFileName.setValue( cfg.dbFileName() );
+
+	setDefined();
 }
 
 DBCfg

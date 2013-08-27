@@ -56,6 +56,8 @@ public:
 
 	HeaderColumnCfg( const HeaderColumnCfg & other );
 
+	HeaderColumnCfg & operator = ( const HeaderColumnCfg & other );
+
 	//! \return Size of the column.
 	int size() const;
 	//! Set size of the column.
@@ -91,6 +93,8 @@ public:
 		const HeaderColumnCfg & p );
 
 	ViewHeaderCfg( const ViewHeaderCfg & other );
+
+	ViewHeaderCfg & operator = ( const ViewHeaderCfg & other );
 
 	//! \return Sort column.
 	int sortColumn() const;
@@ -159,6 +163,10 @@ public:
 		const ViewHeaderCfg & viewHeaderCfg );
 
 	~ChannelViewWindowCfg();
+
+	ChannelViewWindowCfg( const ChannelViewWindowCfg & other );
+
+	ChannelViewWindowCfg & operator = ( const ChannelViewWindowCfg & other );
 
 	//! \return Name of the channel.
 	const QString & channelName() const;

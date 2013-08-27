@@ -35,7 +35,8 @@ HEADERS += application_cfg.hpp \
            configuration.hpp \
            db.hpp \
            db_cfg.hpp \
-           log.hpp\
+		   log.hpp \
+		   log_cfg.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -82,6 +83,7 @@ SOURCES += application_cfg.cpp \
            db.cpp \
            db_cfg.cpp \
            log.cpp \
+		   log_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \

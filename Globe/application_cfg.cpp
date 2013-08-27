@@ -53,6 +53,8 @@ ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	,	m_sourcesMainWindowCfgFileName( other.sourcesMainWindowCfgFile() )
 	,	m_windowsCfgFileName( other.windowsCfgFile() )
 	,	m_colorsCfgFileName( other.colorsCfgFile() )
+	,	m_dbCfgFileName( other.dbCfgFile() )
+	,	m_logCfgFileName( other.logCfgFile() )
 {
 }
 
@@ -67,6 +69,8 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 		m_sourcesMainWindowCfgFileName = other.sourcesMainWindowCfgFile();
 		m_windowsCfgFileName = other.windowsCfgFile();
 		m_colorsCfgFileName = other.colorsCfgFile();
+		m_dbCfgFileName = other.dbCfgFile();
+		m_logCfgFileName = other.logCfgFile();
 	}
 
 	return *this;
@@ -144,6 +148,30 @@ ApplicationCfg::setColorsCfgFile( const QString & fileName )
 	m_colorsCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::dbCfgFile() const
+{
+	return m_dbCfgFileName;
+}
+
+void
+ApplicationCfg::setDbCfgFile( const QString & fileName )
+{
+	m_dbCfgFileName = fileName;
+}
+
+const QString &
+ApplicationCfg::logCfgFile() const
+{
+	return m_logCfgFileName;
+}
+
+void
+ApplicationCfg::setLogCfgFile( const QString & fileName )
+{
+	m_logCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -163,6 +191,10 @@ ApplicationCfgTag::ApplicationCfgTag()
 			QLatin1String( "windowsCfgFileName" ), true )
 	,	m_colorsCfgFileName( *this,
 			QLatin1String( "colorsCfgFileName" ), true )
+	,	m_dbCfgFileName( *this,
+			QLatin1String( "dbCfgFileName" ), true )
+	,	m_logCfgFileName( *this,
+			QLatin1String( "logCfgFileName" ), true )
 {
 }
 
@@ -180,6 +212,10 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			QLatin1String( "windowsCfgFileName" ), true )
 	,	m_colorsCfgFileName( *this,
 			QLatin1String( "colorsCfgFileName" ), true )
+	,	m_dbCfgFileName( *this,
+			QLatin1String( "dbCfgFileName" ), true )
+	,	m_logCfgFileName( *this,
+			QLatin1String( "logCfgFileName" ), true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
@@ -187,6 +223,8 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 	m_sourcesMainWindowCfgFileName.setValue( cfg.sourcesMainWindowCfgFile() );
 	m_windowsCfgFileName.setValue( cfg.windowsCfgFile() );
 	m_colorsCfgFileName.setValue( cfg.colorsCfgFile() );
+	m_dbCfgFileName.setValue( cfg.dbCfgFile() );
+	m_logCfgFileName.setValue( cfg.logCfgFile() );
 
 	setDefined();
 }
@@ -202,6 +240,8 @@ ApplicationCfgTag::cfg() const
 	cfg.setSourcesMainWindowCfgFile( m_sourcesMainWindowCfgFileName.value() );
 	cfg.setWindowsCfgFile( m_windowsCfgFileName.value() );
 	cfg.setColorsCfgFile( m_colorsCfgFileName.value() );
+	cfg.setDbCfgFile( m_dbCfgFileName.value() );
+	cfg.setLogCfgFile( m_logCfgFileName.value() );
 
 	return cfg;
 }

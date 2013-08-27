@@ -46,6 +46,7 @@
 #include <Globe/tool_window_object.hpp>
 #include <Globe/sources.hpp>
 #include <Globe/sources_mainwindow.hpp>
+#include <Globe/log.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -101,6 +102,8 @@ int main( int argc, char ** argv )
 	app.installTranslator( &appTranslator );
 
 	Globe::DB db;
+
+	Globe::Log::instance().setDb( &db );
 
 	Globe::ChannelsManager channelsManager( &db );
 

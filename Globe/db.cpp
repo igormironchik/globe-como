@@ -32,15 +32,21 @@
 #include <Globe/db.hpp>
 #include <Globe/mainwindow.hpp>
 #include <Globe/db_cfg.hpp>
+#include <Globe/utils.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
 
 // Qt include.
 #include <QMessageBox>
+#include <QFileInfo>
 
 
 namespace Globe {
+
+static const QString defaultDbFile =
+	QLatin1String( "./etc/db/globe.db" );
+
 
 //
 // DBPrivate
@@ -77,6 +83,7 @@ DB::DB( QObject * parent )
 
 DB::~DB()
 {
+	d->m_connection.close();
 }
 
 bool
@@ -94,7 +101,10 @@ DB::connection() const
 void
 DB::setCfg( const DBCfg & cfg )
 {
-	init( cfg.dbFileName() );
+	if( !cfg.dbFileName().isEmpty() )
+		init( cfg.dbFileName() );
+	else
+		init( defaultDbFile );
 }
 
 void
@@ -105,17 +115,25 @@ DB::readCfg( const QString & fileName )
 	try {
 		QtConfFile::readQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		setCfg( tag.cfg() );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to read DB configuration..." ),
-			x.whatAsQString() );
+			QString( "%1\n"
+				"Default database will be used: \"%2\"." )
+					.arg( x.whatAsQString() )
+					.arg( defaultDbFile )
+		);
 
-		return;
+		DBCfg cfg;
+
+		cfg.setDbFileName( defaultDbFile );
+
+		setCfg( cfg );
 	}
-
-	setCfg( tag.cfg() );
 }
 
 void
@@ -151,6 +169,10 @@ DB::init( const QString & dbFileName )
 	d->m_connection.close();
 
 	d->m_dbFileName = dbFileName;
+
+	QFileInfo info( d->m_dbFileName );
+
+	checkPathAndCreateIfNotExists( info.path() );
 
 	d->m_connection = QSqlDatabase::addDatabase( "QSQLITE" );
 	d->m_connection.setDatabaseName( d->m_dbFileName );

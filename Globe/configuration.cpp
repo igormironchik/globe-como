@@ -134,6 +134,9 @@ Configuration::~Configuration()
 void
 Configuration::loadConfiguration()
 {
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Loading configuration..." ) );
+
 	checkDirAndCreateIfNotExists( QLatin1String( "./" ),
 		QLatin1String( "etc" ) );
 
@@ -154,11 +157,17 @@ Configuration::loadConfiguration()
 	readColorsCfg( d->m_appCfg.colorsCfgFile() );
 
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Configuration successfully loaded..." ) );
 }
 
 void
 Configuration::saveConfiguration()
 {
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Saving configuration..." ) );
+
 	saveSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
 	savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
@@ -176,6 +185,9 @@ Configuration::saveConfiguration()
 	saveLogCfg( d->m_appCfg.logCfgFile() );
 
 	saveAppCfg( d->m_cfgFileName );
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Configuration successfully saved..." ) );
 }
 
 ColorForLevel *
@@ -198,12 +210,22 @@ Configuration::readAppCfg( const QString & cfgFileName )
 		QtConfFile::readQtConfFile( appCfgTag,
 			d->m_cfgFileName, QTextCodec::codecForName( "UTF-8" ) );
 
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Application's configuration loaded from file \"%1\"." )
+				.arg( cfgFileName ) );
+
 		d->m_appCfg = appCfgTag.cfg();
 
 		d->m_appCfgWasLoaded = true;
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to load application's configuration from file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to load Globe's configuration file..." ),
 			x.whatAsQString() );
@@ -223,6 +245,10 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 			QtConfFile::readQtConfFile( tag, cfgFileName,
 				QTextCodec::codecForName( "UTF-8" ) );
 
+			Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+				"Main window's configuration loaded from file \"%1\"." )
+					.arg( cfgFileName ) );
+
 			cfg = tag.cfg();
 		}
 		else
@@ -230,6 +256,15 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 			d->m_appCfg.setMainWindowCfgFile( defaultMainWindowCfgFileName );
 
 			if( d->m_appCfgWasLoaded )
+			{
+				Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+					"Error in application's configuration...\n"
+					"Not specified main window's configuration file.\n"
+					"Main window's configuration will not be loaded.\n"
+					"At exit configuration of the main window will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultMainWindowCfgFileName ) );
+
 				QMessageBox::warning( d->m_mainWindow,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified main window's configuration file.\n"
@@ -237,13 +272,22 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 						"At exit configuration of the main window will be saved\n"
 						"in \"%1\" file." )
 							.arg( defaultMainWindowCfgFileName ) );
+			}
 		}
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to load main window's configuration from file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to load main window's configuration..." ),
 			x.whatAsQString() );
+
+		return;
 	}
 
 	d->m_mainWindow->list()->setShownChannelsMode( cfg.shownChannels() );
@@ -263,6 +307,10 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 			QtConfFile::readQtConfFile( tag, cfgFileName,
 				QTextCodec::codecForName( "UTF-8" ) );
 
+			Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+				"Channel's configuration loaded from file \"%1\"." )
+					.arg( cfgFileName ) );
+
 			cfg = tag.cfg();
 		}
 		else
@@ -270,6 +318,15 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 			d->m_appCfg.setChannelsCfgFile( defaultChannelsCfgFileName );
 
 			if( d->m_appCfgWasLoaded )
+			{
+				Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+					"Error in application's configuration...\n"
+					"Not specified channel's configuration file.\n"
+					"Channel's configuration will not be loaded.\n"
+					"At exit channels configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultChannelsCfgFileName ) );
+
 				QMessageBox::warning( d->m_mainWindow,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified channel's configuration file.\n"
@@ -277,13 +334,22 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 						"At exit channels configuration will be saved\n"
 						"in \"%1\" file." )
 							.arg( defaultChannelsCfgFileName ) );
+			}
 		}
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to load channels configuration from file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to load channels configuration..." ),
 			x.whatAsQString() );
+
+		return;
 	}
 
 	foreach( const ChannelCfg & channelCfg, cfg )
@@ -302,15 +368,32 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 				channel->connectToHost();
 		}
 		else if( !d->m_channelsManager->isNameUnique( channelCfg.name() ) )
-			QMessageBox::critical( d->m_mainWindow, tr( "Unable to create new channel..." ),
+		{
+			Log::instance().writeMsgToEventLog( LogLevelError, QString(
+				"Unable to create new channel... "
+				"Channel with name \"%1\" already exists." )
+					.arg( channelCfg.name() ) );
+
+			QMessageBox::critical( d->m_mainWindow,
+				tr( "Unable to create new channel..." ),
 				tr( "Channel with name \"%1\" already exists." )
 					.arg( channelCfg.name() ) );
+		}
 		else if( !d->m_channelsManager->isAddressAndPortUnique(
 			channelCfg.address(), channelCfg.port() ) )
-				QMessageBox::critical( d->m_mainWindow, tr( "Unable to create new channel..." ),
-					tr( "Channel with address \"%1\" and port %2 already exists." )
-						.arg( channelCfg.address().toString() )
-						.arg( QString::number( channelCfg.port() ) ) );
+		{
+			Log::instance().writeMsgToEventLog( LogLevelError, QString(
+				"Unable to create new channel...\n"
+				"Channel with address \"%1\" and port %2 already exists." )
+					.arg( channelCfg.address().toString() )
+					.arg( QString::number( channelCfg.port() ) ) );
+
+			QMessageBox::critical( d->m_mainWindow,
+				tr( "Unable to create new channel..." ),
+				tr( "Channel with address \"%1\" and port %2 already exists." )
+					.arg( channelCfg.address().toString() )
+					.arg( QString::number( channelCfg.port() ) ) );
+		}
 	}
 }
 
@@ -324,6 +407,15 @@ Configuration::readPropertiesCfg( const QString & cfgFileName )
 		d->m_appCfg.setPropertiesCfgFile( defaultPropertiesCfgFileName );
 
 		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified properties configuration file.\n"
+				"Properties configuration will not be loaded.\n"
+				"At exit properties configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultPropertiesCfgFileName ) );
+
 			QMessageBox::warning( d->m_mainWindow,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified properties configuration file.\n"
@@ -331,6 +423,7 @@ Configuration::readPropertiesCfg( const QString & cfgFileName )
 					"At exit properties configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultPropertiesCfgFileName ) );
+		}
 	}
 }
 
@@ -345,6 +438,15 @@ Configuration::readSourcesMainWindowCfg( const QString & cfgFileName )
 			defaultSourcesMainWindowCfgFileName );
 
 		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified sources main window configuration file.\n"
+				"Sources main window configuration will not be loaded.\n"
+				"At exit sources main window configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultSourcesMainWindowCfgFileName ) );
+
 			QMessageBox::warning( d->m_mainWindow,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified sources main window configuration file.\n"
@@ -352,6 +454,7 @@ Configuration::readSourcesMainWindowCfg( const QString & cfgFileName )
 					"At exit sources main window configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultSourcesMainWindowCfgFileName ) );
+		}
 	}
 }
 
@@ -368,6 +471,10 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 			QtConfFile::readQtConfFile( tag, cfgFileName,
 				QTextCodec::codecForName( "UTF-8" ) );
 
+			Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+				"Windows configuration loaded from file \"%1\"." )
+					.arg( cfgFileName ) );
+
 			cfg = tag.cfg();
 		}
 		else
@@ -375,6 +482,15 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 			d->m_appCfg.setWindowsCfgFile( defaultWindowsCfgFileName );
 
 			if( d->m_appCfgWasLoaded )
+			{
+				Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+					"Error in application's configuration...\n"
+					"Not specified windows configuration file.\n"
+					"Windows configuration will not be loaded.\n"
+					"At exit configuration of the windows will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultWindowsCfgFileName ) );
+
 				QMessageBox::warning( d->m_mainWindow,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified windows configuration file.\n"
@@ -382,13 +498,22 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 						"At exit configuration of the windows will be saved\n"
 						"in \"%1\" file." )
 							.arg( defaultWindowsCfgFileName ) );
+			}
 		}
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to load windows configuration from file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to load windows configuration..." ),
 			x.whatAsQString() );
+
+		return;
 	}
 
 	d->m_mainWindow->restoreWindows( cfg );
@@ -404,6 +529,15 @@ Configuration::readColorsCfg( const QString & cfgFileName )
 		d->m_appCfg.setColorsCfgFile( defaultColorsCfgFilename );
 
 		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified colors configuration file.\n"
+				"Colors configuration will not be loaded.\n"
+				"At exit colors configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultColorsCfgFilename ) );
+
 			QMessageBox::warning( d->m_mainWindow,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified colors configuration file.\n"
@@ -411,6 +545,7 @@ Configuration::readColorsCfg( const QString & cfgFileName )
 					"At exit colors configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultColorsCfgFilename ) );
+		}
 	}
 }
 
@@ -424,6 +559,15 @@ Configuration::readDbCfg( const QString & cfgFileName )
 		d->m_appCfg.setDbCfgFile( defaultDbCfgFileName );
 
 		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified DB configuration file.\n"
+				"DB configuration will not be loaded.\n"
+				"At exit DB configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultDbCfgFileName ) );
+
 			QMessageBox::warning( d->m_mainWindow,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified DB configuration file.\n"
@@ -431,6 +575,7 @@ Configuration::readDbCfg( const QString & cfgFileName )
 					"At exit DB configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultDbCfgFileName ) );
+		}
 	}
 }
 
@@ -444,6 +589,15 @@ Configuration::readLogCfg( const QString & cfgFileName )
 		d->m_appCfg.setLogCfgFile( defaultLogCfgFileName );
 
 		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified log configuration file.\n"
+				"Log configuration will not be loaded.\n"
+				"At exit log configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultLogCfgFileName ) );
+
 			QMessageBox::warning( d->m_mainWindow,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified log configuration file.\n"
@@ -451,6 +605,7 @@ Configuration::readLogCfg( const QString & cfgFileName )
 					"At exit log configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultLogCfgFileName ) );
+		}
 	}
 }
 
@@ -462,9 +617,19 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Application's configuration saved into file \"%1\"." )
+				.arg( cfgFileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save application's configuration in file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save application's configuration..." ),
 			x.whatAsQString() );
@@ -483,9 +648,19 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Main window's configuration saved into file \"%1\"." )
+				.arg( cfgFileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save main window's configuration in file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save main window's configuration..." ),
 			x.whatAsQString() );
@@ -516,9 +691,19 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Channels configuration saved into file \"%1\"." )
+				.arg( cfgFileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save channels configuration in file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save channels configuration..." ),
 			x.whatAsQString() );
@@ -547,9 +732,19 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 
 		QtConfFile::writeQtConfFile( tag, cfgFileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Windows configuration saved into file \"%1\"." )
+				.arg( cfgFileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save windows configuration in file "
+			"\"%1\". %2" )
+				.arg( cfgFileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save windows configuration..." ),
 			x.whatAsQString() );

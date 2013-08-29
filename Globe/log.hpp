@@ -52,6 +52,20 @@ namespace Globe {
 class DB;
 class MainWindow;
 
+//
+// LogLevel
+//
+
+//! Level of the log.
+enum LogLevel {
+	//! Info.
+	LogLevelInfo = 0,
+	//! Warning.
+	LogLevelWarning = 1,
+	//! Error.
+	LogLevelError = 2
+}; // enum LogLevel
+
 
 //
 // Log
@@ -73,10 +87,10 @@ public:
 	void setDb( DB * db );
 
 	//! Write message to the event's log.
-	void writeMsgToEventLog( const QDateTime & dateTime,
+	void writeMsgToEventLog( LogLevel level, const QDateTime & dateTime,
 		const QString & msg );
 	//! Write message to the event's log.
-	void writeMsgToEventLog( const QString & msg );
+	void writeMsgToEventLog( LogLevel level, const QString & msg );
 	//! Write message to the source's log.
 	void writeMsgToSourcesLog( const QDateTime & dateTime,
 		const QString & channelName,
@@ -144,7 +158,7 @@ private:
 	void privateInit();
 
 	//! Insert record into event's log.
-	void insertMsgIntoEventLog( const QDateTime & dateTime,
+	void insertMsgIntoEventLog( LogLevel level, const QDateTime & dateTime,
 		const QString & msg );
 	//! Convert QDateTime into string.
 	QString dateTimeToString( const QDateTime & dt );

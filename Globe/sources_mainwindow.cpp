@@ -35,6 +35,7 @@
 #include <Globe/sources_widget.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/sources_mainwindow_cfg.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QCloseEvent>
@@ -142,9 +143,19 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Sources main window's configuration saved into \"%1\" file." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save sources main window's configuration to file "
+			"\"%1\". %2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( this,
 			tr( "Unable to save sources main window configuration..." ),
 			x.whatAsQString() );
@@ -159,9 +170,19 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 	try {
 		QtConfFile::readQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Sources main window's configuration loaded from file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to read sources main window's configuration from file "
+			"\"%1\". %2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( this,
 			tr( "Unable to read sources main window configuration..." ),
 			x.whatAsQString() );

@@ -42,6 +42,7 @@
 #include <Globe/properties_key_type_dialog.hpp>
 #include <Globe/properties_dialog.hpp>
 #include <Globe/properties_widget.hpp>
+#include <Globe/log.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -601,6 +602,37 @@ static inline PropertiesKey createKey( PropertiesKeyType type,
 	}
 }
 
+static inline QString sourceToString( const Como::Source & source )
+{
+	QString result;
+
+	result.append( QLatin1String( "name: \"" ) );
+	result.append( source.name() );
+	result.append( QLatin1String( "\", type name: \"" ) );
+	result.append( source.typeName() );
+	result.append( QLatin1String( "\"" ) );
+
+	return result;
+}
+
+static inline QString keyToString( const PropertiesKey & key )
+{
+	QString result;
+
+	result.append( QLatin1String( "channel: \"" ) );
+	result.append( ( key.channelName().isEmpty() ?
+		QLatin1String( "any" ) : key.channelName() ) );
+	result.append( QLatin1String( "\", source name: \"" ) );
+	result.append( ( key.name().isEmpty() ?
+		QLatin1String( "any" ) : key.name() ) );
+	result.append( QLatin1String( "\", type name: \"" ) );
+	result.append( ( key.typeName().isEmpty() ?
+		QLatin1String( "any" ) : key.typeName() ) );
+	result.append( QLatin1String( "\"" ) );
+
+	return result;
+}
+
 void
 PropertiesManager::addProperties( const Como::Source & source,
 	const QString & channelName, QWidget * parent )
@@ -612,6 +644,9 @@ PropertiesManager::addProperties( const Como::Source & source,
 	if( dialog.exec() == QDialog::Accepted )
 	{
 		PropertiesKey key = createKey( type, source, channelName );
+
+		const QString sourceAsString = sourceToString( source );
+		const QString keyAsString = keyToString( key );
 
 		PropertiesMap::Iterator it;
 		bool propertiesExists = false;
@@ -632,8 +667,45 @@ PropertiesManager::addProperties( const Como::Source & source,
 				it.value().properties() =
 					propertiesDialog.propertiesWidget()->properties();
 
-				it.value().properties().saveConfiguration( d->m_directoryName +
-					it.value().confFileName() );
+				const QString propertieConfFileName =
+					d->m_directoryName + it.value().confFileName();
+
+				Log::instance().writeMsgToEventLog( LogLevelInfo,
+					QString( "Properties for source %1 and key %2 from channel \"%3\" "
+						"has been changed. New properties will be saved into "
+						"file \"%4\"." )
+							.arg( sourceAsString )
+							.arg( keyAsString )
+							.arg( channelName )
+							.arg( propertieConfFileName ) );
+
+				try {
+					it.value().properties().saveConfiguration(
+						propertieConfFileName );
+
+					Log::instance().writeMsgToEventLog( LogLevelInfo,
+						QString( "Properties for source %1 and key %2 from channel "
+							"\"%3\" was saved in file \"%4\"." )
+								.arg( sourceAsString )
+								.arg( keyAsString )
+								.arg( channelName )
+								.arg( propertieConfFileName ) );
+				}
+				catch( const QtConfFile::Exception & x )
+				{
+					Log::instance().writeMsgToEventLog( LogLevelError,
+						QString( "Unable to save properties for source %1 "
+							"and key %2 from channel \"%3\" to file \"%4\". %5" )
+								.arg( sourceAsString )
+								.arg( keyAsString )
+								.arg( channelName )
+								.arg( propertieConfFileName )
+								.arg( x.whatAsQString() ) );
+
+					QMessageBox::critical( ( parent ? parent : this ),
+						tr( "Unable to save properties..." ),
+						x.whatAsQString() );
+				}
 			}
 			else
 			{
@@ -661,7 +733,42 @@ PropertiesManager::addProperties( const Como::Source & source,
 
 					d->m_model->addPropertie( key, value );
 
-					properties.saveConfiguration( d->m_directoryName + fileName );
+					Log::instance().writeMsgToEventLog( LogLevelInfo,
+						QString( "Properties for source %1 and key %2 from channel \"%3\" "
+							"has been added. New properties will be saved into "
+							"file \"%4\"." )
+								.arg( sourceAsString )
+								.arg( keyAsString )
+								.arg( channelName )
+								.arg( fileName ) );
+
+					try {
+						properties.saveConfiguration(
+							d->m_directoryName + fileName );
+
+						Log::instance().writeMsgToEventLog( LogLevelInfo,
+							QString( "Properties for source %1 and key %2 from channel "
+								"\"%3\" was saved in file \"%4\"." )
+									.arg( sourceAsString )
+									.arg( keyAsString )
+									.arg( channelName )
+									.arg( fileName ) );
+					}
+					catch( const QtConfFile::Exception & x )
+					{
+						Log::instance().writeMsgToEventLog( LogLevelError,
+							QString( "Unable to save properties for source %1 "
+								"and key %2 from channel \"%3\" to file \"%4\". %5" )
+									.arg( sourceAsString )
+									.arg( keyAsString )
+									.arg( channelName )
+									.arg( fileName )
+									.arg( x.whatAsQString() ) );
+
+						QMessageBox::critical( ( parent ? parent : this ),
+							tr( "Unable to save properties..." ),
+							x.whatAsQString() );
+					}
 				}
 			}
 		}
@@ -682,6 +789,10 @@ PropertiesManager::removeProperties( const PropertiesKey & key,
 		d->m_exactlyThisTypeOfSourceMap.remove( key );
 	else
 		d->m_exactlyThisTypeOfSourceInAnyChannelMap.remove( key );
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QString( "Properties for key %1 was deleted." )
+			.arg( keyToString( key ) ) );
 }
 
 void
@@ -702,11 +813,38 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 
 		if( propertiesDialog.exec() == QDialog::Accepted )
 		{
+			const QString fileName = d->m_directoryName +
+				it.value().confFileName();
+			const QString keyAsString = keyToString( key );
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Properties for key %1 was edited." )
+					.arg( keyAsString ) );
+
 			it.value().properties() =
 				propertiesDialog.propertiesWidget()->properties();
 
-			it.value().properties().saveConfiguration( d->m_directoryName +
-				it.value().confFileName() );
+			try {
+				it.value().properties().saveConfiguration( fileName );
+
+				Log::instance().writeMsgToEventLog( LogLevelInfo,
+					QString( "Properties for key %1 was saved in file \"%2\"." )
+							.arg( keyAsString )
+							.arg( fileName ) );
+			}
+			catch( const QtConfFile::Exception & x )
+			{
+				Log::instance().writeMsgToEventLog( LogLevelError,
+					QString( "Unable to save properties for key %1 "
+						"to file \"%2\". %3" )
+							.arg( keyAsString )
+							.arg( fileName )
+							.arg( x.whatAsQString() ) );
+
+				QMessageBox::critical( ( parent ? parent : this ),
+					tr( "Unable to save properties..." ),
+					x.whatAsQString() );
+			}
 		}
 	}
 }
@@ -724,9 +862,19 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Properties manager's configuration saved "
+				"in file \"%1\"." )
+					.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to save properties manager's configuration "
+				"to file \"%1\"." )
+					.arg( fileName ) );
+
 		QMessageBox::critical( this,
 			tr( "Unable to save properties configuration..." ),
 			x.whatAsQString() );
@@ -741,6 +889,8 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 	for( PropertiesMap::Iterator it = map.begin(),
 		last = map.end(); it != last; ++it )
 	{
+		const QString keyAsString = keyToString( it.key() );
+
 		try {
 			PropertiesTag tag;
 
@@ -748,10 +898,23 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 				d->m_directoryName + it.value().confFileName(),
 				QTextCodec::codecForName( "UTF-8" ) );
 
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Propertie's configuration for key %1 was loaded." )
+					.arg( keyAsString ) );
+
 			it.value().properties() = tag.properties();
 		}
 		catch( const QtConfFile::Exception & x )
 		{
+			const QString fileName = d->m_directoryName +
+				it.value().confFileName();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to read propertie's configuration for key %1 "
+					"from file \"%2\"." )
+						.arg( keyAsString )
+						.arg( fileName ) );
+
 			const QMessageBox::StandardButton button =
 				QMessageBox::question( this,
 					tr( "Unable to read properties configuration..." ),
@@ -765,8 +928,13 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 
 			if( button == QMessageBox::Ok )
 			{
-				QFile file( d->m_directoryName + it.value().confFileName() );
+				QFile file( fileName );
 				file.remove();
+
+				Log::instance().writeMsgToEventLog( LogLevelWarning,
+					QString( "Propertie's configuration file \"%1\" "
+						"was removed." )
+							.arg( fileName ) );
 			}
 		}
 	}
@@ -784,9 +952,20 @@ PropertiesManager::readConfiguration( const QString & fileName )
 		try {
 			QtConfFile::readQtConfFile( tag, fileName,
 				QTextCodec::codecForName( "UTF-8" ) );
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Properties manager's configuration loaded "
+					"from file \"%1\"." )
+						.arg( fileName ) );
 		}
 		catch( const QtConfFile::Exception & x )
 		{
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to load properties manager's configuration "
+					" from file \"%1\". %2" )
+						.arg( fileName )
+						.arg( x.whatAsQString() ) );
+
 			QMessageBox::critical( this,
 				tr( "Unable to read properties configuration..." ),
 				x.whatAsQString() );

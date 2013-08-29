@@ -31,6 +31,7 @@
 // Globe include.
 #include <Globe/sources.hpp>
 #include <Globe/channels.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QMap>
@@ -231,6 +232,10 @@ SourcesManager::sourceUpdated( const Como::Source & source )
 
 	QMap< QString, QList< MapValue > >::Iterator it =
 		d->m_map.find( channel->name() );
+
+	Log::instance().writeMsgToSourcesLog( source.dateTime(),
+		channel->name(), source.type(), source.name(),
+		source.typeName(), source.value(), source.description() );
 
 	if( it != d->m_map.end() )
 	{

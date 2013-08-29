@@ -32,6 +32,7 @@
 #include <Globe/color_for_level.hpp>
 #include <Globe/mainwindow.hpp>
 #include <Globe/color_for_level_cfg.hpp>
+#include <Globe/log.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -162,9 +163,18 @@ ColorForLevel::saveCfg( const QString & fileName )
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Colors configuration saved into file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to save colors configuration to file \"%1\". %2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save colors correspondence configuration..." ),
 			x.whatAsQString() );
@@ -179,9 +189,19 @@ ColorForLevel::readCfg( const QString & fileName )
 	try {
 		QtConfFile::readQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Colors configuration loaded from file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to read colors configuration from file "
+				"\"%1\". %2" )
+					.arg( fileName )
+					.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to read colors correspondence configuration..." ),
 			x.whatAsQString() );

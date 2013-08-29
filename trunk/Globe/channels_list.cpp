@@ -34,6 +34,7 @@
 #include <Globe/channels.hpp>
 #include <Globe/channel_attributes.hpp>
 #include <Globe/mainwindow.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QList>
@@ -579,13 +580,23 @@ ChannelsList::addChannel()
 		if( channel )
 			addChannel( channel );
 		else
+		{
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to create channel with "
+					"name: \"%1\" address: \"%2\" and port: %3" )
+						.arg( attributes.name() )
+						.arg( attributes.address().toString() )
+						.arg( QString::number( attributes.port() ) ) );
+
 			QMessageBox::critical( this, tr( "Unable to create channel..." ),
 				tr( "Unable to create channel with:\n"
 					"\tName: %1\n"
 					"\tAddress: %2\n"
-					"\tPort: %3" ).arg( attributes.name() )
+					"\tPort: %3" )
+						.arg( attributes.name() )
 						.arg( attributes.address().toString() )
 						.arg( QString::number( attributes.port() ) ) );
+		}
 	}
 }
 

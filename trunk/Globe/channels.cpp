@@ -31,6 +31,7 @@
 // Globe include.
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
+#include <Globe/log.hpp>
 
 // Como include.
 #include <Como/ClientSocket>
@@ -512,6 +513,12 @@ ChannelsManager::createChannel(	const QString & name,
 		d->m_channels.insert( name, ChannelAndThread( ch, thread ) );
 		thread->start();
 
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Channel created. Name \"%1\", ip \"%2\" and port %3." )
+				.arg( name )
+				.arg( hostAddress.toString() )
+				.arg( QString::number( port ) ) );
+
 		emit channelCreated( ch );
 
 		return ch;
@@ -572,6 +579,12 @@ ChannelsManager::removeChannel( const QString & name )
 		Q_UNUSED( deleter )
 
 		channelAndThread.channel()->disconnectFromHost();
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Channel removed. Name \"%1\", ip \"%2\" and port %3." )
+				.arg( name )
+				.arg( channelAndThread.channel()->hostAddress().toString() )
+				.arg( QString::number( channelAndThread.channel()->portNumber() ) ) );
 
 		emit channelRemoved( channelAndThread.channel() );
 	}

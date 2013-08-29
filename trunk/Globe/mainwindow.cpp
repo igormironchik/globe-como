@@ -190,6 +190,9 @@ MainWindow::init()
 void
 MainWindow::start()
 {
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Application started." ) );
+
 	d->m_cfg.loadConfiguration();
 
 	show();
@@ -253,6 +256,9 @@ MainWindow::closeEvent( QCloseEvent * event )
 	event->accept();
 
 	saveConfiguration();
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Application finished." ) );
 
 	QApplication::quit();
 }

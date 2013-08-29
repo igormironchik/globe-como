@@ -35,7 +35,6 @@
 #include <QSqlQuery>
 #include <QMessageBox>
 #include <QVector>
-#include <QPair>
 #include <QTimer>
 
 // Globe include.
@@ -83,6 +82,55 @@ enum LogState {
 
 
 //
+// EventLogRecord
+//
+
+//! Event's log record.
+struct EventLogRecord {
+public:
+	EventLogRecord()
+		:	m_level( LogLevelError )
+	{
+	}
+
+	EventLogRecord( LogLevel l,
+		const QDateTime & dt,
+		const QString & msg )
+		:	m_level( l )
+		,	m_dateTime( dt )
+		,	m_message( msg )
+	{
+	}
+
+	EventLogRecord( const EventLogRecord & other )
+		:	m_level( other.m_level )
+		,	m_dateTime( other.m_dateTime )
+		,	m_message( other.m_message )
+	{
+	}
+
+	EventLogRecord & operator = ( const EventLogRecord & other )
+	{
+		if( this != & other )
+		{
+			m_level = other.m_level;
+			m_dateTime = other.m_dateTime;
+			m_message = other.m_message;
+		}
+
+		return *this;
+	}
+
+	//! Log level.
+	LogLevel m_level;
+	//! Date and time.
+	QDateTime m_dateTime;
+	//! Message.
+	QString m_message;
+}; // struct EventLogRecord
+
+
+//
 // LogPrivate
 //
 
@@ -110,7 +158,7 @@ public:
 	//! State of  the log.
 	LogState m_logState;
 	//! Deferred event's log messages.
-	QVector< QPair< QDateTime, QString > > m_deferredEventMessages;
+	QVector< EventLogRecord > m_deferredEventMessages;
 	//! Timer.
 	QTimer * m_timer;
 	//! Main window.
@@ -137,16 +185,22 @@ void
 Log::init()
 {
 	static QSqlQuery eventLogTableQuery( QLatin1String(
-		"CREATE TABLE IF NOT EXISTS eventLog ( dateTime TEXT, "
+		"CREATE TABLE IF NOT EXISTS eventLog ( level INTEGER, dateTime TEXT, "
 		"msg TEXT )" ) );
 
 	eventLogTableQuery.exec();
 
-	static QSqlQuery eventLogTableIndexQuery( QLatin1String(
-		"CREATE UNIQUE INDEX IF NOT EXISTS eventLogIdx "
+	static QSqlQuery eventLogTableDateTimeIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS eventLogDateTimeIdx "
 		"ON eventLog ( dateTime )" ) );
 
-	eventLogTableIndexQuery.exec();
+	eventLogTableDateTimeIndexQuery.exec();
+
+	static QSqlQuery eventLogTableLevelIndexQuery( QLatin1String(
+		"CREATE UNIQUE INDEX IF NOT EXISTS eventLogLevelIdx "
+		"ON eventLog ( level )" ) );
+
+	eventLogTableLevelIndexQuery.exec();
 
 	static QSqlQuery sourcesLogTableQuery( QLatin1String(
 		"CREATE TABLE IF NOT EXISTS sourcesLog( dateTime TEXT, "
@@ -188,8 +242,9 @@ Log::init()
 	for( int i = 0; i < d->m_deferredEventMessages.size(); ++i )
 	{
 		insertMsgIntoEventLog(
-			d->m_deferredEventMessages.at( i ).first,
-			d->m_deferredEventMessages.at( i ).second );
+			d->m_deferredEventMessages.at( i ).m_level,
+			d->m_deferredEventMessages.at( i ).m_dateTime,
+			d->m_deferredEventMessages.at( i ).m_message );
 	}
 
 	d->m_deferredEventMessages.clear();
@@ -238,7 +293,7 @@ Log::setDb( DB * db )
 }
 
 void
-Log::writeMsgToEventLog( const QDateTime & dateTime,
+Log::writeMsgToEventLog( LogLevel level, const QDateTime & dateTime,
 	const QString & msg )
 {
 	if( d->m_cfg.isEventLogEnabled() )
@@ -247,20 +302,20 @@ Log::writeMsgToEventLog( const QDateTime & dateTime,
 			d->m_dbState != ErrorInDBState )
 		{
 			d->m_deferredEventMessages.push_back(
-				QPair< QDateTime, QString >( dateTime, msg ) );
+				EventLogRecord( level, dateTime, msg ) );
 		}
 		else if( d->m_logState == ReadyLogState &&
 			d->m_dbState == AllIsOkDBState )
 		{
-			insertMsgIntoEventLog( dateTime, msg );
+			insertMsgIntoEventLog( level, dateTime, msg );
 		}
 	}
 }
 
 void
-Log::writeMsgToEventLog( const QString & msg )
+Log::writeMsgToEventLog( LogLevel level, const QString & msg )
 {
-	writeMsgToEventLog( QDateTime::currentDateTime(), msg );
+	writeMsgToEventLog( level, QDateTime::currentDateTime(), msg );
 }
 
 void
@@ -1028,13 +1083,14 @@ Log::eraseSourcesLog()
 }
 
 void
-Log::insertMsgIntoEventLog( const QDateTime & dateTime,
+Log::insertMsgIntoEventLog( LogLevel level, const QDateTime & dateTime,
 	const QString & msg )
 {
 	static QSqlQuery insert( QLatin1String(
-		"INSERT INTO eventLog ( dateTime, msg ) "
-		"VALUES ( ?, ? )" ) );
+		"INSERT INTO eventLog ( level, dateTime, msg ) "
+		"VALUES ( ?, ?, ? )" ) );
 
+	insert.addBindValue( (int) level );
 	insert.addBindValue( dateTimeToString( dateTime ) );
 	insert.addBindValue( msg );
 

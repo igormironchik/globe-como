@@ -33,6 +33,7 @@
 #include <Globe/mainwindow.hpp>
 #include <Globe/db_cfg.hpp>
 #include <Globe/utils.hpp>
+#include <Globe/log.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -116,10 +117,20 @@ DB::readCfg( const QString & fileName )
 		QtConfFile::readQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
 
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Database configuration loaded from file \"%1\"." )
+				.arg( fileName ) );
+
 		setCfg( tag.cfg() );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to read database configuration "
+				"from file \"%1\". %2" )
+					.arg( fileName )
+					.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to read DB configuration..." ),
 			QString( "%1\n"
@@ -147,9 +158,19 @@ DB::saveCfg( const QString & fileName )
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Database configuration saved into file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to save database configuration to file "
+				"\"%1\". %2" )
+					.arg( fileName )
+					.arg( x.whatAsQString() ) );
+
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save DB configuration..." ),
 			x.whatAsQString() );
@@ -181,11 +202,19 @@ DB::init( const QString & dbFileName )
 	{
 		d->m_connection.close();
 
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to initialize databse in file \"%1\"." )
+				.arg( dbFileName ) );
+
 		emit error();
 	}
 	else
 	{
 		d->m_isReady = true;
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Database successfully initialized in file \"%1\"." )
+				.arg( dbFileName ) );
 
 		emit ready();
 	}

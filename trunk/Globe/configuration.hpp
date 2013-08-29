@@ -94,6 +94,7 @@ private:
 	void readDbCfg( const QString & cfgFileName );
 	//! Read log cfg.
 	void readLogCfg( const QString & cfgFileName );
+
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
 	//! Save main window's configuration.

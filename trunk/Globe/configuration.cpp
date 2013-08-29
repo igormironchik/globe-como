@@ -146,15 +146,15 @@ Configuration::loadConfiguration()
 
 	readDbCfg( d->m_appCfg.dbCfgFile() );
 
-	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
-	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
-
-	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
 	readColorsCfg( d->m_appCfg.colorsCfgFile() );
+
+	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+
+	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 

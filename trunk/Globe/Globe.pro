@@ -30,9 +30,11 @@ HEADERS += application_cfg.hpp \
            channel_widget.hpp \
            color_for_level.hpp \
            color_for_level_cfg.hpp \
+           color_picker.hpp \
            condition.hpp \
            condition_cfg.hpp \
            configuration.hpp \
+           configuration_dialog.hpp \
            db.hpp \
            db_cfg.hpp \
 		   log.hpp \
@@ -77,9 +79,11 @@ SOURCES += application_cfg.cpp \
            channel_widget.cpp \
            color_for_level.cpp \
            color_for_level_cfg.cpp \
+           color_picker.cpp \
            condition.cpp \
            condition_cfg.cpp \
            configuration.cpp \
+           configuration_dialog.cpp \
            db.cpp \
            db_cfg.cpp \
            log.cpp \
@@ -113,6 +117,7 @@ SOURCES += application_cfg.cpp \
 FORMS	 = channels_to_show.ui \
            channel_name_dialog.ui \
            channel_attributes.ui \
+           configuration_dialog.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \
            properties_key_type_dialog.ui \

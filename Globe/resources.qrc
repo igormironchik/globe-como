@@ -15,5 +15,8 @@
         <file>img/edit_copy_22x22.png</file>
         <file>img/edit_select_all_22x22.png</file>
         <file>img/fill_color_22x22.png</file>
+        <file>img/fill_color_64x64.png</file>
+        <file>img/log_64x64.png</file>
+        <file>img/sounds_64x64.png</file>
     </qresource>
 </RCC>

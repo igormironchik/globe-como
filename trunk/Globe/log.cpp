@@ -973,6 +973,12 @@ Log::readAllSourcesLog( const QString & channelName,
 		return dummy;
 }
 
+const LogCfg &
+Log::cfg() const
+{
+	return d->m_cfg;
+}
+
 void
 Log::readCfg( const QString & fileName )
 {

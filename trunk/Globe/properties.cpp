@@ -506,7 +506,7 @@ PropertiesManager::init()
 }
 
 void
-PropertiesManager::initMenu( QMenu * fileMenu,
+PropertiesManager::initMenu( QMenu * fileMenu, QMenu * settingsMenu,
 	const QList< ToolWindowObject* > & toolWindows )
 {
 	menuBar()->addMenu( fileMenu );
@@ -516,6 +516,8 @@ PropertiesManager::initMenu( QMenu * fileMenu,
 	foreach( ToolWindowObject * obj, toolWindows )
 		if( obj != d->m_toolWindowObject )
 			toolsMenu->addAction( obj->menuEntity() );
+
+	menuBar()->addMenu( settingsMenu );
 }
 
 const Properties *

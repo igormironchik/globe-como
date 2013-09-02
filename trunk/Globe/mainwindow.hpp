@@ -101,6 +101,8 @@ private slots:
 	void aboutToQuit();
 	//! New channel view.
 	void newChannelView();
+	//! Settings dialog.
+	void settings();
 
 private:
 	//! Init.

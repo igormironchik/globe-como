@@ -42,6 +42,7 @@
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
 #include <Globe/log.hpp>
+#include <Globe/configuration_dialog.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -77,6 +78,8 @@ public:
 		,	m_cfg( cfgFileName, mainWindow, channelsManager,
 				db, propertiesManager, sourcesMainWindow )
 		,	m_fileMenu( 0 )
+		,	m_settingsMenu( 0 )
+		,	m_confDialog( 0 )
 	{
 	}
 
@@ -112,8 +115,12 @@ public:
 	QList< ChannelViewWindow* > m_channelViewWindows;
 	//! File menu.
 	QMenu * m_fileMenu;
+	//! Settings menu.
+	QMenu * m_settingsMenu;
 	//! Map of the channel view windows configuration.
 	QMap< QString, ChannelViewWindowCfg > m_channelViewWindowsCfg;
+	//! Configuration dialog.
+	ConfigurationDialog * m_confDialog;
 }; // class MainWindowPrivate
 
 
@@ -170,6 +177,14 @@ MainWindow::init()
 	foreach( ToolWindowObject * obj, d->m_toolWindows )
 		toolsMenu->addAction( obj->menuEntity() );
 
+	d->m_settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
+
+	d->m_settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
+		tr( "&Settings" ), this, SLOT( settings() ) );
+
+	d->m_confDialog = new ConfigurationDialog( d->m_cfg.colorForLevel(),
+		this );
+
 	ScrolledView * area = new ScrolledView( this );
 
 	d->m_list = new ChannelsList( this, d->m_channelsManager,
@@ -179,8 +194,10 @@ MainWindow::init()
 
 	setCentralWidget( area );
 
-	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_toolWindows );
-	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_toolWindows );
+	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_settingsMenu,
+		d->m_toolWindows );
+	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_settingsMenu,
+		d->m_toolWindows );
 
 	d->m_db->setMainWindow( this );
 
@@ -232,7 +249,7 @@ MainWindow::showChannelView( const QString & channelName )
 			d->m_sourcesManager, d->m_channelsManager, this,
 			d->m_cfg.colorForLevel() );
 
-		window->initMenu( d->m_fileMenu, d->m_toolWindows );
+		window->initMenu( d->m_fileMenu, d->m_settingsMenu, d->m_toolWindows );
 
 		if( !window->setChannel( channelName ) )
 			window->deleteLater();
@@ -305,6 +322,14 @@ MainWindow::newChannelView()
 
 	if( QDialog::Accepted == dlg.exec() )
 		showChannelView( channel );
+}
+
+void
+MainWindow::settings()
+{
+	if( d->m_confDialog->exec() == QDialog::Accepted )
+	{
+	}
 }
 
 void

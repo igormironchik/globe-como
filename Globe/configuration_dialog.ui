@@ -93,54 +93,10 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
-               <widget class="QWidget" name="m_noneColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
               <item row="1" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="text">
                  <string>Color for critical level</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QWidget" name="m_criticalColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
                 </property>
                </widget>
               </item>
@@ -151,54 +107,10 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="1">
-               <widget class="QWidget" name="m_errorColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
               <item row="3" column="0">
                <widget class="QLabel" name="label_4">
                 <property name="text">
                  <string>Color for warning level</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QWidget" name="m_warningColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
                 </property>
                </widget>
               </item>
@@ -209,54 +121,10 @@
                 </property>
                </widget>
               </item>
-              <item row="4" column="1">
-               <widget class="QWidget" name="m_debugColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-               </widget>
-              </item>
               <item row="5" column="0">
                <widget class="QLabel" name="label_6">
                 <property name="text">
                  <string>Color for info level</string>
-                </property>
-               </widget>
-              </item>
-              <item row="5" column="1">
-               <widget class="QWidget" name="m_infoColorWidget" native="true">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>45</width>
-                  <height>20</height>
-                 </size>
                 </property>
                </widget>
               </item>
@@ -267,8 +135,15 @@
                 </property>
                </widget>
               </item>
-              <item row="6" column="1">
-               <widget class="QWidget" name="m_deregisteredColorWidget" native="true">
+              <item row="7" column="0">
+               <widget class="QLabel" name="label_8">
+                <property name="text">
+                 <string>Color for disconnected sources</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="Globe::ColorPicker" name="m_noneColorPicker">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -289,15 +164,140 @@
                 </property>
                </widget>
               </item>
-              <item row="7" column="0">
-               <widget class="QLabel" name="label_8">
-                <property name="text">
-                 <string>Color for disconnected sources</string>
+              <item row="1" column="1">
+               <widget class="Globe::ColorPicker" name="m_criticalColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="Globe::ColorPicker" name="m_errorColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="Globe::ColorPicker" name="m_warningColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="4" column="1">
+               <widget class="Globe::ColorPicker" name="m_debugColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="5" column="1">
+               <widget class="Globe::ColorPicker" name="m_infoColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item row="6" column="1">
+               <widget class="Globe::ColorPicker" name="m_deregisteredColorPicker">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>45</width>
+                  <height>20</height>
+                 </size>
                 </property>
                </widget>
               </item>
               <item row="7" column="1">
-               <widget class="QWidget" name="m_disconnectedColorWidget" native="true">
+               <widget class="Globe::ColorPicker" name="m_disconnectedColorPicker">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                   <horstretch>0</horstretch>
@@ -451,15 +451,9 @@
                </widget>
               </item>
               <item row="0" column="1">
-               <widget class="QLabel" name="m_criticalSoundLabel">
+               <widget class="QLineEdit" name="m_criticalSoundLine">
                 <property name="enabled">
                  <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
@@ -467,8 +461,8 @@
                   <height>0</height>
                  </size>
                 </property>
-                <property name="text">
-                 <string/>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -490,15 +484,9 @@
                </widget>
               </item>
               <item row="1" column="1">
-               <widget class="QLabel" name="m__errorSoundLabel">
+               <widget class="QLineEdit" name="m_errorSoundLine">
                 <property name="enabled">
                  <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
@@ -506,8 +494,8 @@
                   <height>0</height>
                  </size>
                 </property>
-                <property name="text">
-                 <string/>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -529,15 +517,9 @@
                </widget>
               </item>
               <item row="2" column="1">
-               <widget class="QLabel" name="m_warningSoundLabel">
+               <widget class="QLineEdit" name="m_warningSoundLine">
                 <property name="enabled">
                  <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
@@ -545,8 +527,8 @@
                   <height>0</height>
                  </size>
                 </property>
-                <property name="text">
-                 <string/>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -564,6 +546,22 @@
                <widget class="QCheckBox" name="m_enableDebugSound">
                 <property name="text">
                  <string>Enable debug sound</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="m_debugSoundLine">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -585,15 +583,9 @@
                </widget>
               </item>
               <item row="4" column="1">
-               <widget class="QLabel" name="m_infoSoundLabel">
+               <widget class="QLineEdit" name="m_infoSoundLine">
                 <property name="enabled">
                  <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
@@ -601,8 +593,8 @@
                   <height>0</height>
                  </size>
                 </property>
-                <property name="text">
-                 <string/>
+                <property name="readOnly">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -613,28 +605,6 @@
                 </property>
                 <property name="text">
                  <string>...</string>
-                </property>
-               </widget>
-              </item>
-              <item row="3" column="1">
-               <widget class="QLabel" name="m_debugSoundLabel">
-                <property name="enabled">
-                 <bool>false</bool>
-                </property>
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>150</width>
-                  <height>0</height>
-                 </size>
-                </property>
-                <property name="text">
-                 <string/>
                 </property>
                </widget>
               </item>
@@ -681,26 +651,18 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Globe::ColorPicker</class>
+   <extends>QFrame</extends>
+   <header>color_picker.hpp</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>m_buttons</sender>
-   <signal>accepted()</signal>
-   <receiver>ConfigurationDialog</receiver>
-   <slot>accept()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>248</x>
-     <y>254</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>157</x>
-     <y>274</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>m_buttons</sender>
    <signal>rejected()</signal>

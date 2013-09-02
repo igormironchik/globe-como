@@ -51,6 +51,7 @@ namespace Globe {
 
 class DB;
 class MainWindow;
+class LogCfg;
 
 //
 // LogLevel
@@ -129,6 +130,9 @@ public:
 	QSqlQuery & readAllSourcesLog( const QString & channelName = QString(),
 		const QString & sourceName = QString(),
 		const QString & typeName = QString() );
+
+	//! \return Configuration of the log.
+	const LogCfg & cfg() const;
 
 	//! Read configuration.
 	void readCfg( const QString & fileName );

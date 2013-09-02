@@ -45,6 +45,16 @@ namespace Globe {
 class MainWindow;
 
 
+static const QColor defaultNoneColor = Qt::white;
+static const QColor defaultCriticalColor = Qt::red;
+static const QColor defaultErrorColor = Qt::magenta;
+static const QColor defaultWarningColor = Qt::yellow;
+static const QColor defaultDebugColor = Qt::cyan;
+static const QColor defaultInfoColor = Qt::green;
+static const QColor defaultDeregisteredColor = Qt::lightGray;
+static const QColor defaultDisconnectedColor = Qt::lightGray;
+
+
 //
 // ColorForLevel
 //

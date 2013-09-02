@@ -18,5 +18,6 @@
         <file>img/fill_color_64x64.png</file>
         <file>img/log_64x64.png</file>
         <file>img/sounds_64x64.png</file>
+        <file>img/settings_22x22.png</file>
     </qresource>
 </RCC>

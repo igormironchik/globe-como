@@ -265,7 +265,7 @@ ChannelViewWindow::init()
 }
 
 void
-ChannelViewWindow::initMenu( QMenu * fileMenu,
+ChannelViewWindow::initMenu( QMenu * fileMenu, QMenu * settingsMenu,
 	const QList< ToolWindowObject* > & toolWindows )
 {
 	menuBar()->addMenu( fileMenu );
@@ -274,6 +274,8 @@ ChannelViewWindow::initMenu( QMenu * fileMenu,
 
 	foreach( ToolWindowObject * obj, toolWindows )
 		toolsMenu->addAction( obj->menuEntity() );
+
+	menuBar()->addMenu( settingsMenu );
 }
 
 void

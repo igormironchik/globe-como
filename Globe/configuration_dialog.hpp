@@ -96,6 +96,12 @@ private slots:
 	//! Info sound button clicked.
 	void infoSoundButtonClicked();
 
+protected:
+	friend class MainWindow;
+
+	//! Init UI with settings.
+	void initUiWithSettings();
+
 private:
 	//! Init.
 	void init();

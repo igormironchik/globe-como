@@ -91,17 +91,6 @@ ConfigurationDialog::init()
 {
 	d->m_ui.setupUi( this );
 
-	d->m_ui.m_noneColorPicker->setColor( d->m_colorForLevel->color( None ) );
-	d->m_ui.m_criticalColorPicker->setColor( d->m_colorForLevel->color( Critical ) );
-	d->m_ui.m_errorColorPicker->setColor( d->m_colorForLevel->color( Error ) );
-	d->m_ui.m_warningColorPicker->setColor( d->m_colorForLevel->color( Warning ) );
-	d->m_ui.m_debugColorPicker->setColor( d->m_colorForLevel->color( Debug ) );
-	d->m_ui.m_infoColorPicker->setColor( d->m_colorForLevel->color( Info ) );
-	d->m_ui.m_deregisteredColorPicker->setColor(
-		d->m_colorForLevel->deregisteredColor() );
-	d->m_ui.m_disconnectedColorPicker->setColor(
-		d->m_colorForLevel->disconnectedColor() );
-
 	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
 		this, SLOT( newSettingsAccepted() ) );
 
@@ -114,15 +103,6 @@ ConfigurationDialog::init()
 
 	connect( d->m_ui.m_enableSourcesLog, SIGNAL( stateChanged( int ) ),
 		this, SLOT( sourcesLogStateChanged( int ) ) );
-
-	if( Log::instance().cfg().isEventLogEnabled() )
-		d->m_ui.m_enableEventsLog->setChecked( true );
-
-	if( Log::instance().cfg().isSourcesLogEnabled() )
-		d->m_ui.m_enableSourcesLog->setChecked( true );
-
-	d->m_ui.m_sourcesLogDays->setValue(
-		Log::instance().cfg().sourcesLogDays() );
 
 	connect( d->m_ui.m_enableCriticalSound,
 		SIGNAL( stateChanged( int ) ), this,
@@ -164,6 +144,30 @@ ConfigurationDialog::init()
 }
 
 void
+ConfigurationDialog::initUiWithSettings()
+{
+	d->m_ui.m_noneColorPicker->setColor( d->m_colorForLevel->color( None ) );
+	d->m_ui.m_criticalColorPicker->setColor( d->m_colorForLevel->color( Critical ) );
+	d->m_ui.m_errorColorPicker->setColor( d->m_colorForLevel->color( Error ) );
+	d->m_ui.m_warningColorPicker->setColor( d->m_colorForLevel->color( Warning ) );
+	d->m_ui.m_debugColorPicker->setColor( d->m_colorForLevel->color( Debug ) );
+	d->m_ui.m_infoColorPicker->setColor( d->m_colorForLevel->color( Info ) );
+	d->m_ui.m_deregisteredColorPicker->setColor(
+		d->m_colorForLevel->deregisteredColor() );
+	d->m_ui.m_disconnectedColorPicker->setColor(
+		d->m_colorForLevel->disconnectedColor() );
+
+	if( Log::instance().cfg().isEventLogEnabled() )
+		d->m_ui.m_enableEventsLog->setChecked( true );
+
+	if( Log::instance().cfg().isSourcesLogEnabled() )
+		d->m_ui.m_enableSourcesLog->setChecked( true );
+
+	d->m_ui.m_sourcesLogDays->setValue(
+		Log::instance().cfg().sourcesLogDays() );
+}
+
+void
 ConfigurationDialog::changePage( QListWidgetItem * current,
 	QListWidgetItem * previous )
 {
@@ -188,15 +192,14 @@ ConfigurationDialog::newSettingsAccepted()
 	d->m_colorForLevel->setColors( none, critical, error, warning,
 		debug, info, deregistered, disconnected );
 
-	if( d->m_ui.m_enableEventsLog->isChecked() )
-		Log::instance().enableEventsLog();
+	Log::instance().enableEventsLog(
+		d->m_ui.m_enableEventsLog->isChecked() );
 
-	if( d->m_ui.m_enableSourcesLog->isChecked() )
-	{
-		Log::instance().enableSourcesLog();
-		Log::instance().setSourcesLogDays(
-			d->m_ui.m_sourcesLogDays->value() );
-	}
+	Log::instance().enableSourcesLog(
+		d->m_ui.m_enableSourcesLog->isChecked() );
+
+	Log::instance().setSourcesLogDays(
+		d->m_ui.m_sourcesLogDays->value() );
 
 	accept();
 }

@@ -7,6 +7,7 @@ CONFIG += console
 
 debug {
 	DEFINE+=DEBUG
+	QT += testlib
 }
 
 win32 {

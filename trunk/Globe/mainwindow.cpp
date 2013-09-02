@@ -212,6 +212,8 @@ MainWindow::start()
 
 	d->m_cfg.loadConfiguration();
 
+	d->m_confDialog->initUiWithSettings();
+
 	show();
 }
 

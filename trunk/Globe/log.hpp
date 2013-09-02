@@ -34,6 +34,7 @@
 // Qt include.
 #include <QObject>
 #include <QScopedPointer>
+#include <QSqlQuery>
 
 // Como include.
 #include <Como/Source>
@@ -43,7 +44,6 @@ QT_BEGIN_NAMESPACE
 class QDateTime;
 class QString;
 class QVariant;
-class QSqlQuery;
 QT_END_NAMESPACE
 
 
@@ -102,32 +102,32 @@ public:
 		const QString & desc );
 
 	//! Read all records from the event's log.
-	QSqlQuery & readAllEventLog();
+	QSqlQuery readAllEventLog();
 	//! Read event's log for the given period of time.
-	QSqlQuery & readEventLog( const QDateTime & from,
+	QSqlQuery readEventLog( const QDateTime & from,
 		const QDateTime & to );
 	//! Read event's log from the beginning to the given time.
-	QSqlQuery & readEventLogTo( const QDateTime & to );
+	QSqlQuery readEventLogTo( const QDateTime & to );
 	//! Read event's log from the given time to the end.
-	QSqlQuery & readEventLogFrom( const QDateTime & from );
+	QSqlQuery readEventLogFrom( const QDateTime & from );
 	//! Read source's log for the given period of time.
-	QSqlQuery & readSourcesLog( const QDateTime & from,
+	QSqlQuery readSourcesLog( const QDateTime & from,
 		const QDateTime & to,
 		const QString & channelName = QString(),
 		const QString & sourceName = QString(),
 		const QString & typeName = QString() );
 	//! Read source's log from the beginning to the given time.
-	QSqlQuery & readSourcesLogTo( const QDateTime & to,
+	QSqlQuery readSourcesLogTo( const QDateTime & to,
 		const QString & channelName = QString(),
 		const QString & sourceName = QString(),
 		const QString & typeName = QString() );
 	//! Read source's log from the given time to the end.
-	QSqlQuery & readSourcesLogFrom( const QDateTime & from,
+	QSqlQuery readSourcesLogFrom( const QDateTime & from,
 		const QString & channelName = QString(),
 		const QString & sourceName = QString(),
 		const QString & typeName = QString() );
 	//! Read all records from the source's log.
-	QSqlQuery & readAllSourcesLog( const QString & channelName = QString(),
+	QSqlQuery readAllSourcesLog( const QString & channelName = QString(),
 		const QString & sourceName = QString(),
 		const QString & typeName = QString() );
 

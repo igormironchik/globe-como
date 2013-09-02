@@ -198,8 +198,9 @@ ConfigurationDialog::newSettingsAccepted()
 	Log::instance().enableSourcesLog(
 		d->m_ui.m_enableSourcesLog->isChecked() );
 
-	Log::instance().setSourcesLogDays(
-		d->m_ui.m_sourcesLogDays->value() );
+	if( d->m_ui.m_enableSourcesLog->isChecked() )
+		Log::instance().setSourcesLogDays(
+			d->m_ui.m_sourcesLogDays->value() );
 
 	accept();
 }

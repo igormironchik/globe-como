@@ -40,6 +40,10 @@ HEADERS += application_cfg.hpp \
            db_cfg.hpp \
 		   log.hpp \
 		   log_cfg.hpp \
+           log_event_selector.hpp \
+           log_event_view.hpp \
+           log_event_view_model.hpp \
+           log_event_view_window.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -89,6 +93,10 @@ SOURCES += application_cfg.cpp \
            db_cfg.cpp \
            log.cpp \
 		   log_cfg.cpp \
+           log_event_selector.cpp \
+           log_event_view.cpp \
+           log_event_view_model.cpp \
+           log_event_view_window.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \

@@ -19,5 +19,12 @@
         <file>img/log_64x64.png</file>
         <file>img/sounds_64x64.png</file>
         <file>img/settings_22x22.png</file>
+        <file>img/chronometer_16x16.png</file>
+        <file>img/launch_16x16.png</file>
+        <file>img/exec_22x22.png</file>
+        <file>img/1leftarrow_22x22.png</file>
+        <file>img/1rightarrow_22x22.png</file>
+        <file>img/2leftarrow_22x22.png</file>
+        <file>img/2rightarrow_22x22.png</file>
     </qresource>
 </RCC>

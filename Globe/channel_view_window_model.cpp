@@ -469,8 +469,8 @@ ChannelViewWindowModel::setData( const QModelIndex & index, const QVariant & val
 		}
 	}
 
-	emit dataChanged( QAbstractTableModel::index( index.row(), column ),
-		QAbstractTableModel::index( index.row(), column ) );
+	emit dataChanged( QAbstractTableModel::index( row, column ),
+		QAbstractTableModel::index( row, column ) );
 
 	return true;
 }

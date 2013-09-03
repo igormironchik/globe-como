@@ -50,7 +50,7 @@ class ChannelsManager;
 
 
 //
-// ChannelViewWindow
+// ChannelViewWindowModel
 //
 
 class ChannelViewWindowModelPrivate;
@@ -62,7 +62,7 @@ class ChannelViewWindowModel
 	Q_OBJECT
 
 public:
-	explicit ChannelViewWindowModel( PropertiesManager * propertiesManager,
+	ChannelViewWindowModel( PropertiesManager * propertiesManager,
 		SourcesManager * sourcesManager, ChannelsManager * channelsManager,
 		QObject * parent = 0 );
 	~ChannelViewWindowModel();

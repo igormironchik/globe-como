@@ -127,6 +127,7 @@ FORMS	 = channels_to_show.ui \
            channel_name_dialog.ui \
            channel_attributes.ui \
            configuration_dialog.ui \
+           log_event_selector.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \
            properties_key_type_dialog.ui \

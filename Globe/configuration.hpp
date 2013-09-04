@@ -44,6 +44,7 @@ class PropertiesManager;
 class MainWindow;
 class SourcesMainWindow;
 class ColorForLevel;
+class LogEventWindow;
 
 
 //
@@ -62,7 +63,8 @@ public:
 	Configuration( const QString & cfgFileName,
 		MainWindow * mainWindow, ChannelsManager * channelsManager,
 		DB * db, PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow );
+		SourcesMainWindow * sourcesMainWindow,
+		LogEventWindow * logEventWindow );
 
 	~Configuration();
 
@@ -94,6 +96,8 @@ private:
 	void readDbCfg( const QString & cfgFileName );
 	//! Read log cfg.
 	void readLogCfg( const QString & cfgFileName );
+	//! Read event log window configuration.
+	void readLogEventWindowCfg( const QString & cfgFileName );
 
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
@@ -113,6 +117,8 @@ private:
 	void saveDbCfg( const QString & cfgFileName );
 	//! Save log cfg.
 	void saveLogCfg( const QString & cfgFileName );
+	//! Save event log window configuration.
+	void saveLogEventWindowCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

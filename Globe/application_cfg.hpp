@@ -97,6 +97,11 @@ public:
 	//! Set file name of the log configuration.
 	void setLogCfgFile( const QString & fileName );
 
+	//! \return File name of the event's log window configuration.
+	const QString & logEventWindowCfgFile() const;
+	//! Set file name of the event's log window configuration.
+	void setLogEventWindowCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -114,6 +119,8 @@ private:
 	QString m_dbCfgFileName;
 	//! File name of the log configuration.
 	QString m_logCfgFileName;
+	//! File name of the event's log window configuration.
+	QString m_logEventWindowCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -150,6 +157,8 @@ private:
 	QtConfFile::TagScalar< QString > m_dbCfgFileName;
 	//! File name of the log configuration.
 	QtConfFile::TagScalar< QString > m_logCfgFileName;
+	//! File name of the event's log window configuration.
+	QtConfFile::TagScalar< QString > m_logEventWindowCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

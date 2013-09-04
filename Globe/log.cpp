@@ -190,11 +190,11 @@ Log::init()
 
 	eventLogTableQuery.exec();
 
-//	QSqlQuery eventLogTableDateTimeIndexQuery( QLatin1String(
-//		"CREATE INDEX IF NOT EXISTS eventLogDateTimeIdx "
-//		"ON eventLog ( dateTime )" ) );
+	QSqlQuery eventLogTableDateTimeIndexQuery( QLatin1String(
+		"CREATE INDEX IF NOT EXISTS eventLogDateTimeIdx "
+		"ON eventLog ( dateTime )" ) );
 
-//	eventLogTableDateTimeIndexQuery.exec();
+	eventLogTableDateTimeIndexQuery.exec();
 
 //	QSqlQuery eventLogTableLevelIndexQuery( QLatin1String(
 //		"CREATE INDEX IF NOT EXISTS eventLogLevelIdx "
@@ -209,11 +209,11 @@ Log::init()
 
 	sourcesLogTableQuery.exec();
 
-//	QSqlQuery dateTimeIndexQuery( QLatin1String(
-//		"CREATE INDEX IF NOT EXISTS sourcesLogDateTimeIdx "
-//		"ON sourcesLog( dateTime )" ) );
+	QSqlQuery dateTimeIndexQuery( QLatin1String(
+		"CREATE INDEX IF NOT EXISTS sourcesLogDateTimeIdx "
+		"ON sourcesLog( dateTime )" ) );
 
-//	dateTimeIndexQuery.exec();
+	dateTimeIndexQuery.exec();
 
 //	QSqlQuery channelNameIndexQuery( QLatin1String(
 //		"CREATE INDEX IF NOT EXISTS sourcesLogChannelNameIdx "

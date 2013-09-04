@@ -55,6 +55,7 @@ ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	,	m_colorsCfgFileName( other.colorsCfgFile() )
 	,	m_dbCfgFileName( other.dbCfgFile() )
 	,	m_logCfgFileName( other.logCfgFile() )
+	,	m_logEventWindowCfgFileName( other.logEventWindowCfgFile() )
 {
 }
 
@@ -71,6 +72,7 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 		m_colorsCfgFileName = other.colorsCfgFile();
 		m_dbCfgFileName = other.dbCfgFile();
 		m_logCfgFileName = other.logCfgFile();
+		m_logEventWindowCfgFileName = other.logEventWindowCfgFile();
 	}
 
 	return *this;
@@ -172,6 +174,18 @@ ApplicationCfg::setLogCfgFile( const QString & fileName )
 	m_logCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::logEventWindowCfgFile() const
+{
+	return m_logEventWindowCfgFileName;
+}
+
+void
+ApplicationCfg::setLogEventWindowCfgFile( const QString & fileName )
+{
+	m_logEventWindowCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -195,6 +209,8 @@ ApplicationCfgTag::ApplicationCfgTag()
 			QLatin1String( "dbCfgFileName" ), true )
 	,	m_logCfgFileName( *this,
 			QLatin1String( "logCfgFileName" ), true )
+	,	m_logEventWindowCfgFileName( *this,
+			QLatin1String( "logEventWindowCfgFileName" ), true )
 {
 }
 
@@ -216,6 +232,8 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			QLatin1String( "dbCfgFileName" ), true )
 	,	m_logCfgFileName( *this,
 			QLatin1String( "logCfgFileName" ), true )
+	,	m_logEventWindowCfgFileName( *this,
+			QLatin1String( "logEventWindowCfgFileName" ), true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
@@ -225,6 +243,7 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 	m_colorsCfgFileName.setValue( cfg.colorsCfgFile() );
 	m_dbCfgFileName.setValue( cfg.dbCfgFile() );
 	m_logCfgFileName.setValue( cfg.logCfgFile() );
+	m_logEventWindowCfgFileName.setValue( cfg.logEventWindowCfgFile() );
 
 	setDefined();
 }
@@ -242,6 +261,7 @@ ApplicationCfgTag::cfg() const
 	cfg.setColorsCfgFile( m_colorsCfgFileName.value() );
 	cfg.setDbCfgFile( m_dbCfgFileName.value() );
 	cfg.setLogCfgFile( m_logCfgFileName.value() );
+	cfg.setLogEventWindowCfgFile( m_logEventWindowCfgFileName.value() );
 
 	return cfg;
 }

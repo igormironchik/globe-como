@@ -50,6 +50,7 @@ class ChannelsList;
 class SourcesMainWindow;
 class SourcesManager;
 class ChannelViewWindow;
+class LogEventWindow;
 
 class MainWindowPrivate;
 
@@ -69,6 +70,7 @@ public:
 		PropertiesManager * propertiesManager,
 		SourcesMainWindow * sourcesMainWindow,
 		SourcesManager * sourcesManager,
+		LogEventWindow * logEventWindow,
 		const QList< ToolWindowObject* > & toolWindows,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 

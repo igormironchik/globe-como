@@ -34,9 +34,40 @@
 // Qt include.
 #include <QWidget>
 #include <QScopedPointer>
+#include <QDateTime>
 
 
 namespace Globe {
+
+class SelectQueryNavigation;
+
+
+//
+// LogEventSelectorCfg
+//
+
+//! Configuration of the event's log selector.
+class LogEventSelectorCfg {
+public:
+	LogEventSelectorCfg();
+
+	//! \return Start date and time.
+	const QDateTime & startDateTime() const;
+	//! Set start date and time.
+	void setStartDateTime( const QDateTime & dt );
+
+	//! \return End date and time.
+	const QDateTime & endDateTime() const;
+	//! Set end date and time.
+	void setEndDateTime( const QDateTime & dt );
+
+private:
+	//! Start date and time.
+	QDateTime m_startDateTime;
+	//! End date and time.
+	QDateTime m_endDateTime;
+}; // class LogEventSelectorCfg
+
 
 //
 // LogEventSelector
@@ -54,6 +85,22 @@ public:
 	LogEventSelector( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 	~LogEventSelector();
+
+	//! \return Configuration.
+	const LogEventSelectorCfg & cfg() const;
+
+	//! \return Navigation widget.
+	SelectQueryNavigation * navigationWidget();
+
+private slots:
+	//! Start date and time changed.
+	void startDateTimeChanged( const QDateTime & dt );
+	//! End date and time changed.
+	void endDateTimeChanged( const QDateTime & dt );
+	//! Set start time to the launching app time.
+	void setStartTimeToLaunchTime();
+	//! Set end time to the current time.
+	void setEndTimeToCurrent();
 
 private:
 	//! Init.

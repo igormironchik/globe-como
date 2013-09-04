@@ -47,6 +47,8 @@
 #include <Globe/sources.hpp>
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/log.hpp>
+#include <Globe/launch_time.hpp>
+#include <Globe/log_event_view_window.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -101,6 +103,8 @@ int main( int argc, char ** argv )
 	appTranslator.load( "./tr/" + QLocale::system().name() );
 	app.installTranslator( &appTranslator );
 
+	Globe::LaunchTime::instance();
+
 	Globe::DB db;
 
 	Globe::Log::instance().setDb( &db );
@@ -114,13 +118,16 @@ int main( int argc, char ** argv )
 	Globe::SourcesMainWindow sourcesMainWindow( &sourcesManager, &channelsManager );
 	sourcesMainWindow.setPropertiesManager( &propertiesManager );
 
+	Globe::LogEventWindow logEventWindow;
+
 	QList< Globe::ToolWindowObject* > toolWindows;
 	toolWindows.append( propertiesManager.toolWindowObject() );
 	toolWindows.append( sourcesMainWindow.toolWindowObject() );
+	toolWindows.append( logEventWindow.toolWindowObject() );
 
 	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
 		&propertiesManager, &sourcesMainWindow, &sourcesManager,
-		toolWindows );
+		&logEventWindow, toolWindows );
 
 	QTimer::singleShot( 0, &mainWindow, SLOT( start() ) );
 

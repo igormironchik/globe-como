@@ -38,6 +38,7 @@ HEADERS += application_cfg.hpp \
            configuration_dialog.hpp \
            db.hpp \
            db_cfg.hpp \
+           launch_time.hpp \
 		   log.hpp \
 		   log_cfg.hpp \
            log_event_selector.hpp \
@@ -54,6 +55,7 @@ HEADERS += application_cfg.hpp \
            properties_model.hpp \
            properties_widget.hpp \
            properties_widget_model.hpp \
+           select_query_navigation.hpp \
            scrolled_widget.hpp \
            sounds.hpp \
            source_manual_dialog.hpp \
@@ -91,6 +93,7 @@ SOURCES += application_cfg.cpp \
            configuration_dialog.cpp \
            db.cpp \
            db_cfg.cpp \
+           launch_time.cpp \
            log.cpp \
 		   log_cfg.cpp \
            log_event_selector.cpp \
@@ -108,6 +111,7 @@ SOURCES += application_cfg.cpp \
            properties_model.cpp \
            properties_widget.cpp \
            properties_widget_model.cpp \
+           select_query_navigation.cpp \
            scrolled_widget.cpp \
            sounds.cpp \
            source_manual_dialog.cpp \
@@ -131,6 +135,7 @@ FORMS	 = channels_to_show.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \
            properties_key_type_dialog.ui \
+           select_query_navigation.ui \
            source_manual_dialog.ui \
            sources_widget.ui
 

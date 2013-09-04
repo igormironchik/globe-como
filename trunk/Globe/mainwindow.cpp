@@ -43,6 +43,7 @@
 #include <Globe/db.hpp>
 #include <Globe/log.hpp>
 #include <Globe/configuration_dialog.hpp>
+#include <Globe/log_event_view_window.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -66,6 +67,7 @@ public:
 		PropertiesManager * propertiesManager,
 		SourcesMainWindow * sourcesMainWindow,
 		SourcesManager * sourcesManager,
+		LogEventWindow * logEventWindow,
 		const QList< ToolWindowObject* > & toolWindows )
 		:	m_channelsManager( channelsManager )
 		,	m_db( db )
@@ -73,10 +75,12 @@ public:
 		,	m_propertiesManager( propertiesManager )
 		,	m_sourcesMainWindow( sourcesMainWindow )
 		,	m_sourcesManager( sourcesManager )
+		,	m_logEventWindow( logEventWindow )
 		,	m_cfgWasSaved( false )
 		,	m_toolWindows( toolWindows )
 		,	m_cfg( cfgFileName, mainWindow, channelsManager,
-				db, propertiesManager, sourcesMainWindow )
+				db, propertiesManager, sourcesMainWindow,
+				logEventWindow )
 		,	m_fileMenu( 0 )
 		,	m_settingsMenu( 0 )
 		,	m_confDialog( 0 )
@@ -105,6 +109,8 @@ public:
 	SourcesMainWindow * m_sourcesMainWindow;
 	//! Sources manager.
 	SourcesManager * m_sourcesManager;
+	//! Event's log window.
+	LogEventWindow * m_logEventWindow;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
 	//! Tool window objects.
@@ -133,12 +139,13 @@ MainWindow::MainWindow( const QString & cfgFileName,
 	PropertiesManager * propertiesManager,
 	SourcesMainWindow * sourcesMainWindow,
 	SourcesManager * sourcesManager,
+	LogEventWindow * logEventWindow,
 	const QList< ToolWindowObject* > & toolWindows,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
 	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
 			propertiesManager, sourcesMainWindow, sourcesManager,
-			toolWindows ) )
+			logEventWindow, toolWindows ) )
 {
 	init();
 }
@@ -197,6 +204,8 @@ MainWindow::init()
 	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_settingsMenu,
 		d->m_toolWindows );
 	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_settingsMenu,
+		d->m_toolWindows );
+	d->m_logEventWindow->initMenu( d->m_fileMenu, d->m_settingsMenu,
 		d->m_toolWindows );
 
 	d->m_db->setMainWindow( this );

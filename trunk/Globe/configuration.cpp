@@ -45,6 +45,7 @@
 #include <Globe/windows_cfg.hpp>
 #include <Globe/color_for_level.hpp>
 #include <Globe/log.hpp>
+#include <Globe/log_event_view_window.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -74,6 +75,8 @@ static const QString defaultDbCfgFileName =
 	QLatin1String( "./etc/DB.cfg" );
 static const QString defaultLogCfgFileName =
 	QLatin1String( "./etc/Log.cfg" );
+static const QString defaultLogEventWindowCfgFileName =
+	QLatin1String( "./etc/LogEventWindow.cfg" );
 
 
 //
@@ -85,7 +88,8 @@ public:
 	ConfigurationPrivate( const QString & cfgFileName,
 		MainWindow * mainWindow, ChannelsManager * channelsManager,
 		DB * db, PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow )
+		SourcesMainWindow * sourcesMainWindow,
+		LogEventWindow * logEventWindow )
 		:	m_mainWindow( mainWindow )
 		,	m_channelsManager( channelsManager )
 		,	m_db( db )
@@ -94,6 +98,7 @@ public:
 		,	m_sourcesMainWindow( sourcesMainWindow )
 		,	m_appCfgWasLoaded( false )
 		,	m_colorForLevel( new ColorForLevel( m_mainWindow ) )
+		,	m_logEventWindow( logEventWindow )
 	{
 	}
 
@@ -102,6 +107,7 @@ public:
 	DB * m_db;
 	PropertiesManager * m_propertiesManager;
 	SourcesMainWindow * m_sourcesMainWindow;
+	LogEventWindow * m_logEventWindow;
 
 	//! Configuration's file name.
 	QString m_cfgFileName;
@@ -121,9 +127,10 @@ public:
 Configuration::Configuration( const QString & cfgFileName,
 	MainWindow * mainWindow, ChannelsManager * channelsManager,
 	DB * db, PropertiesManager * propertiesManager,
-	SourcesMainWindow * sourcesMainWindow )
+	SourcesMainWindow * sourcesMainWindow,
+	LogEventWindow * logEventWindow )
 	:	d( new ConfigurationPrivate( cfgFileName, mainWindow, channelsManager, db,
-			propertiesManager, sourcesMainWindow ) )
+			propertiesManager, sourcesMainWindow, logEventWindow ) )
 {
 }
 
@@ -156,6 +163,8 @@ Configuration::loadConfiguration()
 
 	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
+	readLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
+
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
 	Log::instance().writeMsgToEventLog( LogLevelInfo,
@@ -167,6 +176,8 @@ Configuration::saveConfiguration()
 {
 	Log::instance().writeMsgToEventLog( LogLevelInfo,
 		QLatin1String( "Saving configuration..." ) );
+
+	saveLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
 
 	saveSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
@@ -610,6 +621,36 @@ Configuration::readLogCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readLogEventWindowCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		d->m_logEventWindow->readConfiguration( cfgFileName );
+	else
+	{
+		d->m_appCfg.setLogEventWindowCfgFile( defaultLogEventWindowCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified event's log window configuration file.\n"
+				"Event's log window configuration will not be loaded.\n"
+				"At exit event's log window configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultLogEventWindowCfgFileName ) );
+
+			QMessageBox::warning( d->m_mainWindow,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified event's log window configuration file.\n"
+					"Event's log window configuration will not be loaded.\n"
+					"At exit event's log window configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultLogEventWindowCfgFileName ) );
+		}
+	}
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	try {
@@ -767,6 +808,12 @@ void
 Configuration::saveLogCfg( const QString & cfgFileName )
 {
 	Log::instance().saveCfg( cfgFileName );
+}
+
+void
+Configuration::saveLogEventWindowCfg( const QString & cfgFileName )
+{
+	d->m_logEventWindow->saveConfiguration( cfgFileName );
 }
 
 } /* namespace Globe */

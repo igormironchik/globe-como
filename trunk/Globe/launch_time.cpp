@@ -28,63 +28,37 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__LOG_EVENT_VIEW_WINDOW_HPP__INCLUDED
-#define GLOBE__LOG_EVENT_VIEW_WINDOW_HPP__INCLUDED
-
-// Qt include.
-#include <QMainWindow>
-#include <QScopedPointer>
+// Globe include.
+#include <Globe/launch_time.hpp>
 
 
 namespace Globe {
 
-class ToolWindowObject;
-
-
 //
-// LogEventWindow
+// LaunchTime
 //
 
-class LogEventWindowPrivate;
-
-//! Window with event log.
-class LogEventWindow
-	:	public QMainWindow
+LaunchTime::LaunchTime()
+	:	m_launchTime( QDateTime::currentDateTime() )
 {
-	Q_OBJECT
+}
 
-public:
-	LogEventWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+LaunchTime::~LaunchTime()
+{
+}
 
-	~LogEventWindow();
+LaunchTime &
+LaunchTime::instance()
+{
+	static LaunchTime inst;
 
-	//! \return Tool window object.
-	ToolWindowObject * toolWindowObject();
+	return inst;
+}
 
-	//! Save properties manager configuration.
-	void saveConfiguration( const QString & fileName );
-	//! Read properties manager configuration.
-	void readConfiguration( const QString & fileName );
-
-protected:
-	friend class MainWindow;
-
-	//! Init menu.
-	void initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-		const QList< ToolWindowObject* > & toolWindows );
-
-	void closeEvent( QCloseEvent * event );
-
-private:
-	//! Init.
-	void init();
-
-private:
-	Q_DISABLE_COPY( LogEventWindow )
-
-	QScopedPointer< LogEventWindowPrivate > d;
-}; // class LogEventWindow
+const QDateTime &
+LaunchTime::launchTime() const
+{
+	return m_launchTime;
+}
 
 } /* namespace Globe */
-
-#endif // GLOBE__LOG_EVENT_VIEW_WINDOW_HPP__INCLUDED

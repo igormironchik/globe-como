@@ -39,7 +39,6 @@
 
 // Qt include.
 #include <QCloseEvent>
-#include <QApplication>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>

@@ -91,7 +91,7 @@ void
 LogEventView::init()
 {
 	setRootIsDecorated( false );
-	setSortingEnabled( true );
+	setSortingEnabled( false );
 	setSelectionMode( QAbstractItemView::ExtendedSelection );
 	setSelectionBehavior( QAbstractItemView::SelectRows );
 

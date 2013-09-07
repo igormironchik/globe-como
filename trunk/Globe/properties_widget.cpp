@@ -45,13 +45,6 @@
 #include <QLabel>
 #include <QGroupBox>
 
-#ifdef DEBUG
-
-// ModelTest include.
-#include <modeltest.h>
-
-#endif
-
 
 namespace Globe {
 
@@ -221,10 +214,6 @@ PropertiesList::init()
 	setAlternatingRowColors( true );
 
 	d->m_model = new PropertiesListModel( d->m_valueType, this );
-
-#ifdef DEBUG
-	new ModelTest( d->m_model, this );
-#endif
 
 	d->m_expressionDelegate = new ComboBoxDelegate(
 		QStringList() << "<" << "<=" << "==" << ">=" << ">", this );

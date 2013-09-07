@@ -132,6 +132,18 @@ LogEventSelector::navigationWidget()
 	return d->m_ui.m_navigation;
 }
 
+QDateTime
+LogEventSelector::startDateTime() const
+{
+	return d->m_ui.m_from->dateTime();
+}
+
+QDateTime
+LogEventSelector::endDateTime() const
+{
+	return d->m_ui.m_to->dateTime();
+}
+
 void
 LogEventSelector::startDateTimeChanged( const QDateTime & dt )
 {

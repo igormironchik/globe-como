@@ -96,6 +96,11 @@ private slots:
 	//! Info sound button clicked.
 	void infoSoundButtonClicked();
 
+	//! Clear event's log.
+	void clearEventLog();
+	//! Clear sources log.
+	void clearSourcesLog();
+
 protected:
 	friend class MainWindow;
 

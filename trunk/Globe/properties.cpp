@@ -56,13 +56,6 @@
 // QtConfFile include.
 #include <QtConfFile/Utils>
 
-#ifdef DEBUG
-
-// ModelTest include.
-#include <modeltest.h>
-
-#endif
-
 
 namespace Globe {
 
@@ -477,10 +470,6 @@ PropertiesManager::init()
 
 	d->m_model = new PropertiesModel( this );
 
-#ifdef DEBUG
-	new ModelTest( d->m_model, this );
-#endif
-
 	d->m_sortModel = new QSortFilterProxyModel( this );
 
 	d->m_sortModel->setSourceModel( d->m_model );
@@ -621,16 +610,16 @@ static inline QString keyToString( const PropertiesKey & key )
 {
 	QString result;
 
-	result.append( QLatin1String( "channel: \"" ) );
+	result.append( QLatin1String( "{channel: \"" ) );
 	result.append( ( key.channelName().isEmpty() ?
 		QLatin1String( "any" ) : key.channelName() ) );
-	result.append( QLatin1String( "\", source name: \"" ) );
+	result.append( QLatin1String( "\",\nsource name: \"" ) );
 	result.append( ( key.name().isEmpty() ?
 		QLatin1String( "any" ) : key.name() ) );
-	result.append( QLatin1String( "\", type name: \"" ) );
+	result.append( QLatin1String( "\",\ntype name: \"" ) );
 	result.append( ( key.typeName().isEmpty() ?
 		QLatin1String( "any" ) : key.typeName() ) );
-	result.append( QLatin1String( "\"" ) );
+	result.append( QLatin1String( "\"}" ) );
 
 	return result;
 }
@@ -673,9 +662,10 @@ PropertiesManager::addProperties( const Como::Source & source,
 					d->m_directoryName + it.value().confFileName();
 
 				Log::instance().writeMsgToEventLog( LogLevelInfo,
-					QString( "Properties for source %1 and key %2 from channel \"%3\" "
-						"has been changed. New properties will be saved into "
-						"file \"%4\"." )
+					QString( "Properties for source %1\n"
+						"and key %2\n"
+						"from channel \"%3\" has been changed.\n"
+						"New properties will be saved into file \"%4\"." )
 							.arg( sourceAsString )
 							.arg( keyAsString )
 							.arg( channelName )
@@ -686,8 +676,10 @@ PropertiesManager::addProperties( const Como::Source & source,
 						propertieConfFileName );
 
 					Log::instance().writeMsgToEventLog( LogLevelInfo,
-						QString( "Properties for source %1 and key %2 from channel "
-							"\"%3\" was saved in file \"%4\"." )
+						QString( "Properties for source %1\n"
+							"and key %2\n"
+							"from channel \"%3\"\n"
+							"was saved in file \"%4\"." )
 								.arg( sourceAsString )
 								.arg( keyAsString )
 								.arg( channelName )
@@ -696,8 +688,10 @@ PropertiesManager::addProperties( const Como::Source & source,
 				catch( const QtConfFile::Exception & x )
 				{
 					Log::instance().writeMsgToEventLog( LogLevelError,
-						QString( "Unable to save properties for source %1 "
-							"and key %2 from channel \"%3\" to file \"%4\". %5" )
+						QString( "Unable to save properties for source %1\n"
+							"and key %2\n"
+							"from channel \"%3\" to file \"%4\".\n"
+							"%5" )
 								.arg( sourceAsString )
 								.arg( keyAsString )
 								.arg( channelName )
@@ -736,9 +730,10 @@ PropertiesManager::addProperties( const Como::Source & source,
 					d->m_model->addPropertie( key, value );
 
 					Log::instance().writeMsgToEventLog( LogLevelInfo,
-						QString( "Properties for source %1 and key %2 from channel \"%3\" "
-							"has been added. New properties will be saved into "
-							"file \"%4\"." )
+						QString( "Properties for source %1\n"
+							"and key %2\n"
+							"from channel \"%3\" has been added.\n"
+							"New properties will be saved into file \"%4\"." )
 								.arg( sourceAsString )
 								.arg( keyAsString )
 								.arg( channelName )
@@ -749,8 +744,9 @@ PropertiesManager::addProperties( const Como::Source & source,
 							d->m_directoryName + fileName );
 
 						Log::instance().writeMsgToEventLog( LogLevelInfo,
-							QString( "Properties for source %1 and key %2 from channel "
-								"\"%3\" was saved in file \"%4\"." )
+							QString( "Properties for source %1\n"
+								"and key %2\n"
+								"from channel \"%3\" was saved in file \"%4\"." )
 									.arg( sourceAsString )
 									.arg( keyAsString )
 									.arg( channelName )
@@ -759,8 +755,10 @@ PropertiesManager::addProperties( const Como::Source & source,
 					catch( const QtConfFile::Exception & x )
 					{
 						Log::instance().writeMsgToEventLog( LogLevelError,
-							QString( "Unable to save properties for source %1 "
-								"and key %2 from channel \"%3\" to file \"%4\". %5" )
+							QString( "Unable to save properties for source %1\n"
+								"and key %2\n"
+								"from channel \"%3\" to file \"%4\".\n"
+								"%5" )
 									.arg( sourceAsString )
 									.arg( keyAsString )
 									.arg( channelName )
@@ -820,7 +818,8 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 			const QString keyAsString = keyToString( key );
 
 			Log::instance().writeMsgToEventLog( LogLevelInfo,
-				QString( "Properties for key %1 was edited." )
+				QString( "Properties for key %1\n"
+					"was edited." )
 					.arg( keyAsString ) );
 
 			it.value().properties() =
@@ -830,15 +829,17 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 				it.value().properties().saveConfiguration( fileName );
 
 				Log::instance().writeMsgToEventLog( LogLevelInfo,
-					QString( "Properties for key %1 was saved in file \"%2\"." )
+					QString( "Properties for key %1\n"
+						"was saved in file \"%2\"." )
 							.arg( keyAsString )
 							.arg( fileName ) );
 			}
 			catch( const QtConfFile::Exception & x )
 			{
 				Log::instance().writeMsgToEventLog( LogLevelError,
-					QString( "Unable to save properties for key %1 "
-						"to file \"%2\". %3" )
+					QString( "Unable to save properties for key %1\n"
+						"to file \"%2\".\n"
+						"%3" )
 							.arg( keyAsString )
 							.arg( fileName )
 							.arg( x.whatAsQString() ) );
@@ -901,7 +902,8 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 				QTextCodec::codecForName( "UTF-8" ) );
 
 			Log::instance().writeMsgToEventLog( LogLevelInfo,
-				QString( "Propertie's configuration for key %1 was loaded." )
+				QString( "Propertie's configuration for key %1\n"
+					"was loaded." )
 					.arg( keyAsString ) );
 
 			it.value().properties() = tag.properties();
@@ -912,7 +914,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 				it.value().confFileName();
 
 			Log::instance().writeMsgToEventLog( LogLevelError,
-				QString( "Unable to read propertie's configuration for key %1 "
+				QString( "Unable to read propertie's configuration for key %1\n"
 					"from file \"%2\"." )
 						.arg( keyAsString )
 						.arg( fileName ) );
@@ -964,7 +966,8 @@ PropertiesManager::readConfiguration( const QString & fileName )
 		{
 			Log::instance().writeMsgToEventLog( LogLevelError,
 				QString( "Unable to load properties manager's configuration "
-					" from file \"%1\". %2" )
+					" from file \"%1\".\n"
+					"%2" )
 						.arg( fileName )
 						.arg( x.whatAsQString() ) );
 

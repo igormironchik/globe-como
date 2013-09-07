@@ -36,7 +36,6 @@
 #include <QString>
 #include <QTimer>
 #include <QList>
-#include <QDebug>
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>
@@ -98,6 +97,8 @@ int main( int argc, char ** argv )
 	}
 
 	QApplication app( argc, argv );
+
+	app.setWindowIcon( QIcon( ":/img/globe_128x128.png" ) );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/" + QLocale::system().name() );

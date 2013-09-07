@@ -26,5 +26,8 @@
         <file>img/1rightarrow_22x22.png</file>
         <file>img/2leftarrow_22x22.png</file>
         <file>img/2rightarrow_22x22.png</file>
+        <file>img/edit_clear_22x22.png</file>
+        <file>img/globe_48x48.png</file>
+        <file>img/globe_128x128.png</file>
     </qresource>
 </RCC>

@@ -41,13 +41,6 @@
 #include <QComboBox>
 #include <QSortFilterProxyModel>
 
-#ifdef DEBUG
-
-// ModelTest include.
-#include <modeltest.h>
-
-#endif
-
 
 namespace Globe {
 
@@ -98,10 +91,6 @@ SourcesWidget::init()
 	d->m_ui.setupUi( this );
 
 	d->m_model = new SourcesModel( this );
-
-#ifdef DEBUG
-	new ModelTest( d->m_model, this );
-#endif
 
 	d->m_sortModel = new QSortFilterProxyModel( this );
 	d->m_sortModel->setSourceModel( d->m_model );

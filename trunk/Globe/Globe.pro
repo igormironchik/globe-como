@@ -3,12 +3,7 @@ TEMPLATE = app
 TARGET = Globe
 DESTDIR = ..
 QT += core gui network sql widgets
-CONFIG += console
-
-debug {
-	DEFINE+=DEBUG
-	QT += testlib
-}
+CONFIG += windows
 
 win32 {
     RC_FILE = globe.rc
@@ -39,8 +34,8 @@ HEADERS += application_cfg.hpp \
            db.hpp \
            db_cfg.hpp \
            launch_time.hpp \
-		   log.hpp \
-		   log_cfg.hpp \
+           log.hpp \
+           log_cfg.hpp \
            log_event_selector.hpp \
            log_event_view.hpp \
            log_event_view_model.hpp \
@@ -95,7 +90,7 @@ SOURCES += application_cfg.cpp \
            db_cfg.cpp \
            launch_time.cpp \
            log.cpp \
-		   log_cfg.cpp \
+           log_cfg.cpp \
            log_event_selector.cpp \
            log_event_view.cpp \
            log_event_view_model.cpp \
@@ -151,5 +146,4 @@ win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfF
 else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfFile.lib $$OUT_PWD/../lib/Como.lib
 else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../lib/libQtConfFile.a $$OUT_PWD/../lib/libComo.a
 
-include( ../modeltest/modeltest.pri )
 include ( ../QtArg/qtarg.pri )

@@ -139,6 +139,12 @@ ConfigurationDialog::init()
 	connect( d->m_ui.m_infoSoundButton, SIGNAL( clicked() ),
 		this, SLOT( infoSoundButtonClicked() ) );
 
+	connect( d->m_ui.m_clearEventLogButton, SIGNAL( clicked() ),
+		this, SLOT( clearEventLog() ) );
+
+	connect( d->m_ui.m_clearSourcesLogButton, SIGNAL( clicked() ),
+		this, SLOT( clearSourcesLog() ) );
+
 	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
 		QLatin1String( "sounds" ) );
 }
@@ -329,6 +335,18 @@ void
 ConfigurationDialog::infoSoundButtonClicked()
 {
 	soundSelectButtonClicked( d->m_ui.m_infoSoundLine );
+}
+
+void
+ConfigurationDialog::clearEventLog()
+{
+	Log::instance().clearEventsLog();
+}
+
+void
+ConfigurationDialog::clearSourcesLog()
+{
+	Log::instance().clearSourcesLog();
 }
 
 } /* namespace Globe */

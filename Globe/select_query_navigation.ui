@@ -77,6 +77,9 @@
        <height>22</height>
       </size>
      </property>
+     <property name="shortcut">
+      <string>Ctrl+Home</string>
+     </property>
     </widget>
    </item>
    <item>
@@ -93,6 +96,9 @@
        <width>22</width>
        <height>22</height>
       </size>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+Left</string>
      </property>
     </widget>
    </item>
@@ -111,6 +117,9 @@
        <height>22</height>
       </size>
      </property>
+     <property name="shortcut">
+      <string>Ctrl+Right</string>
+     </property>
     </widget>
    </item>
    <item>
@@ -127,6 +136,9 @@
        <width>22</width>
        <height>22</height>
       </size>
+     </property>
+     <property name="shortcut">
+      <string>Ctrl+End</string>
      </property>
     </widget>
    </item>

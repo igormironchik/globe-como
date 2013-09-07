@@ -38,6 +38,9 @@
 
 namespace Globe {
 
+class LogEventViewModel;
+
+
 //
 // LogEventView
 //
@@ -54,6 +57,9 @@ public:
 	LogEventView( QWidget * parent = 0 );
 
 	~LogEventView();
+
+	//! \return Underlieng model.
+	LogEventViewModel * model();
 
 protected slots:
 	//! Selection changed.

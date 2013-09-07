@@ -40,13 +40,6 @@
 #include <QApplication>
 #include <QClipboard>
 
-#ifdef DEBUG
-
-// ModelTest include.
-#include <modeltest.h>
-
-#endif
-
 
 namespace Globe {
 
@@ -87,6 +80,12 @@ LogEventView::~LogEventView()
 {
 }
 
+LogEventViewModel *
+LogEventView::model()
+{
+	return d->m_model;
+}
+
 void
 LogEventView::init()
 {
@@ -94,6 +93,7 @@ LogEventView::init()
 	setSortingEnabled( false );
 	setSelectionMode( QAbstractItemView::ExtendedSelection );
 	setSelectionBehavior( QAbstractItemView::SelectRows );
+	setWordWrap( true );
 
 	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
 		tr( "Copy" ), this );
@@ -113,10 +113,6 @@ LogEventView::init()
 		this, SLOT( selectAllImplementation() ) );
 
 	d->m_model = new LogEventViewModel( this );
-
-#ifdef DEBUG
-	new ModelTest( d->m_model, this );
-#endif
 
 	setModel( d->m_model );
 }
@@ -142,7 +138,7 @@ LogEventView::selectAllImplementation()
 void
 LogEventView::copyImplementation()
 {
-	QModelIndexList indexes = selectionModel()->selectedRows();
+	const QModelIndexList indexes = selectionModel()->selectedRows();
 
 	const int size = indexes.size();
 

@@ -51,6 +51,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
+#include <QDebug>
 
 
 namespace Globe {
@@ -216,12 +217,16 @@ MainWindow::init()
 void
 MainWindow::start()
 {
-	Log::instance().writeMsgToEventLog( LogLevelInfo,
-		QLatin1String( "Application started." ) );
-
 	d->m_cfg.loadConfiguration();
 
 	d->m_confDialog->initUiWithSettings();
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Application started." ) );
+
+	#ifdef GLOBE_DEBUG
+		qDebug() << "DEBUG";
+	#endif
 
 	show();
 }
@@ -321,6 +326,9 @@ void
 MainWindow::aboutToQuit()
 {
 	saveConfiguration();
+
+	Log::instance().writeMsgToEventLog( LogLevelInfo,
+		QLatin1String( "Application finished." ) );
 }
 
 void

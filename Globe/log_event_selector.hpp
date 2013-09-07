@@ -92,6 +92,12 @@ public:
 	//! \return Navigation widget.
 	SelectQueryNavigation * navigationWidget();
 
+	//! \return Date and time for begin selection from log.
+	QDateTime startDateTime() const;
+
+	//! \return Date and time for end slection from log.
+	QDateTime endDateTime() const;
+
 private slots:
 	//! Start date and time changed.
 	void startDateTimeChanged( const QDateTime & dt );

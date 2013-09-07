@@ -35,6 +35,9 @@
 #include <QMainWindow>
 #include <QScopedPointer>
 
+// Globe include.
+#include <Globe/log_event_view_model.hpp>
+
 
 namespace Globe {
 
@@ -78,6 +81,24 @@ protected:
 private:
 	//! Init.
 	void init();
+	//! Set navigation buttons.
+	void setNavigationButtons();
+	//! \return List with log records.
+	QList< LogEventRecord > readLog();
+	//! \return List with log records.
+	QList< LogEventRecord > readLogFirstTime();
+
+private slots:
+	//! Select from log.
+	void selectFromLog();
+	//! Next log page.
+	void nextLogPage();
+	//! Previous log page.
+	void prevLogPage();
+	//! Go to the first log page.
+	void goToFirstLogPage();
+	//! Go to the last log page.
+	void goToLastLogPage();
 
 private:
 	Q_DISABLE_COPY( LogEventWindow )

@@ -42,13 +42,6 @@
 #include <Globe/channel_view_window_model.hpp>
 #include <Globe/color_for_level.hpp>
 
-#ifdef DEBUG
-
-// ModelTest include.
-#include <modeltest.h>
-
-#endif
-
 
 namespace Globe {
 
@@ -276,6 +269,7 @@ ChannelView::init()
 	setSortingEnabled( true );
 	setSelectionMode( QAbstractItemView::ExtendedSelection );
 	setSelectionBehavior( QAbstractItemView::SelectRows );
+	setWordWrap( true );
 
 	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
 		tr( "Copy" ), this );
@@ -311,10 +305,6 @@ ChannelView::init()
 	connect( d->m_model,
 		SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
 		this, SLOT( rowsAdded( QModelIndex, int, int ) ) );
-
-#ifdef DEBUG
-	new ModelTest( d->m_model, this );
-#endif
 
 	d->m_sortModel = new QSortFilterProxyModel( this );
 	d->m_sortModel->setSourceModel( d->m_model );

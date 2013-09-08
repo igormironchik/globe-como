@@ -135,6 +135,41 @@ LogEventView::selectAllImplementation()
 	selectAll();
 }
 
+static inline QString eventLogLevelToString( LogLevel l )
+{
+	switch( l )
+	{
+		case LogLevelInfo : return QLatin1String( "INFO" );
+		case LogLevelWarning : return QLatin1String( "WARN" );
+		case LogLevelError : return QLatin1String( "ERR" );
+		default : return QString();
+	}
+}
+
+static inline QString eventLogMessage( const QString & msg )
+{
+	static const QLatin1String blank( "                               " );
+
+	QString res = msg;
+
+	int i = 0;
+
+	while( true )
+	{
+		i = res.indexOf( QLatin1String( "\n" ), i );
+
+		if( i != -1 )
+		{
+			++i;
+			res.insert( i, blank );
+		}
+		else
+			break;
+	}
+
+	return res;
+}
+
 void
 LogEventView::copyImplementation()
 {
@@ -148,22 +183,15 @@ LogEventView::copyImplementation()
 
 	for( int i = 0; i < size; ++i )
 	{
-//		const Como::Source & source = d->m_model->source( indexes[ i ] );
-//		const bool isRegistered = d->m_model->isRegistered( indexes[ i ] );
-//		const int priority = d->m_model->priority( indexes[ i ] );
+		const LogEventRecord & r = d->m_model->record( indexes[ i ] );
 
-//		text.append( source.name() );
-//		text.append( QLatin1String( ";" ) );
-//		text.append( source.typeName() );
-//		text.append( QLatin1String( ";" ) );
-//		text.append( source.value().toString() );
-//		text.append( QLatin1String( ";" ) );
-//		text.append( source.dateTime().toString() );
-//		text.append( QLatin1String( ";" ) );
-//		text.append( QString::number( priority ) );
-//		text.append( QLatin1String( ";" ) );
-//		text.append( boolToString( isRegistered ) );
-//		text.append( QLatin1String( ";\n" ) );
+		text.append( QLatin1String( "[" ) );
+		text.append( eventLogLevelToString( r.level() ) );
+		text.append( QLatin1String( "] " ) );
+		text.append( r.dateTime() );
+		text.append( QLatin1String( " " ) );
+		text.append( eventLogMessage( r.message() ) );
+		text.append( QLatin1String( "\n" ) );
 	}
 
 	clipboard->setText( text );

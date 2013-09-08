@@ -233,7 +233,8 @@ Configuration::readAppCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to load application's configuration from file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -290,7 +291,8 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to load main window's configuration from file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -352,7 +354,8 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to load channels configuration from file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -381,7 +384,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 		else if( !d->m_channelsManager->isNameUnique( channelCfg.name() ) )
 		{
 			Log::instance().writeMsgToEventLog( LogLevelError, QString(
-				"Unable to create new channel... "
+				"Unable to create new channel...\n"
 				"Channel with name \"%1\" already exists." )
 					.arg( channelCfg.name() ) );
 
@@ -516,7 +519,8 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to load windows configuration from file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -667,7 +671,8 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save application's configuration in file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -698,7 +703,8 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save main window's configuration in file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -741,7 +747,8 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save channels configuration in file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
@@ -782,7 +789,8 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save windows configuration in file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 

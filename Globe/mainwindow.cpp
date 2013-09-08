@@ -51,7 +51,6 @@
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
-#include <QDebug>
 
 
 namespace Globe {
@@ -223,10 +222,6 @@ MainWindow::start()
 
 	Log::instance().writeMsgToEventLog( LogLevelInfo,
 		QLatin1String( "Application started." ) );
-
-	#ifdef GLOBE_DEBUG
-		qDebug() << "DEBUG";
-	#endif
 
 	show();
 }

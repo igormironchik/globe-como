@@ -162,9 +162,10 @@ ColorForLevel::saveCfg( const QString & fileName )
 	catch( const QtConfFile::Exception & x )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
-			QString( "Unable to save colors configuration to file \"%1\". %2" )
-				.arg( fileName )
-				.arg( x.whatAsQString() ) );
+			QString( "Unable to save colors configuration to file \"%1\".\n"
+				"%2" )
+					.arg( fileName )
+					.arg( x.whatAsQString() ) );
 
 		QMessageBox::critical( d->m_mainWindow,
 			tr( "Unable to save colors correspondence configuration..." ),
@@ -189,7 +190,8 @@ ColorForLevel::readCfg( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to read colors configuration from file "
-				"\"%1\". %2" )
+				"\"%1\".\n"
+				"%2" )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 

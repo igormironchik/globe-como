@@ -127,7 +127,8 @@ DB::readCfg( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to read database configuration "
-				"from file \"%1\". %2" )
+				"from file \"%1\".\n"
+				"%2" )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
@@ -167,7 +168,8 @@ DB::saveCfg( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to save database configuration to file "
-				"\"%1\". %2" )
+				"\"%1\".\n"
+				"%2" )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 

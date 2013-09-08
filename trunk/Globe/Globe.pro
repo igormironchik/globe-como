@@ -3,10 +3,14 @@ TEMPLATE = app
 TARGET = Globe
 DESTDIR = ..
 QT += core gui network sql widgets
-CONFIG += windows
+CONFIG += console
 
 win32 {
     RC_FILE = globe.rc
+}
+
+CONFIG(debug, debug|release) {
+	DEFINES += GLOBE_DEBUG
 }
 
 RESOURCES = resources.qrc
@@ -40,6 +44,7 @@ HEADERS += application_cfg.hpp \
            log_event_view.hpp \
            log_event_view_model.hpp \
            log_event_view_window.hpp \
+		   log_event_view_window_cfg.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -95,6 +100,7 @@ SOURCES += application_cfg.cpp \
            log_event_view.cpp \
            log_event_view_model.cpp \
            log_event_view_window.cpp \
+		   log_event_view_window_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \

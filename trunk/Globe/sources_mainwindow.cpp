@@ -153,7 +153,8 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save sources main window's configuration to file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 
@@ -180,7 +181,8 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to read sources main window's configuration from file "
-			"\"%1\". %2" )
+			"\"%1\".\n"
+			"%2" )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 

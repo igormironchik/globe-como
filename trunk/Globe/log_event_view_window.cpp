@@ -35,6 +35,7 @@
 #include <Globe/log_event_selector.hpp>
 #include <Globe/log_event_view.hpp>
 #include <Globe/select_query_navigation.hpp>
+#include <Globe/log_event_view_window_cfg.hpp>
 
 // Qt include.
 #include <QCloseEvent>
@@ -111,62 +112,61 @@ LogEventWindow::toolWindowObject()
 void
 LogEventWindow::saveConfiguration( const QString & fileName )
 {
-//	try {
-//		SourcesMainWindowTag tag( d->m_widget->channelName(),
-//			windowStateCfg( this ) );
+	try {
+		LogEventCfgTag tag( LogEventCfg( windowStateCfg( this ) ) );
 
-//		QtConfFile::writeQtConfFile( tag, fileName,
-//			QTextCodec::codecForName( "UTF-8" ) );
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
 
-//		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
-//			"Sources main window's configuration saved into \"%1\" file." )
-//				.arg( fileName ) );
-//	}
-//	catch( const QtConfFile::Exception & x )
-//	{
-//		Log::instance().writeMsgToEventLog( LogLevelError, QString(
-//			"Unable to save sources main window's configuration to file "
-//			"\"%1\". %2" )
-//				.arg( fileName )
-//				.arg( x.whatAsQString() ) );
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Event's log window configuration saved into \"%1\" file." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save event's log window configuration to file "
+			"\"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
 
-//		QMessageBox::critical( this,
-//			tr( "Unable to save sources main window configuration..." ),
-//			x.whatAsQString() );
-//	}
+		QMessageBox::critical( this,
+			tr( "Unable to save event's log window configuration..." ),
+			x.whatAsQString() );
+	}
 }
 
 void
 LogEventWindow::readConfiguration( const QString & fileName )
 {
-//	SourcesMainWindowTag tag;
+	LogEventCfgTag tag;
 
-//	try {
-//		QtConfFile::readQtConfFile( tag, fileName,
-//			QTextCodec::codecForName( "UTF-8" ) );
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
 
-//		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
-//			"Sources main window's configuration loaded from file \"%1\"." )
-//				.arg( fileName ) );
-//	}
-//	catch( const QtConfFile::Exception & x )
-//	{
-//		Log::instance().writeMsgToEventLog( LogLevelError, QString(
-//			"Unable to read sources main window's configuration from file "
-//			"\"%1\". %2" )
-//				.arg( fileName )
-//				.arg( x.whatAsQString() ) );
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Event's log window configuration loaded from file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to read event's log window configuration from file "
+			"\"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
 
-//		QMessageBox::critical( this,
-//			tr( "Unable to read sources main window configuration..." ),
-//			x.whatAsQString() );
+		QMessageBox::critical( this,
+			tr( "Unable to read event's log window configuration..." ),
+			x.whatAsQString() );
 
-//		return;
-//	}
+		return;
+	}
 
-//	d->m_widget->setChannelName( tag.channelName() );
-
-//	restoreWindowState( tag.windowState(), this );
+	restoreWindowState( tag.cfg().windowState(), this );
 }
 
 void

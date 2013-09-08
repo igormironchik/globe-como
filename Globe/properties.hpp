@@ -42,6 +42,7 @@
 
 // Globe include.
 #include <Globe/condition.hpp>
+#include <Globe/tool_window.hpp>
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -241,6 +242,7 @@ class PropertiesManagerPrivate;
 //! Manager of all properties in application.
 class PropertiesManager
 	:	public QMainWindow
+	,	public ToolWindow
 {
 	Q_OBJECT
 
@@ -273,12 +275,8 @@ public:
 	//! \return Tool window object.
 	ToolWindowObject * toolWindowObject();
 
-protected:
-	friend class MainWindow;
-
 	//! Init menu.
-	void initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-		const QList< ToolWindowObject* > & toolWindows );
+	void initMenu( const Menu & menu );
 
 protected:
 	void closeEvent( QCloseEvent * event );

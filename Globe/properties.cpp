@@ -43,6 +43,7 @@
 #include <Globe/properties_dialog.hpp>
 #include <Globe/properties_widget.hpp>
 #include <Globe/log.hpp>
+#include <Globe/globe_menu.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -495,18 +496,17 @@ PropertiesManager::init()
 }
 
 void
-PropertiesManager::initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-	const QList< ToolWindowObject* > & toolWindows )
+PropertiesManager::initMenu( const Menu & menu )
 {
-	menuBar()->addMenu( fileMenu );
+	menuBar()->addMenu( menu.fileMenu() );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
-	foreach( ToolWindowObject * obj, toolWindows )
+	foreach( ToolWindowObject * obj, menu.toolWindows() )
 		if( obj != d->m_toolWindowObject )
 			toolsMenu->addAction( obj->menuEntity() );
 
-	menuBar()->addMenu( settingsMenu );
+	menuBar()->addMenu( menu.settingsMenu() );
 }
 
 const Properties *

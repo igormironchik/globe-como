@@ -108,7 +108,7 @@ private slots:
 
 private:
 	//! Init.
-	void init();
+	void init( const QList< ToolWindowObject* > & toolWindows );
 	//! Save configuration.
 	void saveConfiguration();
 

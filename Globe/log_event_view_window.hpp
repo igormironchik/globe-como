@@ -37,6 +37,7 @@
 
 // Globe include.
 #include <Globe/log_event_view_model.hpp>
+#include <Globe/tool_window.hpp>
 
 
 namespace Globe {
@@ -53,6 +54,7 @@ class LogEventWindowPrivate;
 //! Window with event log.
 class LogEventWindow
 	:	public QMainWindow
+	,	public ToolWindow
 {
 	Q_OBJECT
 
@@ -69,13 +71,10 @@ public:
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
 
-protected:
-	friend class MainWindow;
-
 	//! Init menu.
-	void initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-		const QList< ToolWindowObject* > & toolWindows );
+	void initMenu( const Menu & menu );
 
+protected:
 	void closeEvent( QCloseEvent * event );
 
 private:

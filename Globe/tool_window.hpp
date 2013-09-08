@@ -28,72 +28,35 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
-#define GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
-
-// Qt include.
-#include <QMainWindow>
-#include <QScopedPointer>
+#ifndef GLOBE__TOOL_WINDOW_HPP__INCLUDED
+#define GLOBE__TOOL_WINDOW_HPP__INCLUDED
 
 // Globe include.
-#include <Globe/tool_window.hpp>
+#include <Globe/with_menu.hpp>
 
 
 namespace Globe {
 
 class ToolWindowObject;
-class SourcesManager;
-class ChannelsManager;
-class PropertiesManager;
 
 
 //
-// SourcesMainWindow
+// ToolWindow
 //
 
-class SourcesMainWindowPrivate;
-
-//! Main window with show all sources available in the application.
-class SourcesMainWindow
-	:	public QMainWindow
-	,	public ToolWindow
+//! Base interface for tool window.
+class ToolWindow
+	:	public WithMenu
 {
-	Q_OBJECT
-
 public:
-	SourcesMainWindow( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	ToolWindow();
 
-	~SourcesMainWindow();
+	virtual ~ToolWindow();
 
 	//! \return Tool window object.
-	ToolWindowObject * toolWindowObject();
-
-	//! Save properties manager configuration.
-	void saveConfiguration( const QString & fileName );
-	//! Read properties manager configuration.
-	void readConfiguration( const QString & fileName );
-
-	//! Set properties manager.
-	void setPropertiesManager( PropertiesManager * propertiesManager );
-
-	//! Init menu.
-	void initMenu( const Menu & menu );
-
-protected:
-	void closeEvent( QCloseEvent * event );
-
-private:
-	//! Init.
-	void init();
-
-private:
-	Q_DISABLE_COPY( SourcesMainWindow )
-
-	QScopedPointer< SourcesMainWindowPrivate > d;
-}; // class SourcesMainWindow
+	virtual ToolWindowObject * toolWindowObject() = 0;
+}; // class ToolWindow
 
 } /* namespace Globe */
 
-#endif // GLOBE__SOURCES_MAINWINDOW_HPP__INCLUDED
+#endif // GLOBE__TOOL_WINDOW_HPP__INCLUDED

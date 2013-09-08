@@ -35,6 +35,7 @@
 #include <Globe/tool_window_object.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/mainwindow.hpp>
+#include <Globe/globe_menu.hpp>
 
 // Qt include.
 #include <QMenuBar>
@@ -265,17 +266,16 @@ ChannelViewWindow::init()
 }
 
 void
-ChannelViewWindow::initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-	const QList< ToolWindowObject* > & toolWindows )
+ChannelViewWindow::initMenu( const Menu & menu )
 {
-	menuBar()->addMenu( fileMenu );
+	menuBar()->addMenu( menu.fileMenu() );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
-	foreach( ToolWindowObject * obj, toolWindows )
+	foreach( ToolWindowObject * obj, menu.toolWindows() )
 		toolsMenu->addAction( obj->menuEntity() );
 
-	menuBar()->addMenu( settingsMenu );
+	menuBar()->addMenu( menu.settingsMenu() );
 }
 
 void

@@ -37,6 +37,7 @@ HEADERS += application_cfg.hpp \
            configuration_dialog.hpp \
            db.hpp \
            db_cfg.hpp \
+		   globe_menu.hpp \
            launch_time.hpp \
            log.hpp \
            log_cfg.hpp \
@@ -68,7 +69,9 @@ HEADERS += application_cfg.hpp \
            sources_widget_view.hpp \
            window_state_cfg.hpp \
            windows_cfg.hpp \
+		   with_menu.hpp \
            tool_window_object.hpp \
+		   tool_window.hpp \
            utils.hpp
 
 SOURCES += application_cfg.cpp \
@@ -93,6 +96,7 @@ SOURCES += application_cfg.cpp \
            configuration_dialog.cpp \
            db.cpp \
            db_cfg.cpp \
+		   globe_menu.cpp \
            launch_time.cpp \
            log.cpp \
            log_cfg.cpp \
@@ -125,7 +129,9 @@ SOURCES += application_cfg.cpp \
            sources_widget_view.cpp \
            window_state_cfg.cpp \
            windows_cfg.cpp \
+		   with_menu.cpp \
            tool_window_object.cpp \
+		   tool_window.cpp \
            utils.cpp
 
 FORMS	 = channels_to_show.ui \

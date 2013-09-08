@@ -44,6 +44,7 @@
 #include <Globe/log.hpp>
 #include <Globe/configuration_dialog.hpp>
 #include <Globe/log_event_view_window.hpp>
+#include <Globe/globe_menu.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -67,8 +68,7 @@ public:
 		PropertiesManager * propertiesManager,
 		SourcesMainWindow * sourcesMainWindow,
 		SourcesManager * sourcesManager,
-		LogEventWindow * logEventWindow,
-		const QList< ToolWindowObject* > & toolWindows )
+		LogEventWindow * logEventWindow )
 		:	m_channelsManager( channelsManager )
 		,	m_db( db )
 		,	m_list( 0 )
@@ -77,12 +77,9 @@ public:
 		,	m_sourcesManager( sourcesManager )
 		,	m_logEventWindow( logEventWindow )
 		,	m_cfgWasSaved( false )
-		,	m_toolWindows( toolWindows )
 		,	m_cfg( cfgFileName, mainWindow, channelsManager,
 				db, propertiesManager, sourcesMainWindow,
 				logEventWindow )
-		,	m_fileMenu( 0 )
-		,	m_settingsMenu( 0 )
 		,	m_confDialog( 0 )
 	{
 	}
@@ -113,20 +110,16 @@ public:
 	LogEventWindow * m_logEventWindow;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
-	//! Tool window objects.
-	QList< ToolWindowObject* > m_toolWindows;
 	//! Configuration.
 	Configuration m_cfg;
 	//! Channel view windows.
 	QList< ChannelViewWindow* > m_channelViewWindows;
-	//! File menu.
-	QMenu * m_fileMenu;
-	//! Settings menu.
-	QMenu * m_settingsMenu;
 	//! Map of the channel view windows configuration.
 	QMap< QString, ChannelViewWindowCfg > m_channelViewWindowsCfg;
 	//! Configuration dialog.
 	ConfigurationDialog * m_confDialog;
+	//! Menu.
+	Menu m_menu;
 }; // class MainWindowPrivate
 
 
@@ -145,9 +138,9 @@ MainWindow::MainWindow( const QString & cfgFileName,
 	:	QMainWindow( parent, flags )
 	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
 			propertiesManager, sourcesMainWindow, sourcesManager,
-			logEventWindow, toolWindows ) )
+			logEventWindow ) )
 {
-	init();
+	init( toolWindows );
 }
 
 MainWindow::~MainWindow()
@@ -161,33 +154,35 @@ MainWindow::list()
 }
 
 void
-MainWindow::init()
+MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 {
 	connect( qApp, SIGNAL( aboutToQuit() ),
 		this, SLOT( aboutToQuit() ) );
 
-	d->m_fileMenu = menuBar()->addMenu( tr( "&File" ) );
+	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
 
-	QMenu * newMenu = d->m_fileMenu->addMenu( QIcon( ":/img/new_22x22.png" ),
+	QMenu * newMenu = fileMenu->addMenu( QIcon( ":/img/new_22x22.png" ),
 		tr( "New" ) );
 
 	newMenu->addAction( tr( "Channel View" ), this,
 		SLOT( newChannelView() ) );
 
-	d->m_fileMenu->addSeparator();
+	fileMenu->addSeparator();
 
-	d->m_fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
+	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
 		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
-	foreach( ToolWindowObject * obj, d->m_toolWindows )
+	foreach( ToolWindowObject * obj, d->m_menu.toolWindows() )
 		toolsMenu->addAction( obj->menuEntity() );
 
-	d->m_settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
+	QMenu * settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
 
-	d->m_settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
+	settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
 		tr( "&Settings" ), this, SLOT( settings() ) );
+
+	d->m_menu = Menu( fileMenu, settingsMenu, toolWindows );
 
 	d->m_confDialog = new ConfigurationDialog( d->m_cfg.colorForLevel(),
 		this );
@@ -201,12 +196,9 @@ MainWindow::init()
 
 	setCentralWidget( area );
 
-	d->m_propertiesManager->initMenu( d->m_fileMenu, d->m_settingsMenu,
-		d->m_toolWindows );
-	d->m_sourcesMainWindow->initMenu( d->m_fileMenu, d->m_settingsMenu,
-		d->m_toolWindows );
-	d->m_logEventWindow->initMenu( d->m_fileMenu, d->m_settingsMenu,
-		d->m_toolWindows );
+	d->m_propertiesManager->initMenu( d->m_menu );
+	d->m_sourcesMainWindow->initMenu( d->m_menu );
+	d->m_logEventWindow->initMenu( d->m_menu );
 
 	d->m_db->setMainWindow( this );
 
@@ -260,7 +252,7 @@ MainWindow::showChannelView( const QString & channelName )
 			d->m_sourcesManager, d->m_channelsManager, this,
 			d->m_cfg.colorForLevel() );
 
-		window->initMenu( d->m_fileMenu, d->m_settingsMenu, d->m_toolWindows );
+		window->initMenu( d->m_menu );
 
 		if( !window->setChannel( channelName ) )
 			window->deleteLater();

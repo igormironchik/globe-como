@@ -36,6 +36,7 @@
 #include <Globe/channels.hpp>
 #include <Globe/sources_mainwindow_cfg.hpp>
 #include <Globe/log.hpp>
+#include <Globe/globe_menu.hpp>
 
 // Qt include.
 #include <QCloseEvent>
@@ -99,18 +100,17 @@ SourcesMainWindow::toolWindowObject()
 }
 
 void
-SourcesMainWindow::initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-	const QList< ToolWindowObject* > & toolWindows )
+SourcesMainWindow::initMenu( const Menu & menu )
 {
-	menuBar()->addMenu( fileMenu );
+	menuBar()->addMenu( menu.fileMenu() );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
-	foreach( ToolWindowObject * obj, toolWindows )
+	foreach( ToolWindowObject * obj, menu.toolWindows() )
 		if( obj != d->m_toolWindowObject )
 			toolsMenu->addAction( obj->menuEntity() );
 
-	menuBar()->addMenu( settingsMenu );
+	menuBar()->addMenu( menu.settingsMenu() );
 }
 
 void

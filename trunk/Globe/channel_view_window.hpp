@@ -37,6 +37,7 @@
 
 // Globe include.
 #include <Globe/channel_view_window_cfg.hpp>
+#include <Globe/with_menu.hpp>
 
 
 namespace Globe {
@@ -58,6 +59,7 @@ class ChannelViewWindowPrivate;
 //! Window with channel's sources.
 class ChannelViewWindow
 	:	public QMainWindow
+	,	public WithMenu
 {
 	Q_OBJECT
 
@@ -81,13 +83,10 @@ public:
 	//! Set window configuration.
 	void setWindowCfg( const ChannelViewWindowCfg & c );
 
-protected:
-	friend class MainWindow;
-
 	//! Init menu.
-	void initMenu( QMenu * fileMenu, QMenu * settingsMenu,
-		const QList< ToolWindowObject* > & toolWindows );
+	void initMenu( const Menu & menu );
 
+protected:
 	void closeEvent( QCloseEvent * event );
 
 private:

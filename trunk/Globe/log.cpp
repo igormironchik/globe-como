@@ -239,12 +239,15 @@ Log::init()
 
 //	typeNameIndexQuery.exec();
 
-	for( int i = 0; i < d->m_deferredEventMessages.size(); ++i )
+	if( d->m_cfg.isEventLogEnabled() )
 	{
-		insertMsgIntoEventLog(
-			d->m_deferredEventMessages.at( i ).m_level,
-			d->m_deferredEventMessages.at( i ).m_dateTime,
-			d->m_deferredEventMessages.at( i ).m_message );
+		for( int i = 0; i < d->m_deferredEventMessages.size(); ++i )
+		{
+			insertMsgIntoEventLog(
+				d->m_deferredEventMessages.at( i ).m_level,
+				d->m_deferredEventMessages.at( i ).m_dateTime,
+				d->m_deferredEventMessages.at( i ).m_message );
+		}
 	}
 
 	d->m_deferredEventMessages.clear();

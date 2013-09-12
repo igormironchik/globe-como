@@ -31,8 +31,64 @@
 #ifndef GLOBE__SOUNDS_HPP__INCLUDED
 #define GLOBE__SOUNDS_HPP__INCLUDED
 
+// Qt include.
+#include <QMainWindow>
+#include <QScopedPointer>
+
+// Como include.
+#include <Como/Source>
+
+// Globe include.
+#include <Globe/condition.hpp>
+#include <Globe/tool_window.hpp>
+
 
 namespace Globe {
+
+//
+// Sounds
+//
+
+class SoundsPrivate;
+
+//! Sounds manager.
+class Sounds
+	:	public QMainWindow
+	,	public ToolWindow
+{
+	Q_OBJECT
+
+private:
+	Sounds( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+
+	~Sounds();
+
+public:
+	//! \return Instance.
+	static Sounds & instance();
+
+	//! \return Tool window object.
+	ToolWindowObject * toolWindowObject();
+
+	//! Init menu.
+	void initMenu( const Menu & menu );
+
+public slots:
+	//! Play sound.
+	void playSound( Level level, const Como::Source & source );
+
+protected:
+	void closeEvent( QCloseEvent * event );
+
+private:
+	//! Init.
+	void init();
+
+private:
+	Q_DISABLE_COPY( Sounds )
+
+	QScopedPointer< SoundsPrivate > d;
+}; // class Sounds
 
 } /* namespace Globe */
 

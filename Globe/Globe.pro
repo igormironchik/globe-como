@@ -59,6 +59,11 @@ HEADERS += application_cfg.hpp \
            select_query_navigation.hpp \
            scrolled_widget.hpp \
            sounds.hpp \
+		   sounds_cfg.hpp \
+		   sounds_disabled_model.hpp \
+		   sounds_disabled_view.hpp \
+		   sounds_played_model.hpp \
+		   sounds_played_view.hpp \
            source_manual_dialog.hpp \
            sources.hpp \
            sources_dialog.hpp \
@@ -119,6 +124,11 @@ SOURCES += application_cfg.cpp \
            select_query_navigation.cpp \
            scrolled_widget.cpp \
            sounds.cpp \
+		   sounds_cfg.cpp \
+		   sounds_disabled_model.cpp \
+		   sounds_disabled_view.cpp \
+		   sounds_played_model.cpp \
+		   sounds_played_view.cpp \
            source_manual_dialog.cpp \
            sources.cpp \
            sources_dialog.cpp \

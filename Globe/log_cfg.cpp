@@ -39,7 +39,7 @@ namespace Globe {
 //
 
 LogCfg::LogCfg()
-	:	m_isEventLogEnabled( false )
+	:	m_isEventLogEnabled( true )
 	,	m_isSourcesLogEnabled( false )
 	,	m_sourcesLogDays( 0 )
 {

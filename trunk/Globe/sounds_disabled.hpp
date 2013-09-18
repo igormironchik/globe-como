@@ -28,50 +28,66 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SOUNDS_HPP__INCLUDED
-#define GLOBE__SOUNDS_HPP__INCLUDED
+#ifndef GLOBE__SOUNDS_DISABLED_HPP__INCLUDED
+#define GLOBE__SOUNDS_DISABLED_HPP__INCLUDED
 
 // Qt include.
-#include <QMainWindow>
+#include <QObject>
 #include <QScopedPointer>
 
 // Como include.
 #include <Como/Source>
 
-// Globe include.
-#include <Globe/condition.hpp>
-#include <Globe/tool_window.hpp>
+QT_BEGIN_NAMESPACE
+class QDateTime;
+QT_END_NAMESPACE
 
 
 namespace Globe {
 
 //
-// Sounds
+// DisabledSounds
 //
 
-class SoundsPrivate;
+class DisabledSoundsPrivate;
 
-//! Sounds manager.
-class Sounds
-	:	public QMainWindow
-	,	public ToolWindow
+//! Disabled sounds manager.
+class DisabledSounds
+	:	public QObject
 {
 	Q_OBJECT
 
-private:
-	Sounds( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+signals:
+	//! Sounds disabled.
+	void soundsDisabled( const Como::Source & source,
+		const QString & channelName,
+		const QDateTime & to );
 
-	~Sounds();
+	//! Sounds enabled.
+	void soundsEnabled( const Como::Source & source,
+		const QString & channelName );
+
+private:
+	DisabledSounds( QObject * parent = 0 );
+
+	~DisabledSounds();
 
 public:
 	//! \return Instance.
-	static Sounds & instance();
+	static DisabledSounds & instance();
 
-	//! \return Tool window object.
-	ToolWindowObject * toolWindowObject();
+	//! \return Is sounds enabled for the given source.
+	bool isSoundsEnabled( const Como::Source & source,
+		const QString & channelName );
 
-	//! Init menu.
-	void initMenu( const Menu & menu );
+	//! Disable sound for the give source.
+	void disableSounds( const Como::Source & source,
+		const QString & channelName,
+		const QDateTime & to );
+
+	//! Enable sounds for the given source.
+	void enableSounds( const Como::Source & source,
+		const QString & channelName );
 
 	//! Read configuration.
 	void readCfg( const QString & fileName );
@@ -79,24 +95,22 @@ public:
 	//! Save configuration.
 	void saveCfg( const QString & fileName );
 
-public slots:
-	//! Play sound.
-	void playSound( Level level, const Como::Source & source,
-		const QString & channelName );
-
-protected:
-	void closeEvent( QCloseEvent * event );
+private slots:
+	//! Check if there are sounds that should be enabled.
+	void checkAndEnableIf();
+	//! Init timer.
+	void initTimer();
 
 private:
 	//! Init.
 	void init();
 
 private:
-	Q_DISABLE_COPY( Sounds )
+	Q_DISABLE_COPY( DisabledSounds )
 
-	QScopedPointer< SoundsPrivate > d;
-}; // class Sounds
+	QScopedPointer< DisabledSoundsPrivate > d;
+}; // class DisabledSounds
 
 } /* namespace Globe */
 
-#endif // GLOBE__SOUNDS_HPP__INCLUDED
+#endif // GLOBE__SOUNDS_DISABLED_HPP__INCLUDED

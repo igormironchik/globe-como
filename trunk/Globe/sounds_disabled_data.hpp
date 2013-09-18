@@ -28,11 +28,13 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__UTILS_HPP__INCLUDED
-#define GLOBE__UTILS_HPP__INCLUDED
+#ifndef GLOBE__SOUNDS_DISABLED_DATA_HPP__INCLUDED
+#define GLOBE__SOUNDS_DISABLED_DATA_HPP__INCLUDED
 
 // Qt include.
-#include <QString>
+#include <QDateTime>
+#include <QMap>
+#include <QList>
 
 // Como include.
 #include <Como/Source>
@@ -41,56 +43,59 @@
 namespace Globe {
 
 //
-// relativeFilePath
+// DisabledSoundsData
 //
 
-//! \return Path to the specified file.
-QString relativeFilePath( const QString & fileName,
-	const QString & path = QLatin1String( "./" ) );
+//! Data in the map of disabled sounds.
+class DisabledSoundsData {
+public:
+	DisabledSoundsData();
 
+	DisabledSoundsData( const Como::Source & source,
+		const QDateTime & dt );
 
-//
-// checkDirAndCreateIfNotExists
-//
+	explicit DisabledSoundsData( const Como::Source & source );
 
-//!	Checks is directory exists and create one if not.
-void checkDirAndCreateIfNotExists( const QString & path,
-	const QString & dirName );
+	DisabledSoundsData( const DisabledSoundsData & other );
 
+	DisabledSoundsData & operator = ( const DisabledSoundsData & other );
 
-//
-// checkPathAndCreateIfNotExists
-//
+	//! \return Como source.
+	Como::Source & source();
+	//! \return Como source.
+	const Como::Source & source() const;
 
-//! Checks is path exists and create one if not.
-void checkPathAndCreateIfNotExists( const QString & path );
+	//! \return Date & time.
+	QDateTime & dateTime();
+	//! \return Date & time.
+	const QDateTime & dateTime() const;
 
+	friend bool operator == ( const DisabledSoundsData & d1,
+		const DisabledSoundsData & d2 );
 
-//
-// Como source type string representation constants.
-//
-
-static const QString comoSourceIntType = QLatin1String( "int" );
-static const QString comoSourceStringType = QLatin1String( "string" );
-static const QString comoSourceDoubleType = QLatin1String( "double" );
-static const QString comoSourceUnknownType = QLatin1String( "unknown" );
-
-
-//
-// comoSourceTypeToString
-//
-
-//! Convert Como source type to string.
-QString comoSourceTypeToString( Como::Source::Type type );
+private:
+	//! Source.
+	Como::Source m_source;
+	//! Date & time.
+	QDateTime m_dt;
+}; // class DisabledSoundsData
 
 
 //
-// stringToComoSourceType
+// DisabledSoundsList
 //
 
-//! Convert string to Como source type.
-Como::Source::Type stringToComoSourceType( const QString & type );
+//! List of disabled sounds.
+typedef QList< DisabledSoundsData > DisabledSoundsList;
+
+
+//
+// DisabledSoundsMap
+//
+
+//! Map of disabled sounds.
+typedef QMap< QString, DisabledSoundsList > DisabledSoundsMap;
 
 } /* namespace Globe */
 
-#endif // GLOBE__UTILS_HPP__INCLUDED
+#endif // GLOBE__SOUNDS_DISABLED_DATA_HPP__INCLUDED

@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/properties_cfg.hpp>
+#include <Globe/utils.hpp>
 
 
 namespace Globe {
@@ -100,30 +101,6 @@ PropertiesTag::properties() const
 // PropertiesMapRecordTag
 //
 
-const QString intTypeName = QLatin1String( "int" );
-const QString doubleTypeName = QLatin1String( "double" );
-const QString stringTypeName = QLatin1String( "string" );
-
-static inline QString valueTypeToString( Como::Source::Type type )
-{
-	if( type == Como::Source::Int )
-		return intTypeName;
-	else if( type == Como::Source::Double )
-		return doubleTypeName;
-	else
-		return stringTypeName;
-}
-
-static inline Como::Source::Type valueTypeFromString( const QString & type )
-{
-	if( type == intTypeName )
-		return Como::Source::Int;
-	else if( type == doubleTypeName )
-		return Como::Source::Double;
-	else
-		return Como::Source::String;
-}
-
 PropertiesMapRecordTag::PropertiesMapRecordTag( const QString & name,
 	bool isMandatory )
 	:	QtConfFile::TagNoValue( name, isMandatory )
@@ -133,9 +110,9 @@ PropertiesMapRecordTag::PropertiesMapRecordTag( const QString & name,
 	,	m_valueType( *this, QLatin1String( "valueType" ), true )
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
-	m_valueTypeConstraint.addValue( intTypeName );
-	m_valueTypeConstraint.addValue( doubleTypeName );
-	m_valueTypeConstraint.addValue( stringTypeName );
+	m_valueTypeConstraint.addValue( comoSourceIntType );
+	m_valueTypeConstraint.addValue( comoSourceDoubleType );
+	m_valueTypeConstraint.addValue( comoSourceStringType );
 
 	m_valueType.setConstraint( &m_valueTypeConstraint );
 }
@@ -149,9 +126,9 @@ PropertiesMapRecordTag::PropertiesMapRecordTag( const PropertiesKey & key,
 	,	m_valueType( *this, QLatin1String( "valueType" ), true )
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
-	m_valueTypeConstraint.addValue( intTypeName );
-	m_valueTypeConstraint.addValue( doubleTypeName );
-	m_valueTypeConstraint.addValue( stringTypeName );
+	m_valueTypeConstraint.addValue( comoSourceIntType );
+	m_valueTypeConstraint.addValue( comoSourceDoubleType );
+	m_valueTypeConstraint.addValue( comoSourceStringType );
 
 	m_valueType.setConstraint( &m_valueTypeConstraint );
 
@@ -163,7 +140,7 @@ PropertiesMapRecordTag::PropertiesMapRecordTag( const PropertiesKey & key,
 	if( !key.channelName().isEmpty() )
 		m_channelName.setValue( key.channelName() );
 
-	m_valueType.setValue( valueTypeToString( value.valueType() ) );
+	m_valueType.setValue( comoSourceTypeToString( value.valueType() ) );
 	m_confFileName.setValue( value.confFileName() );
 
 	setDefined();
@@ -184,7 +161,7 @@ PropertiesMapRecordTag::value() const
 	Properties props;
 
 	return PropertiesValue( m_confFileName.value(),
-		valueTypeFromString( m_valueType.value() ),
+		stringToComoSourceType( m_valueType.value() ),
 		props );
 }
 

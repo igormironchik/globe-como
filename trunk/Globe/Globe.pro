@@ -60,6 +60,9 @@ HEADERS += application_cfg.hpp \
            scrolled_widget.hpp \
            sounds.hpp \
 		   sounds_cfg.hpp \
+		   sounds_disabled.hpp \
+		   sounds_disabled_cfg.hpp \
+		   sounds_disabled_data.hpp \
 		   sounds_disabled_model.hpp \
 		   sounds_disabled_view.hpp \
 		   sounds_played_model.hpp \
@@ -125,6 +128,9 @@ SOURCES += application_cfg.cpp \
            scrolled_widget.cpp \
            sounds.cpp \
 		   sounds_cfg.cpp \
+		   sounds_disabled.cpp \
+		   sounds_disabled_cfg.cpp \
+		   sounds_disabled_data.cpp \
 		   sounds_disabled_model.cpp \
 		   sounds_disabled_view.cpp \
 		   sounds_played_model.cpp \

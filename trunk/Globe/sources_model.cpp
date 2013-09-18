@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/sources_model.hpp>
+#include <Globe/utils.hpp>
 
 // Qt include.
 #include <QList>
@@ -123,22 +124,6 @@ SourcesModel::columnCount( const QModelIndex & parent ) const
 	return 3;
 }
 
-static const QString intValueType = QLatin1String( "int" );
-static const QString doubleValueType = QLatin1String( "double" );
-static const QString stringValueType = QLatin1String( "string" );
-static const QString unknownValueType = QLatin1String( "unknown" );
-
-static inline QString valueTypeToString( Como::Source::Type type )
-{
-	switch( type )
-	{
-		case Como::Source::Int : return intValueType;
-		case Como::Source::Double : return doubleValueType;
-		case Como::Source::String : return stringValueType;
-		default : return unknownValueType;
-	}
-}
-
 QVariant
 SourcesModel::data( const QModelIndex & index, int role ) const
 {
@@ -153,7 +138,7 @@ SourcesModel::data( const QModelIndex & index, int role ) const
 			case sourceTypeNameColumn :
 				return d->m_data[ index.row() ].typeName();
 			case valueTypeColumn :
-				return valueTypeToString( d->m_data[ index.row() ].type() );
+				return comoSourceTypeToString( d->m_data[ index.row() ].type() );
 			default :
 				return QVariant();
 		}
@@ -192,16 +177,6 @@ SourcesModel::removeRows( int row, int count, const QModelIndex & parent )
 	return true;
 }
 
-static inline Como::Source::Type valueTypeFromString( const QString & type )
-{
-	if( type == intValueType )
-		return Como::Source::Int;
-	else if( type == doubleValueType )
-		return Como::Source::Double;
-	else
-		return Como::Source::String;
-}
-
 bool
 SourcesModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
@@ -217,7 +192,7 @@ SourcesModel::setData( const QModelIndex & index, const QVariant & value, int ro
 			case sourceTypeNameColumn :
 				d->m_data[ row ].setTypeName( value.toString() ); break;
 			case valueTypeColumn :
-				d->m_data[ row ].setType( valueTypeFromString(
+				d->m_data[ row ].setType( stringToComoSourceType(
 					value.toString() ) ); break;
 		}
 	}

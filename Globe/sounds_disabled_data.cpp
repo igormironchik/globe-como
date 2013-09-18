@@ -29,83 +29,77 @@
 */
 
 // Globe include.
-#include <Globe/utils.hpp>
-
-//  Globe include.
-#include <QWidget>
-#include <QDir>
+#include <Globe/sounds_disabled_data.hpp>
 
 
 namespace Globe {
 
 //
-// relativeFilePath
+// DisabledSoundsData
 //
 
-QString relativeFilePath( const QString & fileName, const QString & path )
+DisabledSoundsData::DisabledSoundsData()
 {
-	static QDir dir( path );
-
-	return dir.relativeFilePath( fileName );
 }
 
-
-//
-// checkDirAndCreateIfNotExists
-//
-
-void checkDirAndCreateIfNotExists( const QString & path,
-	const QString & dirName )
+DisabledSoundsData::DisabledSoundsData( const Como::Source & source,
+	const QDateTime & dt )
+	:	m_source( source )
+	,	m_dt( dt )
 {
-	QDir dir( path );
-
-	if( !dir.exists( dirName ) )
-		dir.mkdir( dirName );
 }
 
-
-//
-// checkPathAndCreateIfNotExists
-//
-
-void checkPathAndCreateIfNotExists( const QString & path )
+DisabledSoundsData::DisabledSoundsData( const Como::Source & source )
+	:	m_source( source )
 {
-	QDir dir( QLatin1String( "." ) );
-
-	dir.mkpath( path );
 }
 
-
-//
-// comoSourceTypeToString
-//
-
-QString comoSourceTypeToString( Como::Source::Type type )
+DisabledSoundsData::DisabledSoundsData( const DisabledSoundsData & other )
+	:	m_source( other.m_source )
+	,	m_dt( other.m_dt )
 {
-	switch( type )
+}
+
+DisabledSoundsData &
+DisabledSoundsData::operator = ( const DisabledSoundsData & other )
+{
+	if( this != &other )
 	{
-		case Como::Source::Int : return comoSourceIntType;
-		case Como::Source::String : return comoSourceStringType;
-		case Como::Source::Double : return comoSourceDoubleType;
-		default : return comoSourceUnknownType;
+		m_source = other.m_source;
+		m_dt = other.m_dt;
 	}
+
+	return *this;
 }
 
-
-//
-// stringToComoSourceType
-//
-
-Como::Source::Type stringToComoSourceType( const QString & type )
+Como::Source &
+DisabledSoundsData::source()
 {
-	if( type == comoSourceIntType )
-		return Como::Source::Int;
-	else if( type == comoSourceStringType )
-		return Como::Source::String;
-	else if( type == comoSourceDoubleType )
-		return Como::Source::Double;
-	else
-		return Como::Source::String;
+	return m_source;
+}
+
+const Como::Source &
+DisabledSoundsData::source() const
+{
+	return m_source;
+}
+
+QDateTime &
+DisabledSoundsData::dateTime()
+{
+	return m_dt;
+}
+
+const QDateTime &
+DisabledSoundsData::dateTime() const
+{
+	return m_dt;
+}
+
+bool operator == ( const DisabledSoundsData & d1,
+	const DisabledSoundsData & d2 )
+{
+	return ( d1.m_source == d2.m_source );
 }
 
 } /* namespace Globe */

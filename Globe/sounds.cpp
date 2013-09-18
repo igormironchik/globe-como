@@ -32,6 +32,7 @@
 #include <Globe/sounds.hpp>
 #include <Globe/globe_menu.hpp>
 #include <Globe/tool_window_object.hpp>
+#include <Globe/sounds_disabled.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -50,11 +51,14 @@ class SoundsPrivate {
 public:
 	SoundsPrivate()
 		:	m_toolWindowObject( 0 )
+		,	m_level( None )
 	{
 	}
 
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
+	//! Level of the current sound.
+	Level m_level;
 }; // class SoundsPrivate
 
 
@@ -102,9 +106,25 @@ Sounds::initMenu( const Menu & menu )
 }
 
 void
-Sounds::playSound( Level level, const Como::Source & source )
+Sounds::readCfg( const QString & fileName )
 {
 
+}
+
+void
+Sounds::saveCfg( const QString & fileName )
+{
+
+}
+
+void
+Sounds::playSound( Level level, const Como::Source & source,
+	const QString & channelName )
+{
+	if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
+	{
+
+	}
 }
 
 void

@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/properties_model.hpp>
+#include <Globe/utils.hpp>
 
 // Qt include.
 #include <QList>
@@ -207,22 +208,6 @@ PropertiesModel::columnCount( const QModelIndex & parent ) const
 	return 5;
 }
 
-static const QString intValueType = QLatin1String( "int" );
-static const QString doubleValueType = QLatin1String( "double" );
-static const QString stringValueType = QLatin1String( "string" );
-static const QString unknownValueType = QLatin1String( "unknown" );
-
-static inline QString valueTypeToString( Como::Source::Type type )
-{
-	switch( type )
-	{
-		case Como::Source::Int : return intValueType;
-		case Como::Source::Double : return doubleValueType;
-		case Como::Source::String : return stringValueType;
-		default : return unknownValueType;
-	}
-}
-
 QVariant
 PropertiesModel::data( const QModelIndex & index, int role ) const
 {
@@ -243,7 +228,7 @@ PropertiesModel::data( const QModelIndex & index, int role ) const
 				return ( d->m_data[ index.row() ].m_channelName.isEmpty() ?
 					anyNameOrChannel : d->m_data[ index.row() ].m_channelName );
 			case valueTypeColumn :
-				return valueTypeToString( d->m_data[ index.row() ].m_valueType );
+				return comoSourceTypeToString( d->m_data[ index.row() ].m_valueType );
 			case confFileColumn :
 				return d->m_data[ index.row() ].m_confFileName;
 			default :
@@ -284,16 +269,6 @@ PropertiesModel::removeRows( int row, int count, const QModelIndex & parent )
 	return true;
 }
 
-static inline Como::Source::Type valueTypeFromString( const QString & type )
-{
-	if( type == intValueType )
-		return Como::Source::Int;
-	else if( type == doubleValueType )
-		return Como::Source::Double;
-	else
-		return Como::Source::String;
-}
-
 bool
 PropertiesModel::setData( const QModelIndex & index, const QVariant & value, int role )
 {
@@ -311,7 +286,7 @@ PropertiesModel::setData( const QModelIndex & index, const QVariant & value, int
 			case channelNameColumn :
 				d->m_data[ row ].m_channelName = value.toString(); break;
 			case valueTypeColumn :
-				d->m_data[ row ].m_valueType = valueTypeFromString(
+				d->m_data[ row ].m_valueType = stringToComoSourceType(
 					value.toString() ); break;
 			case confFileColumn :
 				d->m_data[ row ].m_confFileName = value.toString(); break;

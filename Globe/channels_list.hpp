@@ -42,8 +42,6 @@
 namespace Globe {
 
 class Channel;
-class ChannelsManager;
-class MainWindow;
 
 
 class ChannelsListPrivate;
@@ -63,12 +61,11 @@ class ChannelsList
 	Q_OBJECT
 
 public:
-	ChannelsList( MainWindow * mainWindow,
-		ChannelsManager * channelsManager,
-		ShownChannels shownChannels = ShowAll,
+	ChannelsList( ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder,
 		QWidget * parent = 0,
 		Qt::WindowFlags f = 0 );
+
 	~ChannelsList();
 
 	//! Add channel.

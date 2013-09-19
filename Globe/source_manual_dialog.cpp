@@ -47,10 +47,9 @@ namespace Globe {
 class SourceManualDialogPrivate {
 public:
 	SourceManualDialogPrivate( Como::Source & source,
-		QString & channelName, SourcesManager * sourcesManager )
+		QString & channelName )
 		:	m_source( source )
 		,	m_channelName( channelName )
-		,	m_sourcesManager( sourcesManager )
 		,	m_wasChannelSet( false )
 		,	m_wasNameSet( false )
 		,	m_wasTypeSet( false )
@@ -72,8 +71,6 @@ public:
 	QString & m_channelName;
 	//! Ui.
 	Ui::SourceManualDialog m_ui;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
 	//! Was channel set?
 	bool m_wasChannelSet;
 	//! Was name set?
@@ -88,10 +85,9 @@ public:
 //
 
 SourceManualDialog::SourceManualDialog( Como::Source & source,
-	QString & channelName, SourcesManager * sourcesManager,
-	QWidget * parent, Qt::WindowFlags f )
+	QString & channelName, QWidget * parent, Qt::WindowFlags f )
 	:	QDialog( parent, f )
-	,	d( new SourceManualDialogPrivate( source, channelName, sourcesManager ) )
+	,	d( new SourceManualDialogPrivate( source, channelName ) )
 {
 	init();
 }
@@ -118,7 +114,7 @@ SourceManualDialog::init()
 	connect( d->m_ui.m_typeName, SIGNAL( textChanged( const QString & ) ),
 		this, SLOT( typeWasSet( const QString & ) ) );
 
-	foreach( const QString & channelName, d->m_sourcesManager->channelsNames() )
+	foreach( const QString & channelName, SourcesManager::instance().channelsNames() )
 		d->m_ui.m_channel->addItem( channelName );
 }
 

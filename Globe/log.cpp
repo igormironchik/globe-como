@@ -137,11 +137,9 @@ public:
 class LogPrivate {
 public:
 	LogPrivate()
-		:	m_db( 0 )
-		,	m_dbState( UnknownDBState )
+		:	m_dbState( UnknownDBState )
 		,	m_logState( UninitializedLogState )
 		,	m_timer( 0 )
-		,	m_mainWindow( 0 )
 	{
 	}
 
@@ -149,8 +147,6 @@ public:
 	{
 	}
 
-	//! Database.
-	DB * m_db;
 	//! State of the DB.
 	DBSTate m_dbState;
 	//! Configuration.
@@ -161,8 +157,6 @@ public:
 	QVector< EventLogRecord > m_deferredEventMessages;
 	//! Timer.
 	QTimer * m_timer;
-	//! Main window.
-	MainWindow * m_mainWindow;
 }; // class LogPrivate
 
 
@@ -264,6 +258,9 @@ Log::privateInit()
 
 	connect( d->m_timer, SIGNAL( timeout() ),
 		this, SLOT( eraseSourcesLog() ) );
+
+	connect( &DB::instance(), SIGNAL( ready() ), this, SLOT( dbReady() ) );
+	connect( &DB::instance(), SIGNAL( error() ), this, SLOT( dbError() ) );
 }
 
 Log &
@@ -272,27 +269,6 @@ Log::instance()
 	static Log log;
 
 	return log;
-}
-
-void
-Log::setDb( DB * db )
-{
-	if( db )
-	{
-		if( d->m_db )
-			disconnect( d->m_db, 0, 0, 0 );
-
-		d->m_dbState = UnknownDBState;
-		d->m_logState = UninitializedLogState;
-
-		d->m_db = db;
-
-		connect( d->m_db, SIGNAL( ready() ), this, SLOT( dbReady() ) );
-		connect( d->m_db, SIGNAL( error() ), this, SLOT( dbError() ) );
-
-		if( d->m_db->isReady() )
-			d->m_dbState = AllIsOkDBState;
-	}
 }
 
 void
@@ -918,10 +894,20 @@ Log::readCfg( const QString & fileName )
 	try {
 		QtConfFile::readQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		writeMsgToEventLog( LogLevelInfo, QString(
+			"Log configuration read from file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
-		QMessageBox::critical( d->m_mainWindow,
+		writeMsgToEventLog( LogLevelError, QString(
+			"Unable to read log configuration from file \"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to read log configuration..." ),
 			x.whatAsQString() );
 
@@ -946,10 +932,20 @@ Log::saveCfg( const QString & fileName )
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );
+
+		writeMsgToEventLog( LogLevelInfo, QString(
+			"Log configuration saved to file \"%1\"." )
+				.arg( fileName ) );
 	}
 	catch( const QtConfFile::Exception & x )
 	{
-		QMessageBox::critical( d->m_mainWindow,
+		writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save log configuration to file \"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to save log configuration..." ),
 			x.whatAsQString() );
 	}
@@ -1053,12 +1049,6 @@ void
 Log::dbError()
 {
 	d->m_dbState = ErrorInDBState;
-}
-
-void
-Log::setMainWindow( MainWindow * mainWindow )
-{
-	d->m_mainWindow = mainWindow;
 }
 
 } /* namespace Globe */

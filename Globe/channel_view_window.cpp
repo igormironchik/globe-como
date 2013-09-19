@@ -54,17 +54,8 @@ namespace Globe {
 
 class ChannelViewWindowPrivate {
 public:
-	ChannelViewWindowPrivate( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		MainWindow * mainWindow,
-		ColorForLevel * colorForLevel )
+	ChannelViewWindowPrivate()
 		:	m_view( 0 )
-		,	m_propertiesManager( propertiesManager )
-		,	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
-		,	m_mainWindow( mainWindow )
-		,	m_colorForLevel( colorForLevel )
 	{
 	}
 
@@ -72,16 +63,6 @@ public:
 	ChannelView * m_view;
 	//! Channel's name.
 	QString m_channelName;
-	//! Properties manager.
-	PropertiesManager * m_propertiesManager;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
-	//! Main window.
-	MainWindow * m_mainWindow;
-	//! Correspondence between level and color.
-	ColorForLevel * m_colorForLevel;
 }; // class ChannelViewWindowPrivate
 
 
@@ -89,15 +70,9 @@ public:
 // ChannelViewWindow
 //
 
-ChannelViewWindow::ChannelViewWindow( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		MainWindow * mainWindow,
-		ColorForLevel * colorForLevel,
-		QWidget * parent, Qt::WindowFlags flags )
+ChannelViewWindow::ChannelViewWindow( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new ChannelViewWindowPrivate( propertiesManager, sourcesManager,
-			channelsManager, mainWindow, colorForLevel ) )
+	,	d( new ChannelViewWindowPrivate )
 {
 	init();
 }
@@ -115,7 +90,7 @@ ChannelViewWindow::channel() const
 bool
 ChannelViewWindow::setChannel( const QString & channelName )
 {
-	Channel * channel = d->m_channelsManager->channelByName( channelName );
+	Channel * channel = ChannelsManager::instance().channelByName( channelName );
 
 	if( channel )
 	{
@@ -250,9 +225,7 @@ ChannelViewWindow::setWindowCfg( const ChannelViewWindowCfg & c )
 void
 ChannelViewWindow::init()
 {
-	d->m_view = new ChannelView( d->m_propertiesManager,
-		d->m_sourcesManager, d->m_channelsManager,
-		d->m_colorForLevel, this );
+	d->m_view = new ChannelView( this );
 
 	setCentralWidget( d->m_view );
 
@@ -283,7 +256,7 @@ ChannelViewWindow::closeEvent( QCloseEvent * event )
 {
 	event->accept();
 
-	d->m_mainWindow->channelViewWindowClosed( this );
+	MainWindow::instance().channelViewWindowClosed( this );
 }
 
 } /* namespace Globe */

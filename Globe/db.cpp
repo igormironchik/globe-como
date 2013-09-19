@@ -57,7 +57,6 @@ class DBPrivate {
 public:
 	DBPrivate()
 		:	m_isReady( false )
-		,	m_mainWindow( 0 )
 	{
 	}
 
@@ -65,8 +64,6 @@ public:
 	bool m_isReady;
 	//! Connection.
 	QSqlDatabase m_connection;
-	//! Main window.
-	MainWindow * m_mainWindow;
 	//! File name of the DB file.
 	QString m_dbFileName;
 }; // class DBPrivate
@@ -85,6 +82,14 @@ DB::DB( QObject * parent )
 DB::~DB()
 {
 	d->m_connection.close();
+}
+
+DB &
+DB::instance()
+{
+	static DB inst;
+
+	return inst;
 }
 
 bool
@@ -132,7 +137,7 @@ DB::readCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( d->m_mainWindow,
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to read DB configuration..." ),
 			QString( "%1\n"
 				"Default database will be used: \"%2\"." )
@@ -173,16 +178,10 @@ DB::saveCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( d->m_mainWindow,
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to save DB configuration..." ),
 			x.whatAsQString() );
 	}
-}
-
-void
-DB::setMainWindow( MainWindow * mainWindow )
-{
-	d->m_mainWindow = mainWindow;
 }
 
 void

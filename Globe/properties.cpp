@@ -355,14 +355,11 @@ static const QString defaultConfigurationDirectory =
 
 class PropertiesManagerPrivate {
 public:
-	PropertiesManagerPrivate(SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager )
+	PropertiesManagerPrivate()
 		:	m_model( 0 )
 		,	m_sortModel( 0 )
 		,	m_directoryName( defaultConfigurationDirectory )
 		,	m_toolWindowObject( 0 )
-		,	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
 	{
 	}
 
@@ -438,10 +435,6 @@ public:
 	QSortFilterProxyModel * m_sortModel;
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 }; // class PropertiesManagerPrivate
 
 
@@ -449,17 +442,23 @@ public:
 // PropertiesManager
 //
 
-PropertiesManager::PropertiesManager( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent, Qt::WindowFlags flags )
+PropertiesManager::PropertiesManager( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new PropertiesManagerPrivate( sourcesManager, channelsManager ) )
+	,	d( new PropertiesManagerPrivate )
 {
 	init();
 }
 
 PropertiesManager::~PropertiesManager()
 {
+}
+
+PropertiesManager &
+PropertiesManager::instance()
+{
+	static PropertiesManager inst;
+
+	return inst;
 }
 
 void
@@ -1036,8 +1035,7 @@ PropertiesManager::addProperties()
 	Como::Source source;
 	QString channelName;
 
-	SourcesDialog sourcesDialog( source, channelName, d->m_sourcesManager,
-		d->m_channelsManager, this );
+	SourcesDialog sourcesDialog( source, channelName, this );
 
 	if( sourcesDialog.exec() == QDialog::Accepted )
 		addProperties( source, channelName );

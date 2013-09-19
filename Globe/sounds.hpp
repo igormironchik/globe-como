@@ -45,6 +45,9 @@
 
 namespace Globe {
 
+class MainWindow;
+
+
 //
 // Sounds
 //

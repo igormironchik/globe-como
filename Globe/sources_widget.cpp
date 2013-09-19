@@ -50,19 +50,12 @@ namespace Globe {
 
 class SourcesWidgetPrivate {
 public:
-	explicit SourcesWidgetPrivate( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager )
-		:	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
-		,	m_model( 0 )
+	SourcesWidgetPrivate()
+		:	m_model( 0 )
 		,	m_sortModel( 0 )
 	{
 	}
 
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! Ui.
 	Ui::SourcesWidget m_ui;
 	//! Model.
@@ -76,11 +69,9 @@ public:
 // SourcesWidget
 //
 
-SourcesWidget::SourcesWidget( SourcesManager * sourcesManager,
-	ChannelsManager * channelsManager,
-	QWidget * parent, Qt::WindowFlags f )
+SourcesWidget::SourcesWidget( QWidget * parent, Qt::WindowFlags f )
 	:	QWidget( parent, f )
-	,	d( new SourcesWidgetPrivate( sourcesManager, channelsManager ) )
+	,	d( new SourcesWidgetPrivate )
 {
 	init();
 }
@@ -100,14 +91,14 @@ SourcesWidget::init()
 
 	d->m_ui.m_channel->setInsertPolicy( QComboBox::InsertAlphabetically );
 
-	connect( d->m_sourcesManager,
+	connect( &SourcesManager::instance(),
 		SIGNAL( newSource( const Como::Source &, const QString & ) ),
 		this, SLOT( newSource( const Como::Source &, const QString & ) ) );
 
-	connect( d->m_channelsManager, SIGNAL( channelCreated( Channel * ) ),
+	connect( &ChannelsManager::instance(), SIGNAL( channelCreated( Channel * ) ),
 		this, SLOT( channelCreated( Channel * ) ) );
 
-	connect( d->m_channelsManager, SIGNAL( channelRemoved( Channel * ) ),
+	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel * ) ),
 		this, SLOT( channelRemoved( Channel * ) ) );
 
 	connect( d->m_ui.m_channel, SIGNAL( currentIndexChanged( const QString & ) ),
@@ -116,7 +107,7 @@ SourcesWidget::init()
 	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
 		this, SLOT( itemActivated( const QModelIndex & ) ) );
 
-	foreach( const QString & channelName, d->m_sourcesManager->channelsNames() )
+	foreach( const QString & channelName, SourcesManager::instance().channelsNames() )
 		d->m_ui.m_channel->addItem( channelName );
 }
 
@@ -133,12 +124,6 @@ SourcesWidget::setChannelName( const QString & channelName )
 
 	if( index != -1 )
 		d->m_ui.m_channel->setCurrentIndex( index );
-}
-
-void
-SourcesWidget::setPropertiesManager( PropertiesManager * propertiesManager )
-{
-	d->m_ui.m_view->setPropertiesManager( propertiesManager );
 }
 
 void
@@ -177,7 +162,7 @@ SourcesWidget::selectChannel( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
 	{
-		d->m_model->initModel( d->m_sourcesManager->sources( channelName ) );
+		d->m_model->initModel( SourcesManager::instance().sources( channelName ) );
 		d->m_ui.m_view->setChannelName( channelName );
 
 		emit channelSelected( channelName );

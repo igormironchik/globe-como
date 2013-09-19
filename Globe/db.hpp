@@ -39,7 +39,6 @@
 
 namespace Globe {
 
-class MainWindow;
 class DBCfg;
 
 
@@ -61,10 +60,14 @@ signals:
 	//! Error with DB.
 	void error();
 
-public:
+private:
 	DB( QObject * parent = 0 );
 
 	~DB();
+
+public:
+	//! \return Instance.
+	static DB & instance();
 
 	//! \return Is DB ready?
 	bool isReady() const;
@@ -75,17 +78,10 @@ public:
 	//! Set configuration of the DB.
 	void setCfg( const DBCfg & cfg );
 
-protected:
-	friend class Configuration;
-	friend class MainWindow;
-
 	//! Read configuration.
 	void readCfg( const QString & fileName );
 	//! Write configuration.
 	void saveCfg( const QString & fileName );
-
-	//! Set pointer to the main window.
-	void setMainWindow( MainWindow * mainWindow );
 
 private:
 	//! Init DB.

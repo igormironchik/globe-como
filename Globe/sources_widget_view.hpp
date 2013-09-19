@@ -42,7 +42,6 @@ QT_END_NAMESPACE
 
 namespace Globe {
 
-class PropertiesManager;
 class SourcesModel;
 
 //
@@ -61,8 +60,6 @@ public:
 	SourcesWidgetView( QWidget * parent = 0 );
 	~SourcesWidgetView();
 
-	//! Set properties manager.
-	void setPropertiesManager( PropertiesManager * propertiesManager );
 	//! Set sources model.
 	void setSourcesAndSortModels( SourcesModel * model,
 		QSortFilterProxyModel * proxyModel );

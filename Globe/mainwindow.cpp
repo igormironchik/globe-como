@@ -33,18 +33,16 @@
 #include <Globe/channels_list.hpp>
 #include <Globe/tool_window_object.hpp>
 #include <Globe/configuration.hpp>
-#include <Globe/properties.hpp>
-#include <Globe/sources_mainwindow.hpp>
-#include <Globe/sources.hpp>
 #include <Globe/scrolled_widget.hpp>
 #include <Globe/channel_view_window.hpp>
 #include <Globe/channel_name_dialog.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/db.hpp>
 #include <Globe/log.hpp>
 #include <Globe/configuration_dialog.hpp>
-#include <Globe/log_event_view_window.hpp>
 #include <Globe/globe_menu.hpp>
+#include <Globe/properties.hpp>
+#include <Globe/sources_mainwindow.hpp>
+#include <Globe/log_event_view_window.hpp>
+#include <Globe/sources.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -62,24 +60,9 @@ namespace Globe {
 
 class MainWindowPrivate {
 public:
-	MainWindowPrivate( const QString & cfgFileName,
-		MainWindow * mainWindow,
-		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow,
-		SourcesManager * sourcesManager,
-		LogEventWindow * logEventWindow )
-		:	m_channelsManager( channelsManager )
-		,	m_db( db )
-		,	m_list( 0 )
-		,	m_propertiesManager( propertiesManager )
-		,	m_sourcesMainWindow( sourcesMainWindow )
-		,	m_sourcesManager( sourcesManager )
-		,	m_logEventWindow( logEventWindow )
+	MainWindowPrivate()
+		:	m_list( 0 )
 		,	m_cfgWasSaved( false )
-		,	m_cfg( cfgFileName, mainWindow, channelsManager,
-				db, propertiesManager, sourcesMainWindow,
-				logEventWindow )
 		,	m_confDialog( 0 )
 	{
 	}
@@ -94,24 +77,10 @@ public:
 		return 0;
 	}
 
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
-	//! Database.
-	DB * m_db;
 	//! List with channels.
 	ChannelsList * m_list;
-	//! Properties manager.
-	PropertiesManager * m_propertiesManager;
-	//! Sources main window.
-	SourcesMainWindow * m_sourcesMainWindow;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Event's log window.
-	LogEventWindow * m_logEventWindow;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
-	//! Configuration.
-	Configuration m_cfg;
 	//! Channel view windows.
 	QList< ChannelViewWindow* > m_channelViewWindows;
 	//! Map of the channel view windows configuration.
@@ -127,24 +96,22 @@ public:
 // MainWindow
 //
 
-MainWindow::MainWindow( const QString & cfgFileName,
-	ChannelsManager * channelsManager, DB * db,
-	PropertiesManager * propertiesManager,
-	SourcesMainWindow * sourcesMainWindow,
-	SourcesManager * sourcesManager,
-	LogEventWindow * logEventWindow,
-	const QList< ToolWindowObject* > & toolWindows,
-	QWidget * parent, Qt::WindowFlags flags )
+MainWindow::MainWindow( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new MainWindowPrivate( cfgFileName, this, channelsManager, db,
-			propertiesManager, sourcesMainWindow, sourcesManager,
-			logEventWindow ) )
+	,	d( new MainWindowPrivate )
 {
-	init( toolWindows );
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+MainWindow &
+MainWindow::instance()
+{
+	static MainWindow inst;
+
+	return inst;
 }
 
 ChannelsList *
@@ -174,9 +141,6 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
-	foreach( ToolWindowObject * obj, d->m_menu.toolWindows() )
-		toolsMenu->addAction( obj->menuEntity() );
-
 	QMenu * settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
 
 	settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
@@ -184,31 +148,28 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 
 	d->m_menu = Menu( fileMenu, settingsMenu, toolWindows );
 
-	d->m_confDialog = new ConfigurationDialog( d->m_cfg.colorForLevel(),
-		this );
+	foreach( ToolWindowObject * obj, d->m_menu.toolWindows() )
+		toolsMenu->addAction( obj->menuEntity() );
+
+	d->m_confDialog = new ConfigurationDialog( this );
 
 	ScrolledView * area = new ScrolledView( this );
 
-	d->m_list = new ChannelsList( this, d->m_channelsManager,
-		ShowAll, Qt::AscendingOrder, this );
+	d->m_list = new ChannelsList( ShowAll, Qt::AscendingOrder, this );
 
 	area->setWidget( d->m_list );
 
 	setCentralWidget( area );
 
-	d->m_propertiesManager->initMenu( d->m_menu );
-	d->m_sourcesMainWindow->initMenu( d->m_menu );
-	d->m_logEventWindow->initMenu( d->m_menu );
-
-	d->m_db->setMainWindow( this );
-
-	Log::instance().setMainWindow( this );
+	PropertiesManager::instance().initMenu( d->m_menu );
+	SourcesMainWindow::instance().initMenu( d->m_menu );
+	LogEventWindow::instance().initMenu( d->m_menu );
 }
 
 void
 MainWindow::start()
 {
-	d->m_cfg.loadConfiguration();
+	Configuration::instance().loadConfiguration();
 
 	d->m_confDialog->initUiWithSettings();
 
@@ -248,9 +209,7 @@ MainWindow::showChannelView( const QString & channelName )
 	}
 	else
 	{
-		window = new ChannelViewWindow( d->m_propertiesManager,
-			d->m_sourcesManager, d->m_channelsManager, this,
-			d->m_cfg.colorForLevel() );
+		window = new ChannelViewWindow;
 
 		window->initMenu( d->m_menu );
 
@@ -323,7 +282,7 @@ MainWindow::newChannelView()
 {
 	QString channel;
 
-	ChannelNameDialog dlg( channel, d->m_sourcesManager->channelsNames(),
+	ChannelNameDialog dlg( channel, SourcesManager::instance().channelsNames(),
 		this );
 
 	if( QDialog::Accepted == dlg.exec() )
@@ -343,7 +302,7 @@ MainWindow::saveConfiguration()
 {
 	if( !d->m_cfgWasSaved )
 	{
-		d->m_cfg.saveConfiguration();
+		Configuration::instance().saveConfiguration();
 
 		d->m_cfgWasSaved = true;
 	}

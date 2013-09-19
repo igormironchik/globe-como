@@ -42,9 +42,6 @@
 
 namespace Globe {
 
-class ToolWindowObject;
-
-
 //
 // LogEventWindow
 //
@@ -58,10 +55,14 @@ class LogEventWindow
 {
 	Q_OBJECT
 
-public:
+private:
 	LogEventWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~LogEventWindow();
+
+public:
+	//! \return Instance.
+	static LogEventWindow & instance();
 
 	//! \return Tool window object.
 	ToolWindowObject * toolWindowObject();

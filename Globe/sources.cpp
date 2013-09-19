@@ -117,8 +117,7 @@ bool operator == ( const MapValue & v1, const MapValue & v2 )
 
 class SourcesManagerPrivate {
 public:
-	SourcesManagerPrivate( ChannelsManager * channelsManager )
-		:	m_channelsManager( channelsManager )
+	SourcesManagerPrivate( )
 	{
 	}
 
@@ -175,8 +174,6 @@ public:
 		return result;
 	}
 
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! Map of registered sources.
 	QMap< QString, QList< MapValue > > m_map;
 }; // class SourcesManagerPrivate
@@ -186,19 +183,26 @@ public:
 // SourcesManager.
 //
 
-SourcesManager::SourcesManager( ChannelsManager * channelsManager,
-	QObject * parent )
+SourcesManager::SourcesManager( QObject * parent )
 	:	QObject( parent )
-	,	d( new SourcesManagerPrivate( channelsManager ) )
+	,	d( new SourcesManagerPrivate )
 {
-	connect( channelsManager, SIGNAL( channelCreated( Channel * ) ),
+	connect( &ChannelsManager::instance(), SIGNAL( channelCreated( Channel * ) ),
 		this, SLOT( channelCreated( Channel * ) ) );
-	connect( channelsManager, SIGNAL( channelRemoved( Channel * ) ),
+	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel * ) ),
 		this, SLOT( channelRemoved( Channel * ) ) );
 }
 
 SourcesManager::~SourcesManager()
 {
+}
+
+SourcesManager &
+SourcesManager::instance()
+{
+	static SourcesManager inst;
+
+	return inst;
 }
 
 QList< QString >

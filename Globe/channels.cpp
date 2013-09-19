@@ -30,7 +30,6 @@
 
 // Globe include.
 #include <Globe/channels.hpp>
-#include <Globe/db.hpp>
 #include <Globe/log.hpp>
 
 // Como include.
@@ -56,11 +55,10 @@ public:
 	ChannelPrivate( QObject * parent,
 		const QString & name,
 		const QHostAddress & address,
-		quint16 port, DB * db )
+		quint16 port )
 		:	m_name( name )
 		,	m_address( address )
 		,	m_port( port )
-		,	m_db( db )
 		,	m_socket( new Como::ClientSocket( parent ) )
 		,	m_rateTimer( new QTimer( parent ) )
 		,	m_updateTimeout( 0 )
@@ -76,8 +74,6 @@ public:
 	QHostAddress m_address;
 	//! Port.
 	quint16 m_port;
-	//! Database.
-	DB * m_db;
 	//! Socket implemetation.
 	Como::ClientSocket * m_socket;
 	//! Timer for updating messages rate per second.
@@ -104,8 +100,8 @@ public:
 //
 
 Channel::Channel( const QString & name,
-	const QHostAddress & address, quint16 port, DB * db )
-	:	d( new ChannelPrivate( this, name, address, port, db ) )
+	const QHostAddress & address, quint16 port )
+	:	d( new ChannelPrivate( this, name, address, port ) )
 {
 	setObjectName( QString( "Channel" ) );
 
@@ -447,12 +443,10 @@ private:
 
 class ChannelsManagerPrivate {
 public:
-	explicit ChannelsManagerPrivate( DB * db )
-		:	m_db( db )
-	{}
+	ChannelsManagerPrivate()
+	{
+	}
 
-	//! Database.
-	DB * m_db;
 	//! Channels.
 	QMap< QString, ChannelAndThread > m_channels;
 }; // class ChannelsManager::ChannelsManagerPrivate
@@ -462,8 +456,8 @@ public:
 // ChannelsManager
 //
 
-ChannelsManager::ChannelsManager( DB * db )
-	:	d( new ChannelsManagerPrivate( db ) )
+ChannelsManager::ChannelsManager()
+	:	d( new ChannelsManagerPrivate )
 {
 }
 
@@ -479,6 +473,13 @@ ChannelsManager::~ChannelsManager()
 	}
 }
 
+ChannelsManager &
+ChannelsManager::instance()
+{
+	static ChannelsManager inst;
+
+	return inst;
+}
 
 Channel *
 ChannelsManager::channelByName( const QString & name ) const
@@ -506,7 +507,7 @@ ChannelsManager::createChannel(	const QString & name,
 	}
 	else if( isAddressAndPortUnique( hostAddress, port ) )
 	{
-		ch = new Channel( name, hostAddress, port, d->m_db );
+		ch = new Channel( name, hostAddress, port );
 
 		QThread * thread = new QThread( this );
 		ch->moveToThread( thread );

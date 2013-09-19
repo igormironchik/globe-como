@@ -56,19 +56,12 @@ namespace Globe {
 
 class SourcesMainWindowPrivate {
 public:
-	SourcesMainWindowPrivate( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager )
-		:	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
-		,	m_toolWindowObject( 0 )
+	SourcesMainWindowPrivate()
+		:	m_toolWindowObject( 0 )
 		,	m_widget( 0 )
 	{
 	}
 
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
 	//! Sources widget.
@@ -80,17 +73,23 @@ public:
 // SourcesMainWindow
 //
 
-SourcesMainWindow::SourcesMainWindow( SourcesManager * sourcesManager,
-	ChannelsManager * channelsManager,
-	QWidget * parent, Qt::WindowFlags flags )
+SourcesMainWindow::SourcesMainWindow( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new SourcesMainWindowPrivate( sourcesManager, channelsManager ) )
+	,	d( new SourcesMainWindowPrivate )
 {
 	init();
 }
 
 SourcesMainWindow::~SourcesMainWindow()
 {
+}
+
+SourcesMainWindow &
+SourcesMainWindow::instance()
+{
+	static SourcesMainWindow inst;
+
+	return inst;
 }
 
 ToolWindowObject *
@@ -129,8 +128,7 @@ SourcesMainWindow::init()
 	QAction * showAction = new QAction( tr( "&Sources" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
-	d->m_widget = new SourcesWidget( d->m_sourcesManager, d->m_channelsManager,
-		this );
+	d->m_widget = new SourcesWidget( this );
 
 	setCentralWidget( d->m_widget );
 }
@@ -196,12 +194,6 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 	d->m_widget->setChannelName( tag.channelName() );
 
 	restoreWindowState( tag.windowState(), this );
-}
-
-void
-SourcesMainWindow::setPropertiesManager( PropertiesManager * propertiesManager )
-{
-	d->m_widget->setPropertiesManager( propertiesManager );
 }
 
 } /* namespace Globe */

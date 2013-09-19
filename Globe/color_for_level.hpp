@@ -71,10 +71,14 @@ signals:
 	//! Changed.
 	void changed();
 
-public:
-	explicit ColorForLevel( MainWindow * mainWindow );
+private:
+	ColorForLevel( QObject * parent = 0 );
 
 	~ColorForLevel();
+
+public:
+	//! \return Instance.
+	static ColorForLevel & instance();
 
 	//! \return Color for the given \arg level level.
 	const QColor & color( Level level ) const;
@@ -94,9 +98,6 @@ public:
 		const QColor & info,
 		const QColor & deregistered,
 		const QColor & disconnected );
-
-protected:
-	friend class Configuration;
 
 	//! Save configuration.
 	void saveCfg( const QString & fileName );

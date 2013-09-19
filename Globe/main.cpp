@@ -36,17 +36,16 @@
 #include <QString>
 #include <QTimer>
 #include <QList>
+#include <QDebug>
+#include <QSharedPointer>
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/db.hpp>
 #include <Globe/properties.hpp>
 #include <Globe/tool_window_object.hpp>
-#include <Globe/sources.hpp>
 #include <Globe/sources_mainwindow.hpp>
-#include <Globe/log.hpp>
 #include <Globe/launch_time.hpp>
+#include <Globe/configuration.hpp>
 #include <Globe/log_event_view_window.hpp>
 
 // Como include.
@@ -57,6 +56,20 @@
 #include <QtArg/Arg>
 #include <QtArg/Exceptions>
 #include <QtArg/Help>
+
+
+//
+// globeApplication
+//
+
+//! Singleton with QApplication.
+static QSharedPointer< QApplication > globeApplication( int argc = 0, char ** argv = 0 )
+{
+	static QSharedPointer< QApplication > app(
+		new QApplication( argc, argv ) );
+
+	return app;
+}
 
 
 int main( int argc, char ** argv )
@@ -96,41 +109,26 @@ int main( int argc, char ** argv )
 		return 1;
 	}
 
-	QApplication app( argc, argv );
+	QSharedPointer< QApplication > app = globeApplication( argc, argv );
 
-	app.setWindowIcon( QIcon( ":/img/globe_128x128.png" ) );
+	app->setWindowIcon( QIcon( ":/img/globe_128x128.png" ) );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/" + QLocale::system().name() );
-	app.installTranslator( &appTranslator );
+	app->installTranslator( &appTranslator );
 
 	Globe::LaunchTime::instance();
 
-	Globe::DB db;
-
-	Globe::Log::instance().setDb( &db );
-
-	Globe::ChannelsManager channelsManager( &db );
-
-	Globe::SourcesManager sourcesManager( &channelsManager );
-
-	Globe::PropertiesManager propertiesManager( &sourcesManager, &channelsManager );
-
-	Globe::SourcesMainWindow sourcesMainWindow( &sourcesManager, &channelsManager );
-	sourcesMainWindow.setPropertiesManager( &propertiesManager );
-
-	Globe::LogEventWindow logEventWindow;
-
 	QList< Globe::ToolWindowObject* > toolWindows;
-	toolWindows.append( propertiesManager.toolWindowObject() );
-	toolWindows.append( sourcesMainWindow.toolWindowObject() );
-	toolWindows.append( logEventWindow.toolWindowObject() );
+	toolWindows.append( Globe::PropertiesManager::instance().toolWindowObject() );
+	toolWindows.append( Globe::SourcesMainWindow::instance().toolWindowObject() );
+	toolWindows.append( Globe::LogEventWindow::instance().toolWindowObject() );
 
-	Globe::MainWindow mainWindow( cfgFile, &channelsManager, &db,
-		&propertiesManager, &sourcesMainWindow, &sourcesManager,
-		&logEventWindow, toolWindows );
+	Globe::Configuration::instance().setCfgFile( cfgFile );
 
-	QTimer::singleShot( 0, &mainWindow, SLOT( start() ) );
+	Globe::MainWindow::instance().init( toolWindows );
 
-	return app.exec();
+	QTimer::singleShot( 0, &Globe::MainWindow::instance(), SLOT( start() ) );
+
+	return app->exec();
 }

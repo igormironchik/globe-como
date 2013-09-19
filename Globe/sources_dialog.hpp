@@ -41,10 +41,6 @@
 
 namespace Globe {
 
-class SourcesManager;
-class ChannelsManager;
-
-
 //
 // SourcesDialog
 //
@@ -59,8 +55,6 @@ class SourcesDialog
 
 public:
 	SourcesDialog( Como::Source & source, QString & channelName,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
 		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~SourcesDialog();

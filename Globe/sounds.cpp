@@ -33,12 +33,18 @@
 #include <Globe/globe_menu.hpp>
 #include <Globe/tool_window_object.hpp>
 #include <Globe/sounds_disabled.hpp>
+#include <Globe/sounds_cfg.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QMenu>
 #include <QMenuBar>
 #include <QAction>
 #include <QCloseEvent>
+#include <QMessageBox>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
 
 
 namespace Globe {
@@ -59,6 +65,8 @@ public:
 	ToolWindowObject * m_toolWindowObject;
 	//! Level of the current sound.
 	Level m_level;
+	//! Configuration.
+	SoundsCfg m_cfg;
 }; // class SoundsPrivate
 
 
@@ -108,13 +116,57 @@ Sounds::initMenu( const Menu & menu )
 void
 Sounds::readCfg( const QString & fileName )
 {
+	SoundsCfgTag tag;
 
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Sounds configuration read from file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to read sounds configuration from file \"%1\".\n"
+			"" ) );
+
+		QMessageBox::critical( this,
+			tr( "Unable to read sounds configuration..." ),
+			x.whatAsQString() );
+
+		return;
+	}
+
+	d->m_cfg = tag.cfg();
 }
 
 void
 Sounds::saveCfg( const QString & fileName )
 {
+	try {
+		SoundsCfgTag tag( d->m_cfg );
 
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Sounds configuration saved to file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save sounds configuration to file \"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( this,
+			tr( "Unable to save sounds configuration..." ),
+			x.whatAsQString() );
+	}
 }
 
 void

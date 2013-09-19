@@ -104,6 +104,14 @@ LogEventWindow::~LogEventWindow()
 {
 }
 
+LogEventWindow &
+LogEventWindow::instance()
+{
+	static LogEventWindow inst;
+
+	return inst;
+}
+
 ToolWindowObject *
 LogEventWindow::toolWindowObject()
 {

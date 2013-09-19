@@ -41,12 +41,6 @@
 
 namespace Globe {
 
-class ToolWindowObject;
-class SourcesManager;
-class ChannelsManager;
-class PropertiesManager;
-
-
 //
 // SourcesMainWindow
 //
@@ -60,12 +54,14 @@ class SourcesMainWindow
 {
 	Q_OBJECT
 
-public:
-	SourcesMainWindow( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+private:
+	SourcesMainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~SourcesMainWindow();
+
+public:
+	//! \return Instance.
+	static SourcesMainWindow & instance();
 
 	//! \return Tool window object.
 	ToolWindowObject * toolWindowObject();
@@ -74,9 +70,6 @@ public:
 	void saveConfiguration( const QString & fileName );
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
-
-	//! Set properties manager.
-	void setPropertiesManager( PropertiesManager * propertiesManager );
 
 	//! Init menu.
 	void initMenu( const Menu & menu );

@@ -40,7 +40,6 @@
 
 namespace Globe {
 
-class ChannelsManager;
 class Channel;
 
 //
@@ -66,11 +65,14 @@ signals:
 	*/
 	void newSource( const Como::Source &, const QString & );
 
-public:
-	explicit SourcesManager( ChannelsManager * channelsManager,
-		QObject * parent = 0 );
+private:
+	SourcesManager( QObject * parent = 0 );
 
 	~SourcesManager();
+
+public:
+	//! \return Instance.
+	static SourcesManager & instance();
 
 	//! \return List of names of available channels.
 	QList< QString > channelsNames() const;

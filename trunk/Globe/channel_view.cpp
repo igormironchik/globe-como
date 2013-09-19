@@ -51,16 +51,9 @@ namespace Globe {
 
 class ChannelViewPrivate {
 public:
-	ChannelViewPrivate( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		ColorForLevel * colorForLevel )
+	ChannelViewPrivate()
 		:	m_model( 0 )
 		,	m_sortModel( 0 )
-		,	m_propertiesManager( propertiesManager )
-		,	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
-		,	m_colorForLevel( colorForLevel )
 		,	m_copyAction( 0 )
 		,	m_selectAllAction( 0 )
 		,	m_fillColorAction( 0 )
@@ -71,14 +64,6 @@ public:
 	ChannelViewWindowModel * m_model;
 	//! Sort model.
 	QSortFilterProxyModel * m_sortModel;
-	//! Properties manager.
-	PropertiesManager * m_propertiesManager;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
-	//! Correspondence between level and color.
-	ColorForLevel * m_colorForLevel;
 	//! Copy action.
 	QAction * m_copyAction;
 	//! Select all action.
@@ -92,14 +77,9 @@ public:
 // ChannelView
 //
 
-ChannelView::ChannelView( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		ColorForLevel * colorForLevel,
-		QWidget * parent )
+ChannelView::ChannelView( QWidget * parent )
 	:	QTreeView( parent )
-	,	d( new ChannelViewPrivate( propertiesManager, sourcesManager,
-			channelsManager, colorForLevel ) )
+	,	d( new ChannelViewPrivate )
 {
 	init();
 }
@@ -245,17 +225,17 @@ ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	{
 		if( !d->m_model->isConnected() )
 			painter->fillRect( option.rect,
-				d->m_colorForLevel->disconnectedColor() );
+				ColorForLevel::instance().disconnectedColor() );
 		else
 		{
 			const QModelIndex actualIndex = d->m_sortModel->mapToSource( index );
 
 			if( !d->m_model->isRegistered( actualIndex ) )
 				painter->fillRect( option.rect,
-					d->m_colorForLevel->deregisteredColor() );
+					ColorForLevel::instance().deregisteredColor() );
 			else
 				painter->fillRect( option.rect,
-					d->m_colorForLevel->color( d->m_model->level( actualIndex ) ) );
+					ColorForLevel::instance().color( d->m_model->level( actualIndex ) ) );
 		}
 	}
 
@@ -296,11 +276,10 @@ ChannelView::init()
 		this, SLOT( selectAllImplementation() ) );
 	connect( d->m_fillColorAction, SIGNAL( changed() ),
 		this, SLOT( fillWithColorChanged() ) );
-	connect( d->m_colorForLevel, SIGNAL( changed() ),
+	connect( &ColorForLevel::instance(), SIGNAL( changed() ),
 		this, SLOT( colorForLevelChanged() ) );
 
-	d->m_model = new ChannelViewWindowModel( d->m_propertiesManager,
-		d->m_sourcesManager, d->m_channelsManager, this );
+	d->m_model = new ChannelViewWindowModel( this );
 
 	connect( d->m_model,
 		SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),

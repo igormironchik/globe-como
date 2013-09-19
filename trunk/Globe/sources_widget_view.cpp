@@ -48,14 +48,11 @@ namespace Globe {
 class SourcesWidgetViewPrivate {
 public:
 	SourcesWidgetViewPrivate()
-		:	m_propertiesManager( 0 )
-		,	m_model( 0 )
+		:	m_model( 0 )
 		,	m_proxyModel( 0 )
 	{
 	}
 
-	//! Properties manager.
-	PropertiesManager * m_propertiesManager;
 	//! Sources model.
 	SourcesModel * m_model;
 	//! Proxy model.
@@ -85,12 +82,6 @@ SourcesWidgetView::~SourcesWidgetView()
 }
 
 void
-SourcesWidgetView::setPropertiesManager( PropertiesManager * propertiesManager )
-{
-	d->m_propertiesManager = propertiesManager;
-}
-
-void
 SourcesWidgetView::setSourcesAndSortModels( SourcesModel * model,
 	QSortFilterProxyModel * proxyModel )
 {
@@ -107,8 +98,7 @@ SourcesWidgetView::setChannelName( const QString & channelName )
 void
 SourcesWidgetView::contextMenuEvent( QContextMenuEvent * event )
 {
-	if( d->m_model && d->m_proxyModel && d->m_propertiesManager &&
-		!d->m_channelName.isEmpty() )
+	if( d->m_model && d->m_proxyModel && !d->m_channelName.isEmpty() )
 	{
 		QMenu menu( this );
 
@@ -119,8 +109,8 @@ SourcesWidgetView::contextMenuEvent( QContextMenuEvent * event )
 			d->m_source = d->m_model->source(
 				d->m_proxyModel->mapToSource( index ) );
 
-			const Properties * props = d->m_propertiesManager->
-				findProperties( d->m_source, d->m_channelName, &d->m_key );
+			const Properties * props = PropertiesManager::instance()
+				.findProperties( d->m_source, d->m_channelName, &d->m_key );
 
 			if( props )
 				menu.addAction( QIcon( ":/img/edit_22x22.png" ),
@@ -145,13 +135,13 @@ SourcesWidgetView::contextMenuEvent( QContextMenuEvent * event )
 void
 SourcesWidgetView::editProperties()
 {
-	d->m_propertiesManager->editProperties( d->m_key, this );
+	PropertiesManager::instance().editProperties( d->m_key, this );
 }
 
 void
 SourcesWidgetView::addProperties()
 {
-	d->m_propertiesManager->addProperties( d->m_source,
+	PropertiesManager::instance().addProperties( d->m_source,
 		d->m_channelName, this );
 }
 

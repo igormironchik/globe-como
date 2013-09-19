@@ -59,14 +59,14 @@ class Configuration
 {
 	Q_OBJECT
 
-public:
-	Configuration( const QString & cfgFileName,
-		MainWindow * mainWindow, ChannelsManager * channelsManager,
-		DB * db, PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow,
-		LogEventWindow * logEventWindow );
+private:
+	Configuration( QObject * parent = 0 );
 
 	~Configuration();
+
+public:
+	//! \return Instance.
+	static Configuration & instance();
 
 	//! Load configuration.
 	void loadConfiguration();
@@ -74,8 +74,8 @@ public:
 	//! Save configuration.
 	void saveConfiguration();
 
-	//! \return Correspondence between level and color.
-	ColorForLevel * colorForLevel() const;
+	//! Set configuration file name.
+	void setCfgFile( const QString & fileName );
 
 private:
 	//! Read application's configuration.

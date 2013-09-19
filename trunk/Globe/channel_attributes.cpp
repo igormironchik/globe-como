@@ -122,9 +122,8 @@ ChannelAttributes::setPort( quint16 p )
 class ChannelAttributesDialogPrivate {
 public:
 	ChannelAttributesDialogPrivate( ChannelAttributes & attributes,
-		ChannelsManager * channelsManager, QDialog * parent )
+		QDialog * parent )
 		:	m_attributes( attributes )
-		,	m_channelsManager( channelsManager )
 		,	m_isNameSet( false )
 		,	m_isNameUnique( false )
 		,	m_isIPSet( false )
@@ -137,7 +136,7 @@ public:
 	//! \return State of the validation of IP address and port.
 	bool checkIPAndPort()
 	{
-		return ( m_channelsManager->isAddressAndPortUnique(
+		return ( ChannelsManager::instance().isAddressAndPortUnique(
 			QHostAddress( m_ui.m_ip->text() ), m_ui.m_port->value() ) );
 	}
 
@@ -219,8 +218,6 @@ public:
 
 	//! Attributes of the channel.
 	ChannelAttributes & m_attributes;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! UI.
 	Ui::ChannelAttributesDialog m_ui;
 	//! Default text color.
@@ -247,10 +244,9 @@ public:
 //
 
 ChannelAttributesDialog::ChannelAttributesDialog( ChannelAttributes & attributes,
-	ChannelsManager * channelsManager, QWidget * parent, Qt::WindowFlags f )
+	QWidget * parent, Qt::WindowFlags f )
 	:	QDialog( parent, f )
-	,	d( new ChannelAttributesDialogPrivate( attributes, channelsManager,
-			this ) )
+	,	d( new ChannelAttributesDialogPrivate( attributes, this ) )
 {
 	init();
 }
@@ -289,7 +285,7 @@ ChannelAttributesDialog::nameEdited( const QString & text )
 {
 	if( text.length() )
 	{
-		if( !d->m_channelsManager->isNameUnique( text ) )
+		if( !ChannelsManager::instance().isNameUnique( text ) )
 		{
 			d->highlightError( d->m_ui.m_name );
 			d->m_isNameSet = true;

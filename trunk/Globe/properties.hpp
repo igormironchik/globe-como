@@ -51,11 +51,6 @@ QT_END_NAMESPACE
 
 namespace Globe {
 
-class ToolWindowObject;
-class SourcesManager;
-class ChannelsManager;
-
-
 //
 // Properties
 //
@@ -246,12 +241,14 @@ class PropertiesManager
 {
 	Q_OBJECT
 
-public:
-	PropertiesManager( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+private:
+	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~PropertiesManager();
+
+public:
+	//! \return Instance.
+	static PropertiesManager & instance();
 
 	/*!
 		\return Properties for the given source.

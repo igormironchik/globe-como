@@ -41,16 +41,10 @@
 
 namespace Globe {
 
-class ChannelsManager;
-class DB;
 class WindowStateCfg;
-class PropertiesManager;
 class ToolWindowObject;
 class ChannelsList;
-class SourcesMainWindow;
-class SourcesManager;
 class ChannelViewWindow;
-class LogEventWindow;
 
 class MainWindowPrivate;
 
@@ -64,23 +58,23 @@ class MainWindow
 {
 	Q_OBJECT
 
-public:
-	MainWindow( const QString & cfgFileName,
-		ChannelsManager * channelsManager, DB * db,
-		PropertiesManager * propertiesManager,
-		SourcesMainWindow * sourcesMainWindow,
-		SourcesManager * sourcesManager,
-		LogEventWindow * logEventWindow,
-		const QList< ToolWindowObject* > & toolWindows,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+private:
+	MainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~MainWindow();
+
+public:
+	//! \return Instance.
+	static MainWindow & instance();
 
 	//! \return List with channels.
 	ChannelsList * list();
 
 	//! Channel view window was closed.
 	void channelViewWindowClosed( ChannelViewWindow * window );
+
+	//! Init.
+	void init( const QList< ToolWindowObject* > & toolWindows );
 
 public slots:
 	//! Start.
@@ -107,8 +101,6 @@ private slots:
 	void settings();
 
 private:
-	//! Init.
-	void init( const QList< ToolWindowObject* > & toolWindows );
 	//! Save configuration.
 	void saveConfiguration();
 

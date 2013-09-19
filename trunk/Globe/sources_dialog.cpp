@@ -30,8 +30,6 @@
 
 // Globe include.
 #include <Globe/sources_dialog.hpp>
-#include <Globe/channels.hpp>
-#include <Globe/sources.hpp>
 #include <Globe/sources_widget.hpp>
 #include <Globe/source_manual_dialog.hpp>
 
@@ -52,13 +50,9 @@ namespace Globe {
 
 class SourcesDialogPrivate {
 public:
-	SourcesDialogPrivate( Como::Source & source, QString & channelName,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager )
+	SourcesDialogPrivate( Como::Source & source, QString & channelName )
 		:	m_source( source )
 		,	m_channelName( channelName )
-		,	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
 		,	m_widget( 0 )
 		,	m_buttons( 0 )
 		,	m_setManuallyButton( 0 )
@@ -69,10 +63,6 @@ public:
 	Como::Source & m_source;
 	//! Channel's name.
 	QString & m_channelName;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! Widget.
 	SourcesWidget * m_widget;
 	//! Buttons.
@@ -87,12 +77,9 @@ public:
 //
 
 SourcesDialog::SourcesDialog( Como::Source & source, QString & channelName,
-	SourcesManager * sourcesManager,
-	ChannelsManager * channelsManager,
 	QWidget * parent, Qt::WindowFlags flags )
 	:	QDialog( parent, flags )
-	,	d( new SourcesDialogPrivate( source, channelName, sourcesManager,
-			channelsManager ) )
+	,	d( new SourcesDialogPrivate( source, channelName ) )
 {
 	init();
 }
@@ -109,8 +96,7 @@ SourcesDialog::init()
 
 	QVBoxLayout * layout = new QVBoxLayout( this );
 
-	d->m_widget = new SourcesWidget( d->m_sourcesManager, d->m_channelsManager,
-		this );
+	d->m_widget = new SourcesWidget( this );
 
 	QSpacerItem * spacer = new QSpacerItem( 10, 10, QSizePolicy::Minimum,
 		QSizePolicy::Expanding );
@@ -166,8 +152,7 @@ SourcesDialog::channelSelected( const QString & channelName )
 void
 SourcesDialog::setSourceManually()
 {
-	SourceManualDialog dialog( d->m_source, d->m_channelName,
-		d->m_sourcesManager, this );
+	SourceManualDialog dialog( d->m_source, d->m_channelName, this );
 
 	if( dialog.exec() == QDialog::Accepted )
 		accept();

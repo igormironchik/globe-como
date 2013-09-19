@@ -42,7 +42,6 @@ QT_END_NAMESPACE
 
 namespace Globe {
 
-class ChannelsManager;
 class ChannelAttributesPrivate;
 
 
@@ -93,8 +92,8 @@ class ChannelAttributesDialog
 
 public:
 	explicit ChannelAttributesDialog( ChannelAttributes & attributes,
-		ChannelsManager * channelsManager,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+
 	~ChannelAttributesDialog();
 
 private slots:

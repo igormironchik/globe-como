@@ -103,13 +103,10 @@ const int spaceBetweenChannelWidgets = 4;
 
 class ChannelsListPrivate {
 public:
-	ChannelsListPrivate( ChannelsManager * channelsManager,
-		QWidget * widget,
-		MainWindow * mainWindow,
+	ChannelsListPrivate( QWidget * widget,
 		ShownChannels shownChannels,
 		Qt::SortOrder sortOrder )
 		:	m_widget( widget )
-		,	m_mainWindow( mainWindow )
 		,	m_sortOrder( sortOrder )
 		,	m_minWidth( 0 )
 		,	m_minHeight( 0 )
@@ -121,7 +118,6 @@ public:
 		,	m_delChannelAction( 0 )
 		,	m_showChannelViewAction( 0 )
 		,	m_currentWidgetIndex( -1 )
-		,	m_channelsManager( channelsManager )
 	{
 		m_channelsToShowWidget->move( 0, 0 );
 		m_minWidth = m_currentWidth = m_channelsToShowWidget->width();
@@ -237,8 +233,6 @@ public:
 
 	//! Widget.
 	QWidget * m_widget;
-	//! Main window.
-	MainWindow * m_mainWindow;
 	//! Sort order.
 	Qt::SortOrder m_sortOrder;
 	//! List with child widgets.
@@ -263,8 +257,6 @@ public:
 	QAction * m_showChannelViewAction;
 	//! Index of current ChannelWidget.
 	int m_currentWidgetIndex;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 }; // class ChannelsListPrivate
 
 
@@ -272,15 +264,12 @@ public:
 // ChannelsList
 //
 
-ChannelsList::ChannelsList( MainWindow * mainWindow,
-	ChannelsManager * channelsManager,
-	ShownChannels shownChannels,
+ChannelsList::ChannelsList( ShownChannels shownChannels,
 	Qt::SortOrder sortOrder,
 	QWidget * parent,
 	Qt::WindowFlags f )
 	:	ScrolledWidget( parent, f )
-	,	d( new ChannelsListPrivate( channelsManager,
-			this, mainWindow, shownChannels, sortOrder ) )
+	,	d( new ChannelsListPrivate( this, shownChannels, sortOrder ) )
 {
 	init();
 }
@@ -570,11 +559,11 @@ ChannelsList::addChannel()
 {
 	ChannelAttributes attributes;
 
-	ChannelAttributesDialog dlg( attributes, d->m_channelsManager, this );
+	ChannelAttributesDialog dlg( attributes, this );
 
 	if( QDialog::Accepted == dlg.exec() )
 	{
-		Channel * channel = d->m_channelsManager->createChannel(
+		Channel * channel = ChannelsManager::instance().createChannel(
 			attributes.name(), attributes.address(), attributes.port() );
 
 		if( channel )
@@ -608,7 +597,7 @@ ChannelsList::delChannel()
 		const ChannelWidgetAndLine & widgetAndLine =
 			d->m_widgets.at( d->m_currentWidgetIndex );
 
-		d->m_channelsManager->removeChannel(
+		ChannelsManager::instance().removeChannel(
 			widgetAndLine.widget()->channel()->name() );
 
 		widgetAndLine.widget()->hide();
@@ -633,7 +622,7 @@ ChannelsList::showChannelView()
 
 		d->m_currentWidgetIndex = -1;
 
-		d->m_mainWindow->showChannelView(
+		MainWindow::instance().showChannelView(
 			widgetAndLine.widget()->channel()->name() );
 	}
 }

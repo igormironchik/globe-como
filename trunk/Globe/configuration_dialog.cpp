@@ -58,13 +58,10 @@ namespace Globe {
 
 class ConfigurationDialogPrivate {
 public:
-	ConfigurationDialogPrivate( ColorForLevel * cfl )
-		:	m_colorForLevel( cfl )
+	ConfigurationDialogPrivate( )
 	{
 	}
 
-	//! Colors.
-	ColorForLevel * m_colorForLevel;
 	//! Ui.
 	Ui::ConfigurationDialog m_ui;
 }; // class ConfigurationDialogPrivate
@@ -74,10 +71,9 @@ public:
 // ConfigurationDialog
 //
 
-ConfigurationDialog::ConfigurationDialog( ColorForLevel * cfl,
-	QWidget * parent, Qt::WindowFlags f )
+ConfigurationDialog::ConfigurationDialog( QWidget * parent, Qt::WindowFlags f )
 	:	QDialog( parent, f )
-	,	d( new ConfigurationDialogPrivate( cfl ) )
+	,	d( new ConfigurationDialogPrivate )
 {
 	init();
 }
@@ -152,16 +148,16 @@ ConfigurationDialog::init()
 void
 ConfigurationDialog::initUiWithSettings()
 {
-	d->m_ui.m_noneColorPicker->setColor( d->m_colorForLevel->color( None ) );
-	d->m_ui.m_criticalColorPicker->setColor( d->m_colorForLevel->color( Critical ) );
-	d->m_ui.m_errorColorPicker->setColor( d->m_colorForLevel->color( Error ) );
-	d->m_ui.m_warningColorPicker->setColor( d->m_colorForLevel->color( Warning ) );
-	d->m_ui.m_debugColorPicker->setColor( d->m_colorForLevel->color( Debug ) );
-	d->m_ui.m_infoColorPicker->setColor( d->m_colorForLevel->color( Info ) );
+	d->m_ui.m_noneColorPicker->setColor( ColorForLevel::instance().color( None ) );
+	d->m_ui.m_criticalColorPicker->setColor( ColorForLevel::instance().color( Critical ) );
+	d->m_ui.m_errorColorPicker->setColor( ColorForLevel::instance().color( Error ) );
+	d->m_ui.m_warningColorPicker->setColor( ColorForLevel::instance().color( Warning ) );
+	d->m_ui.m_debugColorPicker->setColor( ColorForLevel::instance().color( Debug ) );
+	d->m_ui.m_infoColorPicker->setColor( ColorForLevel::instance().color( Info ) );
 	d->m_ui.m_deregisteredColorPicker->setColor(
-		d->m_colorForLevel->deregisteredColor() );
+		ColorForLevel::instance().deregisteredColor() );
 	d->m_ui.m_disconnectedColorPicker->setColor(
-		d->m_colorForLevel->disconnectedColor() );
+		ColorForLevel::instance().disconnectedColor() );
 
 	if( Log::instance().cfg().isEventLogEnabled() )
 		d->m_ui.m_enableEventsLog->setChecked( true );
@@ -195,7 +191,7 @@ ConfigurationDialog::newSettingsAccepted()
 	const QColor deregistered = d->m_ui.m_deregisteredColorPicker->color();
 	const QColor disconnected = d->m_ui.m_disconnectedColorPicker->color();
 
-	d->m_colorForLevel->setColors( none, critical, error, warning,
+	ColorForLevel::instance().setColors( none, critical, error, warning,
 		debug, info, deregistered, disconnected );
 
 	Log::instance().enableEventsLog(

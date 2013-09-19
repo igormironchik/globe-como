@@ -42,14 +42,6 @@
 
 namespace Globe {
 
-class PropertiesManager;
-class SourcesManager;
-class ChannelsManager;
-class ToolWindowObject;
-class MainWindow;
-class ColorForLevel;
-
-
 //
 // ChannelViewWindow
 //
@@ -64,12 +56,7 @@ class ChannelViewWindow
 	Q_OBJECT
 
 public:
-	ChannelViewWindow( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		MainWindow * mainWindow,
-		ColorForLevel * colorForLevel,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	ChannelViewWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
 	~ChannelViewWindow();
 

@@ -44,8 +44,6 @@ QT_END_NAMESPACE
 
 namespace Globe {
 
-class ColorForLevel;
-
 //
 // ConfigurationDialog
 //
@@ -59,8 +57,7 @@ class ConfigurationDialog
 	Q_OBJECT
 
 public:
-	explicit ConfigurationDialog( ColorForLevel * cfl,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ConfigurationDialog( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 	~ConfigurationDialog();
 

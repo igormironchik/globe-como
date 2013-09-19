@@ -45,10 +45,7 @@ QT_END_NAMESPACE
 
 namespace Globe {
 
-class SourcesManager;
-class ChannelsManager;
 class Channel;
-class PropertiesManager;
 
 
 //
@@ -70,17 +67,12 @@ signals:
 	void channelSelected( const QString & );
 
 public:
-	SourcesWidget( SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	SourcesWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 	//! \return Name of the current channel.
 	QString channelName() const;
 	//! Set channel name.
 	void setChannelName( const QString & channelName );
-
-	//! Set properties manager.
-	void setPropertiesManager( PropertiesManager * propertiesManager );
 
 private:
 	//! Init.

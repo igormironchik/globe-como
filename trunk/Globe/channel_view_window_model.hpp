@@ -44,11 +44,6 @@
 
 namespace Globe {
 
-class PropertiesManager;
-class SourcesManager;
-class ChannelsManager;
-
-
 //
 // ChannelViewWindowModel
 //
@@ -62,9 +57,8 @@ class ChannelViewWindowModel
 	Q_OBJECT
 
 public:
-	ChannelViewWindowModel( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager, ChannelsManager * channelsManager,
-		QObject * parent = 0 );
+	ChannelViewWindowModel( QObject * parent = 0 );
+
 	~ChannelViewWindowModel();
 
 	//! Init model.

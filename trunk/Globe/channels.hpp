@@ -44,8 +44,6 @@
 
 namespace Globe {
 
-class DB;
-
 class ChannelPrivate;
 
 //
@@ -93,9 +91,7 @@ public:
 		//! Host address.
 		const QHostAddress & address,
 		//! Port.
-		quint16 port,
-		//! Database.
-		DB * db );
+		quint16 port );
 
 	~Channel();
 
@@ -180,9 +176,14 @@ signals:
 	//! Channel was removed.
 	void channelRemoved( Channel * );
 
-public:
-	explicit ChannelsManager( DB * db );
+private:
+	ChannelsManager();
+
 	~ChannelsManager();
+
+public:
+	//! \return Instance.
+	static ChannelsManager & instance();
 
 	/*!
 		\return Channel by it's name.

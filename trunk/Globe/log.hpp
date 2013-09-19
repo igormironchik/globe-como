@@ -84,9 +84,6 @@ public:
 	//! \return Instance of the log.
 	static Log & instance();
 
-	//! Set database engine.
-	void setDb( DB * db );
-
 	//! Write message to the event's log.
 	void writeMsgToEventLog( LogLevel level, const QDateTime & dateTime,
 		const QString & msg );
@@ -174,12 +171,6 @@ private slots:
 	void dbError();
 	//! Erase outdated recrods from source's log.
 	void eraseSourcesLog();
-
-protected:
-	friend class MainWindow;
-
-	//! Set pointer to the main window.
-	void setMainWindow( MainWindow * mainWindow );
 
 private:
 	Q_DISABLE_COPY( Log )

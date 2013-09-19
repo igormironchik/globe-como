@@ -49,9 +49,8 @@ namespace Globe {
 
 class ColorForLevelPrivate {
 public:
-	explicit ColorForLevelPrivate( MainWindow * mainWindow )
-		:	m_mainWindow( mainWindow )
-		,	m_noneColor( defaultNoneColor )
+	ColorForLevelPrivate()
+		:	m_noneColor( defaultNoneColor )
 		,	m_criticalColor( defaultCriticalColor )
 		,	m_errorColor( defaultErrorColor )
 		,	m_warningColor( defaultWarningColor )
@@ -62,8 +61,6 @@ public:
 	{
 	}
 
-	//! Main window.
-	MainWindow * m_mainWindow;
 	//! Color for "none" level.
 	QColor m_noneColor;
 	//! Color for "critical" level.
@@ -87,14 +84,22 @@ public:
 // ColorForLevel
 //
 
-ColorForLevel::ColorForLevel( MainWindow * mainWindow )
-	:	QObject( mainWindow )
-	,	d( new ColorForLevelPrivate( mainWindow ) )
+ColorForLevel::ColorForLevel( QObject * parent )
+	:	QObject( parent )
+	,	d( new ColorForLevelPrivate )
 {
 }
 
 ColorForLevel::~ColorForLevel()
 {
+}
+
+ColorForLevel &
+ColorForLevel::instance()
+{
+	static ColorForLevel inst;
+
+	return inst;
 }
 
 const QColor &
@@ -167,7 +172,7 @@ ColorForLevel::saveCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( d->m_mainWindow,
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to save colors correspondence configuration..." ),
 			x.whatAsQString() );
 	}
@@ -195,7 +200,7 @@ ColorForLevel::readCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( d->m_mainWindow,
+		QMessageBox::critical( &MainWindow::instance(),
 			tr( "Unable to read colors correspondence configuration..." ),
 			x.whatAsQString() );
 

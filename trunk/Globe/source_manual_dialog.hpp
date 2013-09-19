@@ -58,7 +58,6 @@ class SourceManualDialog
 
 public:
 	SourceManualDialog( Como::Source & source, QString & channelName,
-		SourcesManager * sourcesManager,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 	~SourceManualDialog();

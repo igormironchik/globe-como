@@ -79,12 +79,8 @@ public:
 
 class ChannelViewWindowModelPrivate {
 public:
-	ChannelViewWindowModelPrivate( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager, ChannelsManager * channelsManager )
-		:	m_propertiesManager( propertiesManager )
-		,	m_sourcesManager( sourcesManager )
-		,	m_channelsManager( channelsManager )
-		,	m_isConnected( false )
+	ChannelViewWindowModelPrivate()
+		:	m_isConnected( false )
 	{
 	}
 
@@ -100,12 +96,6 @@ public:
 		return -1;
 	}
 
-	//! Properties manager.
-	PropertiesManager * m_propertiesManager;
-	//! Sources manager.
-	SourcesManager * m_sourcesManager;
-	//! Channels manager.
-	ChannelsManager * m_channelsManager;
 	//! Data.
 	QList< ChannelViewWindowModelData > m_data;
 	//! Channel name.
@@ -125,12 +115,9 @@ static const int valueColumn = 2;
 static const int dateTimeColumn = 3;
 static const int priorityColumn = 4;
 
-ChannelViewWindowModel::ChannelViewWindowModel( PropertiesManager * propertiesManager,
-	SourcesManager * sourcesManager, ChannelsManager * channelsManager,
-	QObject * parent )
+ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 	:	QAbstractTableModel( parent )
-	,	d( new ChannelViewWindowModelPrivate( propertiesManager, sourcesManager,
-			channelsManager ) )
+	,	d( new ChannelViewWindowModelPrivate )
 {
 }
 
@@ -143,8 +130,8 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
 	{
-		Channel * channel = d->m_channelsManager->
-			channelByName( channelName );
+		Channel * channel = ChannelsManager::instance()
+			.channelByName( channelName );
 
 		if( channel )
 		{
@@ -167,11 +154,11 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 				this,
 				SLOT( sourceUpdated( const Como::Source & ) ) );
 
-			const QList< Como::Source > registered = d->m_sourcesManager->
-				registeredSources( d->m_channelName );
+			const QList< Como::Source > registered = SourcesManager::instance()
+				.registeredSources( d->m_channelName );
 
-			const QList< Como::Source > deregistered = d->m_sourcesManager->
-				deregisteredSources( d->m_channelName );
+			const QList< Como::Source > deregistered = SourcesManager::instance()
+				.deregisteredSources( d->m_channelName );
 
 			const int registeredCount = registered.size();
 			const int deregisteredCount = deregistered.size();
@@ -183,8 +170,8 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 			{
 				const Como::Source & source = registered.at( i );
 
-				const Properties * props = d->m_propertiesManager->findProperties( source,
-					d->m_channelName, 0 );
+				const Properties * props = PropertiesManager::instance()
+					.findProperties( source, d->m_channelName, 0 );
 
 				int priority = 0;
 				Level level = None;
@@ -205,8 +192,8 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 			{
 				const Como::Source & source = deregistered.at( i );
 
-				const Properties * props = d->m_propertiesManager->findProperties( source,
-					d->m_channelName, 0 );
+				const Properties * props = PropertiesManager::instance()
+					.findProperties( source, d->m_channelName, 0 );
 
 				int priority = 0;
 				Level level = None;
@@ -240,8 +227,8 @@ ChannelViewWindowModel::clear()
 
 	if( !d->m_channelName.isEmpty() )
 	{
-		Channel * oldChannel = d->m_channelsManager->
-			channelByName( d->m_channelName );
+		Channel * oldChannel = ChannelsManager::instance()
+			.channelByName( d->m_channelName );
 
 		if( oldChannel )
 		{
@@ -266,8 +253,8 @@ ChannelViewWindowModel::addItem( const Como::Source & source, bool isRegistered 
 
 	beginInsertRows( QModelIndex(), size, size );
 
-	const Properties * props = d->m_propertiesManager->findProperties( source,
-		d->m_channelName, 0 );
+	const Properties * props = PropertiesManager::instance().findProperties(
+		source, d->m_channelName, 0 );
 
 	int priority = 0;
 	Level level = None;
@@ -327,8 +314,8 @@ ChannelViewWindowModel::sourceUpdated( const Como::Source & source )
 
 		data.m_source = source;
 
-		const Properties * props = d->m_propertiesManager->findProperties( source,
-			d->m_channelName, 0 );
+		const Properties * props = PropertiesManager::instance().findProperties(
+			source, d->m_channelName, 0 );
 
 		int priority = 0;
 		Level level = None;
@@ -363,8 +350,8 @@ ChannelViewWindowModel::sourceDeregistered( const Como::Source & source )
 
 		data.m_source = source;
 
-		const Properties * props = d->m_propertiesManager->findProperties( source,
-			d->m_channelName, 0 );
+		const Properties * props = PropertiesManager::instance().findProperties(
+			source, d->m_channelName, 0 );
 
 		int priority = 0;
 

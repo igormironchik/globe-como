@@ -43,10 +43,6 @@ QT_END_NAMESPACE
 namespace Globe {
 
 class ChannelViewWindowModel;
-class PropertiesManager;
-class SourcesManager;
-class ChannelsManager;
-class ColorForLevel;
 
 
 //
@@ -62,11 +58,8 @@ class ChannelView
 	Q_OBJECT
 
 public:
-	ChannelView( PropertiesManager * propertiesManager,
-		SourcesManager * sourcesManager,
-		ChannelsManager * channelsManager,
-		ColorForLevel * colorForLevel,
-		QWidget * parent = 0 );
+	ChannelView( QWidget * parent = 0 );
+
 	~ChannelView();
 
 	//! \return Model.

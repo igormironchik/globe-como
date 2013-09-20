@@ -31,9 +31,15 @@
 // Globe include.
 #include <Globe/sounds_disabled.hpp>
 #include <Globe/sounds_disabled_data.hpp>
+#include <Globe/sounds_disabled_cfg.hpp>
+#include <Globe/log.hpp>
 
 // Qt include.
 #include <QTimer>
+#include <QMessageBox>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
 
 
 namespace Globe {
@@ -128,13 +134,66 @@ DisabledSounds::enableSounds( const Como::Source & source,
 void
 DisabledSounds::readCfg( const QString & fileName )
 {
+	DisabledSoundsCfgTag tag;
 
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Disabled sounds configuration loaded from file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to read disabled sounds configuration from file \"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( 0,
+			tr( "Unable to read disabled sounds configuration..." ),
+			x.whatAsQString() );
+
+		return;
+	}
+
+	d->m_map = tag.cfg().map();
+
+	checkAndEnableIf();
+
+	notifyAboutDisabledSounds();
 }
 
 void
 DisabledSounds::saveCfg( const QString & fileName )
 {
+	try {
+		DisabledSoundsCfg cfg;
+		cfg.setMap( d->m_map );
 
+		DisabledSoundsCfgTag tag( cfg );
+
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+			"Disabled sounds configuration saved to file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError, QString(
+			"Unable to save disabled sounds configuration to file \"%1\".\n"
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( 0,
+			tr( "Unable to save disabled sounds configuration..." ),
+			x.whatAsQString() );
+	}
 }
 
 void
@@ -183,6 +242,17 @@ DisabledSounds::init()
 
 	QTimer::singleShot( ( 60 - QTime::currentTime().second() ) * 1000,
 		this, SLOT( initTimer() ) );
+}
+
+void
+DisabledSounds::notifyAboutDisabledSounds()
+{
+	for( DisabledSoundsMap::ConstIterator it = d->m_map.begin(),
+		last= d->m_map.end(); it != last; ++it )
+	{
+		foreach( const DisabledSoundsData & data, it.value() )
+			emit soundsDisabled( data.source(), it.key(), data.dateTime() );
+	}
 }
 
 } /* namespace Globe */

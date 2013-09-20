@@ -34,6 +34,8 @@
 #include <Globe/log.hpp>
 #include <Globe/log_cfg.hpp>
 #include <Globe/utils.hpp>
+#include <Globe/sounds_cfg.hpp>
+#include <Globe/sounds.hpp>
 
 #include "ui_configuration_dialog.h"
 
@@ -204,6 +206,30 @@ ConfigurationDialog::newSettingsAccepted()
 		Log::instance().setSourcesLogDays(
 			d->m_ui.m_sourcesLogDays->value() );
 
+	SoundsCfg soundsCfg;
+
+	if( d->m_ui.m_enableCriticalSound->isChecked() &&
+		!d->m_ui.m_criticalSoundLine->text().isEmpty() )
+			soundsCfg.setCriticalSoundFile( d->m_ui.m_criticalSoundLine->text() );
+
+	if( d->m_ui.m_enableErrorSound->isChecked() &&
+		!d->m_ui.m_errorSoundLine->text().isEmpty() )
+			soundsCfg.setErrorSoundFile( d->m_ui.m_errorSoundLine->text() );
+
+	if( d->m_ui.m_enableWarningSound->isChecked() &&
+		!d->m_ui.m_warningSoundLine->text().isEmpty() )
+			soundsCfg.setWarningSoundFile( d->m_ui.m_warningSoundLine->text() );
+
+	if( d->m_ui.m_enableDebugSound->isChecked() &&
+		!d->m_ui.m_debugSoundLine->text().isEmpty() )
+			soundsCfg.setDebugSoundFile( d->m_ui.m_debugSoundLine->text() );
+
+	if( d->m_ui.m_enableInfoSound->isChecked() &&
+		!d->m_ui.m_infoSoundLine->text().isEmpty() )
+			soundsCfg.setInfoSoundFile( d->m_ui.m_infoSoundLine->text() );
+
+	Sounds::instance().setCfg( soundsCfg );
+
 	accept();
 }
 
@@ -295,12 +321,7 @@ ConfigurationDialog::soundSelectButtonClicked( QLineEdit * line )
 		tr( "Sound Files (*.wav *.mp3 *.ogg)" ) );
 
 	if( !fileName.isEmpty() )
-	{
-		QFileInfo info( fileName );
-		fileName = info.fileName();
-
-		line->setText( fileName );
-	}
+		line->setText( relativeFilePath( fileName ) );
 }
 
 void

@@ -56,6 +56,8 @@ ApplicationCfg::ApplicationCfg( const ApplicationCfg & other )
 	,	m_dbCfgFileName( other.dbCfgFile() )
 	,	m_logCfgFileName( other.logCfgFile() )
 	,	m_logEventWindowCfgFileName( other.logEventWindowCfgFile() )
+	,	m_soundsCfgFileName( other.soundsCfgFile() )
+	,	m_disabledSoundsCfgFileName( other.disabledSoundsCfgFile() )
 {
 }
 
@@ -73,6 +75,8 @@ ApplicationCfg::operator = ( const ApplicationCfg & other )
 		m_dbCfgFileName = other.dbCfgFile();
 		m_logCfgFileName = other.logCfgFile();
 		m_logEventWindowCfgFileName = other.logEventWindowCfgFile();
+		m_soundsCfgFileName = other.soundsCfgFile();
+		m_disabledSoundsCfgFileName = other.disabledSoundsCfgFile();
 	}
 
 	return *this;
@@ -186,6 +190,30 @@ ApplicationCfg::setLogEventWindowCfgFile( const QString & fileName )
 	m_logEventWindowCfgFileName = fileName;
 }
 
+const QString &
+ApplicationCfg::soundsCfgFile() const
+{
+	return m_soundsCfgFileName;
+}
+
+void
+ApplicationCfg::setSoundsCfgFile( const QString & fileName )
+{
+	m_soundsCfgFileName = fileName;
+}
+
+const QString &
+ApplicationCfg::disabledSoundsCfgFile() const
+{
+	return m_disabledSoundsCfgFileName;
+}
+
+void
+ApplicationCfg::setDisabledSoundsCfgFile( const QString & fileName )
+{
+	m_disabledSoundsCfgFileName = fileName;
+}
+
 
 //
 // ApplicationCfgTag
@@ -211,6 +239,10 @@ ApplicationCfgTag::ApplicationCfgTag()
 			QLatin1String( "logCfgFileName" ), true )
 	,	m_logEventWindowCfgFileName( *this,
 			QLatin1String( "logEventWindowCfgFileName" ), true )
+	,	m_soundsCfgFileName( *this,
+			QLatin1String( "soundsCfgFileName" ), true )
+	,	m_disabledSoundsCfgFileName( *this,
+			QLatin1String( "disabledSoundsCfgFileName" ), true )
 {
 }
 
@@ -234,6 +266,10 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 			QLatin1String( "logCfgFileName" ), true )
 	,	m_logEventWindowCfgFileName( *this,
 			QLatin1String( "logEventWindowCfgFileName" ), true )
+	,	m_soundsCfgFileName( *this,
+			QLatin1String( "soundsCfgFileName" ), true )
+	,	m_disabledSoundsCfgFileName( *this,
+			QLatin1String( "disabledSoundsCfgFileName" ), true )
 {
 	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
 	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
@@ -244,6 +280,8 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 	m_dbCfgFileName.setValue( cfg.dbCfgFile() );
 	m_logCfgFileName.setValue( cfg.logCfgFile() );
 	m_logEventWindowCfgFileName.setValue( cfg.logEventWindowCfgFile() );
+	m_soundsCfgFileName.setValue( cfg.soundsCfgFile() );
+	m_disabledSoundsCfgFileName.setValue( cfg.disabledSoundsCfgFile() );
 
 	setDefined();
 }
@@ -262,6 +300,8 @@ ApplicationCfgTag::cfg() const
 	cfg.setDbCfgFile( m_dbCfgFileName.value() );
 	cfg.setLogCfgFile( m_logCfgFileName.value() );
 	cfg.setLogEventWindowCfgFile( m_logEventWindowCfgFileName.value() );
+	cfg.setSoundsCfgFile( m_soundsCfgFileName.value() );
+	cfg.setDisabledSoundsCfgFile( m_disabledSoundsCfgFileName.value() );
 
 	return cfg;
 }

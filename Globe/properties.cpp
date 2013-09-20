@@ -697,8 +697,7 @@ PropertiesManager::addProperties( const Como::Source & source,
 								.arg( propertieConfFileName )
 								.arg( x.whatAsQString() ) );
 
-					QMessageBox::critical( ( parent ? parent : this ),
-						tr( "Unable to save properties..." ),
+					QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 						x.whatAsQString() );
 				}
 			}
@@ -764,8 +763,7 @@ PropertiesManager::addProperties( const Como::Source & source,
 									.arg( fileName )
 									.arg( x.whatAsQString() ) );
 
-						QMessageBox::critical( ( parent ? parent : this ),
-							tr( "Unable to save properties..." ),
+						QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 							x.whatAsQString() );
 					}
 				}
@@ -843,8 +841,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 							.arg( fileName )
 							.arg( x.whatAsQString() ) );
 
-				QMessageBox::critical( ( parent ? parent : this ),
-					tr( "Unable to save properties..." ),
+				QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 					x.whatAsQString() );
 			}
 		}
@@ -877,7 +874,7 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 				"to file \"%1\"." )
 					.arg( fileName ) );
 
-		QMessageBox::critical( this,
+		QMessageBox::critical( 0,
 			tr( "Unable to save properties configuration..." ),
 			x.whatAsQString() );
 	}
@@ -919,7 +916,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 						.arg( fileName ) );
 
 			const QMessageBox::StandardButton button =
-				QMessageBox::question( this,
+				QMessageBox::question( 0,
 					tr( "Unable to read properties configuration..." ),
 					tr( "%1\\n\\n"
 						"Do you want to delete this file?" )
@@ -970,7 +967,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 						.arg( fileName )
 						.arg( x.whatAsQString() ) );
 
-			QMessageBox::critical( this,
+			QMessageBox::critical( 0,
 				tr( "Unable to read properties configuration..." ),
 				x.whatAsQString() );
 
@@ -1050,7 +1047,7 @@ PropertiesManager::removeProperties()
 	if( index.isValid() )
 	{
 		QMessageBox::StandardButton deletePropertieButton =
-			QMessageBox::question( this, tr( "Deletion of the propertie..." ),
+			QMessageBox::question( 0, tr( "Deletion of the propertie..." ),
 				tr( "You are about to delete propertie. Are you sure?" ),
 				QMessageBox::Ok | QMessageBox::Cancel,
 				QMessageBox::Ok );
@@ -1073,7 +1070,7 @@ PropertiesManager::removeProperties()
 			if( propertiesExists )
 			{
 				QMessageBox::StandardButton deleteFileButton =
-					QMessageBox::question( this, tr( "Deletion of the propertie..." ),
+					QMessageBox::question( 0, tr( "Deletion of the propertie..." ),
 						tr( "Delete the file \"%1\" with propertie defenitions?" )
 							.arg( it.value().confFileName() ),
 						QMessageBox::Ok | QMessageBox::Cancel,

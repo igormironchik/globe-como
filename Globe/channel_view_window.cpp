@@ -97,7 +97,7 @@ ChannelViewWindow::setChannel( const QString & channelName )
 		if( !channel->isMustBeConnected() && !channel->isConnected() )
 		{
 			const QMessageBox::StandardButton button =
-				QMessageBox::question( this, tr( "Channel is not connected..." ),
+				QMessageBox::question( 0, tr( "Channel is not connected..." ),
 					tr( "Channel \"%1\" is not connected.\n"
 						"Do you want to connect it?" )
 							.arg( channelName ),
@@ -118,7 +118,7 @@ ChannelViewWindow::setChannel( const QString & channelName )
 	}
 	else
 	{
-		QMessageBox::critical( this, tr( "Unable to initialize window..." ),
+		QMessageBox::critical( 0, tr( "Unable to initialize window..." ),
 			tr( "Unable to initialize window with channel \"%1\",\n"
 				"because there is no such channel." )
 					.arg( channelName ) );

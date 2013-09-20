@@ -38,15 +38,6 @@
 
 namespace Globe {
 
-class ChannelsManager;
-class DB;
-class PropertiesManager;
-class MainWindow;
-class SourcesMainWindow;
-class ColorForLevel;
-class LogEventWindow;
-
-
 //
 // Configuration
 //
@@ -98,6 +89,10 @@ private:
 	void readLogCfg( const QString & cfgFileName );
 	//! Read event log window configuration.
 	void readLogEventWindowCfg( const QString & cfgFileName );
+	//! Read sounds configuration.
+	void readSoundsCfg( const QString & cfgFileName );
+	//! Read disabled sounds configuration.
+	void readDisabledSoundsCfg( const QString & cfgFileName );
 
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
@@ -119,6 +114,10 @@ private:
 	void saveLogCfg( const QString & cfgFileName );
 	//! Save event log window configuration.
 	void saveLogEventWindowCfg( const QString & cfgFileName );
+	//! Save sounds configuration.
+	void saveSoundsCfg( const QString & cfgFileName );
+	//! Save disabled sounds configuration.
+	void saveDisabledSoundsCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

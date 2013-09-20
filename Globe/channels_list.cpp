@@ -577,7 +577,7 @@ ChannelsList::addChannel()
 						.arg( attributes.address().toString() )
 						.arg( QString::number( attributes.port() ) ) );
 
-			QMessageBox::critical( this, tr( "Unable to create channel..." ),
+			QMessageBox::critical( 0, tr( "Unable to create channel..." ),
 				tr( "Unable to create channel with:\n"
 					"\tName: %1\n"
 					"\tAddress: %2\n"

@@ -104,6 +104,8 @@ private slots:
 private:
 	//! Init.
 	void init();
+	//! Notify about all disabled sounds.
+	void notifyAboutDisabledSounds();
 
 private:
 	Q_DISABLE_COPY( DisabledSounds )

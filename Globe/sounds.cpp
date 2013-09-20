@@ -35,6 +35,7 @@
 #include <Globe/sounds_disabled.hpp>
 #include <Globe/sounds_cfg.hpp>
 #include <Globe/log.hpp>
+#include <Globe/utils.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -130,9 +131,11 @@ Sounds::readCfg( const QString & fileName )
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to read sounds configuration from file \"%1\".\n"
-			"" ) );
+			"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( this,
+		QMessageBox::critical( 0,
 			tr( "Unable to read sounds configuration..." ),
 			x.whatAsQString() );
 
@@ -163,19 +166,32 @@ Sounds::saveCfg( const QString & fileName )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( this,
+		QMessageBox::critical( 0,
 			tr( "Unable to save sounds configuration..." ),
 			x.whatAsQString() );
 	}
+}
+
+const SoundsCfg &
+Sounds::cfg() const
+{
+	return d->m_cfg;
+}
+
+void
+Sounds::setCfg( const SoundsCfg & c )
+{
+	d->m_cfg = c;
 }
 
 void
 Sounds::playSound( Level level, const Como::Source & source,
 	const QString & channelName )
 {
+	Q_UNUSED( level )
+
 	if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
 	{
-
 	}
 }
 
@@ -190,6 +206,9 @@ Sounds::closeEvent( QCloseEvent * event )
 void
 Sounds::init()
 {
+	checkDirAndCreateIfNotExists( QLatin1String( "./" ),
+		QLatin1String( "sounds" ) );
+
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 }

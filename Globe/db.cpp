@@ -30,7 +30,6 @@
 
 // Globe include.
 #include <Globe/db.hpp>
-#include <Globe/mainwindow.hpp>
 #include <Globe/db_cfg.hpp>
 #include <Globe/utils.hpp>
 #include <Globe/log.hpp>
@@ -137,7 +136,7 @@ DB::readCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to read DB configuration..." ),
 			QString( "%1\n"
 				"Default database will be used: \"%2\"." )
@@ -178,7 +177,7 @@ DB::saveCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save DB configuration..." ),
 			x.whatAsQString() );
 	}

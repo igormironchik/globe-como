@@ -131,7 +131,7 @@ PropertiesCfgFileNameDialog::accepted()
 	if( file.exists() )
 	{
 		const QMessageBox::StandardButton button =
-			QMessageBox::question( this, tr( "File already exists..." ),
+			QMessageBox::question( 0, tr( "File already exists..." ),
 			tr( "File already exists. Do you want to overwrite it?" ),
 			QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Cancel );
 

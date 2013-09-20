@@ -41,7 +41,6 @@
 #include <Globe/log.hpp>
 #include <Globe/db.hpp>
 #include <Globe/log_cfg.hpp>
-#include <Globe/mainwindow.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -907,7 +906,7 @@ Log::readCfg( const QString & fileName )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to read log configuration..." ),
 			x.whatAsQString() );
 
@@ -945,7 +944,7 @@ Log::saveCfg( const QString & fileName )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save log configuration..." ),
 			x.whatAsQString() );
 	}

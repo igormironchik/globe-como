@@ -45,7 +45,7 @@
 
 namespace Globe {
 
-class MainWindow;
+class SoundsCfg;
 
 
 //
@@ -81,6 +81,11 @@ public:
 
 	//! Save configuration.
 	void saveCfg( const QString & fileName );
+
+	//! \return Configuration.
+	const SoundsCfg & cfg() const;
+	//! Set configuration.
+	void setCfg( const SoundsCfg & c );
 
 public slots:
 	//! Play sound.

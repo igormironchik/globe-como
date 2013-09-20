@@ -102,6 +102,16 @@ public:
 	//! Set file name of the event's log window configuration.
 	void setLogEventWindowCfgFile( const QString & fileName );
 
+	//! \return File name of the sounds configuration.
+	const QString & soundsCfgFile() const;
+	//! Set file name of the sounds configuration.
+	void setSoundsCfgFile( const QString & fileName );
+
+	//! \return File name of the disabled sounds configuration.
+	const QString & disabledSoundsCfgFile() const;
+	//! Set file name of the disabled sounds configuration.
+	void setDisabledSoundsCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -121,6 +131,10 @@ private:
 	QString m_logCfgFileName;
 	//! File name of the event's log window configuration.
 	QString m_logEventWindowCfgFileName;
+	//! File name of the sounds configuration.
+	QString m_soundsCfgFileName;
+	//! File name of the disabled sounds configuration.
+	QString m_disabledSoundsCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -159,6 +173,10 @@ private:
 	QtConfFile::TagScalar< QString > m_logCfgFileName;
 	//! File name of the event's log window configuration.
 	QtConfFile::TagScalar< QString > m_logEventWindowCfgFileName;
+	//! File name of the sounds configuration.
+	QtConfFile::TagScalar< QString > m_soundsCfgFileName;
+	//!File name of the disabled sounds configuration.
+	QtConfFile::TagScalar< QString > m_disabledSoundsCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

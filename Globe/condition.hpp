@@ -59,7 +59,7 @@ enum Expression {
 //! Level of severity of the condition.
 enum Level {
 	//! None level,
-	None = 0x00,
+	None = 0xFF,
 	//! Critical state of the source.
 	Critical = 0x01,
 	//! Error state of the source.

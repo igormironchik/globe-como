@@ -68,6 +68,8 @@ public:
 	Level m_level;
 	//! Configuration.
 	SoundsCfg m_cfg;
+	//! Player.
+	QMediaPlayer * m_player;
 }; // class SoundsPrivate
 
 
@@ -184,15 +186,57 @@ Sounds::setCfg( const SoundsCfg & c )
 	d->m_cfg = c;
 }
 
+bool
+Sounds::isSoundEnabled( Level level )
+{
+	switch( level )
+	{
+		case Critical : return d->m_cfg.isCriticalSoundEnabled();
+		case Error : return d->m_cfg.isErrorSoundEnabled();
+		case Warning : return d->m_cfg.isWarningSoundEnabled();
+		case Debug : return d->m_cfg.isDebugSoundEnabled();
+		case Info : return d->m_cfg.isInfoSoundEnabled();
+		default : return false;
+	}
+}
+
+const QString &
+Sounds::soundFileName( Level level )
+{
+	static QString dummy = QString();
+
+	switch( level )
+	{
+		case Critical : return d->m_cfg.criticalSoundFile();
+		case Error : return d->m_cfg.errorSoundFile();
+		case Warning : return d->m_cfg.warningSoundFile();
+		case Debug : return d->m_cfg.debugSoundFile();
+		case Info : return d->m_cfg.infoSoundFile();
+		default : return dummy;
+	}
+}
+
 void
 Sounds::playSound( Level level, const Como::Source & source,
 	const QString & channelName )
 {
-	Q_UNUSED( level )
-
-	if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
+	if( level <= d->m_level && isSoundEnabled( level ) )
 	{
+		if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
+		{
+			d->m_player->stop();
+			d->m_player->setMedia( QUrl::fromLocalFile( soundFileName( level ) ) );
+			d->m_player->play();
+			d->m_level = level;
+		}
 	}
+}
+
+void
+Sounds::playerStateChanged( QMediaPlayer::State state )
+{
+	if( state == QMediaPlayer::StoppedState )
+		d->m_level = None;
 }
 
 void
@@ -211,6 +255,11 @@ Sounds::init()
 
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
+
+	d->m_player = new QMediaPlayer( this );
+
+	connect( d->m_player, SIGNAL( stateChanged( QMediaPlayer::State ) ),
+		this, SLOT( playerStateChanged( QMediaPlayer::State ) ) );
 }
 
 } /* namespace Globe */

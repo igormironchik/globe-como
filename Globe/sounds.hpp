@@ -42,6 +42,9 @@
 #include <Globe/condition.hpp>
 #include <Globe/tool_window.hpp>
 
+// Qt include.
+#include <QMediaPlayer>
+
 
 namespace Globe {
 
@@ -92,12 +95,20 @@ public slots:
 	void playSound( Level level, const Como::Source & source,
 		const QString & channelName );
 
+private slots:
+	//! Player state changed.
+	void playerStateChanged( QMediaPlayer::State state );
+
 protected:
 	void closeEvent( QCloseEvent * event );
 
 private:
 	//! Init.
 	void init();
+	//! Check is sound enabled for the given level.
+	bool isSoundEnabled( Level level );
+	//! \return Sound file for the given level.
+	const QString & soundFileName( Level level );
 
 private:
 	Q_DISABLE_COPY( Sounds )

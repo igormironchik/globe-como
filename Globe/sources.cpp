@@ -32,6 +32,8 @@
 #include <Globe/sources.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/log.hpp>
+#include <Globe/properties.hpp>
+#include <Globe/sounds.hpp>
 
 // Qt include.
 #include <QMap>
@@ -260,6 +262,19 @@ SourcesManager::sourceUpdated( const Como::Source & source )
 			d->m_map.insert( channel->name(), QList< MapValue > () );
 
 		it.value().append( MapValue( source ) );
+	}
+
+	const QString channelName = channel->name();
+
+	const Properties * props = PropertiesManager::instance().findProperties(
+		source, channelName, 0 );
+
+	if( props )
+	{
+		Level level = props->checkConditions( source.value(),
+			source.type() ).level();
+
+		Sounds::instance().playSound( level, source, channelName );
 	}
 }
 

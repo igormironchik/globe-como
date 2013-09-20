@@ -2,7 +2,7 @@
 TEMPLATE = app
 TARGET = Globe
 DESTDIR = ..
-QT += core gui network sql widgets
+QT += core gui network sql widgets multimedia
 CONFIG += console
 
 win32 {

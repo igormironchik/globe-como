@@ -47,6 +47,7 @@
 #include <Globe/launch_time.hpp>
 #include <Globe/configuration.hpp>
 #include <Globe/log_event_view_window.hpp>
+#include <Globe/utils.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -91,7 +92,7 @@ int main( int argc, char ** argv )
 		helpArg.printer()->setExecutableName( argv[0] );
 
 		cmdLine.addArg( &cfgFileArg );
-		cmdLine.addArg( & helpArg );
+		cmdLine.addArg( &helpArg );
 
 		cmdLine.parse();
 
@@ -116,6 +117,9 @@ int main( int argc, char ** argv )
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/" + QLocale::system().name() );
 	app->installTranslator( &appTranslator );
+
+	Globe::checkDirAndCreateIfNotExists( QLatin1String( "./" ),
+		QLatin1String( "etc" ) );
 
 	Globe::LaunchTime::instance();
 

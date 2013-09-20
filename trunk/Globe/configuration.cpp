@@ -36,7 +36,6 @@
 #include <Globe/mainwindow.hpp>
 #include <Globe/application_cfg.hpp>
 #include <Globe/window_state_cfg.hpp>
-#include <Globe/utils.hpp>
 #include <Globe/application_cfg.hpp>
 #include <Globe/channels_cfg.hpp>
 #include <Globe/mainwindow_cfg.hpp>
@@ -46,6 +45,8 @@
 #include <Globe/color_for_level.hpp>
 #include <Globe/log.hpp>
 #include <Globe/log_event_view_window.hpp>
+#include <Globe/sounds.hpp>
+#include <Globe/sounds_disabled.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -77,6 +78,10 @@ static const QString defaultLogCfgFileName =
 	QLatin1String( "./etc/Log.cfg" );
 static const QString defaultLogEventWindowCfgFileName =
 	QLatin1String( "./etc/LogEventWindow.cfg" );
+static const QString defaultSoundsCfgFileName =
+	QLatin1String( "./etc/Sounds.cfg" );
+static const QString defaultDisabledSoundsCfgFileName =
+	QLatin1String( "./etc/DisabledSounds.cfg" );
 
 
 //
@@ -127,9 +132,6 @@ Configuration::loadConfiguration()
 	Log::instance().writeMsgToEventLog( LogLevelInfo,
 		QLatin1String( "Loading configuration..." ) );
 
-	checkDirAndCreateIfNotExists( QLatin1String( "./" ),
-		QLatin1String( "etc" ) );
-
 	readAppCfg( d->m_cfgFileName );
 
 	readLogCfg( d->m_appCfg.logCfgFile() );
@@ -147,6 +149,10 @@ Configuration::loadConfiguration()
 	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
 	readLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
+
+	readSoundsCfg( d->m_appCfg.soundsCfgFile() );
+
+	readDisabledSoundsCfg( d->m_appCfg.disabledSoundsCfgFile() );
 
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
@@ -177,6 +183,10 @@ Configuration::saveConfiguration()
 	saveDbCfg( d->m_appCfg.dbCfgFile() );
 
 	saveLogCfg( d->m_appCfg.logCfgFile() );
+
+	saveSoundsCfg( d->m_appCfg.soundsCfgFile() );
+
+	saveDisabledSoundsCfg( d->m_appCfg.disabledSoundsCfgFile() );
 
 	saveAppCfg( d->m_cfgFileName );
 
@@ -221,7 +231,7 @@ Configuration::readAppCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to load Globe's configuration file..." ),
 			x.whatAsQString() );
 	}
@@ -260,7 +270,7 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 					"in \"%1\" file." )
 						.arg( defaultMainWindowCfgFileName ) );
 
-				QMessageBox::warning( &MainWindow::instance(),
+				QMessageBox::warning( 0,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified main window's configuration file.\n"
 						"Main window's configuration will not be loaded.\n"
@@ -279,7 +289,7 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to load main window's configuration..." ),
 			x.whatAsQString() );
 
@@ -323,7 +333,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 					"in \"%1\" file." )
 						.arg( defaultChannelsCfgFileName ) );
 
-				QMessageBox::warning( &MainWindow::instance(),
+				QMessageBox::warning( 0,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified channel's configuration file.\n"
 						"Channel's configuration will not be loaded.\n"
@@ -342,7 +352,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to load channels configuration..." ),
 			x.whatAsQString() );
 
@@ -371,7 +381,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 				"Channel with name \"%1\" already exists." )
 					.arg( channelCfg.name() ) );
 
-			QMessageBox::critical( &MainWindow::instance(),
+			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
 				tr( "Channel with name \"%1\" already exists." )
 					.arg( channelCfg.name() ) );
@@ -385,7 +395,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 					.arg( channelCfg.address().toString() )
 					.arg( QString::number( channelCfg.port() ) ) );
 
-			QMessageBox::critical( &MainWindow::instance(),
+			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
 				tr( "Channel with address \"%1\" and port %2 already exists." )
 					.arg( channelCfg.address().toString() )
@@ -413,7 +423,7 @@ Configuration::readPropertiesCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultPropertiesCfgFileName ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified properties configuration file.\n"
 					"Properties configuration will not be loaded.\n"
@@ -444,7 +454,7 @@ Configuration::readSourcesMainWindowCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultSourcesMainWindowCfgFileName ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified sources main window configuration file.\n"
 					"Sources main window configuration will not be loaded.\n"
@@ -488,7 +498,7 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 					"in \"%1\" file." )
 						.arg( defaultWindowsCfgFileName ) );
 
-				QMessageBox::warning( &MainWindow::instance(),
+				QMessageBox::warning( 0,
 					tr( "Error in application's configuration..." ),
 					tr( "Not specified windows configuration file.\n"
 						"Windows configuration will not be loaded.\n"
@@ -507,7 +517,7 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to load windows configuration..." ),
 			x.whatAsQString() );
 
@@ -536,7 +546,7 @@ Configuration::readColorsCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultColorsCfgFilename ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified colors configuration file.\n"
 					"Colors configuration will not be loaded.\n"
@@ -566,7 +576,7 @@ Configuration::readDbCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultDbCfgFileName ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified DB configuration file.\n"
 					"DB configuration will not be loaded.\n"
@@ -596,7 +606,7 @@ Configuration::readLogCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultLogCfgFileName ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified log configuration file.\n"
 					"Log configuration will not be loaded.\n"
@@ -626,13 +636,73 @@ Configuration::readLogEventWindowCfg( const QString & cfgFileName )
 				"in \"%1\" file." )
 					.arg( defaultLogEventWindowCfgFileName ) );
 
-			QMessageBox::warning( &MainWindow::instance(),
+			QMessageBox::warning( 0,
 				tr( "Error in application's configuration..." ),
 				tr( "Not specified event's log window configuration file.\n"
 					"Event's log window configuration will not be loaded.\n"
 					"At exit event's log window configuration will be saved\n"
 					"in \"%1\" file." )
 						.arg( defaultLogEventWindowCfgFileName ) );
+		}
+	}
+}
+
+void
+Configuration::readSoundsCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		Sounds::instance().readCfg( cfgFileName );
+	else
+	{
+		d->m_appCfg.setSoundsCfgFile( defaultSoundsCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified sounds configuration file.\n"
+				"Sounds configuration will not be loaded.\n"
+				"At exit sounds configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultSoundsCfgFileName ) );
+
+			QMessageBox::warning( 0,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified sounds configuration file.\n"
+					"Sounds configuration will not be loaded.\n"
+					"At exit sounds configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultSoundsCfgFileName ) );
+		}
+	}
+}
+
+void
+Configuration::readDisabledSoundsCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		DisabledSounds::instance().readCfg( cfgFileName );
+	else
+	{
+		d->m_appCfg.setDisabledSoundsCfgFile( defaultDisabledSoundsCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified disabled sounds configuration file.\n"
+				"Disabled sounds configuration will not be loaded.\n"
+				"At exit disabled sounds configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultDisabledSoundsCfgFileName ) );
+
+			QMessageBox::warning( 0,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified disabled sounds configuration file.\n"
+					"Disabled sounds configuration will not be loaded.\n"
+					"At exit disabled sounds configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultDisabledSoundsCfgFileName ) );
 		}
 	}
 }
@@ -659,7 +729,7 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save application's configuration..." ),
 			x.whatAsQString() );
 	}
@@ -693,7 +763,7 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save main window's configuration..." ),
 			x.whatAsQString() );
 	}
@@ -737,7 +807,7 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save channels configuration..." ),
 			x.whatAsQString() );
 	}
@@ -779,7 +849,7 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 				.arg( cfgFileName )
 				.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save windows configuration..." ),
 			x.whatAsQString() );
 	}
@@ -807,6 +877,18 @@ void
 Configuration::saveLogEventWindowCfg( const QString & cfgFileName )
 {
 	LogEventWindow::instance().saveConfiguration( cfgFileName );
+}
+
+void
+Configuration::saveSoundsCfg( const QString & cfgFileName )
+{
+	Sounds::instance().saveCfg( cfgFileName );
+}
+
+void
+Configuration::saveDisabledSoundsCfg( const QString & cfgFileName )
+{
+	DisabledSounds::instance().saveCfg( cfgFileName );
 }
 
 } /* namespace Globe */

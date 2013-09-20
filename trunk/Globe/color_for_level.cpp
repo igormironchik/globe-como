@@ -30,7 +30,6 @@
 
 // Globe include.
 #include <Globe/color_for_level.hpp>
-#include <Globe/mainwindow.hpp>
 #include <Globe/color_for_level_cfg.hpp>
 #include <Globe/log.hpp>
 
@@ -172,7 +171,7 @@ ColorForLevel::saveCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to save colors correspondence configuration..." ),
 			x.whatAsQString() );
 	}
@@ -200,7 +199,7 @@ ColorForLevel::readCfg( const QString & fileName )
 					.arg( fileName )
 					.arg( x.whatAsQString() ) );
 
-		QMessageBox::critical( &MainWindow::instance(),
+		QMessageBox::critical( 0,
 			tr( "Unable to read colors correspondence configuration..." ),
 			x.whatAsQString() );
 

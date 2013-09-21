@@ -89,11 +89,6 @@ public:
 	const Condition & checkConditions( const QVariant & value,
 		Como::Source::Type valueType ) const;
 
-	// Save properties configuration.
-	void saveConfiguration( const QString & fileName ) const;
-	//! Read properties configuration.
-	void readConfiguration( const QString & fileName );
-
 private:
 	//! Priority of the source.
 	int m_priority;

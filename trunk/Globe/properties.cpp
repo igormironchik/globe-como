@@ -162,24 +162,27 @@ Properties::checkConditions( const QVariant & value,
 	return m_otherwise;
 }
 
+template< class T >
 void
-Properties::saveConfiguration( const QString & fileName ) const
+savePropertiesConfigurationTemplate( const QString & fileName,
+	const Properties & p )
 {
-	PropertiesTag tag( *this );
+	PropertiesTag< T > tag( p );
 
 	QtConfFile::writeQtConfFile( tag, fileName,
 		QTextCodec::codecForName( "UTF-8" ) );
 }
 
+template< class T >
 void
-Properties::readConfiguration( const QString & fileName )
+readPropertiesConfigurationTemplate( const QString & fileName, Properties & p )
 {
-	PropertiesTag tag;
+	PropertiesTag< T > tag;
 
 	QtConfFile::readQtConfFile( tag, fileName,
 		QTextCodec::codecForName( "UTF-8" ) );
 
-	operator = ( tag.properties() );
+	p = tag.properties();
 }
 
 
@@ -623,6 +626,38 @@ static inline QString keyToString( const PropertiesKey & key )
 	return result;
 }
 
+static void savePropertiesConfiguration( const QString & fileName,
+	const Properties & p, Como::Source::Type t )
+{
+	switch( t )
+	{
+		case Como::Source::Int :
+			savePropertiesConfigurationTemplate< int > ( fileName, p );
+			break;
+		case Como::Source::UInt :
+			savePropertiesConfigurationTemplate< uint > ( fileName, p );
+			break;
+		case Como::Source::LongLong :
+			savePropertiesConfigurationTemplate< qlonglong > ( fileName, p );
+			break;
+		case Como::Source::ULongLong :
+			savePropertiesConfigurationTemplate< qulonglong > ( fileName, p );
+			break;
+		case Como::Source::String :
+			savePropertiesConfigurationTemplate< QString > ( fileName, p );
+			break;
+		case Como::Source::Double :
+			savePropertiesConfigurationTemplate< double > ( fileName, p );
+			break;
+		case Como::Source::DateTime :
+			savePropertiesConfigurationTemplate< QDateTime > ( fileName, p );
+			break;
+		case Como::Source::Time :
+			savePropertiesConfigurationTemplate< QTime > ( fileName, p );
+			break;
+	}
+}
+
 void
 PropertiesManager::addProperties( const Como::Source & source,
 	const QString & channelName, QWidget * parent )
@@ -671,8 +706,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 							.arg( propertieConfFileName ) );
 
 				try {
-					it.value().properties().saveConfiguration(
-						propertieConfFileName );
+					savePropertiesConfiguration( propertieConfFileName,
+						it.value().properties(), it.value().valueType() );
 
 					Log::instance().writeMsgToEventLog( LogLevelInfo,
 						QString( "Properties for source %1\n"
@@ -738,8 +773,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 								.arg( fileName ) );
 
 					try {
-						properties.saveConfiguration(
-							d->m_directoryName + fileName );
+						savePropertiesConfiguration( d->m_directoryName + fileName,
+							properties, source.type() );
 
 						Log::instance().writeMsgToEventLog( LogLevelInfo,
 							QString( "Properties for source %1\n"
@@ -823,7 +858,8 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 				propertiesDialog.propertiesWidget()->properties();
 
 			try {
-				it.value().properties().saveConfiguration( fileName );
+				savePropertiesConfiguration( fileName, it.value().properties(),
+					it.value().valueType() );
 
 				Log::instance().writeMsgToEventLog( LogLevelInfo,
 					QString( "Properties for key %1\n"
@@ -880,6 +916,38 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 	}
 }
 
+static void readPropertiesConfiguration( const QString & fileName,
+	Properties & p, Como::Source::Type t )
+{
+	switch( t )
+	{
+		case Como::Source::Int :
+			readPropertiesConfigurationTemplate< int > ( fileName, p );
+			break;
+		case Como::Source::UInt :
+			readPropertiesConfigurationTemplate< uint > ( fileName, p );
+			break;
+		case Como::Source::LongLong :
+			readPropertiesConfigurationTemplate< qlonglong > ( fileName, p );
+			break;
+		case Como::Source::ULongLong :
+			readPropertiesConfigurationTemplate< qulonglong > ( fileName, p );
+			break;
+		case Como::Source::String :
+			readPropertiesConfigurationTemplate< QString > ( fileName, p );
+			break;
+		case Como::Source::Double :
+			readPropertiesConfigurationTemplate< double > ( fileName, p );
+			break;
+		case Como::Source::DateTime :
+			readPropertiesConfigurationTemplate< QDateTime > ( fileName, p );
+			break;
+		case Como::Source::Time :
+			readPropertiesConfigurationTemplate< QTime > ( fileName, p );
+			break;
+	}
+}
+
 void
 PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 {
@@ -891,18 +959,14 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 		const QString keyAsString = keyToString( it.key() );
 
 		try {
-			PropertiesTag tag;
-
-			QtConfFile::readQtConfFile( tag,
+			readPropertiesConfiguration(
 				d->m_directoryName + it.value().confFileName(),
-				QTextCodec::codecForName( "UTF-8" ) );
+				it.value().properties(), it.value().valueType() );
 
 			Log::instance().writeMsgToEventLog( LogLevelInfo,
 				QString( "Propertie's configuration for key %1\n"
 					"was loaded." )
 					.arg( keyAsString ) );
-
-			it.value().properties() = tag.properties();
 		}
 		catch( const QtConfFile::Exception & x )
 		{

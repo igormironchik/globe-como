@@ -138,13 +138,13 @@ Configuration::loadConfiguration()
 
 	readDbCfg( d->m_appCfg.dbCfgFile() );
 
-	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
 	readColorsCfg( d->m_appCfg.colorsCfgFile() );
 
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
+
+	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 

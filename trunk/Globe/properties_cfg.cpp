@@ -111,8 +111,13 @@ PropertiesMapRecordTag::PropertiesMapRecordTag( const QString & name,
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
 	m_valueTypeConstraint.addValue( comoSourceIntType );
+	m_valueTypeConstraint.addValue( comoSourceUIntType );
+	m_valueTypeConstraint.addValue( comoSourceLongLongType );
+	m_valueTypeConstraint.addValue( comoSourceULongLongType );
 	m_valueTypeConstraint.addValue( comoSourceDoubleType );
 	m_valueTypeConstraint.addValue( comoSourceStringType );
+	m_valueTypeConstraint.addValue( comoSourceDateTimeType );
+	m_valueTypeConstraint.addValue( comoSourceTimeType );
 
 	m_valueType.setConstraint( &m_valueTypeConstraint );
 }
@@ -127,8 +132,13 @@ PropertiesMapRecordTag::PropertiesMapRecordTag( const PropertiesKey & key,
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
 	m_valueTypeConstraint.addValue( comoSourceIntType );
+	m_valueTypeConstraint.addValue( comoSourceUIntType );
+	m_valueTypeConstraint.addValue( comoSourceLongLongType );
+	m_valueTypeConstraint.addValue( comoSourceULongLongType );
 	m_valueTypeConstraint.addValue( comoSourceDoubleType );
 	m_valueTypeConstraint.addValue( comoSourceStringType );
+	m_valueTypeConstraint.addValue( comoSourceDateTimeType );
+	m_valueTypeConstraint.addValue( comoSourceTimeType );
 
 	m_valueType.setConstraint( &m_valueTypeConstraint );
 

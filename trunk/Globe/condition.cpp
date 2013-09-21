@@ -83,41 +83,117 @@ bool checkIfStatement( const T & a, const T & b, Expression expr )
 bool
 Condition::check( const QVariant & val, Como::Source::Type valueType ) const
 {
-	if( valueType == Como::Source::Int )
+	switch( valueType )
 	{
-		bool ok = false;
+		case Como::Source::Int :
+			{
+				bool ok = false;
 
-		const int a = m_value.toInt( &ok );
+				const int a = m_value.toInt( &ok );
 
-		if( !ok )
-			return false;
+				if( !ok )
+					return false;
 
-		const int b = val.toInt( &ok );
+				const int b = val.toInt( &ok );
 
-		if( !ok )
-			return false;
+				if( !ok )
+					return false;
 
-		return checkIfStatement< int > ( b, a, m_exprType );
+				return checkIfStatement< int > ( b, a, m_exprType );
+			}
+			break;
+		case Como::Source::UInt :
+			{
+				bool ok = false;
+
+				const uint a = m_value.toUInt( &ok );
+
+				if( !ok )
+					return false;
+
+				const uint b = val.toUInt( &ok );
+
+				if( !ok )
+					return false;
+
+				return checkIfStatement< uint > ( b, a, m_exprType );
+			}
+			break;
+		case Como::Source::LongLong :
+			{
+				bool ok = false;
+
+				const qlonglong a = m_value.toLongLong( &ok );
+
+				if( !ok )
+					return false;
+
+				const qlonglong b = val.toLongLong( &ok );
+
+				if( !ok )
+					return false;
+
+				return checkIfStatement< qlonglong > ( b, a, m_exprType );
+			}
+			break;
+		case Como::Source::ULongLong :
+			{
+				bool ok = false;
+
+				const qulonglong a = m_value.toULongLong( &ok );
+
+				if( !ok )
+					return false;
+
+				const qulonglong b = val.toULongLong( &ok );
+
+				if( !ok )
+					return false;
+
+				return checkIfStatement< qulonglong > ( b, a, m_exprType );
+			}
+			break;
+		case Como::Source::Double :
+			{
+				bool ok = false;
+
+				const double a = m_value.toDouble( &ok );
+
+				if( !ok )
+					return false;
+
+				const double b = val.toDouble( &ok );
+
+				if( !ok )
+					return false;
+
+				return checkIfStatement< double > ( b, a, m_exprType );
+			}
+			break;
+		case Como::Source::String :
+			{
+				return checkIfStatement< QString > ( val.toString(),
+					m_value.toString(), m_exprType );
+			}
+			break;
+		case Como::Source::DateTime :
+			{
+				return checkIfStatement< QDateTime > ( val.toDateTime(),
+					m_value.toDateTime(), m_exprType );
+			}
+			break;
+		case Como::Source::Time :
+			{
+				return checkIfStatement< QTime > ( val.toTime(),
+					m_value.toTime(), m_exprType );
+			}
+		default :
+			{
+				return checkIfStatement< QString > ( val.toString(),
+					m_value.toString(), m_exprType );
+			}
+			break;
 	}
-	else if( valueType == Como::Source::Double )
-	{
-		bool ok = false;
-
-		const double a = m_value.toDouble( &ok );
-
-		if( !ok )
-			return false;
-
-		const double b = val.toDouble( &ok );
-
-		if( !ok )
-			return false;
-
-		return checkIfStatement< double > ( b, a, m_exprType );
-	}
-	else
-		return checkIfStatement< QString > ( val.toString(),
-			m_value.toString(), m_exprType );
 }
 
 Expression

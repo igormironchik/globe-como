@@ -85,8 +85,13 @@ QString comoSourceTypeToString( Como::Source::Type type )
 	switch( type )
 	{
 		case Como::Source::Int : return comoSourceIntType;
+		case Como::Source::UInt : return comoSourceUIntType;
+		case Como::Source::LongLong : return comoSourceLongLongType;
+		case Como::Source::ULongLong : return comoSourceULongLongType;
 		case Como::Source::String : return comoSourceStringType;
 		case Como::Source::Double : return comoSourceDoubleType;
+		case Como::Source::DateTime : return comoSourceDateTimeType;
+		case Como::Source::Time : return comoSourceTimeType;
 		default : return comoSourceUnknownType;
 	}
 }
@@ -100,10 +105,20 @@ Como::Source::Type stringToComoSourceType( const QString & type )
 {
 	if( type == comoSourceIntType )
 		return Como::Source::Int;
+	else if( type == comoSourceUIntType )
+		return Como::Source::UInt;
+	else if( type == comoSourceLongLongType )
+		return Como::Source::LongLong;
+	else if( type == comoSourceULongLongType )
+		return Como::Source::ULongLong;
 	else if( type == comoSourceStringType )
 		return Como::Source::String;
 	else if( type == comoSourceDoubleType )
 		return Como::Source::Double;
+	else if( type == comoSourceDateTimeType )
+		return Como::Source::DateTime;
+	else if( type == comoSourceTimeType )
+		return Como::Source::Time;
 	else
 		return Como::Source::String;
 }

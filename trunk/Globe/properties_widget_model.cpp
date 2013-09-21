@@ -111,6 +111,33 @@ static inline bool checkIntValue( const QVariant & value )
 	return ok;
 }
 
+static inline bool checkUIntValue( const QVariant & value )
+{
+	bool ok = false;
+
+	value.toUInt( &ok );
+
+	return ok;
+}
+
+static inline bool checkLongLongValue( const QVariant & value )
+{
+	bool ok = false;
+
+	value.toLongLong( &ok );
+
+	return ok;
+}
+
+static inline bool checkULongLongValue( const QVariant & value )
+{
+	bool ok = false;
+
+	value.toULongLong( &ok );
+
+	return ok;
+}
+
 static inline bool checkDoubleValue( const QVariant & value )
 {
 	bool ok = false;
@@ -121,6 +148,20 @@ static inline bool checkDoubleValue( const QVariant & value )
 }
 
 static inline bool checkStringValue( const QVariant & value )
+{
+	Q_UNUSED( value )
+
+	return true;
+}
+
+static inline bool checkDateTimeValue( const QVariant & value )
+{
+	Q_UNUSED( value )
+
+	return true;
+}
+
+static inline bool checkTimeValue( const QVariant & value )
 {
 	Q_UNUSED( value )
 
@@ -147,20 +188,62 @@ public:
 		{
 			if( data.m_type == IfCondition )
 			{
-				if( m_valueType == Como::Source::Int )
+				switch( m_valueType )
 				{
-					if( !checkIntValue( data.m_value ) )
-						return false;
-				}
-				else if( m_valueType == Como::Source::Double )
-				{
-					if( !checkDoubleValue( data.m_value ) )
-						return false;
-				}
-				else
-				{
-					if( !checkStringValue( data.m_value ) )
-						return false;
+					case Como::Source::Int :
+						{
+							if( !checkIntValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::UInt :
+						{
+							if( !checkUIntValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::LongLong :
+						{
+							if( !checkLongLongValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::ULongLong :
+						{
+							if( !checkULongLongValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::Double :
+						{
+							if( !checkDoubleValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::String :
+						{
+							if( !checkStringValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::DateTime :
+						{
+							if( !checkDateTimeValue( data.m_value ) )
+								return false;
+						}
+						break;
+					case Como::Source::Time :
+						{
+							if( !checkTimeValue( data.m_value ) )
+								return false;
+						}
+						break;
+					default:
+						{
+							if( !checkStringValue( data.m_value ) )
+								return false;
+						}
+						break;
 				}
 			}
 		}
@@ -601,20 +684,59 @@ PropertiesListModel::setData( const QModelIndex & index, const QVariant & value,
 					switch( d->m_valueType )
 					{
 						case Como::Source::Int :
-							if( !checkIntValue( value ) )
-								emit wrongProperties();
-
-						break;
-
+							{
+								if( !checkIntValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::UInt :
+							{
+								if( !checkUIntValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::LongLong :
+							{
+								if( !checkLongLongValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::ULongLong :
+							{
+								if( !checkULongLongValue( value ) )
+									emit wrongProperties();
+							}
+							break;
 						case Como::Source::Double :
-							if( !checkDoubleValue( value ) )
-								emit wrongProperties();
-
-						break;
-
-						default :
-							if( !checkStringValue( value ) )
-								emit wrongProperties();
+							{
+								if( !checkDoubleValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::String :
+							{
+								if( !checkStringValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::DateTime :
+							{
+								if( !checkDateTimeValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						case Como::Source::Time :
+							{
+								if( !checkTimeValue( value ) )
+									emit wrongProperties();
+							}
+							break;
+						default:
+							{
+								if( !checkStringValue( value ) )
+									emit wrongProperties();
+							}
+							break;
 					}
 				}
 

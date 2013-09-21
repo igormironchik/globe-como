@@ -71,8 +71,13 @@ void checkPathAndCreateIfNotExists( const QString & path );
 //
 
 static const QString comoSourceIntType = QLatin1String( "int" );
+static const QString comoSourceUIntType = QLatin1String( "uint" );
+static const QString comoSourceLongLongType = QLatin1String( "longlong" );
+static const QString comoSourceULongLongType = QLatin1String( "ulonglong" );
 static const QString comoSourceStringType = QLatin1String( "string" );
 static const QString comoSourceDoubleType = QLatin1String( "double" );
+static const QString comoSourceDateTimeType = QLatin1String( "datetime" );
+static const QString comoSourceTimeType = QLatin1String( "time" );
 static const QString comoSourceUnknownType = QLatin1String( "unknown" );
 
 

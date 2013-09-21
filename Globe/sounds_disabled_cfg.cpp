@@ -151,8 +151,13 @@ SourceAndDateTimeTag::SourceAndDateTimeTag( const QString & name,
 	,	m_dt( *this, QLatin1String( "dateTime" ), true )
 {
 	m_typeConstraint.addValue( comoSourceIntType );
+	m_typeConstraint.addValue( comoSourceUIntType );
+	m_typeConstraint.addValue( comoSourceLongLongType );
+	m_typeConstraint.addValue( comoSourceULongLongType );
 	m_typeConstraint.addValue( comoSourceDoubleType );
 	m_typeConstraint.addValue( comoSourceStringType );
+	m_typeConstraint.addValue( comoSourceDateTimeType );
+	m_typeConstraint.addValue( comoSourceTimeType );
 
 	m_type.setConstraint( &m_typeConstraint );
 }
@@ -166,8 +171,13 @@ SourceAndDateTimeTag::SourceAndDateTimeTag( const DisabledSoundsData & data,
 	,	m_dt( data.dateTime(), *this, QLatin1String( "dateTime" ), true )
 {
 	m_typeConstraint.addValue( comoSourceIntType );
+	m_typeConstraint.addValue( comoSourceUIntType );
+	m_typeConstraint.addValue( comoSourceLongLongType );
+	m_typeConstraint.addValue( comoSourceULongLongType );
 	m_typeConstraint.addValue( comoSourceDoubleType );
 	m_typeConstraint.addValue( comoSourceStringType );
+	m_typeConstraint.addValue( comoSourceDateTimeType );
+	m_typeConstraint.addValue( comoSourceTimeType );
 
 	m_type.setConstraint( &m_typeConstraint );
 

@@ -250,7 +250,7 @@ Sounds::closeEvent( QCloseEvent * event )
 void
 Sounds::init()
 {
-	checkDirAndCreateIfNotExists( QLatin1String( "./" ),
+	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
 		QLatin1String( "sounds" ) );
 
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );

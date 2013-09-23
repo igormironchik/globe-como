@@ -112,7 +112,15 @@ int main( int argc, char ** argv )
 
 	QSharedPointer< QApplication > app = globeApplication( argc, argv );
 
-	app->setWindowIcon( QIcon( ":/img/globe_128x128.png" ) );
+	QIcon appIcon( ":/img/globe_256x256.png" );
+	appIcon.addFile( ":/img/globe_128x128.png" );
+	appIcon.addFile( ":/img/globe_64x64.png" );
+	appIcon.addFile( ":/img/globe_48x48.png" );
+	appIcon.addFile( ":/img/globe_32x32.png" );
+	appIcon.addFile( ":/img/globe_22x22.png" );
+	appIcon.addFile( ":/img/globe_16x16.png" );
+	appIcon.addFile( ":/img/globe_8x8.png" );
+	app->setWindowIcon( appIcon );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/" + QLocale::system().name() );

@@ -29,5 +29,11 @@
         <file>img/edit_clear_22x22.png</file>
         <file>img/globe_48x48.png</file>
         <file>img/globe_128x128.png</file>
+        <file>img/globe_8x8.png</file>
+        <file>img/globe_16x16.png</file>
+        <file>img/globe_22x22.png</file>
+        <file>img/globe_32x32.png</file>
+        <file>img/globe_64x64.png</file>
+        <file>img/globe_256x256.png</file>
     </qresource>
 </RCC>

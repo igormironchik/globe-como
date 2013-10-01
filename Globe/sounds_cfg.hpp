@@ -38,6 +38,9 @@
 #include <QtConfFile/TagNoValue>
 #include <QtConfFile/TagScalar>
 
+// Globe include.
+#include <Globe/window_state_cfg.hpp>
+
 
 namespace Globe {
 
@@ -99,6 +102,11 @@ public:
 	//! Set info sound file.
 	void setInfoSoundFile( const QString & fileName );
 
+	//! \return Window state configuration.
+	const WindowStateCfg & windowState() const;
+	//! Set window state configuration.
+	void setWindowState( const WindowStateCfg & state );
+
 private:
 	//! Is critical sound enabled?
 	bool m_isCriticalSoundEnabled;
@@ -120,6 +128,8 @@ private:
 	bool m_isInfoSoundEnabled;
 	//! Info sound file.
 	QString m_infoSoundFile;
+	//! Window state configuration.
+	WindowStateCfg m_windowState;
 }; // class SoundsCfg
 
 
@@ -150,6 +160,8 @@ private:
 	QtConfFile::TagScalar< QString > m_debugSoundFile;
 	//! Info sound file.
 	QtConfFile::TagScalar< QString > m_infoSoundFile;
+	//! Window state configuration.
+	WindowStateCfgTag m_windowState;
 }; // class SoundsCfgTag
 
 

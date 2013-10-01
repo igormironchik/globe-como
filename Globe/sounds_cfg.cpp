@@ -58,6 +58,7 @@ SoundsCfg::SoundsCfg( const SoundsCfg & other )
 	,	m_debugSoundFile( other.debugSoundFile() )
 	,	m_isInfoSoundEnabled( other.isInfoSoundEnabled() )
 	,	m_infoSoundFile( other.infoSoundFile() )
+	,	m_windowState( other.windowState() )
 {
 }
 
@@ -76,6 +77,7 @@ SoundsCfg::operator = ( const SoundsCfg & other )
 		m_debugSoundFile = other.debugSoundFile();
 		m_isInfoSoundEnabled = other.isInfoSoundEnabled();
 		m_infoSoundFile = other.infoSoundFile();
+		m_windowState = other.windowState();
 	}
 
 	return *this;
@@ -241,6 +243,18 @@ SoundsCfg::setInfoSoundFile( const QString & fileName )
 	}
 }
 
+const WindowStateCfg &
+SoundsCfg::windowState() const
+{
+	return m_windowState;
+}
+
+void
+SoundsCfg::setWindowState( const WindowStateCfg & state )
+{
+	m_windowState = state;
+}
+
 
 //
 // SoundsCfgTag
@@ -253,6 +267,7 @@ SoundsCfgTag::SoundsCfgTag()
 	,	m_warningSoundFile( *this, QLatin1String( "warningSoundFile" ), false )
 	,	m_debugSoundFile( *this, QLatin1String( "debugSoundFile" ), false )
 	,	m_infoSoundFile( *this, QLatin1String( "infoSoundFile" ), false )
+	,	m_windowState( *this, QLatin1String( "windowState" ), false )
 {
 }
 
@@ -263,6 +278,8 @@ SoundsCfgTag::SoundsCfgTag( const SoundsCfg & cfg )
 	,	m_warningSoundFile( *this, QLatin1String( "warningSoundFile" ), false )
 	,	m_debugSoundFile( *this, QLatin1String( "debugSoundFile" ), false )
 	,	m_infoSoundFile( *this, QLatin1String( "infoSoundFile" ), false )
+	,	m_windowState( cfg.windowState(), *this,
+			QLatin1String( "windowState" ), false )
 {
 	if( cfg.isCriticalSoundEnabled() && !cfg.criticalSoundFile().isEmpty() )
 		m_criticalSoundFile.setValue( cfg.criticalSoundFile() );
@@ -301,6 +318,9 @@ SoundsCfgTag::cfg() const
 
 	if( m_infoSoundFile.isDefined() )
 		c.setInfoSoundFile( m_infoSoundFile.value() );
+
+	if( m_windowState.isDefined() )
+		c.setWindowState( m_windowState.cfg() );
 
 	return c;
 }

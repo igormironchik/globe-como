@@ -43,6 +43,7 @@
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/log_event_view_window.hpp>
 #include <Globe/sources.hpp>
+#include <Globe/sounds.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -164,6 +165,7 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	PropertiesManager::instance().initMenu( d->m_menu );
 	SourcesMainWindow::instance().initMenu( d->m_menu );
 	LogEventWindow::instance().initMenu( d->m_menu );
+	Sounds::instance().initMenu( d->m_menu );
 }
 
 void

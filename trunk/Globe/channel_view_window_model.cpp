@@ -480,7 +480,7 @@ ChannelViewWindowModel::headerData( int section, Qt::Orientation orientation, in
 	{
 		switch ( section )
 		{
-			case sourceNameColumn : return tr( "Source name" );
+			case sourceNameColumn : return tr( "Source Name" );
 			case sourceTypeNameColumn : return tr( "Type Name" );
 			case valueColumn : return tr( "Value" );
 			case dateTimeColumn : return tr( "Date & Time" );

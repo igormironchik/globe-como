@@ -37,7 +37,7 @@ HEADERS += application_cfg.hpp \
            configuration_dialog.hpp \
            db.hpp \
            db_cfg.hpp \
-		   globe_menu.hpp \
+           globe_menu.hpp \
            launch_time.hpp \
            log.hpp \
            log_cfg.hpp \
@@ -45,7 +45,7 @@ HEADERS += application_cfg.hpp \
            log_event_view.hpp \
            log_event_view_model.hpp \
            log_event_view_window.hpp \
-		   log_event_view_window_cfg.hpp \
+           log_event_view_window_cfg.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -59,14 +59,14 @@ HEADERS += application_cfg.hpp \
            select_query_navigation.hpp \
            scrolled_widget.hpp \
            sounds.hpp \
-		   sounds_cfg.hpp \
-		   sounds_disabled.hpp \
-		   sounds_disabled_cfg.hpp \
-		   sounds_disabled_data.hpp \
-		   sounds_disabled_model.hpp \
-		   sounds_disabled_view.hpp \
-		   sounds_played_model.hpp \
-		   sounds_played_view.hpp \
+           sounds_cfg.hpp \
+           sounds_disabled.hpp \
+           sounds_disabled_cfg.hpp \
+           sounds_disabled_data.hpp \
+           sounds_disabled_model.hpp \
+           sounds_disabled_view.hpp \
+           sounds_played_model.hpp \
+           sounds_played_view.hpp \
            source_manual_dialog.hpp \
            sources.hpp \
            sources_dialog.hpp \
@@ -77,9 +77,9 @@ HEADERS += application_cfg.hpp \
            sources_widget_view.hpp \
            window_state_cfg.hpp \
            windows_cfg.hpp \
-		   with_menu.hpp \
+           with_menu.hpp \
            tool_window_object.hpp \
-		   tool_window.hpp \
+           tool_window.hpp \
            utils.hpp
 
 SOURCES += application_cfg.cpp \
@@ -104,7 +104,7 @@ SOURCES += application_cfg.cpp \
            configuration_dialog.cpp \
            db.cpp \
            db_cfg.cpp \
-		   globe_menu.cpp \
+           globe_menu.cpp \
            launch_time.cpp \
            log.cpp \
            log_cfg.cpp \
@@ -112,7 +112,7 @@ SOURCES += application_cfg.cpp \
            log_event_view.cpp \
            log_event_view_model.cpp \
            log_event_view_window.cpp \
-		   log_event_view_window_cfg.cpp \
+           log_event_view_window_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            main.cpp \
@@ -127,14 +127,14 @@ SOURCES += application_cfg.cpp \
            select_query_navigation.cpp \
            scrolled_widget.cpp \
            sounds.cpp \
-		   sounds_cfg.cpp \
-		   sounds_disabled.cpp \
-		   sounds_disabled_cfg.cpp \
-		   sounds_disabled_data.cpp \
-		   sounds_disabled_model.cpp \
-		   sounds_disabled_view.cpp \
-		   sounds_played_model.cpp \
-		   sounds_played_view.cpp \
+           sounds_cfg.cpp \
+           sounds_disabled.cpp \
+           sounds_disabled_cfg.cpp \
+           sounds_disabled_data.cpp \
+           sounds_disabled_model.cpp \
+           sounds_disabled_view.cpp \
+           sounds_played_model.cpp \
+           sounds_played_view.cpp \
            source_manual_dialog.cpp \
            sources.cpp \
            sources_dialog.cpp \
@@ -145,9 +145,9 @@ SOURCES += application_cfg.cpp \
            sources_widget_view.cpp \
            window_state_cfg.cpp \
            windows_cfg.cpp \
-		   with_menu.cpp \
+           with_menu.cpp \
            tool_window_object.cpp \
-		   tool_window.cpp \
+           tool_window.cpp \
            utils.cpp
 
 FORMS	 = channels_to_show.ui \

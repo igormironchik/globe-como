@@ -36,6 +36,8 @@
 #include <Globe/sounds_cfg.hpp>
 #include <Globe/log.hpp>
 #include <Globe/utils.hpp>
+#include <Globe/sounds_played_view.hpp>
+#include <Globe/sounds_played_model.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -43,6 +45,7 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QMessageBox>
+#include <QTabWidget>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -59,6 +62,8 @@ public:
 	SoundsPrivate()
 		:	m_toolWindowObject( 0 )
 		,	m_level( None )
+		,	m_tabs( 0 )
+		,	m_playedSoundsView( 0 )
 	{
 	}
 
@@ -70,6 +75,10 @@ public:
 	SoundsCfg m_cfg;
 	//! Player.
 	QMediaPlayer * m_player;
+	//! Tab widget.
+	QTabWidget * m_tabs;
+	//! Played sounds widget.
+	PlayedSoundsView * m_playedSoundsView;
 }; // class SoundsPrivate
 
 
@@ -145,12 +154,16 @@ Sounds::readCfg( const QString & fileName )
 	}
 
 	d->m_cfg = tag.cfg();
+
+	restoreWindowState( d->m_cfg.windowState(), this );
 }
 
 void
 Sounds::saveCfg( const QString & fileName )
 {
 	try {
+		d->m_cfg.setWindowState( windowStateCfg( this ) );
+
 		SoundsCfgTag tag( d->m_cfg );
 
 		QtConfFile::writeQtConfFile( tag, fileName,
@@ -228,6 +241,8 @@ Sounds::playSound( Level level, const Como::Source & source,
 			d->m_player->setMedia( QUrl::fromLocalFile( soundFileName( level ) ) );
 			d->m_player->play();
 			d->m_level = level;
+			d->m_playedSoundsView->model()->addRecord(
+				PlayedSoundsModelRecord( level, channelName, source ) );
 		}
 	}
 }
@@ -260,6 +275,14 @@ Sounds::init()
 
 	connect( d->m_player, SIGNAL( stateChanged( QMediaPlayer::State ) ),
 		this, SLOT( playerStateChanged( QMediaPlayer::State ) ) );
+
+	d->m_tabs = new QTabWidget( this );
+
+	setCentralWidget( d->m_tabs );
+
+	d->m_playedSoundsView = new PlayedSoundsView( this );
+
+	d->m_tabs->addTab( d->m_playedSoundsView, tr( "Played Sounds" ) );
 }
 
 } /* namespace Globe */

@@ -46,9 +46,10 @@ PlayedSoundsModelRecord::PlayedSoundsModelRecord()
 {
 }
 
-PlayedSoundsModelRecord::PlayedSoundsModelRecord( Level level,
-	const QString & channelName, const Como::Source & source )
-	:	m_level( level )
+PlayedSoundsModelRecord::PlayedSoundsModelRecord( const QDateTime & dt,
+	Level level, const QString & channelName, const Como::Source & source )
+	:	m_dateTime( dt )
+	,	m_level( level )
 	,	m_channelName( channelName )
 	,	m_source( source )
 {
@@ -59,6 +60,7 @@ PlayedSoundsModelRecord::PlayedSoundsModelRecord(
 	:	m_level( other.level() )
 	,	m_channelName( other.channelName() )
 	,	m_source( other.source() )
+	,	m_dateTime( other.dateTime() )
 {
 }
 
@@ -70,9 +72,22 @@ PlayedSoundsModelRecord::operator = ( const PlayedSoundsModelRecord & other )
 		m_level = other.level();
 		m_channelName = other.channelName();
 		m_source = other.source();
+		m_dateTime = other.dateTime();
 	}
 
 	return *this;
+}
+
+const QDateTime &
+PlayedSoundsModelRecord::dateTime() const
+{
+	return m_dateTime;
+}
+
+void
+PlayedSoundsModelRecord::setDateTime( const QDateTime & dt )
+{
+	m_dateTime = dt;
 }
 
 Level
@@ -141,9 +156,10 @@ public:
 //
 
 static const int maxRowsCount = 100;
-static const int channelNameColumn = 0;
-static const int typeNameColumn = 1;
-static const int sourceNameColumn = 2;
+static const int dateTimeColumn = 0;
+static const int channelNameColumn = 1;
+static const int typeNameColumn = 2;
+static const int sourceNameColumn = 3;
 
 PlayedSoundsModel::PlayedSoundsModel( QObject * parent )
 	:	QAbstractTableModel( parent )
@@ -196,7 +212,7 @@ PlayedSoundsModel::columnCount( const QModelIndex & parent ) const
 {
 	Q_UNUSED( parent )
 
-	return 3;
+	return 4;
 }
 
 QVariant
@@ -208,6 +224,8 @@ PlayedSoundsModel::data( const QModelIndex & index, int role ) const
 	{
 		switch( column )
 		{
+			case dateTimeColumn :
+				return ( d->m_data[ index.row() ].dateTime() );
 			case channelNameColumn :
 				return ( d->m_data[ index.row() ].channelName() );
 			case typeNameColumn :
@@ -233,6 +251,8 @@ PlayedSoundsModel::setData( const QModelIndex & index, const QVariant & value,
 	{
 		switch( column )
 		{
+			case dateTimeColumn :
+				d->m_data[ row ].setDateTime( value.toDateTime() ); break;
 			case channelNameColumn :
 				d->m_data[ row ].setChannelName( value.toString() ); break;
 			case typeNameColumn :
@@ -267,6 +287,7 @@ PlayedSoundsModel::headerData( int section, Qt::Orientation orientation,
 	{
 		switch ( section )
 		{
+			case dateTimeColumn : return tr( "Date & Time" );
 			case channelNameColumn : return tr( "Channel Name" );
 			case typeNameColumn : return tr( "Type Name" );
 			case sourceNameColumn : return tr( "Source Name" );

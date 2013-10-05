@@ -31,10 +31,12 @@
 // Globe include.
 #include <Globe/sounds_played_view.hpp>
 #include <Globe/sounds_played_model.hpp>
+#include <Globe/color_for_level.hpp>
 
 // Qt include.
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QPainter>
 
 
 namespace Globe {
@@ -105,6 +107,16 @@ PlayedSoundsView::contextMenuEvent( QContextMenuEvent * event )
 	}
 	else
 		event->ignore();
+}
+
+void
+PlayedSoundsView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
+	const QModelIndex & index ) const
+{
+	painter->fillRect( option.rect,
+		ColorForLevel::instance().color( d->m_model->record( index ).level() ) );
+
+	QTreeView::drawRow( painter, option, index );
 }
 
 void

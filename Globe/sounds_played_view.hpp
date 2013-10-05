@@ -68,6 +68,9 @@ private slots:
 protected:
 	//! Context menu event.
 	void contextMenuEvent( QContextMenuEvent * event );
+	//! Draw row.
+	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,
+		const QModelIndex & index ) const;
 
 private:
 	//! Init.

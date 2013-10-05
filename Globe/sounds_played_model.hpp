@@ -53,13 +53,19 @@ class PlayedSoundsModelRecord {
 public:
 	PlayedSoundsModelRecord();
 
-	PlayedSoundsModelRecord( Level level, const QString & channelName,
+	PlayedSoundsModelRecord( const QDateTime & dt,
+		Level level, const QString & channelName,
 		const Como::Source & source );
 
 	PlayedSoundsModelRecord( const PlayedSoundsModelRecord & other );
 
 	PlayedSoundsModelRecord & operator = (
 		const PlayedSoundsModelRecord & other );
+
+	//! \return Date and time.
+	const QDateTime & dateTime() const;
+	//! Set date and time.
+	void setDateTime( const QDateTime & dt );
 
 	//! \return Level.
 	Level level() const;
@@ -79,6 +85,8 @@ public:
 	void setSource( const Como::Source & s );
 
 private:
+	//! Date and time.
+	QDateTime m_dateTime;
 	//! Level.
 	Level m_level;
 	//! Channel's name.

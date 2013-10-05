@@ -240,9 +240,12 @@ Sounds::playSound( Level level, const Como::Source & source,
 			d->m_player->stop();
 			d->m_player->setMedia( QUrl::fromLocalFile( soundFileName( level ) ) );
 			d->m_player->play();
+
 			d->m_level = level;
+
 			d->m_playedSoundsView->model()->addRecord(
-				PlayedSoundsModelRecord( level, channelName, source ) );
+				PlayedSoundsModelRecord( QDateTime::currentDateTime(),
+					level, channelName, source ) );
 		}
 	}
 }

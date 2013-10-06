@@ -38,6 +38,7 @@
 #include <Globe/utils.hpp>
 #include <Globe/sounds_played_view.hpp>
 #include <Globe/sounds_played_model.hpp>
+#include <Globe/sounds_disabled_view.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -64,6 +65,7 @@ public:
 		,	m_level( None )
 		,	m_tabs( 0 )
 		,	m_playedSoundsView( 0 )
+		,	m_disabledSoundsView( 0 )
 	{
 	}
 
@@ -79,6 +81,8 @@ public:
 	QTabWidget * m_tabs;
 	//! Played sounds widget.
 	PlayedSoundsView * m_playedSoundsView;
+	//! Disabled sounds view.
+	DisabledSoundsView * m_disabledSoundsView;
 }; // class SoundsPrivate
 
 
@@ -286,6 +290,10 @@ Sounds::init()
 	d->m_playedSoundsView = new PlayedSoundsView( this );
 
 	d->m_tabs->addTab( d->m_playedSoundsView, tr( "Played Sounds" ) );
+
+	d->m_disabledSoundsView = new DisabledSoundsView( this );
+
+	d->m_tabs->addTab( d->m_disabledSoundsView, tr( "Disabled Sounds" ) );
 }
 
 } /* namespace Globe */

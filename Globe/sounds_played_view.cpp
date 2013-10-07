@@ -32,6 +32,8 @@
 #include <Globe/sounds_played_view.hpp>
 #include <Globe/sounds_played_model.hpp>
 #include <Globe/color_for_level.hpp>
+#include <Globe/sounds_disabled_to_dialog.hpp>
+#include <Globe/sounds_disabled.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -83,7 +85,19 @@ PlayedSoundsView::model()
 void
 PlayedSoundsView::disableSound()
 {
+	QDateTime to;
 
+	DisableSoundToDialog dlg( to, this );
+
+	if( dlg.exec() == QDialog::Accepted )
+	{
+		if( to > QDateTime::currentDateTime() )
+		{
+			DisabledSounds::instance().disableSounds(
+				d->m_currentRecord.source(),
+				d->m_currentRecord.channelName(), to );
+		}
+	}
 }
 
 void

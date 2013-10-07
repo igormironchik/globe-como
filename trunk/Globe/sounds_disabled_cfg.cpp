@@ -206,7 +206,7 @@ SourceAndDateTimeTag::data() const
 DisabledSoundsInChannelTag::DisabledSoundsInChannelTag( const QString & name,
 	bool isMandatory )
 	:	QtConfFile::TagScalar< QString > ( name, isMandatory )
-	,	m_disabledSounds( *this, QLatin1String( "disabled" ), false )
+	,	m_disabledSounds( *this, QLatin1String( "disabledSound" ), false )
 {
 }
 

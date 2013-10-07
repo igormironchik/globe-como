@@ -151,10 +151,9 @@ DisabledSoundsModel::enableSound( const QModelIndex & index )
 {
 	if( index.isValid() )
 	{
-		const DisabledSoundsModelData & data = d->m_data.at( index.row() );
-
-		DisabledSounds::instance().enableSounds( data.m_source,
-			data.m_channelName );
+		DisabledSounds::instance().enableSounds(
+			d->m_data.at( index.row() ).m_source,
+			d->m_data.at( index.row() ).m_channelName );
 	}
 }
 

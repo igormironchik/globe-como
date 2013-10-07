@@ -64,6 +64,7 @@ HEADERS += application_cfg.hpp \
            sounds_disabled_cfg.hpp \
            sounds_disabled_data.hpp \
 		   sounds_disabled_model.hpp \
+		   sounds_disabled_to_dialog.hpp \
            sounds_disabled_view.hpp \
            sounds_played_model.hpp \
            sounds_played_view.hpp \
@@ -132,6 +133,7 @@ SOURCES += application_cfg.cpp \
            sounds_disabled_cfg.cpp \
            sounds_disabled_data.cpp \
 		   sounds_disabled_model.cpp \
+		   sounds_disabled_to_dialog.cpp \
            sounds_disabled_view.cpp \
            sounds_played_model.cpp \
            sounds_played_view.cpp \
@@ -160,7 +162,8 @@ FORMS	 = channels_to_show.ui \
            properties_key_type_dialog.ui \
            select_query_navigation.ui \
            source_manual_dialog.ui \
-           sources_widget.ui
+		   sources_widget.ui \
+		   sounds_disabled_to_dialog.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo

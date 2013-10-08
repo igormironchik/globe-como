@@ -158,7 +158,8 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save sources main window configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save sources main window configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -186,7 +187,8 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read sources main window configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to read sources main window configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}

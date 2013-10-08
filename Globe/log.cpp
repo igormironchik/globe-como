@@ -908,7 +908,8 @@ Log::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read log configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to read log configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		d->m_logState = ErrorLogState;
 
@@ -946,7 +947,8 @@ Log::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save log configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save log configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 

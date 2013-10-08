@@ -154,7 +154,8 @@ DisabledSounds::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read disabled sounds configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to read disabled sounds configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}
@@ -192,7 +193,8 @@ DisabledSounds::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save disabled sounds configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save disabled sounds configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 

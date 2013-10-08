@@ -138,7 +138,8 @@ DB::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read DB configuration..." ),
-			QString( "%1\n"
+			tr( "Unable to read DB configuration...\n\n"
+				"%1\n\n"
 				"Default database will be used: \"%2\"." )
 					.arg( x.whatAsQString() )
 					.arg( defaultDbFile )
@@ -179,7 +180,8 @@ DB::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save DB configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save DB configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 

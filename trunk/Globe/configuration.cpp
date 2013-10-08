@@ -233,7 +233,8 @@ Configuration::readAppCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to load Globe's configuration file..." ),
-			x.whatAsQString() );
+			tr( "Unable to load Globe's configuration file...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -291,7 +292,8 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to load main window's configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to load main window's configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}
@@ -354,7 +356,8 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to load channels configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to load channels configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}
@@ -383,7 +386,8 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
-				tr( "Channel with name \"%1\" already exists." )
+				tr( "Unable to create new channel...\n\n"
+					"Channel with name \"%1\" already exists." )
 					.arg( channelCfg.name() ) );
 		}
 		else if( !ChannelsManager::instance().isAddressAndPortUnique(
@@ -397,7 +401,8 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
-				tr( "Channel with address \"%1\" and port %2 already exists." )
+				tr( "Unable to create new channel...\n\n"
+					"Channel with address \"%1\" and port %2 already exists." )
 					.arg( channelCfg.address().toString() )
 					.arg( QString::number( channelCfg.port() ) ) );
 		}
@@ -519,7 +524,8 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to load windows configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to load windows configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}
@@ -731,7 +737,8 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save application's configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save application's configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -765,7 +772,8 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save main window's configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save main window's configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -809,7 +817,8 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save channels configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save channels configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -851,7 +860,8 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save windows configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save windows configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 

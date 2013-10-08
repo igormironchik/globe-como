@@ -173,7 +173,8 @@ ColorForLevel::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save colors correspondence configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save colors correspondence configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -201,7 +202,8 @@ ColorForLevel::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read colors correspondence configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to read colors correspondence configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 
 		return;
 	}

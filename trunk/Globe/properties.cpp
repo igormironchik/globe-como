@@ -733,7 +733,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 								.arg( x.whatAsQString() ) );
 
 					QMessageBox::critical( 0, tr( "Unable to save properties..." ),
-						x.whatAsQString() );
+						tr( "Unable to save properties...\n\n%1" )
+							.arg( x.whatAsQString() ) );
 				}
 			}
 			else
@@ -799,7 +800,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 									.arg( x.whatAsQString() ) );
 
 						QMessageBox::critical( 0, tr( "Unable to save properties..." ),
-							x.whatAsQString() );
+							tr( "Unable to save properties...\n\n%1" )
+								.arg( x.whatAsQString() ) );
 					}
 				}
 			}
@@ -878,7 +880,8 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 							.arg( x.whatAsQString() ) );
 
 				QMessageBox::critical( 0, tr( "Unable to save properties..." ),
-					x.whatAsQString() );
+					tr( "Unable to save properties...\n\n%1" )
+						.arg( x.whatAsQString() ) );
 			}
 		}
 	}
@@ -912,7 +915,8 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save properties configuration..." ),
-			x.whatAsQString() );
+			tr( "Unable to save properties configuration...\n\n%1" )
+				.arg( x.whatAsQString() ) );
 	}
 }
 
@@ -982,7 +986,8 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 			const QMessageBox::StandardButton button =
 				QMessageBox::question( 0,
 					tr( "Unable to read properties configuration..." ),
-					tr( "%1\\n\\n"
+					tr( "Unable to read properties configuration...\n\n"
+						"%1\n\n"
 						"Do you want to delete this file?" )
 							.arg( x.whatAsQString() ),
 					QMessageBox::Ok | QMessageBox::Cancel,
@@ -1033,7 +1038,8 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read properties configuration..." ),
-				x.whatAsQString() );
+				tr( "Unable to read properties configuration...\n\n%1" )
+					.arg( x.whatAsQString() ) );
 
 			return;
 		}

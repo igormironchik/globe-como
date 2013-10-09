@@ -151,9 +151,9 @@ public:
 
 private:
 	//! X coordinates.
-	QtConfFile::TagScalar< int > m_x;
+	QtConfFile::TagScalar< double > m_x;
 	//! Y coordinates.
-	QtConfFile::TagScalar< int > m_y;
+	QtConfFile::TagScalar< double > m_y;
 }; // class PosTag
 
 
@@ -177,11 +177,11 @@ public:
 
 private:
 	//! Width.
-	QtConfFile::TagScalar< int > m_width;
+	QtConfFile::TagScalar< double > m_width;
 	//! Height.
-	QtConfFile::TagScalar< int > m_height;
+	QtConfFile::TagScalar< double > m_height;
 	//! Constraint for width and height.
-	QtConfFile::ConstraintMinMax< int > m_constraint;
+	QtConfFile::ConstraintMinMax< double > m_constraint;
 }; // class SizeTag
 
 

@@ -36,9 +36,6 @@
 #include <QDesktopWidget>
 #include <QApplication>
 
-// C++ include.
-#include <limits>
-
 
 namespace Globe {
 
@@ -212,6 +209,31 @@ restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
 
 
 //
+// toRelativePos
+//
+
+QPointF toRelativePos( const QPoint & p )
+{
+	const QRect geometry = QApplication::desktop()->screenGeometry();
+
+	return QPointF( (qreal) p.x() / (qreal) geometry.width(),
+		(qreal) p.y() / (qreal) geometry.height() );
+}
+
+
+//
+// fromRelativePos
+//
+
+QPoint fromRelativePos( const QPointF & p )
+{
+	const QRect geometry = QApplication::desktop()->screenGeometry();
+
+	return QPoint( p.x() * geometry.width(), p.y() * geometry.height() );
+}
+
+
+//
 // PosTag
 //
 
@@ -229,8 +251,10 @@ PosTag::PosTag( const QPoint & pos,
 	,	m_x( *this, QLatin1String( "x" ), true )
 	,	m_y( *this, QLatin1String( "y" ), true )
 {
-	m_x.setValue( pos.x() );
-	m_y.setValue( pos.y() );
+	const QPointF fp = toRelativePos( pos );
+
+	m_x.setValue( fp.x() );
+	m_y.setValue( fp.y() );
 
 	setDefined();
 }
@@ -238,7 +262,35 @@ PosTag::PosTag( const QPoint & pos,
 QPoint
 PosTag::pos() const
 {
-	return QPoint( m_x.value(), m_y.value() );
+	const QPointF fp( m_x.value(), m_y.value() );
+
+	return fromRelativePos( fp );
+}
+
+
+//
+// toRelativeSize
+//
+
+QSizeF toRelativeSize( const QSize & s )
+{
+	const QRect geometry = QApplication::desktop()->screenGeometry();
+
+	return QSizeF( (qreal) s.width() / (qreal) geometry.width(),
+		(qreal) s.height() / (qreal) geometry.height() );
+}
+
+
+//
+// fromRelativeSize
+//
+
+QSize fromRelativeSize( const QSizeF & s )
+{
+	const QRect geometry = QApplication::desktop()->screenGeometry();
+
+	return QSize( s.width() * geometry.width(),
+		s.height() * geometry.height() );
 }
 
 
@@ -251,7 +303,7 @@ SizeTag::SizeTag( QtConfFile::Tag & owner, const QString & name,
 	:	QtConfFile::TagNoValue( owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
-	,	m_constraint( 0, std::numeric_limits< int >::max() )
+	,	m_constraint( 0.0, 1.0 )
 {
 	m_width.setConstraint( &m_constraint );
 	m_height.setConstraint( &m_constraint );
@@ -262,13 +314,15 @@ SizeTag::SizeTag( const QSize & size,
 	:	QtConfFile::TagNoValue( owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
-	,	m_constraint( 0, std::numeric_limits< int >::max() )
+	,	m_constraint( 0.0, 1.0 )
 {
 	m_width.setConstraint( &m_constraint );
 	m_height.setConstraint( &m_constraint );
 
-	m_width.setValue( size.width() );
-	m_height.setValue( size.height() );
+	const QSizeF fs = toRelativeSize( size );
+
+	m_width.setValue( fs.width() );
+	m_height.setValue( fs.height() );
 
 	setDefined();
 }
@@ -276,7 +330,9 @@ SizeTag::SizeTag( const QSize & size,
 QSize
 SizeTag::size() const
 {
-	return QSize( m_width.value(), m_height.value() );
+	const QSizeF fs( m_width.value(), m_height.value() );
+
+	return fromRelativeSize( fs );
 }
 
 

@@ -136,24 +136,24 @@ ChannelViewWindow::viewHeaderCfg() const
 	cfg.setSortOrder( d->m_view->header()->sortIndicatorOrder() );
 
 	cfg.setSourceNameColumn( HeaderColumnCfg(
-		d->m_view->header()->sectionSize( 0 ),
-		d->m_view->header()->visualIndex( 0 ) ) );
+		d->m_view->header()->sectionSize( sourceNameColumn ),
+		d->m_view->header()->visualIndex( sourceNameColumn ) ) );
 
 	cfg.setTypeNameColumn( HeaderColumnCfg(
-		d->m_view->header()->sectionSize( 1 ),
-		d->m_view->header()->visualIndex( 1 ) ) );
+		d->m_view->header()->sectionSize( sourceTypeNameColumn ),
+		d->m_view->header()->visualIndex( sourceTypeNameColumn ) ) );
 
 	cfg.setValueColumn( HeaderColumnCfg(
-		d->m_view->header()->sectionSize( 2 ),
-		d->m_view->header()->visualIndex( 2 ) ) );
+		d->m_view->header()->sectionSize( valueColumn ),
+		d->m_view->header()->visualIndex( valueColumn ) ) );
 
 	cfg.setDateTimeColumn( HeaderColumnCfg(
-		d->m_view->header()->sectionSize( 3 ),
-		d->m_view->header()->visualIndex( 3 ) ) );
+		d->m_view->header()->sectionSize( dateTimeColumn ),
+		d->m_view->header()->visualIndex( dateTimeColumn ) ) );
 
 	cfg.setPriorityColumn( HeaderColumnCfg(
-		d->m_view->header()->sectionSize( 4 ),
-		d->m_view->header()->visualIndex( 4 ) ) );
+		d->m_view->header()->sectionSize( priorityColumn ),
+		d->m_view->header()->visualIndex( priorityColumn ) ) );
 
 	return cfg;
 }
@@ -198,19 +198,24 @@ void
 ChannelViewWindow::restoreHeader( const ViewHeaderCfg & cfg )
 {
 	QList< int > positions;
-	positions.append( cfg.sourceNameColumn().pos() );
-	positions.append( cfg.typeNameColumn().pos() );
-	positions.append( cfg.valueColumn().pos() );
-	positions.append( cfg.dateTimeColumn().pos() );
 	positions.append( cfg.priorityColumn().pos() );
+	positions.append( cfg.dateTimeColumn().pos() );
+	positions.append( cfg.typeNameColumn().pos() );
+	positions.append( cfg.sourceNameColumn().pos() );
+	positions.append( cfg.valueColumn().pos() );
 
 	restoreColumns( positions, d->m_view->header() );
 
-	d->m_view->header()->resizeSection( 0, cfg.sourceNameColumn().size() );
-	d->m_view->header()->resizeSection( 1, cfg.typeNameColumn().size() );
-	d->m_view->header()->resizeSection( 2, cfg.valueColumn().size() );
-	d->m_view->header()->resizeSection( 3, cfg.dateTimeColumn().size() );
-	d->m_view->header()->resizeSection( 4, cfg.priorityColumn().size() );
+	d->m_view->header()->resizeSection( sourceNameColumn,
+		cfg.sourceNameColumn().size() );
+	d->m_view->header()->resizeSection( sourceTypeNameColumn,
+		cfg.typeNameColumn().size() );
+	d->m_view->header()->resizeSection( valueColumn,
+		cfg.valueColumn().size() );
+	d->m_view->header()->resizeSection( dateTimeColumn,
+		cfg.dateTimeColumn().size() );
+	d->m_view->header()->resizeSection( priorityColumn,
+		cfg.priorityColumn().size() );
 
 	d->m_view->header()->setSortIndicator( cfg.sortColumn(), cfg.sortOrder() );
 }

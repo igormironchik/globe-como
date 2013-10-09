@@ -44,6 +44,13 @@
 
 namespace Globe {
 
+static const int priorityColumn = 0;
+static const int dateTimeColumn = 1;
+static const int sourceTypeNameColumn = 2;
+static const int sourceNameColumn = 3;
+static const int valueColumn = 4;
+
+
 //
 // ChannelViewWindowModel
 //
@@ -89,12 +96,6 @@ public:
 	//! \return Data by the given index and role.
 	QVariant data( const QModelIndex & index,
 		int role = Qt::DisplayRole ) const;
-	//! Insert rows to the model.
-//	bool insertRows( int row, int count,
-//		const QModelIndex & parent = QModelIndex() );
-	//! Remove rows from the model.
-//	bool removeRows( int row, int count,
-//		const QModelIndex & parent = QModelIndex() );
 	//! Set data.
 	bool setData( const QModelIndex & index, const QVariant & value,
 		int role = Qt::EditRole );

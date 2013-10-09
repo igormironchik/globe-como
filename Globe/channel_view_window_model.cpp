@@ -109,12 +109,6 @@ public:
 // ChannelViewWindowModel
 //
 
-static const int sourceNameColumn = 0;
-static const int sourceTypeNameColumn = 1;
-static const int valueColumn = 2;
-static const int dateTimeColumn = 3;
-static const int priorityColumn = 4;
-
 ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 	:	QAbstractTableModel( parent )
 	,	d( new ChannelViewWindowModelPrivate )

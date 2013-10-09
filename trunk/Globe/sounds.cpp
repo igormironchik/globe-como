@@ -277,6 +277,8 @@ Sounds::init()
 	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
 		QLatin1String( "sounds" ) );
 
+	setWindowTitle( tr( "Sounds" ) );
+
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 

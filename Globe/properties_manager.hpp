@@ -87,6 +87,9 @@ public:
 	//! Read properties manager configuration.
 	void readConfiguration( const QString & fileName );
 
+	//! Init with default configuration.
+	void initWithDefaultCfg();
+
 	//! \return Tool window object.
 	ToolWindowObject * toolWindowObject();
 

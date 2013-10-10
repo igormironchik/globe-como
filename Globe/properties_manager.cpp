@@ -658,6 +658,12 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 }
 
 void
+PropertiesManager::initWithDefaultCfg()
+{
+	checkPathAndCreateIfNotExists( d->m_directoryName );
+}
+
+void
 PropertiesManager::readConfiguration( const QString & fileName )
 {
 	{

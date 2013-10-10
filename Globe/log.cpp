@@ -886,6 +886,15 @@ Log::cfg() const
 }
 
 void
+Log::initWithDefaultCfg()
+{
+	d->m_logState = ConfigurationLoadedLogState;
+
+	if( d->m_dbState == AllIsOkDBState )
+		init();
+}
+
+void
 Log::readCfg( const QString & fileName )
 {
 	LogTag tag;

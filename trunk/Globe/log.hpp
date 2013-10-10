@@ -136,6 +136,9 @@ public:
 	//! Save configuration.
 	void saveCfg( const QString & fileName );
 
+	//! Init log with default configuration.
+	void initWithDefaultCfg();
+
 	//! Enable/disable event's log.
 	void enableEventsLog( bool on = true );
 	//! Enable/disable source's log.

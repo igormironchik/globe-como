@@ -132,6 +132,8 @@ int main( int argc, char ** argv )
 
 	Globe::LaunchTime::instance();
 
+	Globe::Log::instance();
+
 	QList< Globe::ToolWindowObject* > toolWindows;
 	toolWindows.append( Globe::PropertiesManager::instance().toolWindowObject() );
 	toolWindows.append( Globe::SourcesMainWindow::instance().toolWindowObject() );

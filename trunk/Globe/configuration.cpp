@@ -47,6 +47,7 @@
 #include <Globe/log_event_view_window.hpp>
 #include <Globe/sounds.hpp>
 #include <Globe/sounds_disabled.hpp>
+#include <Globe/db_cfg.hpp>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -134,9 +135,9 @@ Configuration::loadConfiguration()
 
 	readAppCfg( d->m_cfgFileName );
 
-	readLogCfg( d->m_appCfg.logCfgFile() );
-
 	readDbCfg( d->m_appCfg.dbCfgFile() );
+
+	readLogCfg( d->m_appCfg.logCfgFile() );
 
 	readPropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
@@ -156,8 +157,13 @@ Configuration::loadConfiguration()
 
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 
-	Log::instance().writeMsgToEventLog( LogLevelInfo,
-		QLatin1String( "Configuration successfully loaded..." ) );
+	if( d->m_appCfgWasLoaded )
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QLatin1String( "Configuration successfully loaded..." ) );
+	else
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QLatin1String( "Configuration was not loaded. "
+				"Use the default configuration." ) );
 }
 
 void
@@ -418,6 +424,8 @@ Configuration::readPropertiesCfg( const QString & cfgFileName )
 	{
 		d->m_appCfg.setPropertiesCfgFile( defaultPropertiesCfgFileName );
 
+		PropertiesManager::instance().initWithDefaultCfg();
+
 		if( d->m_appCfgWasLoaded )
 		{
 			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
@@ -572,6 +580,8 @@ Configuration::readDbCfg( const QString & cfgFileName )
 	{
 		d->m_appCfg.setDbCfgFile( defaultDbCfgFileName );
 
+		DB::instance().setCfg( DBCfg() );
+
 		if( d->m_appCfgWasLoaded )
 		{
 			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
@@ -601,6 +611,8 @@ Configuration::readLogCfg( const QString & cfgFileName )
 	else
 	{
 		d->m_appCfg.setLogCfgFile( defaultLogCfgFileName );
+
+		Log::instance().initWithDefaultCfg();
 
 		if( d->m_appCfgWasLoaded )
 		{

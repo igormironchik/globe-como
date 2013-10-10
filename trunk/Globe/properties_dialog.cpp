@@ -31,12 +31,18 @@
 // Globe include.
 #include <Globe/properties_dialog.hpp>
 #include <Globe/properties_widget.hpp>
+#include <Globe/properties.hpp>
 
 // Qt include.
 #include <QDialogButtonBox>
 #include <QVBoxLayout>
 #include <QFrame>
 #include <QPushButton>
+#include <QFileDialog>
+#include <QMessageBox>
+
+// QtConfFile include.
+#include <QtConfFile/Exceptions>
 
 
 namespace Globe {
@@ -47,13 +53,17 @@ namespace Globe {
 
 class PropertiesDialogPrivate {
 public:
-	PropertiesDialogPrivate( Como::Source::Type valueType )
-		:	m_valueType( valueType )
+	PropertiesDialogPrivate( const QString & cfgDirName,
+		Como::Source::Type valueType )
+		:	m_cfgDirName( cfgDirName )
+		,	m_valueType( valueType )
 		,	m_properties( 0 )
 		,	m_buttons( 0 )
 	{
 	}
 
+	//! Configuration directory.
+	QString m_cfgDirName;
 	//! Type of the value.
 	Como::Source::Type m_valueType;
 	//! Properties widget.
@@ -67,10 +77,11 @@ public:
 // PropertiesDialog
 //
 
-PropertiesDialog::PropertiesDialog( Como::Source::Type valueType,
+PropertiesDialog::PropertiesDialog( const QString & cfgDirName,
+	Como::Source::Type valueType,
 	QWidget * parent, Qt::WindowFlags f )
 	:	QDialog( parent, f )
-	,	d( new PropertiesDialogPrivate( valueType ) )
+	,	d( new PropertiesDialogPrivate( cfgDirName, valueType ) )
 {
 	init();
 }
@@ -112,6 +123,10 @@ PropertiesDialog::init()
 
 	d->m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
+	QPushButton * openButton = new QPushButton( tr( "Open" ), this );
+
+	d->m_buttons->addButton( openButton, QDialogButtonBox::ActionRole );
+
 	connect( d->m_buttons, SIGNAL( accepted() ),
 		this, SLOT( accept() ) );
 	connect( d->m_buttons, SIGNAL( rejected() ),
@@ -120,6 +135,8 @@ PropertiesDialog::init()
 		this, SLOT( wrongProperties() ) );
 	connect( d->m_properties, SIGNAL( changed() ),
 		this, SLOT( propertiesChanged() ) );
+	connect( openButton, SIGNAL( clicked() ),
+		this, SLOT( openProperties() ) );
 }
 
 void
@@ -132,6 +149,33 @@ void
 PropertiesDialog::propertiesChanged()
 {
 	d->m_buttons->button( QDialogButtonBox::Ok )->setEnabled( true );
+}
+
+void
+PropertiesDialog::openProperties()
+{
+	const QString fileName = QFileDialog::getOpenFileName( this,
+		tr( "Select properties configuration file..." ),
+		d->m_cfgDirName,
+		tr( "Configuration Files (*.cfg)" )  );
+
+	if( !fileName.isEmpty() )
+	{
+		try {
+			Properties p;
+
+			readPropertiesConfiguration( fileName, p, d->m_valueType );
+
+			d->m_properties->setProperties( p );
+		}
+		catch( const QtConfFile::Exception & x )
+		{
+			QMessageBox::critical( 0,
+				tr( "Unable to load properties configuration..." ),
+				tr( "Unable to load properties configuration...\n\n%1" )
+					.arg( x.whatAsQString() ) );
+		}
+	}
 }
 
 } /* namespace Globe */

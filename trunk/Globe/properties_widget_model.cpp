@@ -31,6 +31,7 @@
 // Globe include.
 #include <Globe/properties_widget_model.hpp>
 #include <Globe/condition.hpp>
+#include <Globe/condition_cfg.hpp>
 
 // Qt include.
 #include <QList>
@@ -523,27 +524,6 @@ static inline QString expressionToString( Expression expr )
 	}
 }
 
-static const QString noneLevelString = QLatin1String( "none" );
-static const QString criticalLevelString = QLatin1String( "critical" );
-static const QString errorLevelString = QLatin1String( "error" );
-static const QString warningLevelString = QLatin1String( "warning" );
-static const QString debugLevelString = QLatin1String( "debug" );
-static const QString infoLevelString = QLatin1String( "info" );
-
-static inline QString levelToString( Level l )
-{
-	switch( l )
-	{
-		case None : return noneLevelString;
-		case Critical : return criticalLevelString;
-		case Error : return errorLevelString;
-		case Warning : return warningLevelString;
-		case Debug : return debugLevelString;
-		case Info : return infoLevelString;
-		default : return QString();
-	}
-}
-
 QVariant
 PropertiesListModel::data( const QModelIndex & index, int role ) const
 {
@@ -636,24 +616,6 @@ static inline Expression expressionFromString( const QString & str )
 		return IfGreaterOrEqual;
 	else
 		return IfEqual;
-}
-
-static inline Level levelFromString( const QString & str )
-{
-	if( str == noneLevelString )
-		return None;
-	else if( str == criticalLevelString )
-		return Critical;
-	else if( str == errorLevelString )
-		return Error;
-	else if( str == warningLevelString )
-		return Warning;
-	else if( str == debugLevelString )
-		return Debug;
-	else if( str == infoLevelString )
-		return Info;
-	else
-		return None;
 }
 
 bool

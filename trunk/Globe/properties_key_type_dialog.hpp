@@ -32,7 +32,7 @@
 #define GLOBE__PROPERTIES_KEY_TYPE_DIALOG_HPP__INCLUDED
 
 // Globe include.
-#include <Globe/properties.hpp>
+#include <Globe/properties_map.hpp>
 
 // Qt include.
 #include <QDialog>

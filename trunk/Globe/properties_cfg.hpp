@@ -35,93 +35,14 @@
 #include <QtConfFile/TagNoValue>
 #include <QtConfFile/TagVectorOfTags>
 #include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintMinMax>
 #include <QtConfFile/ConstraintOneOf>
 
 // Globe include.
-#include <Globe/condition_cfg.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_map.hpp>
 #include <Globe/window_state_cfg.hpp>
 
 
 namespace Globe {
-
-
-//
-// PropertiesTag
-//
-
-//! Tag for properties of the source.
-template< class T >
-class PropertiesTag
-	:	public QtConfFile::TagNoValue
-{
-public:
-	PropertiesTag()
-		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
-		,	m_priority( *this, QLatin1String( "priority" ), false )
-		,	m_conditions( *this, QLatin1String( "if" ), false )
-		,	m_otherwise( *this, QLatin1String( "otherwise" ), false )
-		,	m_priorityConstraint( 0, 999 )
-	{
-		m_priority.setConstraint( &m_priorityConstraint );
-	}
-
-	PropertiesTag( const Properties & properties )
-		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
-		,	m_priority( *this, QLatin1String( "priority" ), false )
-		,	m_conditions( *this, QLatin1String( "if" ), false )
-		,	m_otherwise( properties.otherwise(), *this,
-				QLatin1String( "otherwise" ), false )
-		,	m_priorityConstraint( 0, 999 )
-	{
-		m_priority.setConstraint( &m_priorityConstraint );
-
-		if( properties.priority() > 0 )
-			m_priority.setValue( properties.priority() );
-
-		for( int i = 0; i < properties.conditionsAmount(); ++i )
-		{
-			QtConfFile::TagVectorOfTags< ConditionTag< T > >::PointerToTag tag(
-				new ConditionTag< T >( properties.conditionAt( i ),
-					QLatin1String( "if" ), true ) );
-
-			m_conditions.setValue( tag );
-		}
-
-		setDefined();
-	}
-
-	Properties properties() const
-	{
-		Properties p;
-
-		if( m_priority.isDefined() )
-			p.setPriority( m_priority.value() );
-
-		if( m_conditions.isDefined() )
-		{
-			for( int i = 0; i < m_conditions.size(); ++i )
-				p.insertCondition( m_conditions.at( i ).condition(), i );
-		}
-
-		if( m_otherwise.isDefined() )
-			p.otherwise() = m_otherwise.value();
-
-		return p;
-	}
-
-private:
-	//! Priority.
-	QtConfFile::TagScalar< int > m_priority;
-	//! Conditions.
-	QtConfFile::TagVectorOfTags< ConditionTag< T > > m_conditions;
-	//! Otherwise condition.
-	OtherwiseTag m_otherwise;
-	//! Constraint for the priority.
-	QtConfFile::ConstraintMinMax< int > m_priorityConstraint;
-}; // class PropertiesTag
-
 
 //
 // PropertiesMapRecordTag

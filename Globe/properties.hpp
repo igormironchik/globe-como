@@ -28,25 +28,26 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__PROPERTIES_HPP__INCLUDED
-#define GLOBE__PROPERTIES_HPP__INCLUDED
+#ifndef GLOBE__PROPERTIES_HPP__INLCUDED
+#define GLOBE__PROPERTIES_HPP__INLCUDED
 
 // Como include.
 #include <Como/Source>
 
 // Qt include.
 #include <QList>
-#include <QMap>
-#include <QScopedPointer>
-#include <QMainWindow>
 
 // Globe include.
 #include <Globe/condition.hpp>
-#include <Globe/tool_window.hpp>
+#include <Globe/condition_cfg.hpp>
 
-QT_BEGIN_NAMESPACE
-class QModelIndex;
-QT_END_NAMESPACE
+// QtConfFile include.
+#include <QtConfFile/Utils>
+#include <QtConfFile/TagNoValue>
+#include <QtConfFile/TagVectorOfTags>
+#include <QtConfFile/TagScalar>
+#include <QtConfFile/ConstraintMinMax>
+#include <QtConfFile/ConstraintOneOf>
 
 
 namespace Globe {
@@ -100,203 +101,129 @@ private:
 
 
 //
-// PropertiesKeyType
+// PropertiesTag
 //
 
-//! Enum with properties key type.
-enum PropertiesKeyType {
-	//! Not defined.
-	NotDefinedKeyType,
-	//! Exactly this source.
-	ExactlyThisSource,
-	//! Exactly this source but from any channel.
-	ExactlyThisSourceInAnyChannel,
-	//! Exactly this type of source with any name.
-	ExactlyThisTypeOfSource,
-	//! Exactly this type of source with any name from any channel.
-	ExactlyThisTypeOfSourceInAnyChannel
-}; // enum PropertiesKeyType
-
-
-//
-// PropertiesKey
-//
-
-/*!
-	The key for the map of properties.
-
-	Name of the type can't be empty.
-
-	If defined only name of type then this key points to the properties
-	for all sources with the given type in any channel.
-
-	If defined name of the type and name of the channel then this key
-	points to the properties for all sources with the given type in the
-	given channel.
-
-	If defined name of the source and name of the type then this key
-	points to the properties for the sources with the given name and type
-	in any channel.
-
-	If defined and name and type and channel's name then this key points
-	to the properties for the source with the given name and type from the
-	given channel.
-*/
-class PropertiesKey {
-public:
-	PropertiesKey();
-
-	PropertiesKey( const QString & name,
-		const QString & typeName, const QString & channelName );
-
-	PropertiesKey( const PropertiesKey & other );
-
-	PropertiesKey & operator = ( const PropertiesKey & other );
-
-	//! \return Name of the source.
-	const QString & name() const;
-
-	//! \return Type name of the source.
-	const QString & typeName() const;
-
-	//! \return Channel's name.
-	const QString & channelName() const;
-
-	//! \return Type of the key.
-	PropertiesKeyType keyType() const;
-
-private:
-	//! Source's name.
-	QString m_name;
-	//! Source's type name.
-	QString m_typeName;
-	//! Channel's name.
-	QString m_channelName;
-	//! Key type.
-	PropertiesKeyType m_keyType;
-}; // class PropertiesKey
-
-bool operator < ( const PropertiesKey & k1, const PropertiesKey & k2 );
-bool operator == ( const PropertiesKey & k1, const PropertiesKey & k2 );
-
-
-//
-// PropertiesValue
-//
-
-//! The value for the map of properties.
-class PropertiesValue {
-public:
-	PropertiesValue();
-
-	PropertiesValue( const QString & confFileName,
-		const Como::Source::Type & type,
-		const Properties & props );
-
-	PropertiesValue( const PropertiesValue & other );
-
-	PropertiesValue & operator = ( const PropertiesValue & other );
-
-	//! \return Configuration's file name.
-	const QString & confFileName() const;
-
-	//! \return Type of the value of the source.
-	Como::Source::Type valueType() const;
-
-	//! \return Properties.
-	Properties & properties();
-
-	//! \return Properties.
-	const Properties & properties() const;
-
-private:
-	//! Configuration's file name.
-	QString m_confFileName;
-	//!Type of the value of the source.
-	Como::Source::Type m_valueType;
-	//! Properties.
-	Properties m_properties;
-}; // class PropertiesValue
-
-
-//! Type of the map of properties.
-typedef QMap< PropertiesKey, PropertiesValue > PropertiesMap;
-
-
-//
-// PropertiesManager
-//
-
-class PropertiesManagerPrivate;
-
-//! Manager of all properties in application.
-class PropertiesManager
-	:	public QMainWindow
-	,	public ToolWindow
+//! Tag for properties of the source.
+template< class T >
+class PropertiesTag
+	:	public QtConfFile::TagNoValue
 {
-	Q_OBJECT
-
-private:
-	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
-
-	~PropertiesManager();
-
 public:
-	//! \return Instance.
-	static PropertiesManager & instance();
+	PropertiesTag()
+		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
+		,	m_priority( *this, QLatin1String( "priority" ), false )
+		,	m_conditions( *this, QLatin1String( "if" ), false )
+		,	m_otherwise( *this, QLatin1String( "otherwise" ), false )
+		,	m_priorityConstraint( 0, 999 )
+	{
+		m_priority.setConstraint( &m_priorityConstraint );
+	}
 
-	/*!
-		\return Properties for the given source.
-		\retval NULL if there is no properties for the given source.
-	*/
-	const Properties * findProperties( const Como::Source & source,
-		const QString & channelName, PropertiesKey * resultedkey ) const;
-	//! Add new properties.
-	void addProperties( const Como::Source & source,
-		const QString & channelName, QWidget * parent = 0 );
-	//! Remove properties for the given \arg source source.
-	void removeProperties( const PropertiesKey & key, QWidget * parent = 0 );
-	//! Edit properties.
-	void editProperties( const PropertiesKey & key, QWidget * parent = 0 );
+	PropertiesTag( const Properties & properties )
+		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
+		,	m_priority( *this, QLatin1String( "priority" ), false )
+		,	m_conditions( *this, QLatin1String( "if" ), false )
+		,	m_otherwise( properties.otherwise(), *this,
+				QLatin1String( "otherwise" ), false )
+		,	m_priorityConstraint( 0, 999 )
+	{
+		m_priority.setConstraint( &m_priorityConstraint );
 
-	//! Save properties manager configuration.
-	void saveConfiguration( const QString & fileName );
-	//! Read properties manager configuration.
-	void readConfiguration( const QString & fileName );
+		if( properties.priority() > 0 )
+			m_priority.setValue( properties.priority() );
 
-	//! \return Tool window object.
-	ToolWindowObject * toolWindowObject();
+		for( int i = 0; i < properties.conditionsAmount(); ++i )
+		{
+			QtConfFile::TagVectorOfTags< ConditionTag< T > >::PointerToTag tag(
+				new ConditionTag< T >( properties.conditionAt( i ),
+					QLatin1String( "if" ), true ) );
 
-	//! Init menu.
-	void initMenu( const Menu & menu );
+			m_conditions.setValue( tag );
+		}
 
-protected:
-	void closeEvent( QCloseEvent * event );
+		setDefined();
+	}
+
+	Properties properties() const
+	{
+		Properties p;
+
+		if( m_priority.isDefined() )
+			p.setPriority( m_priority.value() );
+
+		if( m_conditions.isDefined() )
+		{
+			for( int i = 0; i < m_conditions.size(); ++i )
+				p.insertCondition( m_conditions.at( i ).condition(), i );
+		}
+
+		if( m_otherwise.isDefined() )
+			p.otherwise() = m_otherwise.value();
+
+		return p;
+	}
 
 private:
-	//! Init.
-	void init();
-	//! Init model.
-	void initModelAndView();
-	//! Read properties configurations.
-	void readPropertiesConfigs( PropertiesMap & map );
+	//! Priority.
+	QtConfFile::TagScalar< int > m_priority;
+	//! Conditions.
+	QtConfFile::TagVectorOfTags< ConditionTag< T > > m_conditions;
+	//! Otherwise condition.
+	OtherwiseTag m_otherwise;
+	//! Constraint for the priority.
+	QtConfFile::ConstraintMinMax< int > m_priorityConstraint;
+}; // class PropertiesTag
 
-private slots:
-	//! Add propertie.
-	void addProperties();
-	//! Remove properties.
-	void removeProperties();
-	//! Item selected.
-	void itemSelected( const QModelIndex & index );
-	//! Edit properties.
-	void editProperties();
 
-private:
-	Q_DISABLE_COPY( PropertiesManager )
+//
+// readPropertiesConfigurationTemplate
+//
 
-	QScopedPointer< PropertiesManagerPrivate > d;
-}; // class PropertiesManager
+template< class T >
+void
+readPropertiesConfigurationTemplate( const QString & fileName, Properties & p )
+{
+	PropertiesTag< T > tag;
+
+	QtConfFile::readQtConfFile( tag, fileName,
+		QTextCodec::codecForName( "UTF-8" ) );
+
+	p = tag.properties();
+}
+
+
+//
+// savePropertiesConfigurationTemplate
+//
+
+template< class T >
+void
+savePropertiesConfigurationTemplate( const QString & fileName,
+	const Properties & p )
+{
+	PropertiesTag< T > tag( p );
+
+	QtConfFile::writeQtConfFile( tag, fileName,
+		QTextCodec::codecForName( "UTF-8" ) );
+}
+
+
+//
+// readPropertiesConfiguration
+//
+
+void readPropertiesConfiguration( const QString & fileName,
+	Properties & p, Como::Source::Type t );
+
+
+//
+// savePropertiesConfiguration
+//
+
+void savePropertiesConfiguration( const QString & fileName,
+	const Properties & p, Como::Source::Type t );
 
 } /* namespace Globe */
 
-#endif // GLOBE__PROPERTIES_HPP__INCLUDED
+#endif // GLOBE__PROPERTIES_HPP__INLCUDED

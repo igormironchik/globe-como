@@ -41,7 +41,7 @@
 
 // Globe icnlude.
 #include <Globe/mainwindow.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/tool_window_object.hpp>
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/launch_time.hpp>

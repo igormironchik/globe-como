@@ -33,7 +33,6 @@
 #include <Globe/sources.hpp>
 #include <Globe/sources_model.hpp>
 #include <Globe/channels.hpp>
-#include <Globe/properties.hpp>
 
 #include "ui_sources_widget.h"
 

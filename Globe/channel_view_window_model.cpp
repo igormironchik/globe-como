@@ -30,7 +30,7 @@
 
 // Globe include.
 #include <Globe/channel_view_window_model.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/sources.hpp>
 #include <Globe/channels.hpp>
 

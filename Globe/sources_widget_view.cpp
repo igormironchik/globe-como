@@ -30,7 +30,8 @@
 
 // Globe include.
 #include <Globe/sources_widget_view.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_map.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/sources_model.hpp>
 
 // Qt include.

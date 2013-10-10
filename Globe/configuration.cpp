@@ -32,7 +32,7 @@
 #include <Globe/configuration.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/db.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/mainwindow.hpp>
 #include <Globe/application_cfg.hpp>
 #include <Globe/window_state_cfg.hpp>

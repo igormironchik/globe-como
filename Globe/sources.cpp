@@ -32,7 +32,7 @@
 #include <Globe/sources.hpp>
 #include <Globe/channels.hpp>
 #include <Globe/log.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/sounds.hpp>
 
 // Qt include.

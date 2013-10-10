@@ -35,5 +35,6 @@
         <file>img/globe_32x32.png</file>
         <file>img/globe_64x64.png</file>
         <file>img/globe_256x256.png</file>
+        <file>img/open_22x22.png</file>
     </qresource>
 </RCC>

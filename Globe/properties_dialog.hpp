@@ -56,7 +56,7 @@ class PropertiesDialog
 	Q_OBJECT
 
 public:
-	explicit PropertiesDialog( Como::Source::Type valueType,
+	PropertiesDialog( const QString & cfgDirName, Como::Source::Type valueType,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 	~PropertiesDialog();
 
@@ -72,6 +72,8 @@ private slots:
 	void wrongProperties();
 	//! Properties has been changed.
 	void propertiesChanged();
+	//! Open properties from file.
+	void openProperties();
 
 private:
 	Q_DISABLE_COPY( PropertiesDialog )

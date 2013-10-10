@@ -39,7 +39,7 @@
 #include <Globe/log.hpp>
 #include <Globe/configuration_dialog.hpp>
 #include <Globe/globe_menu.hpp>
-#include <Globe/properties.hpp>
+#include <Globe/properties_manager.hpp>
 #include <Globe/sources_mainwindow.hpp>
 #include <Globe/log_event_view_window.hpp>
 #include <Globe/sources.hpp>

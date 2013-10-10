@@ -36,6 +36,7 @@
 #include <QItemSelectionModel>
 #include <QApplication>
 #include <QClipboard>
+#include <QTableView>
 
 // Globe include.
 #include <Globe/channel_view.hpp>
@@ -290,6 +291,13 @@ ChannelView::init()
 	d->m_sortModel->setDynamicSortFilter( false );
 
 	setModel( d->m_sortModel );
+
+	// Enable moving of first column.
+	// It's a hack. See QTBUG-33974.
+	QTableView unused;
+	unused.setVerticalHeader( header() );
+	header()->setParent( this );
+	unused.setVerticalHeader( new QHeaderView( Qt::Horizontal ) );
 }
 
 } /* namespace Globe */

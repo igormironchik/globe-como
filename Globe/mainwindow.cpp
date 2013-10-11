@@ -135,6 +135,10 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	newMenu->addAction( tr( "Channel View" ), this,
 		SLOT( newChannelView() ) );
 
+	fileMenu->addAction( QIcon( ":/img/save_22x22.png" ),
+		tr( "Save Configuration" ), this, SLOT( save() ),
+		QKeySequence( tr( "Ctrl+S" ) ) );
+
 	fileMenu->addSeparator();
 
 	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
@@ -145,7 +149,8 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	QMenu * settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
 
 	settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
-		tr( "&Settings" ), this, SLOT( settings() ) );
+		tr( "&Settings" ), this, SLOT( settings() ),
+		QKeySequence( tr( "Alt+C" ) ) );
 
 	d->m_menu = Menu( fileMenu, settingsMenu, toolWindows );
 
@@ -229,6 +234,14 @@ MainWindow::showChannelView( const QString & channelName )
 				window->show();
 		}
 	}
+}
+
+void
+MainWindow::save()
+{
+	saveConfiguration();
+
+	d->m_cfgWasSaved = false;
 }
 
 void

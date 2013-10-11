@@ -208,6 +208,7 @@ LogEventWindow::init()
 	setWindowTitle( tr( "Event Log" ) );
 
 	QAction * showAction = new QAction( tr( "Event &Log" ), this );
+	showAction->setShortcut( QKeySequence( tr( "Alt+L" ) ) );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
 	QWidget * centralWidget = new QWidget( this );

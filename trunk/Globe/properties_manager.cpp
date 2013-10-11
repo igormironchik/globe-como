@@ -193,6 +193,7 @@ PropertiesManager::init()
 	d->m_ui.m_directory->setText( d->m_directoryName );
 
 	QAction * showAction = new QAction( tr( "&Properties" ), this );
+	showAction->setShortcut( QKeySequence( tr( "Alt+P" ) ) );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
 	connect( d->m_ui.m_addAction, SIGNAL( triggered() ),

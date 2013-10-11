@@ -81,6 +81,8 @@ public slots:
 	void start();
 	//! Show channel view.
 	void showChannelView( const QString & channelName );
+	//! Save configuration.
+	void save();
 
 protected:
 	friend class Configuration;

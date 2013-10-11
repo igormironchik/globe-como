@@ -280,6 +280,7 @@ Sounds::init()
 	setWindowTitle( tr( "Sounds" ) );
 
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );
+	showAction->setShortcut( QKeySequence( tr( "Alt+D" ) ) );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
 	d->m_player = new QMediaPlayer( this );

@@ -126,6 +126,7 @@ SourcesMainWindow::init()
 	setWindowTitle( tr( "Sources Manager" ) );
 
 	QAction * showAction = new QAction( tr( "&Sources" ), this );
+	showAction->setShortcut( QKeySequence( tr( "Alt+E" ) ) );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
 	d->m_widget = new SourcesWidget( this );

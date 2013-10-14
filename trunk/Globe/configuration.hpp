@@ -93,6 +93,8 @@ private:
 	void readSoundsCfg( const QString & cfgFileName );
 	//! Read disabled sounds configuration.
 	void readDisabledSoundsCfg( const QString & cfgFileName );
+	//! Read sources log window configuration.
+	void readSourcesLogWindowCfg( const QString & cfgFileName );
 
 	//! Save application's configuration.
 	void saveAppCfg( const QString & cfgFileName );
@@ -118,6 +120,8 @@ private:
 	void saveSoundsCfg( const QString & cfgFileName );
 	//! Save disabled sounds configuration.
 	void saveDisabledSoundsCfg( const QString & cfgFileName );
+	//! Save sources log window configuration.
+	void saveSourcesLogWindowCfg( const QString & cfgFileName );
 
 private:
 	Q_DISABLE_COPY( Configuration )

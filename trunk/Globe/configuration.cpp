@@ -45,6 +45,7 @@
 #include <Globe/color_for_level.hpp>
 #include <Globe/log.hpp>
 #include <Globe/log_event_view_window.hpp>
+#include <Globe/log_sources_window.hpp>
 #include <Globe/sounds.hpp>
 #include <Globe/sounds_disabled.hpp>
 #include <Globe/db_cfg.hpp>
@@ -83,6 +84,8 @@ static const QString defaultSoundsCfgFileName =
 	QLatin1String( "./etc/Sounds.cfg" );
 static const QString defaultDisabledSoundsCfgFileName =
 	QLatin1String( "./etc/DisabledSounds.cfg" );
+static const QString defaultSourcesLogWindowCfgFileName =
+	QLatin1String( "./etc/SourcesLogWindow.cfg" );
 
 
 //
@@ -151,6 +154,8 @@ Configuration::loadConfiguration()
 
 	readLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
 
+	readSourcesLogWindowCfg( d->m_appCfg.sourcesLogWindowCfgFile() );
+
 	readSoundsCfg( d->m_appCfg.soundsCfgFile() );
 
 	readDisabledSoundsCfg( d->m_appCfg.disabledSoundsCfgFile() );
@@ -175,6 +180,8 @@ Configuration::saveConfiguration()
 	saveLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
 
 	saveSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
+
+	saveSourcesLogWindowCfg( d->m_appCfg.sourcesLogWindowCfgFile() );
 
 	savePropertiesCfg( d->m_appCfg.propertiesCfgFile() );
 
@@ -726,6 +733,36 @@ Configuration::readDisabledSoundsCfg( const QString & cfgFileName )
 }
 
 void
+Configuration::readSourcesLogWindowCfg( const QString & cfgFileName )
+{
+	if( !cfgFileName.isEmpty() )
+		LogSourcesWindow::instance().readConfiguration( cfgFileName );
+	else
+	{
+		d->m_appCfg.setSourcesLogWindowCfgFile( defaultSourcesLogWindowCfgFileName );
+
+		if( d->m_appCfgWasLoaded )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelWarning, QString(
+				"Error in application's configuration...\n"
+				"Not specified sources log window's configuration file.\n"
+				"Sources log window's configuration will not be loaded.\n"
+				"At exit sources log window's configuration will be saved\n"
+				"in \"%1\" file." )
+					.arg( defaultSourcesLogWindowCfgFileName ) );
+
+			QMessageBox::warning( 0,
+				tr( "Error in application's configuration..." ),
+				tr( "Not specified sources log window's configuration file.\n"
+					"Sources log window's configuration will not be loaded.\n"
+					"At exit sources log window's configuration will be saved\n"
+					"in \"%1\" file." )
+						.arg( defaultSourcesLogWindowCfgFileName ) );
+		}
+	}
+}
+
+void
 Configuration::saveAppCfg( const QString & cfgFileName )
 {
 	try {
@@ -911,6 +948,12 @@ void
 Configuration::saveDisabledSoundsCfg( const QString & cfgFileName )
 {
 	DisabledSounds::instance().saveCfg( cfgFileName );
+}
+
+void
+Configuration::saveSourcesLogWindowCfg( const QString & cfgFileName )
+{
+	LogSourcesWindow::instance().saveConfiguration( cfgFileName );
 }
 
 } /* namespace Globe */

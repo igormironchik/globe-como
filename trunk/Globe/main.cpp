@@ -47,6 +47,7 @@
 #include <Globe/launch_time.hpp>
 #include <Globe/configuration.hpp>
 #include <Globe/log_event_view_window.hpp>
+#include <Globe/log_sources_window.hpp>
 #include <Globe/utils.hpp>
 #include <Globe/sounds.hpp>
 
@@ -139,6 +140,7 @@ int main( int argc, char ** argv )
 	toolWindows.append( Globe::SourcesMainWindow::instance().toolWindowObject() );
 	toolWindows.append( Globe::LogEventWindow::instance().toolWindowObject() );
 	toolWindows.append( Globe::Sounds::instance().toolWindowObject() );
+	toolWindows.append( Globe::LogSourcesWindow::instance().toolWindowObject() );
 
 	Globe::Configuration::instance().setCfgFile( cfgFile );
 

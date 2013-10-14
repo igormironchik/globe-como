@@ -112,6 +112,11 @@ public:
 	//! Set file name of the disabled sounds configuration.
 	void setDisabledSoundsCfgFile( const QString & fileName );
 
+	//! \return File name of the sources log window configuration.
+	const QString & sourcesLogWindowCfgFile() const;
+	//! Set file name of the sources log window configuration.
+	void setSourcesLogWindowCfgFile( const QString & fileName );
+
 private:
 	//! File name of the main window configuration.
 	QString m_mainWindowCfgFileName;
@@ -135,6 +140,8 @@ private:
 	QString m_soundsCfgFileName;
 	//! File name of the disabled sounds configuration.
 	QString m_disabledSoundsCfgFileName;
+	//! File name of the sources log window configuration.
+	QString m_sourcesLogWindowCfgFileName;
 }; // class ApplicationCfg
 
 
@@ -177,6 +184,8 @@ private:
 	QtConfFile::TagScalar< QString > m_soundsCfgFileName;
 	//!File name of the disabled sounds configuration.
 	QtConfFile::TagScalar< QString > m_disabledSoundsCfgFileName;
+	//! File name of the sources log window configuration.
+	QtConfFile::TagScalar< QString > m_sourcesLogWindowCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

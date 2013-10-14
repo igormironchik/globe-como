@@ -169,6 +169,38 @@ ConfigurationDialog::initUiWithSettings()
 
 	d->m_ui.m_sourcesLogDays->setValue(
 		Log::instance().cfg().sourcesLogDays() );
+
+	SoundsCfg soundsCfg = Sounds::instance().cfg();
+
+	if( soundsCfg.isCriticalSoundEnabled() )
+	{
+		d->m_ui.m_enableCriticalSound->setChecked( true );
+		d->m_ui.m_criticalSoundLine->setText( soundsCfg.criticalSoundFile() );
+	}
+
+	if( soundsCfg.isErrorSoundEnabled() )
+	{
+		d->m_ui.m_enableErrorSound->setChecked( true );
+		d->m_ui.m_errorSoundLine->setText( soundsCfg.errorSoundFile() );
+	}
+
+	if( soundsCfg.isWarningSoundEnabled() )
+	{
+		d->m_ui.m_enableWarningSound->setChecked( true );
+		d->m_ui.m_warningSoundLine->setText( soundsCfg.warningSoundFile() );
+	}
+
+	if( soundsCfg.isDebugSoundEnabled() )
+	{
+		d->m_ui.m_enableDebugSound->setChecked( true );
+		d->m_ui.m_debugSoundLine->setText( soundsCfg.debugSoundFile() );
+	}
+
+	if( soundsCfg.isInfoSoundEnabled() )
+	{
+		d->m_ui.m_enableInfoSound->setChecked( true );
+		d->m_ui.m_infoSoundLine->setText( soundsCfg.infoSoundFile() );
+	}
 }
 
 void

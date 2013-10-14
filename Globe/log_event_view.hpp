@@ -58,7 +58,7 @@ public:
 
 	~LogEventView();
 
-	//! \return Underlieng model.
+	//! \return Underlying model.
 	LogEventViewModel * model();
 
 protected slots:

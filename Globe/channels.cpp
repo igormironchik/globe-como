@@ -42,7 +42,6 @@
 #include <QMutexLocker>
 #include <QThread>
 #include <QMap>
-#include <QDebug>
 
 
 namespace Globe {
@@ -267,8 +266,6 @@ Channel::reconnectToHostImplementation()
 void
 Channel::socketDisconnected()
 {
-	qDebug() << "disconnected";
-
 	{
 		QMutexLocker lock( &d->m_mutex );
 
@@ -302,8 +299,6 @@ Channel::socketConnected()
 void
 Channel::socketError( QAbstractSocket::SocketError socketError )
 {
-	qDebug() << "socket error" << socketError;
-
 	if( socketError != QAbstractSocket::RemoteHostClosedError )
 	{
 		QMutexLocker lock( &d->m_mutex );

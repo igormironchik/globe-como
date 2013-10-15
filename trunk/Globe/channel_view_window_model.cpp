@@ -113,6 +113,10 @@ ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 	:	QAbstractTableModel( parent )
 	,	d( new ChannelViewWindowModelPrivate )
 {
+	connect( &SourcesManager::instance(),
+		SIGNAL( newSource( const Como::Source &, const QString & ) ),
+		this,
+		SLOT( newSource( const Como::Source &, const QString & ) ) );
 }
 
 ChannelViewWindowModel::~ChannelViewWindowModel()
@@ -379,6 +383,14 @@ ChannelViewWindowModel::disconnected()
 
 	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
 		QAbstractTableModel::index( d->m_data.size() - 1, priorityColumn ) );
+}
+
+void
+ChannelViewWindowModel::newSource( const Como::Source & source,
+	const QString & channelName )
+{
+	if( channelName == d->m_channelName )
+		sourceUpdated( source );
 }
 
 int

@@ -148,8 +148,6 @@ Configuration::loadConfiguration()
 
 	readMainWindowCfg( d->m_appCfg.mainWindowCfgFile() );
 
-	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
-
 	readSourcesMainWindowCfg( d->m_appCfg.sourcesMainWindowCfgFile() );
 
 	readLogEventWindowCfg( d->m_appCfg.logEventWindowCfgFile() );
@@ -159,6 +157,8 @@ Configuration::loadConfiguration()
 	readSoundsCfg( d->m_appCfg.soundsCfgFile() );
 
 	readDisabledSoundsCfg( d->m_appCfg.disabledSoundsCfgFile() );
+
+	readChannelsCfg( d->m_appCfg.channelsCfgFile() );
 
 	readWindowsCfg( d->m_appCfg.windowsCfgFile() );
 

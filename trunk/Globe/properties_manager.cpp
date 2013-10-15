@@ -86,46 +86,46 @@ public:
 
 	//! Find and initialize iterator for the given key.
 	void findByKey( const PropertiesKey & key,
-		PropertiesMap::Iterator * it, bool * keyExists )
+		PropertiesMap::Iterator & it, bool & keyExists )
 	{
 		if( key.keyType() == ExactlyThisSource )
 		{
-			*it = m_exactlyThisSourceMap.find( key );
+			it = m_exactlyThisSourceMap.find( key );
 
-			if( *it != m_exactlyThisSourceMap.end() )
-				*keyExists = true;
+			if( it != m_exactlyThisSourceMap.end() )
+				keyExists = true;
 
 			return;
 		}
 		else if( key.keyType() == ExactlyThisSourceInAnyChannel )
 		{
-			*it = m_exactlyThisSourceInAnyChannelMap.find( key );
+			it = m_exactlyThisSourceInAnyChannelMap.find( key );
 
-			if( *it != m_exactlyThisSourceInAnyChannelMap.end() )
-				*keyExists = true;
+			if( it != m_exactlyThisSourceInAnyChannelMap.end() )
+				keyExists = true;
 
 			return;
 		}
 		else if( key.keyType() == ExactlyThisTypeOfSource )
 		{
-			*it = m_exactlyThisTypeOfSourceMap.find( key );
+			it = m_exactlyThisTypeOfSourceMap.find( key );
 
-			if( *it != m_exactlyThisTypeOfSourceMap.end() )
-				*keyExists = true;
+			if( it != m_exactlyThisTypeOfSourceMap.end() )
+				keyExists = true;
 
 			return;
 		}
 		else
 		{
-			*it = m_exactlyThisTypeOfSourceInAnyChannelMap.find( key );
+			it = m_exactlyThisTypeOfSourceInAnyChannelMap.find( key );
 
-			if( *it != m_exactlyThisTypeOfSourceInAnyChannelMap.end() )
-				*keyExists = true;
+			if( it != m_exactlyThisTypeOfSourceInAnyChannelMap.end() )
+				keyExists = true;
 
 			return;
 		}
 
-		*keyExists = false;
+		keyExists = false;
 	}
 
 	//! Properties map for "ExactlyThisSource" key's type.
@@ -353,7 +353,7 @@ PropertiesManager::addProperties( const Como::Source & source,
 		PropertiesMap::Iterator it;
 		bool propertiesExists = false;
 
-		d->findByKey( key, &it, &propertiesExists );
+		d->findByKey( key, it, propertiesExists );
 
 		PropertiesDialog propertiesDialog( d->m_directoryName, source.type(),
 			( parent ? parent : this ) );
@@ -512,7 +512,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 	PropertiesMap::Iterator it;
 	bool propertiesExists = false;
 
-	d->findByKey( key, &it, &propertiesExists );
+	d->findByKey( key, it, propertiesExists );
 
 	if( propertiesExists )
 	{
@@ -783,11 +783,7 @@ PropertiesManager::removeProperties()
 			PropertiesMap::Iterator it;
 			bool propertiesExists = false;
 
-			d->findByKey( key, &it, &propertiesExists );
-
-			removeProperties( key );
-
-			d->m_model->removePropertie( row );
+			d->findByKey( key, it, propertiesExists );
 
 			if( propertiesExists )
 			{
@@ -804,6 +800,10 @@ PropertiesManager::removeProperties()
 					confFile.remove();
 				}
 			}
+
+			removeProperties( key );
+
+			d->m_model->removePropertie( row );
 
 			d->m_ui.m_removeAction->setEnabled( false );
 			d->m_ui.m_editAction->setEnabled( false );

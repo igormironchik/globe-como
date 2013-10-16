@@ -37,6 +37,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTableView>
+#include <QDebug>
 
 // Globe include.
 #include <Globe/channel_view.hpp>
@@ -208,17 +209,6 @@ ChannelView::colorForLevelChanged()
 }
 
 void
-ChannelView::rowsAdded( const QModelIndex & parent, int start, int end )
-{
-	Q_UNUSED( parent )
-	Q_UNUSED( start )
-	Q_UNUSED( end )
-
-	d->m_sortModel->sort( d->m_sortModel->sortColumn(),
-		d->m_sortModel->sortOrder() );
-}
-
-void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
 {
@@ -282,13 +272,8 @@ ChannelView::init()
 
 	d->m_model = new ChannelViewWindowModel( this );
 
-	connect( d->m_model,
-		SIGNAL( rowsInserted( const QModelIndex &, int, int ) ),
-		this, SLOT( rowsAdded( QModelIndex, int, int ) ) );
-
 	d->m_sortModel = new QSortFilterProxyModel( this );
 	d->m_sortModel->setSourceModel( d->m_model );
-	d->m_sortModel->setDynamicSortFilter( false );
 
 	setModel( d->m_sortModel );
 

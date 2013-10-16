@@ -152,14 +152,19 @@ SourcesModel::insertRows( int row, int count, const QModelIndex & parent )
 {
 	Q_UNUSED( parent );
 
-	beginInsertRows( QModelIndex(), row, row + count - 1 );
+	if( count > 0 )
+	{
+		beginInsertRows( QModelIndex(), row, row + count - 1 );
 
-	for( int i = 0; i < count; ++i )
-		d->m_data.insert( row + i, Como::Source() );
+		for( int i = 0; i < count; ++i )
+			d->m_data.insert( row + i, Como::Source() );
 
-	endInsertRows();
+		endInsertRows();
 
-	return true;
+		return true;
+	}
+	else
+		return false;
 }
 
 bool

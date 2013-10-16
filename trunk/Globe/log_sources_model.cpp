@@ -150,11 +150,14 @@ LogSourcesModel::initModel( const QList< LogSourcesRecord > & data )
 {
 	clear();
 
-	beginInsertRows( QModelIndex(), 0, data.size() - 1 );
+	if( !data.isEmpty() )
+	{
+		beginInsertRows( QModelIndex(), 0, data.size() - 1 );
 
-	d->m_data = data;
+		d->m_data = data;
 
-	endInsertRows();
+		endInsertRows();
+	}
 }
 
 void

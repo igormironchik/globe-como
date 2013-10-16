@@ -162,54 +162,57 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 			const int deregisteredCount = deregistered.size();
 			const int rows = registeredCount + deregisteredCount;
 
-			beginInsertRows( QModelIndex(), 0, rows - 1 );
-
-			for( int i = 0; i < registeredCount; ++i )
+			if( rows > 0 )
 			{
-				const Como::Source & source = registered.at( i );
+				beginInsertRows( QModelIndex(), 0, rows - 1 );
 
-				const Properties * props = PropertiesManager::instance()
-					.findProperties( source, d->m_channelName, 0 );
-
-				int priority = 0;
-				Level level = None;
-
-				if( props )
+				for( int i = 0; i < registeredCount; ++i )
 				{
-					priority = props->priority();
+					const Como::Source & source = registered.at( i );
 
-					level = props->checkConditions( source.value(),
-						source.type() ).level();
+					const Properties * props = PropertiesManager::instance()
+						.findProperties( source, d->m_channelName, 0 );
+
+					int priority = 0;
+					Level level = None;
+
+					if( props )
+					{
+						priority = props->priority();
+
+						level = props->checkConditions( source.value(),
+							source.type() ).level();
+					}
+
+					d->m_data.insert( i, ChannelViewWindowModelData( source, priority,
+						true, level ) );
 				}
 
-				d->m_data.insert( i, ChannelViewWindowModelData( source, priority,
-					true, level ) );
-			}
-
-			for( int i = 0; i < deregisteredCount; ++i )
-			{
-				const Como::Source & source = deregistered.at( i );
-
-				const Properties * props = PropertiesManager::instance()
-					.findProperties( source, d->m_channelName, 0 );
-
-				int priority = 0;
-				Level level = None;
-
-				if( props )
+				for( int i = 0; i < deregisteredCount; ++i )
 				{
-					priority = props->priority();
+					const Como::Source & source = deregistered.at( i );
 
-					level = props->checkConditions( source.value(),
-						source.type() ).level();
+					const Properties * props = PropertiesManager::instance()
+						.findProperties( source, d->m_channelName, 0 );
+
+					int priority = 0;
+					Level level = None;
+
+					if( props )
+					{
+						priority = props->priority();
+
+						level = props->checkConditions( source.value(),
+							source.type() ).level();
+					}
+
+					d->m_data.insert( registeredCount + i,
+						ChannelViewWindowModelData( source, priority,
+							false, level ) );
 				}
 
-				d->m_data.insert( registeredCount + i,
-					ChannelViewWindowModelData( source, priority,
-						false, level ) );
+				endInsertRows();
 			}
-
-			endInsertRows();
 		}
 	}
 }

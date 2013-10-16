@@ -91,8 +91,6 @@ private slots:
 	void fillWithColorChanged();
 	//! Color for level correspondence changed.
 	void colorForLevelChanged();
-	//! Added new rows.
-	void rowsAdded( const QModelIndex & parent, int start, int end );
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

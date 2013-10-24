@@ -88,7 +88,12 @@ HEADERS += application_cfg.hpp \
            with_menu.hpp \
            tool_window_object.hpp \
            tool_window.hpp \
-           utils.hpp
+           utils.hpp \
+           scheme/scene.hpp \
+           scheme/scheme_cfg.hpp \
+           scheme/source.hpp \
+           scheme/view.hpp \
+           scheme/window.hpp
 
 SOURCES += application_cfg.cpp \
            channel_attributes.cpp \
@@ -164,7 +169,12 @@ SOURCES += application_cfg.cpp \
            with_menu.cpp \
            tool_window_object.cpp \
            tool_window.cpp \
-           utils.cpp
+           utils.cpp \
+           scheme/scene.cpp \
+           scheme/scheme_cfg.cpp \
+           scheme/source.cpp \
+           scheme/view.cpp \
+           scheme/window.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_name_dialog.ui \

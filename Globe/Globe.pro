@@ -88,12 +88,7 @@ HEADERS += application_cfg.hpp \
            with_menu.hpp \
            tool_window_object.hpp \
            tool_window.hpp \
-           utils.hpp \
-           scheme/scene.hpp \
-           scheme/scheme_cfg.hpp \
-           scheme/source.hpp \
-           scheme/view.hpp \
-           scheme/window.hpp
+           utils.hpp
 
 SOURCES += application_cfg.cpp \
            channel_attributes.cpp \
@@ -169,12 +164,7 @@ SOURCES += application_cfg.cpp \
            with_menu.cpp \
            tool_window_object.cpp \
            tool_window.cpp \
-           utils.cpp \
-           scheme/scene.cpp \
-           scheme/scheme_cfg.cpp \
-           scheme/source.cpp \
-           scheme/view.cpp \
-           scheme/window.cpp
+           utils.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_name_dialog.ui \
@@ -190,16 +180,16 @@ FORMS	 = channels_to_show.ui \
 		   sources_widget.ui \
 		   sounds_disabled_to_dialog.ui
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
-else:symbian: LIBS += -lQtConfFile -lComo
-else:unix: LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo -lscheme
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo -lscheme
+else:symbian: LIBS += -lQtConfFile -lComo -lscheme
+else:unix: LIBS += -L$$OUT_PWD/../lib -lQtConfFile -lComo -lscheme
 
 INCLUDEPATH += $$PWD/..
 DEPENDPATH += $$PWD/..
 
-win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfFile.lib $$OUT_PWD/../lib/Como.lib
-else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfFile.lib $$OUT_PWD/../lib/Como.lib
-else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../lib/libQtConfFile.a $$OUT_PWD/../lib/libComo.a
+win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfFile.lib $$OUT_PWD/../lib/Como.lib $$OUT_PWD/../lib/scheme.lib
+else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../lib/QtConfFile.lib $$OUT_PWD/../lib/Como.lib $$OUT_PWD/../lib/scheme.lib
+else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../lib/libQtConfFile.a $$OUT_PWD/../lib/libComo.a $$OUT_PWD/../lib/scheme.a
 
 include ( ../QtArg/qtarg.pri )

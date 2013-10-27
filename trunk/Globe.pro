@@ -31,7 +31,6 @@ TEMPLATE = subdirs
 
 SUBDIRS = Como \
           QtConfFile \
-          Globe/scheme \
           Globe
 
-Globe.depends = Como QtConfFile Globe/scheme
+Globe.depends = Como QtConfFile

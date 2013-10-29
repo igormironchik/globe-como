@@ -44,6 +44,9 @@
 #include <Globe/Core/log_event_view_window.hpp>
 #include <Globe/Core/sources.hpp>
 #include <Globe/Core/sounds.hpp>
+#include <Globe/Core/utils.hpp>
+
+#include <Globe/Scheme/window.hpp>
 
 // Qt include.
 #include <QApplication>
@@ -51,6 +54,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QCloseEvent>
+#include <QFileDialog>
 
 
 namespace Globe {
@@ -78,14 +82,28 @@ public:
 		return 0;
 	}
 
+	//! \return Scheme window for the given \arg fileName configuration file.
+	Scheme::Window * schemeWindow( const QString & fileName )
+	{
+		foreach( Scheme::Window * window, m_schemeWindows )
+			if( window->cfg().schemeCfgFile() == fileName )
+				return window;
+
+		return 0;
+	}
+
 	//! List with channels.
 	ChannelsList * m_list;
 	//! Flag that shows was configuration saved or not.
 	bool m_cfgWasSaved;
 	//! Channel view windows.
 	QList< ChannelViewWindow* > m_channelViewWindows;
+	//! Scheme windows.
+	QList< Scheme::Window* > m_schemeWindows;
 	//! Map of the channel view windows configuration.
 	QMap< QString, ChannelViewWindowCfg > m_channelViewWindowsCfg;
+	//! Map of the scheme windows configurations.
+	QMap< QString, Scheme::WindowCfg > m_schemeWindowsCfg;
 	//! Configuration dialog.
 	ConfigurationDialog * m_confDialog;
 	//! Menu.
@@ -135,6 +153,15 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	newMenu->addAction( tr( "Channel View" ), this,
 		SLOT( newChannelView() ) );
 
+	newMenu->addAction( tr( "Scheme" ), this,
+		SLOT( newSchemeWindow() ) );
+
+	QMenu * openMenu = fileMenu->addMenu( QIcon( ":img/open_22x22.png" ),
+		tr( "Open" ) );
+
+	openMenu->addAction( tr( "Scheme" ), this,
+		SLOT( openScheme() ) );
+
 	fileMenu->addAction( QIcon( ":/img/save_22x22.png" ),
 		tr( "Save Configuration" ), this, SLOT( save() ),
 		QKeySequence( tr( "Ctrl+S" ) ) );
@@ -171,6 +198,8 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	SourcesMainWindow::instance().initMenu( d->m_menu );
 	LogEventWindow::instance().initMenu( d->m_menu );
 	Sounds::instance().initMenu( d->m_menu );
+
+	checkPathAndCreateIfNotExists( QLatin1String( "./etc/schemes" ) );
 }
 
 void
@@ -198,6 +227,20 @@ MainWindow::channelViewWindowClosed( ChannelViewWindow * window )
 		d->m_channelViewWindowsCfg.insert( cfg.channelName(), cfg );
 
 	d->m_channelViewWindows.removeAll( window );
+}
+
+void
+MainWindow::schemeWindowClosed( Scheme::Window * window )
+{
+	Scheme::WindowCfg cfg = window->cfg();
+
+	if( d->m_schemeWindowsCfg.find( cfg.schemeCfgFile() ) !=
+		d->m_schemeWindowsCfg.end() )
+			d->m_schemeWindowsCfg[ cfg.schemeCfgFile() ] = cfg;
+	else
+		d->m_schemeWindowsCfg.insert( cfg.schemeCfgFile(), cfg );
+
+	d->m_schemeWindows.removeAll( window );
 }
 
 void
@@ -237,6 +280,42 @@ MainWindow::showChannelView( const QString & channelName )
 }
 
 void
+MainWindow::showScheme( const QString & cfgFile, bool newScheme )
+{
+	Scheme::Window * window = d->schemeWindow( cfgFile );
+
+	if( window )
+	{
+		if( window->isMinimized() )
+			window->showNormal();
+		else
+			window->show();
+
+		window->activateWindow();
+	}
+	else
+	{
+		window = new Scheme::Window;
+
+		window->initMenu( d->m_menu );
+
+		if( newScheme )
+			window->createNewScheme( cfgFile );
+		else
+			window->loadScheme( cfgFile );
+
+		d->m_schemeWindows.append( window );
+
+		if( d->m_schemeWindowsCfg.find( cfgFile ) !=
+			d->m_schemeWindowsCfg.end() )
+				window->setCfg(
+					d->m_schemeWindowsCfg[ cfgFile ] );
+		else
+			window->show();
+	}
+}
+
+void
 MainWindow::save()
 {
 	saveConfiguration();
@@ -269,6 +348,13 @@ MainWindow::windowsCfg() const
 
 	cfg.setChannelViewWindows( channelViewWindows );
 
+	QList< Scheme::WindowCfg > schemeWindows;
+
+	foreach( Scheme::Window * window, d->m_schemeWindows )
+		schemeWindows.append( window->cfg() );
+
+	cfg.setSchemeWindows( schemeWindows );
+
 	return cfg;
 }
 
@@ -280,6 +366,13 @@ MainWindow::restoreWindows( const WindowsCfg & cfg )
 		d->m_channelViewWindowsCfg.insert( c.channelName(), c );
 
 		showChannelView( c.channelName() );
+	}
+
+	foreach( const Scheme::WindowCfg & c, cfg.schemeWindows() )
+	{
+		d->m_schemeWindowsCfg.insert( c.schemeCfgFile(), c );
+
+		showScheme( c.schemeCfgFile() );
 	}
 }
 
@@ -305,11 +398,41 @@ MainWindow::newChannelView()
 }
 
 void
+MainWindow::newSchemeWindow()
+{
+	QString fileName = QFileDialog::getSaveFileName( this,
+		tr( "Save New Scheme" ),
+		QLatin1String( "./etc/schemes" ),
+		tr( "Scheme (*.scheme)" ) );
+
+	if( !fileName.isEmpty() )
+	{
+		fileName = relativeFilePath( fileName );
+
+		showScheme( fileName, true );
+	}
+}
+
+void
+MainWindow::openScheme()
+{
+	QString fileName = QFileDialog::getOpenFileName( this,
+		tr( "Open Scheme" ),
+		QLatin1String( "./etc/schemes" ),
+		tr( "Scheme (*.scheme)" ) );
+
+	if( !fileName.isEmpty() )
+	{
+		fileName = relativeFilePath( fileName );
+
+		showScheme( fileName );
+	}
+}
+
+void
 MainWindow::settings()
 {
-	if( d->m_confDialog->exec() == QDialog::Accepted )
-	{
-	}
+	d->m_confDialog->exec();
 }
 
 void

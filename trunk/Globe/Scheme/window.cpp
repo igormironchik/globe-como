@@ -30,9 +30,16 @@
 
 // Globe include.
 #include <Globe/Scheme/window.hpp>
+#include <Globe/Scheme/view.hpp>
+
+#include <Globe/Core/mainwindow.hpp>
+#include <Globe/Core/globe_menu.hpp>
+#include <Globe/Core/tool_window_object.hpp>
 
 // Qt include.
 #include <QCloseEvent>
+#include <QMenuBar>
+#include <QMenu>
 
 
 namespace Globe {
@@ -46,8 +53,14 @@ namespace Scheme {
 class WindowPrivate {
 public:
 	WindowPrivate()
+		:	m_view( 0 )
 	{
 	}
+
+	//! View.
+	View * m_view;
+	//! Scheme configuration file.
+	QString m_cfgFile;
 }; // class WindowPrivate
 
 
@@ -69,19 +82,56 @@ Window::~Window()
 void
 Window::initMenu( const Menu & menu )
 {
+	menuBar()->addMenu( menu.fileMenu() );
 
+	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
+
+	foreach( ToolWindowObject * obj, menu.toolWindows() )
+		toolsMenu->addAction( obj->menuEntity() );
+
+	menuBar()->addMenu( menu.settingsMenu() );
+}
+
+WindowCfg
+Window::cfg() const
+{
+	return WindowCfg( d->m_cfgFile, windowStateCfg( this ) );
+}
+
+void
+Window::setCfg( const WindowCfg & cfg )
+{
+	d->m_cfgFile = cfg.schemeCfgFile();
+
+	restoreWindowState( cfg.windowStateCfg(), this );
+}
+
+void
+Window::loadScheme( const QString & fileName )
+{
+	d->m_cfgFile = fileName;
+}
+
+void
+Window::createNewScheme( const QString & fileName )
+{
+	d->m_cfgFile = fileName;
 }
 
 void
 Window::closeEvent( QCloseEvent * event )
 {
 	event->accept();
+
+	MainWindow::instance().schemeWindowClosed( this );
 }
 
 void
 Window::init()
 {
+	d->m_view = new View( this );
 
+	setCentralWidget( d->m_view );
 }
 
 } /* namespace Scheme */

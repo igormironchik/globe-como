@@ -58,6 +58,10 @@ public:
 	~View();
 
 private:
+	//! Init.
+	void init();
+
+private:
 	Q_DISABLE_COPY( View )
 
 	QScopedPointer< ViewPrivate > d;

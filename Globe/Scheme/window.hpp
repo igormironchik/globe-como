@@ -38,6 +38,8 @@
 // Globe include.
 #include <Globe/Core/with_menu.hpp>
 
+#include <Globe/Scheme/window_cfg.hpp>
+
 
 namespace Globe {
 
@@ -63,6 +65,17 @@ public:
 
 	//! Init menu.
 	void initMenu( const Menu & menu );
+
+	//! \return Window's configuration.
+	WindowCfg cfg() const;
+	//! Set window's configuration.
+	void setCfg( const WindowCfg & cfg );
+
+public slots:
+	//! Load scheme configuration.
+	void loadScheme( const QString & fileName );
+	//! Create new scheme.
+	void createNewScheme( const QString & fileName );
 
 protected:
 	void closeEvent( QCloseEvent * event );

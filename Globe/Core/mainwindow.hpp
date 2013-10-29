@@ -41,6 +41,10 @@
 
 namespace Globe {
 
+namespace Scheme {
+	class Window;
+} /* namespace Scheme */
+
 class WindowStateCfg;
 class ToolWindowObject;
 class ChannelsList;
@@ -72,6 +76,8 @@ public:
 
 	//! Channel view window was closed.
 	void channelViewWindowClosed( ChannelViewWindow * window );
+	//! Scheme window closed.
+	void schemeWindowClosed( Scheme::Window * window );
 
 	//! Init.
 	void init( const QList< ToolWindowObject* > & toolWindows );
@@ -83,6 +89,8 @@ public slots:
 	void showChannelView( const QString & channelName );
 	//! Save configuration.
 	void save();
+	//! Show scheme.
+	void showScheme( const QString & cfgFile, bool newScheme = false );
 
 protected:
 	friend class Configuration;
@@ -101,6 +109,10 @@ private slots:
 	void newChannelView();
 	//! Settings dialog.
 	void settings();
+	//! New scheme window.
+	void newSchemeWindow();
+	//! Open saved scheme.
+	void openScheme();
 
 private:
 	//! Save configuration.

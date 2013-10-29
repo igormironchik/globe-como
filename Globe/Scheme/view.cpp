@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/Scheme/view.hpp>
+#include <Globe/Scheme/scene.hpp>
 
 
 namespace Globe {
@@ -43,8 +44,12 @@ namespace Scheme {
 class ViewPrivate {
 public:
 	ViewPrivate()
+		:	m_scene( 0 )
 	{
 	}
+
+	//! Scene.
+	Scene * m_scene;
 }; // class ViewPrivate
 
 
@@ -60,6 +65,14 @@ View::View( QWidget * parent )
 
 View::~View()
 {
+}
+
+void
+View::init()
+{
+	d->m_scene = new Scene( this );
+
+	setScene( d->m_scene );
 }
 
 } /* namespace Scheme */

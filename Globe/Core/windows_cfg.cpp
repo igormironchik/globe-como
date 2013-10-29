@@ -42,10 +42,29 @@ WindowsCfg::WindowsCfg()
 {
 }
 
-WindowsCfg::WindowsCfg(
-	const QList< ChannelViewWindowCfg > & channelViewWindows )
+WindowsCfg::WindowsCfg(	const QList< ChannelViewWindowCfg > & channelViewWindows,
+	const QList< Scheme::WindowCfg > & schemeWindows )
 	:	m_channelViewWindows( channelViewWindows )
+	,	m_schemeWindows( schemeWindows )
 {
+}
+
+WindowsCfg::WindowsCfg( const WindowsCfg & other )
+	:	m_channelViewWindows( other.channelViewWindows() )
+	,	m_schemeWindows( other.schemeWindows() )
+{
+}
+
+WindowsCfg &
+WindowsCfg::operator = ( const WindowsCfg & other )
+{
+	if( this != &other )
+	{
+		m_channelViewWindows = other.channelViewWindows();
+		m_schemeWindows = other.schemeWindows();
+	}
+
+	return *this;
 }
 
 const QList< ChannelViewWindowCfg > &
@@ -55,10 +74,21 @@ WindowsCfg::channelViewWindows() const
 }
 
 void
-WindowsCfg::setChannelViewWindows(
-	const QList< ChannelViewWindowCfg > & windows )
+WindowsCfg::setChannelViewWindows( const QList< ChannelViewWindowCfg > & windows )
 {
 	m_channelViewWindows = windows;
+}
+
+const QList< Scheme::WindowCfg > &
+WindowsCfg::schemeWindows() const
+{
+	return m_schemeWindows;
+}
+
+void
+WindowsCfg::setSchemeWindows( const QList< Scheme::WindowCfg > & windows )
+{
+	m_schemeWindows = windows;
 }
 
 
@@ -68,16 +98,20 @@ WindowsCfg::setChannelViewWindows(
 
 static const QString channelViewWindowTagName =
 	QLatin1String( "channelViewWindow" );
+static const QString schemeWindowTagName =
+	QLatin1String( "schemeWindow" );
 
 WindowsTag::WindowsTag()
 	:	QtConfFile::TagNoValue( QLatin1String( "windowsCfg" ), true )
 	,	m_channelViewWindows( *this, channelViewWindowTagName, false )
+	,	m_schemeWindows( *this, schemeWindowTagName, false )
 {
 }
 
 WindowsTag::WindowsTag( const WindowsCfg & cfg )
 	:	QtConfFile::TagNoValue( QLatin1String( "windowsCfg" ), true )
 	,	m_channelViewWindows( *this, channelViewWindowTagName, false )
+	,	m_schemeWindows( *this, schemeWindowTagName, false )
 {
 	foreach( const ChannelViewWindowCfg & w, cfg.channelViewWindows() )
 	{
@@ -85,6 +119,14 @@ WindowsTag::WindowsTag( const WindowsCfg & cfg )
 			t( new ChannelViewWindowTag( w, channelViewWindowTagName ) );
 
 		m_channelViewWindows.setValue( t );
+	}
+
+	foreach( const Scheme::WindowCfg & w, cfg.schemeWindows() )
+	{
+		QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag >::PointerToTag
+			t( new Scheme::WindowCfgTag( w, schemeWindowTagName ) );
+
+		m_schemeWindows.setValue( t );
 	}
 
 	setDefined();
@@ -104,6 +146,16 @@ WindowsTag::cfg() const
 	}
 
 	cfg.setChannelViewWindows( channelViewWindows );
+
+	QList< Scheme::WindowCfg > schemeWindows;
+
+	foreach( QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag >::PointerToTag t,
+		m_schemeWindows.values() )
+	{
+		schemeWindows.append( t->cfg() );
+	}
+
+	cfg.setSchemeWindows( schemeWindows );
 
 	return cfg;
 }

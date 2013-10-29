@@ -41,6 +41,8 @@
 // Globe include.
 #include <Globe/Core/channel_view_window_cfg.hpp>
 
+#include <Globe/Scheme/window_cfg.hpp>
+
 
 namespace Globe {
 
@@ -53,17 +55,28 @@ class WindowsCfg {
 public:
 	WindowsCfg();
 
-	explicit WindowsCfg(
-		const QList< ChannelViewWindowCfg > & channelViewWindows );
+	WindowsCfg( const QList< ChannelViewWindowCfg > & channelViewWindows,
+		const QList< Scheme::WindowCfg > & schemeWindows );
+
+	WindowsCfg( const WindowsCfg & other );
+
+	WindowsCfg & operator = ( const WindowsCfg & other );
 
 	//! \return Channel view windows configuration.
 	const QList< ChannelViewWindowCfg > & channelViewWindows() const;
 	//! Set channel view windows configuration.
 	void setChannelViewWindows( const QList< ChannelViewWindowCfg > & windows );
 
+	//! \return Scheme windows configuration.
+	const QList< Scheme::WindowCfg > & schemeWindows() const;
+	//! Set scheme windows configuration.
+	void setSchemeWindows( const QList< Scheme::WindowCfg > & windows );
+
 private:
 	//! Channel view windows configuration.
 	QList< ChannelViewWindowCfg > m_channelViewWindows;
+	//! Scheme windows configuration.
+	QList< Scheme::WindowCfg > m_schemeWindows;
 }; // class WindowsCfg
 
 
@@ -86,6 +99,8 @@ public:
 private:
 	//! Channel view windows configuration.
 	QtConfFile::TagVectorOfTags< ChannelViewWindowTag > m_channelViewWindows;
+	//! Scheme windows configuration.
+	QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag > m_schemeWindows;
 }; // class WindowsTag
 
 } /* namespace Globe */

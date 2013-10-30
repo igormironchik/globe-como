@@ -31,6 +31,11 @@
 // Globe include.
 #include <Globe/Scheme/scene.hpp>
 
+// Qt include.
+#include <QWidget>
+#include <QPalette>
+#include <QDebug>
+
 
 namespace Globe {
 
@@ -56,10 +61,21 @@ Scene::Scene( QObject * parent )
 	:	QGraphicsScene( parent )
 	,	d( new ScenePrivate )
 {
+	init();
 }
 
 Scene::~Scene()
 {
+}
+
+void
+Scene::init()
+{
+	QWidget w;
+
+	qDebug() << w.palette().color( QPalette::Window );
+
+	setBackgroundBrush( w.palette().color( QPalette::Window ) );
 }
 
 } /* namespace Scheme */

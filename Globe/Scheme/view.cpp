@@ -61,6 +61,7 @@ View::View( QWidget * parent )
 	:	QGraphicsView( parent )
 	,	d( new ViewPrivate )
 {
+	init();
 }
 
 View::~View()

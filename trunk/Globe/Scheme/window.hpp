@@ -83,6 +83,8 @@ protected:
 private:
 	//! Init.
 	void init();
+	//! Set window title.
+	void setTitle( const QString & title );
 
 private:
 	Q_DISABLE_COPY( Window )

@@ -58,6 +58,10 @@ public:
 	~Scene();
 
 private:
+	//! Init.
+	void init();
+
+private:
 	Q_DISABLE_COPY( Scene )
 
 	QScopedPointer< ScenePrivate > d;

@@ -110,12 +110,19 @@ void
 Window::loadScheme( const QString & fileName )
 {
 	d->m_cfgFile = fileName;
+
+	setTitle( d->m_cfgFile );
 }
 
 void
 Window::createNewScheme( const QString & fileName )
 {
 	d->m_cfgFile = fileName;
+
+	if( !d->m_cfgFile.endsWith( QLatin1String( ".scheme" ) ) )
+		d->m_cfgFile.append( QLatin1String( ".scheme" ) );
+
+	setTitle( d->m_cfgFile );
 }
 
 void
@@ -132,6 +139,12 @@ Window::init()
 	d->m_view = new View( this );
 
 	setCentralWidget( d->m_view );
+}
+
+void
+Window::setTitle( const QString & title )
+{
+	setWindowTitle( QString( "Scheme - [%1]" ).arg( title ) );
 }
 
 } /* namespace Scheme */

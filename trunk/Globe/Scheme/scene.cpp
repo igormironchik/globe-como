@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/Scheme/scene.hpp>
+#include <Globe/Scheme/source.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
 
@@ -37,11 +38,37 @@
 #include <QWidget>
 #include <QPalette>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsItem>
 
 
 namespace Globe {
 
 namespace Scheme {
+
+//
+// DummyItem
+//
+
+class DummyItem
+	:	public QGraphicsItem
+{
+public:
+	//! \return Bounding rectangle.
+	QRectF boundingRect() const
+	{
+		return QRectF( 0, 0, 1, 1 );
+	}
+
+	//! Paint item.
+	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
+		QWidget * widget )
+	{
+		Q_UNUSED( painter )
+		Q_UNUSED( option )
+		Q_UNUSED( widget )
+	}
+}; // class DummyItem
+
 
 //
 // ScenePrivate
@@ -128,7 +155,10 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 					if( dlg.exec() == QDialog::Accepted )
 					{
+						Source * item = new Source( source, channel );
+						item->setPos( mouseEvent->scenePos() );
 
+						addItem( item );
 					}
 				}
 				break;
@@ -149,6 +179,12 @@ Scene::init()
 	QWidget w;
 
 	setBackgroundBrush( w.palette().color( QPalette::Window ) );
+
+	DummyItem * item = new DummyItem;
+
+	item->setPos( 0, 0 );
+
+	addItem( item );
 }
 
 } /* namespace Scheme */

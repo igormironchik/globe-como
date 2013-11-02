@@ -35,6 +35,9 @@
 #include <QGraphicsItem>
 #include <QScopedPointer>
 
+// Como include.
+#include <Como/Source>
+
 
 namespace Globe {
 
@@ -51,7 +54,7 @@ class Source
 	:	public QGraphicsItem
 {
 public:
-	Source();
+	Source( const Como::Source & source, const QString & channelName );
 
 	//! \return Bounding rectangle.
 	QRectF boundingRect() const;

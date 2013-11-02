@@ -9,7 +9,8 @@ win32 {
     RC_FILE = globe.rc
 }
 
-RESOURCES = ../Core/resources.qrc
+RESOURCES = ../Core/resources.qrc \
+            ../Scheme/scheme_resources.qrc
 
 SOURCES += main.cpp
 

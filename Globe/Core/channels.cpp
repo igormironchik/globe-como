@@ -462,14 +462,6 @@ ChannelsManager::ChannelsManager()
 
 ChannelsManager::~ChannelsManager()
 {
-	for( QMap< QString, ChannelAndThread >::Iterator it = d->m_channels.begin(),
-		last = d->m_channels.end(); it != last; ++it )
-	{
-		it.value().thread()->quit();
-		it.value().thread()->wait();
-		it.value().channel()->deleteLater();
-		it.value().thread()->deleteLater();
-	}
 }
 
 ChannelsManager &
@@ -623,6 +615,21 @@ ChannelsManager::channels() const
 	}
 
 	return channels;
+}
+
+void
+ChannelsManager::shutdown()
+{
+	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+		last = d->m_channels.end(); it != last; ++it )
+	{
+		ChannelAndThreadDeleter * deleter = new ChannelAndThreadDeleter(
+			it.value() );
+
+		Q_UNUSED( deleter )
+
+		it.value().channel()->disconnectFromHost();
+	}
 }
 
 } /* namespace Globe */

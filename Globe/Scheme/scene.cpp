@@ -31,10 +31,12 @@
 // Globe include.
 #include <Globe/Scheme/scene.hpp>
 
+#include <Globe/Core/sources_dialog.hpp>
+
 // Qt include.
 #include <QWidget>
 #include <QPalette>
-#include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 
 
 namespace Globe {
@@ -48,8 +50,18 @@ namespace Scheme {
 class ScenePrivate {
 public:
 	ScenePrivate()
+		:	m_mode( ViewScene )
+		,	m_editMode( EditSceneSelect )
+		,	m_parentWidget( 0 )
 	{
 	}
+
+	//! Mode of the scene.
+	SceneMode m_mode;
+	//! Edit mode of the scene.
+	EditSceneMode m_editMode;
+	//! Parent widget.
+	QWidget * m_parentWidget;
 }; // class ScenePrivate
 
 
@@ -68,12 +80,73 @@ Scene::~Scene()
 {
 }
 
+SceneMode
+Scene::mode() const
+{
+	return d->m_mode;
+}
+
+void
+Scene::setMode( SceneMode mode )
+{
+	d->m_mode = mode;
+}
+
+EditSceneMode
+Scene::editMode() const
+{
+	return d->m_editMode;
+}
+
+void
+Scene::setEditMode( EditSceneMode mode )
+{
+	d->m_editMode = mode;
+}
+
+void
+Scene::setParentWidget( QWidget * parent )
+{
+	d->m_parentWidget = parent;
+}
+
+void
+Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
+{
+	if( d->m_mode == EditScene )
+	{
+		if( mouseEvent->button() == Qt::LeftButton )
+		{
+			switch( d->m_editMode )
+			{
+				case EditSceneNewSource :
+				{
+					Como::Source source;
+					QString channel;
+
+					SourcesDialog dlg( source, channel, d->m_parentWidget );
+
+					if( dlg.exec() == QDialog::Accepted )
+					{
+
+					}
+				}
+				break;
+
+				case EditSceneNewText :
+				{
+
+				}
+				break;
+			}
+		}
+	}
+}
+
 void
 Scene::init()
 {
 	QWidget w;
-
-	qDebug() << w.palette().color( QPalette::Window );
 
 	setBackgroundBrush( w.palette().color( QPalette::Window ) );
 }

@@ -40,6 +40,9 @@ namespace Globe {
 
 namespace Scheme {
 
+class Scene;
+
+
 //
 // View
 //
@@ -56,6 +59,9 @@ public:
 	View( QWidget * parent = 0 );
 
 	~View();
+
+	//! \return Scene.
+	Scene * scene();
 
 private:
 	//! Init.

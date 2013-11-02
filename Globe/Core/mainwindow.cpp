@@ -45,6 +45,7 @@
 #include <Globe/Core/sources.hpp>
 #include <Globe/Core/sounds.hpp>
 #include <Globe/Core/utils.hpp>
+#include <Globe/Core/channels.hpp>
 
 #include <Globe/Scheme/window.hpp>
 
@@ -169,7 +170,8 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	fileMenu->addSeparator();
 
 	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
-		tr( "E&xit" ), qApp, SLOT( quit() ), QKeySequence( tr( "Ctrl+Q" ) ) );
+		tr( "E&xit" ), this, SLOT( shutdown() ),
+		QKeySequence( tr( "Ctrl+Q" ) ) );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
@@ -328,12 +330,7 @@ MainWindow::closeEvent( QCloseEvent * event )
 {
 	event->accept();
 
-	saveConfiguration();
-
-	Log::instance().writeMsgToEventLog( LogLevelInfo,
-		QLatin1String( "Application finished." ) );
-
-	QApplication::quit();
+	shutdown();
 }
 
 WindowsCfg
@@ -433,6 +430,22 @@ void
 MainWindow::settings()
 {
 	d->m_confDialog->exec();
+}
+
+void
+MainWindow::shutdown()
+{
+	saveConfiguration();
+
+	foreach( ChannelViewWindow * w, d->m_channelViewWindows )
+		w->close();
+
+	foreach( Scheme::Window * w, d->m_schemeWindows )
+		w->close();
+
+	ChannelsManager::instance().shutdown();
+
+	QApplication::quit();
 }
 
 void

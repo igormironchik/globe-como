@@ -229,6 +229,9 @@ public:
 	//! \return All available channels.
 	QList< Channel* > channels() const;
 
+	//! Shutdown all channels.
+	void shutdown();
+
 private:
 	Q_DISABLE_COPY( ChannelsManager )
 

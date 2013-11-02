@@ -9,6 +9,8 @@ QT += gui widgets
 INCLUDEPATH += $$PWD/.. $$PWD/../..
 DEPENDPATH += $$PWD/.. $$PWD/../..
 
+RESOURCES = scheme_resources.qrc
+
 HEADERS += scene.hpp \
            scheme_cfg.hpp \
            source.hpp \

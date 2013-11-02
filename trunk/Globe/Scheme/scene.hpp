@@ -35,10 +35,43 @@
 #include <QGraphicsScene>
 #include <QScopedPointer>
 
+QT_BEGIN_NAMESPACE
+class QWidget;
+QT_END_NAMESPACE
+
 
 namespace Globe {
 
 namespace Scheme {
+
+
+//
+// SceneMode
+//
+
+//! Mode of the scene.
+enum SceneMode {
+	//! View scene.
+	ViewScene = 0x00,
+	//! Edit scene.
+	EditScene = 0x01
+}; // enum SceneMode
+
+
+//
+// EditSceneMode
+//
+
+//! Edit scene mode.
+enum EditSceneMode {
+	//! Select items on scene.
+	EditSceneSelect = 0x01,
+	//! Add new source.
+	EditSceneNewSource = 0x02,
+	//! Add new text block.
+	EditSceneNewText = 0x03
+}; // enum EditSceneMode
+
 
 //
 // Scene
@@ -56,6 +89,23 @@ public:
 	Scene( QObject * parent = 0 );
 
 	~Scene();
+
+	//! \return Scene mode.
+	SceneMode mode() const;
+	//! Set scene mode.
+	void setMode( SceneMode mode );
+
+	//! \return Edit scene mode.
+	EditSceneMode editMode() const;
+	//! Set edit scene mode.
+	void setEditMode( EditSceneMode mode );
+
+	//! Set parent widget.
+	void setParentWidget( QWidget * parent );
+
+protected:
+	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
+
 
 private:
 	//! Init.

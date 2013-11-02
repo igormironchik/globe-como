@@ -68,10 +68,18 @@ View::~View()
 {
 }
 
+Scene *
+View::scene()
+{
+	return d->m_scene;
+}
+
 void
 View::init()
 {
 	d->m_scene = new Scene( this );
+
+	d->m_scene->setParentWidget( this );
 
 	setScene( d->m_scene );
 }

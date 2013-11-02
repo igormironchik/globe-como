@@ -77,6 +77,16 @@ public slots:
 	//! Create new scheme.
 	void createNewScheme( const QString & fileName );
 
+private slots:
+	//! Edit mode changed.
+	void editMode();
+	//! Set select edit mode.
+	void selectEditMode();
+	//! Set new source edit mode.
+	void sourceEditMode();
+	//! Set new text block edit mode.
+	void textBlockEditMode();
+
 protected:
 	void closeEvent( QCloseEvent * event );
 

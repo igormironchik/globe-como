@@ -113,6 +113,8 @@ private slots:
 	void newSchemeWindow();
 	//! Open saved scheme.
 	void openScheme();
+	//! Shutdown.
+	void shutdown();
 
 private:
 	//! Save configuration.

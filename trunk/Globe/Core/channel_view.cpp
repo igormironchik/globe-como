@@ -37,7 +37,6 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTableView>
-#include <QDebug>
 
 // Globe include.
 #include <Globe/Core/channel_view.hpp>

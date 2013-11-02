@@ -31,6 +31,9 @@
 // Globe include.
 #include <Globe/Scheme/source.hpp>
 
+// Qt include.
+#include <QPainter>
+
 
 namespace Globe {
 
@@ -42,9 +45,16 @@ namespace Scheme {
 
 class SourcePrivate {
 public:
-	SourcePrivate()
+	SourcePrivate( const Como::Source & source, const QString & channelName )
+		:	m_source( source )
+		,	m_channelName( channelName )
 	{
 	}
+
+	//! Source.
+	Como::Source m_source;
+	//! Channel name.
+	QString m_channelName;
 }; // class SourcePrivate
 
 
@@ -52,21 +62,32 @@ public:
 // Source
 //
 
-Source::Source()
-	:	d( new SourcePrivate )
+Source::Source( const Como::Source & source, const QString & channelName )
+	:	d( new SourcePrivate( source, channelName ) )
 {
 }
 
 QRectF
 Source::boundingRect() const
 {
-	return QRectF();
+	return QRectF( 0, 0, 50, 25 );
 }
 
 void
 Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	QWidget * widget )
 {
+	Q_UNUSED( option )
+	Q_UNUSED( widget )
+
+	painter->setPen( Qt::black );
+
+	painter->setBrush( Qt::white );
+
+	painter->drawRect( boundingRect() );
+
+	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
+		d->m_source.value().toString() );
 }
 
 } /* namespace Scheme */

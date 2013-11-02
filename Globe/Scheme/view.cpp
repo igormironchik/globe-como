@@ -81,6 +81,8 @@ View::init()
 
 	d->m_scene->setParentWidget( this );
 
+	setAlignment( Qt::AlignLeft | Qt::AlignTop );
+
 	setScene( d->m_scene );
 }
 

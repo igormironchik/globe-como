@@ -39,6 +39,7 @@
 #include <QPalette>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QMessageBox>
 
 
 namespace Globe {
@@ -83,13 +84,46 @@ public:
 	{
 	}
 
+	//! Notify all items about scene mode changes.
+	void notifyItemsAboutModeChange( SceneMode mode )
+	{
+		foreach( Source * s, m_sources )
+			s->setMode( mode );
+	}
+
+	//! Notify all items about scene edit mode changes.
+	void notifyItemsAboutEditModeChange( EditSceneMode mode )
+	{
+		foreach( Source * s, m_sources )
+			s->setEditMode( mode );
+	}
+
 	//! Mode of the scene.
 	SceneMode m_mode;
 	//! Edit mode of the scene.
 	EditSceneMode m_editMode;
 	//! Parent widget.
 	QWidget * m_parentWidget;
+	//! Source items.
+	QMap< QString, Source* > m_sources;
 }; // class ScenePrivate
+
+
+//
+// createKey
+//
+
+//! Create key for the source.
+QString createKey( const Como::Source & source, const QString & channelName )
+{
+	QString key;
+
+	key.append( channelName );
+	key.append( source.typeName() );
+	key.append( source.name() );
+
+	return key;
+}
 
 
 //
@@ -117,6 +151,8 @@ void
 Scene::setMode( SceneMode mode )
 {
 	d->m_mode = mode;
+
+	d->notifyItemsAboutModeChange( d->m_mode );
 }
 
 EditSceneMode
@@ -129,6 +165,8 @@ void
 Scene::setEditMode( EditSceneMode mode )
 {
 	d->m_editMode = mode;
+
+	d->notifyItemsAboutEditModeChange( mode );
 }
 
 void
@@ -155,22 +193,45 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 					if( dlg.exec() == QDialog::Accepted )
 					{
-						Source * item = new Source( source, channel );
-						item->setPos( mouseEvent->scenePos() );
+						const QString key = createKey( source, channel );
 
-						addItem( item );
+						if( !d->m_sources.contains( key ) )
+						{
+							Source * item = new Source( source, channel );
+							item->setPos( mouseEvent->scenePos() );
+							item->setMode( d->m_mode );
+							item->setEditMode( d->m_editMode );
+
+							addItem( item );
+
+							d->m_sources.insert( key, item );
+						}
+						else
+							QMessageBox::warning( 0,
+								tr( "Source already on the scheme..." ),
+								tr( "Source already on the scheme." ) );
 					}
+
+					mouseEvent->accept();
 				}
 				break;
 
 				case EditSceneNewText :
 				{
-
+					mouseEvent->accept();
 				}
+				break;
+
+				default :
+					QGraphicsScene::mouseReleaseEvent( mouseEvent );
 				break;
 			}
 		}
+		else
+			QGraphicsScene::mouseReleaseEvent( mouseEvent );
 	}
+	else
+		QGraphicsScene::mouseReleaseEvent( mouseEvent );
 }
 
 void

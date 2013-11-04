@@ -11,7 +11,8 @@ DEPENDPATH += $$PWD/.. $$PWD/../..
 
 RESOURCES = scheme_resources.qrc
 
-HEADERS += scene.hpp \
+HEADERS += enums.hpp \
+           scene.hpp \
            scheme_cfg.hpp \
            source.hpp \
            view.hpp \

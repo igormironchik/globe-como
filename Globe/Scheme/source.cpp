@@ -219,6 +219,7 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 					const qreal dy = event->pos().y();
 					width += dx;
 					height -= dy;
+					y += dy;
 				}
 			break;
 
@@ -238,6 +239,7 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 					const qreal dy = event->pos().y() - boundingRect().height();
 					width -= dx;
 					height += dy;
+					x += dx;
 				}
 			break;
 		}

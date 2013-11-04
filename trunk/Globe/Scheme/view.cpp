@@ -84,6 +84,8 @@ View::init()
 	setAlignment( Qt::AlignLeft | Qt::AlignTop );
 
 	setScene( d->m_scene );
+
+	setViewportUpdateMode( QGraphicsView::FullViewportUpdate );
 }
 
 } /* namespace Scheme */

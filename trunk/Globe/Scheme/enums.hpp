@@ -28,19 +28,8 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SCHEME__SCENE_HPP__INCLUDED
-#define GLOBE__SCHEME__SCENE_HPP__INCLUDED
-
-// Globe include.
-#include <Globe/Scheme/enums.hpp>
-
-// Qt include.
-#include <QGraphicsScene>
-#include <QScopedPointer>
-
-QT_BEGIN_NAMESPACE
-class QWidget;
-QT_END_NAMESPACE
+#ifndef GLOBE__SCHEME__ENUMS_HPP__INCLUDED
+#define GLOBE__SCHEME__ENUMS_HPP__INCLUDED
 
 
 namespace Globe {
@@ -48,51 +37,68 @@ namespace Globe {
 namespace Scheme {
 
 //
-// Scene
+// SceneMode
 //
 
-class ScenePrivate;
-
-//! Scene that will display the scheme.
-class Scene
-	:	public QGraphicsScene
-{
-	Q_OBJECT
-
-public:
-	Scene( QObject * parent = 0 );
-
-	~Scene();
-
-	//! \return Scene mode.
-	SceneMode mode() const;
-	//! Set scene mode.
-	void setMode( SceneMode mode );
-
-	//! \return Edit scene mode.
-	EditSceneMode editMode() const;
-	//! Set edit scene mode.
-	void setEditMode( EditSceneMode mode );
-
-	//! Set parent widget.
-	void setParentWidget( QWidget * parent );
-
-protected:
-	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
+//! Mode of the scene.
+enum SceneMode {
+	//! View scene.
+	ViewScene = 0x00,
+	//! Edit scene.
+	EditScene = 0x01
+}; // enum SceneMode
 
 
-private:
-	//! Init.
-	void init();
+//
+// EditSceneMode
+//
 
-private:
-	Q_DISABLE_COPY( Scene )
+//! Edit scene mode.
+enum EditSceneMode {
+	//! Select items on scene.
+	EditSceneSelect = 0x01,
+	//! Add new source.
+	EditSceneNewSource = 0x02,
+	//! Add new text block.
+	EditSceneNewText = 0x03
+}; // enum EditSceneMode
 
-	QScopedPointer< ScenePrivate > d;
-}; // class Scene
+
+//
+// ItemState
+//
+
+//! State of the item.
+enum ItemState {
+	//! Item selected.
+	ItemSelected = 0x00,
+	//! Item not selected.
+	ItemNotSelected = 0x01
+}; // enum ItemState
+
+
+//
+// ResizeMode
+//
+
+//! Resize mode.
+enum ResizeMode {
+	//! Resize mode is off.
+	NoResize = 0x00,
+	//! Resize mode is on.
+	YesResize = 0x01,
+	//! Resize to top left corner.
+	ResizeTopLeft = 0x03,
+	//! Resize to top right corner.
+	ResizeTopRight = 0x05,
+	//! Resize to bottom right corner.
+	ResizeBottomRight = 0x09,
+	//! Resize to bottom left corner.
+	ResizeBottomLeft = 0x11
+}; // enum ResizeMode
 
 } /* namespace Scheme */
 
 } /* namespace Globe */
 
-#endif // GLOBE__SCHEME__SCENE_HPP__INCLUDED
+#endif // GLOBE__SCHEME__ENUMS_HPP__INCLUDED

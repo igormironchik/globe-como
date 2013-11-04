@@ -38,6 +38,9 @@
 // Como include.
 #include <Como/Source>
 
+// Globe include.
+#include <Globe/Scheme/enums.hpp>
+
 
 namespace Globe {
 
@@ -56,12 +59,36 @@ class Source
 public:
 	Source( const Como::Source & source, const QString & channelName );
 
+	//! Set scene mode.
+	void setMode( SceneMode mode );
+
+	//! Set edit scene mode.
+	void setEditMode( EditSceneMode mode );
+
+	//! Set item state.
+	void setItemState( ItemState st );
+
+	//! Set source.
+	void setSource( const Como::Source & source );
+
 	//! \return Bounding rectangle.
 	QRectF boundingRect() const;
 
 	//! Paint item.
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		QWidget * widget );
+
+protected:
+	void mouseMoveEvent( QGraphicsSceneMouseEvent * event );
+	void mousePressEvent( QGraphicsSceneMouseEvent * event );
+	void mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
+	void hoverEnterEvent( QGraphicsSceneHoverEvent * event );
+	void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
+	void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
+
+private:
+	//! Detect resize mode and change cursor.
+	void detectResizeMode( const QPointF & pos );
 
 private:
 	Q_DISABLE_COPY( Source )

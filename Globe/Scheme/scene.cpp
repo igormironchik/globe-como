@@ -31,6 +31,7 @@
 // Globe include.
 #include <Globe/Scheme/scene.hpp>
 #include <Globe/Scheme/source.hpp>
+#include <Globe/Scheme/selection.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
 
@@ -106,6 +107,8 @@ public:
 	QWidget * m_parentWidget;
 	//! Source items.
 	QMap< QString, Source* > m_sources;
+	//! Selection.
+	Selection m_selection;
 }; // class ScenePrivate
 
 
@@ -150,6 +153,8 @@ Scene::mode() const
 void
 Scene::setMode( SceneMode mode )
 {
+	d->m_selection.clear();
+
 	d->m_mode = mode;
 
 	d->notifyItemsAboutModeChange( d->m_mode );
@@ -164,6 +169,8 @@ Scene::editMode() const
 void
 Scene::setEditMode( EditSceneMode mode )
 {
+	d->m_selection.clear();
+
 	d->m_editMode = mode;
 
 	d->notifyItemsAboutEditModeChange( mode );
@@ -197,7 +204,8 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 						if( !d->m_sources.contains( key ) )
 						{
-							Source * item = new Source( source, channel );
+							Source * item = new Source( source, channel,
+								&d->m_selection );
 							item->setPos( mouseEvent->scenePos() );
 							item->setMode( d->m_mode );
 							item->setEditMode( d->m_editMode );
@@ -223,7 +231,12 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 				break;
 
 				default :
+				{
 					QGraphicsScene::mouseReleaseEvent( mouseEvent );
+
+					if( !mouseEvent->isAccepted() )
+						d->m_selection.clear();
+				}
 				break;
 			}
 		}

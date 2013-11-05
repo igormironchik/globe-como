@@ -30,6 +30,7 @@
 
 // Globe include.
 #include <Globe/Scheme/source.hpp>
+#include <Globe/Scheme/selection.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
@@ -52,7 +53,8 @@ namespace Scheme {
 
 class SourcePrivate {
 public:
-	SourcePrivate( const Como::Source & source, const QString & channelName )
+	SourcePrivate( const Como::Source & source, const QString & channelName,
+		Selection * selection )
 		:	m_source( source )
 		,	m_channelName( channelName )
 		,	m_mode( ViewScene )
@@ -62,6 +64,7 @@ public:
 		,	m_leftButtonPressed( false )
 		,	m_width( 50 )
 		,	m_height( 25 )
+		,	m_selection( selection )
 	{
 	}
 
@@ -85,6 +88,8 @@ public:
 	qreal m_width;
 	//! Height.
 	qreal m_height;
+	//! Selection.
+	Selection * m_selection;
 }; // class SourcePrivate
 
 
@@ -92,8 +97,9 @@ public:
 // Source
 //
 
-Source::Source( const Como::Source & source, const QString & channelName )
-	:	d( new SourcePrivate( source, channelName ) )
+Source::Source( const Como::Source & source, const QString & channelName,
+	Selection * selection )
+	:	d( new SourcePrivate( source, channelName, selection ) )
 {
 	setSource( source );
 }
@@ -281,7 +287,12 @@ Source::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 		{
 			d->m_leftButtonPressed = false;
 
-			setItemState( ItemSelected );
+			if( event->modifiers() == Qt::NoModifier )
+				d->m_selection->clear();
+
+			d->m_selection->addItem( this );
+
+			event->accept();
 		}
 		else
 			QGraphicsItem::mouseReleaseEvent( event );

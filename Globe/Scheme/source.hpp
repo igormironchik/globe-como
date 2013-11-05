@@ -40,11 +40,15 @@
 
 // Globe include.
 #include <Globe/Scheme/enums.hpp>
+#include <Globe/Scheme/selectable.hpp>
 
 
 namespace Globe {
 
 namespace Scheme {
+
+class Selection;
+
 
 //
 // Source
@@ -55,9 +59,11 @@ class SourcePrivate;
 //! Graphics item that will display Como source on scheme.
 class Source
 	:	public QGraphicsItem
+	,	public Selectable
 {
 public:
-	Source( const Como::Source & source, const QString & channelName );
+	Source( const Como::Source & source, const QString & channelName,
+		Selection * selection );
 
 	//! Set scene mode.
 	void setMode( SceneMode mode );

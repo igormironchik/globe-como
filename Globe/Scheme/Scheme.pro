@@ -14,6 +14,8 @@ RESOURCES = scheme_resources.qrc
 HEADERS += enums.hpp \
            scene.hpp \
            scheme_cfg.hpp \
+           selectable.hpp \
+           selection.hpp \
            source.hpp \
            view.hpp \
            window.hpp \
@@ -21,6 +23,7 @@ HEADERS += enums.hpp \
 
 SOURCES += scene.cpp \
            scheme_cfg.cpp \
+           selection.cpp \
            source.cpp \
            view.cpp \
            window.cpp \

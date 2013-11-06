@@ -16,6 +16,7 @@ HEADERS += enums.hpp \
            scheme_cfg.hpp \
            selectable.hpp \
            selection.hpp \
+           size_dialog.hpp \
            source.hpp \
            view.hpp \
            window.hpp \
@@ -24,7 +25,10 @@ HEADERS += enums.hpp \
 SOURCES += scene.cpp \
            scheme_cfg.cpp \
            selection.cpp \
+           size_dialog.cpp \
            source.cpp \
            view.cpp \
            window.cpp \
            window_cfg.cpp
+
+FORMS +=   size_dialog.ui

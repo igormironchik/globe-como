@@ -32,7 +32,7 @@
 #define GLOBE__SCHEME__SOURCE_HPP__INCLUDED
 
 // Qt include.
-#include <QGraphicsItem>
+#include <QGraphicsObject>
 #include <QScopedPointer>
 
 // Como include.
@@ -48,6 +48,7 @@ namespace Globe {
 namespace Scheme {
 
 class Selection;
+class Scene;
 
 
 //
@@ -58,12 +59,14 @@ class SourcePrivate;
 
 //! Graphics item that will display Como source on scheme.
 class Source
-	:	public QGraphicsItem
+	:	public QGraphicsObject
 	,	public Selectable
 {
+	Q_OBJECT
+
 public:
 	Source( const Como::Source & source, const QString & channelName,
-		Selection * selection );
+		Selection * selection, Scene * scene );
 
 	//! Set scene mode.
 	void setMode( SceneMode mode );
@@ -86,6 +89,11 @@ public:
 	//! Move right.
 	void moveRight();
 
+	//! \return Channel name.
+	const QString & channelName() const;
+
+	//! \return Source.
+	const Como::Source & source() const;
 	//! Set source.
 	void setSource( const Como::Source & source );
 
@@ -103,10 +111,19 @@ protected:
 	void hoverEnterEvent( QGraphicsSceneHoverEvent * event );
 	void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
 	void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
+	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event );
 
 private:
 	//! Detect resize mode and change cursor.
 	void detectResizeMode( const QPointF & pos );
+
+private slots:
+	//! Remove this item from scene.
+	void removeItemFromScene();
+	//! Change font.
+	void changeFont();
+	//! Change size.
+	void changeSize();
 
 private:
 	Q_DISABLE_COPY( Source )

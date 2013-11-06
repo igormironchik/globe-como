@@ -184,6 +184,18 @@ Scene::setParentWidget( QWidget * parent )
 }
 
 void
+Scene::removeSource( Source * source )
+{
+	const QString key = createKey( source->source(), source->channelName() );
+
+	removeItem( source );
+
+	d->m_selection.removeItem( source );
+
+	d->m_sources.remove( key );
+}
+
+void
 Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 {
 	if( d->m_mode == EditScene )
@@ -206,7 +218,7 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 						if( !d->m_sources.contains( key ) )
 						{
 							Source * item = new Source( source, channel,
-								&d->m_selection );
+								&d->m_selection, this );
 							item->setPos( mouseEvent->scenePos() );
 							item->setMode( d->m_mode );
 							item->setEditMode( d->m_editMode );

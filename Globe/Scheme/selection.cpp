@@ -78,6 +78,12 @@ Selection::addItem( Selectable * item )
 }
 
 void
+Selection::removeItem( Selectable * item )
+{
+	d->m_items.removeOne( item );
+}
+
+void
 Selection::clear()
 {
 	foreach( Selectable * item, d->m_items )

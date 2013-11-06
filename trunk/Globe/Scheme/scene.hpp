@@ -79,7 +79,7 @@ public:
 
 protected:
 	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
-
+	void keyPressEvent( QKeyEvent * keyEvent );
 
 private:
 	//! Init.

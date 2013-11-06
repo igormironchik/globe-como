@@ -41,6 +41,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
 #include <QMessageBox>
+#include <QKeyEvent>
 
 
 namespace Globe {
@@ -245,6 +246,39 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 	}
 	else
 		QGraphicsScene::mouseReleaseEvent( mouseEvent );
+}
+
+void
+Scene::keyPressEvent( QKeyEvent * keyEvent )
+{
+	if( !d->m_selection.isEmpty() && d->m_mode == EditScene &&
+		d->m_editMode == EditSceneSelect )
+	{
+		switch( keyEvent->key() )
+		{
+			case Qt::Key_Up :
+				d->m_selection.moveUp();
+				break;
+
+			case Qt::Key_Down :
+				d->m_selection.moveDown();
+				break;
+
+			case Qt::Key_Left :
+				d->m_selection.moveLeft();
+				break;
+
+			case Qt::Key_Right :
+				d->m_selection.moveRight();
+				break;
+
+			default :
+				QGraphicsScene::keyPressEvent( keyEvent );
+				break;
+		}
+	}
+	else
+		QGraphicsScene::keyPressEvent( keyEvent );
 }
 
 void

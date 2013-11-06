@@ -92,6 +92,34 @@ Selection::isEmpty() const
 	return d->m_items.isEmpty();
 }
 
+void
+Selection::moveUp()
+{
+	foreach( Selectable * item, d->m_items )
+		item->moveUp();
+}
+
+void
+Selection::moveDown()
+{
+	foreach( Selectable * item, d->m_items )
+		item->moveDown();
+}
+
+void
+Selection::moveLeft()
+{
+	foreach( Selectable * item, d->m_items )
+		item->moveLeft();
+}
+
+void
+Selection::moveRight()
+{
+	foreach( Selectable * item, d->m_items )
+		item->moveRight();
+}
+
 } /* namespace Scheme */
 
 } /* namespace Globe */

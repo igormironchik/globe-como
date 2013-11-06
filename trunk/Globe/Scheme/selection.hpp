@@ -64,6 +64,18 @@ public:
 	//! \return Is selection empty?
 	bool isEmpty() const;
 
+	//! Move selection up.
+	void moveUp();
+
+	//! Move selection down.
+	void moveDown();
+
+	//! Move selection left.
+	void moveLeft();
+
+	//! Move selection right.
+	void moveRight();
+
 private:
 	Q_DISABLE_COPY( Selection )
 

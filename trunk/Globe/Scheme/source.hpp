@@ -74,6 +74,18 @@ public:
 	//! Set item state.
 	void setItemState( ItemState st );
 
+	//! Move up.
+	void moveUp();
+
+	//! Move down.
+	void moveDown();
+
+	//! Move left.
+	void moveLeft();
+
+	//! Move right.
+	void moveRight();
+
 	//! Set source.
 	void setSource( const Como::Source & source );
 

@@ -58,6 +58,9 @@ public:
 	//! Add item to the selection.
 	void addItem( Selectable * item );
 
+	//! Remove item.
+	void removeItem( Selectable * item );
+
 	//! Clear selection.
 	void clear();
 

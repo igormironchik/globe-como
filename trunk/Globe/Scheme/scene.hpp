@@ -47,6 +47,9 @@ namespace Globe {
 
 namespace Scheme {
 
+class Source;
+
+
 //
 // Scene
 //
@@ -76,6 +79,9 @@ public:
 
 	//! Set parent widget.
 	void setParentWidget( QWidget * parent );
+
+	//! Remove source from the scene.
+	void removeSource( Source * source );
 
 protected:
 	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );

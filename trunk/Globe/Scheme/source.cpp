@@ -31,6 +31,7 @@
 // Globe include.
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/selection.hpp>
+#include <Globe/Scheme/scene.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
@@ -41,6 +42,10 @@
 #include <QGraphicsSceneHoverEvent>
 #include <QApplication>
 #include <QCursor>
+#include <QGraphicsSceneContextMenuEvent>
+#include <QMenu>
+#include <QFont>
+#include <QFontDialog>
 
 
 namespace Globe {
@@ -54,7 +59,7 @@ namespace Scheme {
 class SourcePrivate {
 public:
 	SourcePrivate( const Como::Source & source, const QString & channelName,
-		Selection * selection )
+		Selection * selection, Scene * scene )
 		:	m_source( source )
 		,	m_channelName( channelName )
 		,	m_mode( ViewScene )
@@ -65,6 +70,7 @@ public:
 		,	m_width( 50 )
 		,	m_height( 25 )
 		,	m_selection( selection )
+		,	m_scene( scene )
 	{
 	}
 
@@ -90,6 +96,10 @@ public:
 	qreal m_height;
 	//! Selection.
 	Selection * m_selection;
+	//! Font.
+	QFont m_font;
+	//! Scene.
+	Scene * m_scene;
 }; // class SourcePrivate
 
 
@@ -98,8 +108,9 @@ public:
 //
 
 Source::Source( const Como::Source & source, const QString & channelName,
-	Selection * selection )
-	:	d( new SourcePrivate( source, channelName, selection ) )
+	Selection * selection, Scene * scene )
+	:	d( new SourcePrivate( source, channelName, selection,
+			scene ) )
 {
 	setSource( source );
 }
@@ -162,6 +173,18 @@ Source::moveRight()
 	setPos( pos().x() + 1, pos().y() );
 }
 
+const QString &
+Source::channelName() const
+{
+	return d->m_channelName;
+}
+
+const Como::Source &
+Source::source() const
+{
+	return d->m_source;
+}
+
 void
 Source::setSource( const Como::Source & source )
 {
@@ -214,6 +237,8 @@ Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	}
 
 	painter->setPen( Qt::black );
+
+	painter->setFont( d->m_font );
 
 	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
 		d->m_source.value().toString() );
@@ -285,7 +310,7 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 		}
 	}
 	else
-		QGraphicsItem::mouseMoveEvent( event );
+		QGraphicsObject::mouseMoveEvent( event );
 }
 
 void
@@ -298,7 +323,7 @@ Source::mousePressEvent( QGraphicsSceneMouseEvent * event )
 				d->m_leftButtonPressed = true;
 	}
 
-	QGraphicsItem::mousePressEvent( event );
+	QGraphicsObject::mousePressEvent( event );
 }
 
 void
@@ -319,10 +344,10 @@ Source::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 			event->accept();
 		}
 		else
-			QGraphicsItem::mouseReleaseEvent( event );
+			QGraphicsObject::mouseReleaseEvent( event );
 	}
 	else
-		QGraphicsItem::mouseReleaseEvent( event );
+		QGraphicsObject::mouseReleaseEvent( event );
 }
 
 void
@@ -332,7 +357,7 @@ Source::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 		d->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
-		QGraphicsItem::hoverEnterEvent( event );
+		QGraphicsObject::hoverEnterEvent( event );
 }
 
 void
@@ -345,7 +370,7 @@ Source::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 	}
 	else
-		QGraphicsItem::hoverLeaveEvent( event );
+		QGraphicsObject::hoverLeaveEvent( event );
 }
 
 void
@@ -355,7 +380,7 @@ Source::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 		d->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
-		QGraphicsItem::hoverMoveEvent( event );
+		QGraphicsObject::hoverMoveEvent( event );
 }
 
 void
@@ -392,6 +417,52 @@ Source::detectResizeMode( const QPointF & pos )
 		d->m_resizeMode = NoResize;
 		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 	}
+}
+
+void
+Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
+{
+	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect )
+	{
+		event->accept();
+
+		QMenu menu;
+
+		menu.addAction( QIcon( ":/img/character_set_22x22.png" ),
+			tr( "Change Font" ), this, SLOT( changeFont() ) );
+		menu.addAction( QIcon( ":/img/transform_scale_22x22.png" ),
+			tr( "Change Size" ), this, SLOT( changeSize() ) );
+		menu.addAction( QIcon( ":/img/remove_22x22.png" ),
+			tr( "Delete Source" ), this, SLOT( removeItemFromScene() ) );
+
+		menu.exec( event->screenPos() );
+	}
+}
+
+void
+Source::removeItemFromScene()
+{
+	d->m_scene->removeSource( this );
+
+	deleteLater();
+}
+
+void
+Source::changeFont()
+{
+	QFontDialog dlg( d->m_font );
+
+	if( dlg.exec() == QDialog::Accepted )
+	{
+		d->m_font = dlg.selectedFont();
+		update();
+	}
+}
+
+void
+Source::changeSize()
+{
+
 }
 
 } /* namespace Scheme */

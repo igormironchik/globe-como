@@ -3,5 +3,7 @@
         <file>img/add_source_22x22.png</file>
         <file>img/add_text_22x22.png</file>
         <file>img/select_mode_22x22.png</file>
+        <file>img/character_set_22x22.png</file>
+        <file>img/transform_scale_22x22.png</file>
     </qresource>
 </RCC>

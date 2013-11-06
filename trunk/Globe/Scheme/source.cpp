@@ -32,6 +32,7 @@
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/selection.hpp>
 #include <Globe/Scheme/scene.hpp>
+#include <Globe/Scheme/size_dialog.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
@@ -462,7 +463,18 @@ Source::changeFont()
 void
 Source::changeSize()
 {
+	int width = d->m_width;
+	int height = d->m_height;
 
+	SizeDialog dlg( width, height );
+
+	if( dlg.exec() == QDialog::Accepted )
+	{
+		d->m_width = width;
+		d->m_height = height;
+
+		update();
+	}
 }
 
 } /* namespace Scheme */

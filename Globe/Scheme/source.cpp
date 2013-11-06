@@ -139,6 +139,30 @@ Source::setItemState( ItemState st )
 }
 
 void
+Source::moveUp()
+{
+	setPos( pos().x(), pos().y() - 1 );
+}
+
+void
+Source::moveDown()
+{
+	setPos( pos().x(), pos().y() + 1 );
+}
+
+void
+Source::moveLeft()
+{
+	setPos( pos().x() - 1, pos().y() );
+}
+
+void
+Source::moveRight()
+{
+	setPos( pos().x() + 1, pos().y() );
+}
+
+void
 Source::setSource( const Como::Source & source )
 {
 	d->m_source = source;

@@ -52,6 +52,18 @@ public:
 
 	//! Set item state.
 	virtual void setItemState( ItemState st ) = 0;
+
+	//! Move up.
+	virtual void moveUp() = 0;
+
+	//! Move down.
+	virtual void moveDown() = 0;
+
+	//! Move left.
+	virtual void moveLeft() = 0;
+
+	//! Move right.
+	virtual void moveRight() = 0;
 }; // class Selectable
 
 } /* namespace Scheme */

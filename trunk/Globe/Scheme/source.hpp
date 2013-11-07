@@ -78,16 +78,19 @@ public:
 	void setItemState( ItemState st );
 
 	//! Move up.
-	void moveUp();
+	void moveUp( int delta );
 
 	//! Move down.
-	void moveDown();
+	void moveDown( int delta );
 
 	//! Move left.
-	void moveLeft();
+	void moveLeft( int delta );
 
 	//! Move right.
-	void moveRight();
+	void moveRight( int delta );
+
+	//! Delete item.
+	void deleteItem();
 
 	//! \return Channel name.
 	const QString & channelName() const;

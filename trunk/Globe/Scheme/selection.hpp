@@ -68,16 +68,19 @@ public:
 	bool isEmpty() const;
 
 	//! Move selection up.
-	void moveUp();
+	void moveUp( int delta );
 
 	//! Move selection down.
-	void moveDown();
+	void moveDown( int delta );
 
 	//! Move selection left.
-	void moveLeft();
+	void moveLeft( int delta );
 
 	//! Move selection right.
-	void moveRight();
+	void moveRight( int delta );
+
+	//! Delete selected items.
+	void deleteItems();
 
 private:
 	Q_DISABLE_COPY( Selection )

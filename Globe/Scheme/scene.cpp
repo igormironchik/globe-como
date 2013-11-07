@@ -266,22 +266,35 @@ Scene::keyPressEvent( QKeyEvent * keyEvent )
 	if( !d->m_selection.isEmpty() && d->m_mode == EditScene &&
 		d->m_editMode == EditSceneSelect )
 	{
+		int delta = 1;
+
+		switch( keyEvent->modifiers() )
+		{
+			case Qt::ShiftModifier : delta = 10; break;
+			case Qt::AltModifier : delta = 1; break;
+			case Qt::NoModifier : delta = 5; break;
+		}
+
 		switch( keyEvent->key() )
 		{
 			case Qt::Key_Up :
-				d->m_selection.moveUp();
+				d->m_selection.moveUp( delta );
 				break;
 
 			case Qt::Key_Down :
-				d->m_selection.moveDown();
+				d->m_selection.moveDown( delta );
 				break;
 
 			case Qt::Key_Left :
-				d->m_selection.moveLeft();
+				d->m_selection.moveLeft( delta );
 				break;
 
 			case Qt::Key_Right :
-				d->m_selection.moveRight();
+				d->m_selection.moveRight( delta );
+				break;
+
+			case Qt::Key_Delete :
+				d->m_selection.deleteItems();
 				break;
 
 			default :

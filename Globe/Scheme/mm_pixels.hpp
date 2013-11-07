@@ -28,11 +28,12 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SCHEME__SELECTABLE_HPP__INCLUDED
-#define GLOBE__SCHEME__SELECTABLE_HPP__INCLUDED
+#ifndef GLOBE__SCHEME__MM_PIXELS_HPP__INCLUDED
+#define GLOBE__SCHEME__MM_PIXELS_HPP__INCLUDED
 
-// Globe include.
-#include <Globe/Scheme/enums.hpp>
+// Qt include.
+#include <QPointF>
+#include <QSizeF>
 
 
 namespace Globe {
@@ -40,37 +41,38 @@ namespace Globe {
 namespace Scheme {
 
 //
-// Selectable
+// pointToMm
 //
 
-//! Interface for selectable item on the scheme.
-class Selectable {
-public:
-	virtual ~Selectable()
-	{
-	}
+//! Convert pixels to mm.
+QPointF pointToMm( const QPointF & p );
 
-	//! Set item state.
-	virtual void setItemState( ItemState st ) = 0;
 
-	//! Move up.
-	virtual void moveUp( int delta ) = 0;
+//
+// pointFromMm
+//
 
-	//! Move down.
-	virtual void moveDown( int delta ) = 0;
+//! Convert mm to pixels.
+QPointF pointFromMm( const QPointF & p );
 
-	//! Move left.
-	virtual void moveLeft( int delta ) = 0;
 
-	//! Move right.
-	virtual void moveRight( int delta ) = 0;
+//
+// sizeToMm
+//
 
-	//! Delete item.
-	virtual void deleteItem() = 0;
-}; // class Selectable
+//! Convert pixels to mm.
+QSizeF sizeToMm( const QSizeF & s );
+
+
+//
+// sizeFromMm
+//
+
+//! Convert mm to pixels.
+QSizeF sizeFromMm( const QSizeF & s );
 
 } /* namespace Scheme */
 
 } /* namespace Globe */
 
-#endif // GLOBE__SCHEME__SELECTABLE_HPP__INCLUDED
+#endif // GLOBE__SCHEME__MM_PIXELS_HPP__INCLUDED

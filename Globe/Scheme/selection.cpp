@@ -99,31 +99,40 @@ Selection::isEmpty() const
 }
 
 void
-Selection::moveUp()
+Selection::moveUp( int delta )
 {
 	foreach( Selectable * item, d->m_items )
-		item->moveUp();
+		item->moveUp( delta );
 }
 
 void
-Selection::moveDown()
+Selection::moveDown( int delta )
 {
 	foreach( Selectable * item, d->m_items )
-		item->moveDown();
+		item->moveDown( delta );
 }
 
 void
-Selection::moveLeft()
+Selection::moveLeft( int delta )
 {
 	foreach( Selectable * item, d->m_items )
-		item->moveLeft();
+		item->moveLeft( delta );
 }
 
 void
-Selection::moveRight()
+Selection::moveRight( int delta )
 {
 	foreach( Selectable * item, d->m_items )
-		item->moveRight();
+		item->moveRight( delta );
+}
+
+void
+Selection::deleteItems()
+{
+	QList< Selectable* > items = d->m_items;
+
+	foreach( Selectable * item, items )
+		item->deleteItem();
 }
 
 } /* namespace Scheme */

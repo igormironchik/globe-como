@@ -151,27 +151,35 @@ Source::setItemState( ItemState st )
 }
 
 void
-Source::moveUp()
+Source::moveUp( int delta )
 {
-	setPos( pos().x(), pos().y() - 1 );
+	setPos( pos().x(), pos().y() - delta );
 }
 
 void
-Source::moveDown()
+Source::moveDown( int delta )
 {
-	setPos( pos().x(), pos().y() + 1 );
+	setPos( pos().x(), pos().y() + delta );
 }
 
 void
-Source::moveLeft()
+Source::moveLeft( int delta )
 {
-	setPos( pos().x() - 1, pos().y() );
+	setPos( pos().x() - delta, pos().y() );
 }
 
 void
-Source::moveRight()
+Source::moveRight( int delta )
 {
-	setPos( pos().x() + 1, pos().y() );
+	setPos( pos().x() + delta, pos().y() );
+}
+
+void
+Source::deleteItem()
+{
+	d->m_scene->removeSource( this );
+
+	deleteLater();
 }
 
 const QString &
@@ -443,9 +451,7 @@ Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 void
 Source::removeItemFromScene()
 {
-	d->m_scene->removeSource( this );
-
-	deleteLater();
+	deleteItem();
 }
 
 void

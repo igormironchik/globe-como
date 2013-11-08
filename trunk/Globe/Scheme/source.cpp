@@ -47,6 +47,7 @@
 #include <QMenu>
 #include <QFont>
 #include <QFontDialog>
+#include <QApplication>
 
 
 namespace Globe {
@@ -211,6 +212,36 @@ Source::setSource( const Como::Source & source )
 	}
 
 	d->m_fillColor = ColorForLevel::instance().color( level );
+}
+
+SourceCfg
+Source::cfg() const
+{
+	SourceCfg cfg;
+
+	cfg.setChannelName( d->m_channelName );
+	cfg.setType( d->m_source.type() );
+	cfg.setTypeName( d->m_source.typeName() );
+	cfg.setSourceName( d->m_source.name() );
+	cfg.setPos( pos() );
+	cfg.setSize( QSizeF( d->m_width, d->m_height ) );
+
+	if( QApplication::font() != d->m_font )
+		cfg.setFont( d->m_font );
+
+	return cfg;
+}
+
+void
+Source::setCfg( const SourceCfg & cfg )
+{
+	if( cfg.isFontSet() )
+		d->m_font = cfg.font();
+
+	setPos( cfg.pos() );
+
+	d->m_width = cfg.size().width();
+	d->m_height = cfg.size().height();
 }
 
 QRectF

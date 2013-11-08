@@ -133,6 +133,8 @@ Window::loadScheme( const QString & fileName )
 	d->m_modeAction->setChecked( false );
 
 	editMode();
+
+	d->m_view->scene()->loadScheme( d->m_cfgFile );
 }
 
 void
@@ -148,6 +150,12 @@ Window::createNewScheme( const QString & fileName )
 	d->m_modeAction->setChecked( true );
 
 	editMode();
+}
+
+void
+Window::saveScheme()
+{
+	d->m_view->scene()->saveScheme( d->m_cfgFile );
 }
 
 void

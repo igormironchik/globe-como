@@ -32,8 +32,10 @@
 #include <Globe/Scheme/scene.hpp>
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/selection.hpp>
+#include <Globe/Scheme/scheme_cfg.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
+#include <Globe/Core/log.hpp>
 
 // Qt include.
 #include <QWidget>
@@ -42,6 +44,10 @@
 #include <QGraphicsItem>
 #include <QMessageBox>
 #include <QKeyEvent>
+
+// QtConfFile include.
+#include <QtConfFile/Utils>
+#include <QtConfFile/Exceptions>
 
 
 namespace Globe {
@@ -193,6 +199,99 @@ Scene::removeSource( Source * source )
 	d->m_selection.removeItem( source );
 
 	d->m_sources.remove( key );
+}
+
+void
+Scene::loadScheme( const QString & fileName )
+{
+	SchemeCfgTag tag;
+
+	try {
+		QtConfFile::readQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		SchemeCfg cfg = tag.cfg();
+
+		foreach( const SourceCfg & s, cfg.sources() )
+		{
+			Como::Source source( s.type(), s.sourceName(), s.typeName(),
+				QVariant(), QString() );
+
+			const QString key = createKey( source, s.channelName() );
+
+			if( !d->m_sources.contains( key ) )
+			{
+				Source * item = new Source( source, s.channelName(),
+					&d->m_selection, this );
+				item->setMode( d->m_mode );
+				item->setEditMode( d->m_editMode );
+				item->setCfg( s );
+
+				addItem( item );
+
+				d->m_sources.insert( key, item );
+			}
+		}
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Scheme successfully loaded from file \"%1\"." )
+				.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to load scheme configuration "
+				"from file \"%1\".\n"
+				"%2" )
+					.arg( fileName )
+					.arg( x.whatAsQString() ) );
+
+		QMessageBox::critical( 0,
+			tr( "Unable to read scheme configuration..." ),
+			tr( "Unable to read scheme configuration from file \"%1\"\n\n"
+				"%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+	}
+}
+
+void
+Scene::saveScheme( const QString & fileName )
+{
+	try {
+		SchemeCfg cfg;
+
+		QList< SourceCfg > sources;
+
+		foreach( Source * s, d->m_sources )
+			sources.append( s->cfg() );
+
+		cfg.setSources( sources );
+
+		SchemeCfgTag tag( cfg );
+
+		QtConfFile::writeQtConfFile( tag, fileName,
+			QTextCodec::codecForName( "UTF-8" ) );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Scheme configuration saved "
+				"in file \"%1\"." )
+					.arg( fileName ) );
+	}
+	catch( const QtConfFile::Exception & x )
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Unable to save scheme configuration "
+				"to file \"%1\"." )
+					.arg( fileName ) );
+
+		QMessageBox::critical( 0,
+			tr( "Unable to save scheme configuration..." ),
+			tr( "Unable to save scheme configuration to file \"%1\".\n\n%2" )
+				.arg( fileName )
+				.arg( x.whatAsQString() ) );
+	}
+
 }
 
 void

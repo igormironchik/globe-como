@@ -455,6 +455,9 @@ MainWindow::saveConfiguration()
 	{
 		Configuration::instance().saveConfiguration();
 
+		foreach( Scheme::Window * w, d->m_schemeWindows )
+			w->saveScheme();
+
 		d->m_cfgWasSaved = true;
 	}
 }

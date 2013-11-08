@@ -41,6 +41,7 @@
 // Globe include.
 #include <Globe/Scheme/enums.hpp>
 #include <Globe/Scheme/selectable.hpp>
+#include <Globe/Scheme/source_cfg.hpp>
 
 
 namespace Globe {
@@ -99,6 +100,11 @@ public:
 	const Como::Source & source() const;
 	//! Set source.
 	void setSource( const Como::Source & source );
+
+	//! \return Configuration.
+	SourceCfg cfg() const;
+	//! Set configuration.
+	void setCfg( const SourceCfg & cfg );
 
 	//! \return Bounding rectangle.
 	QRectF boundingRect() const;

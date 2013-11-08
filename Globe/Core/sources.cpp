@@ -231,6 +231,27 @@ SourcesManager::deregisteredSources( const QString & channelName ) const
 	return d->deregisteredSources( channelName );
 }
 
+bool
+SourcesManager::syncSource( const QString & channelName,
+	Como::Source & s, bool & isRegistered )
+{
+	if( d->m_map.contains( channelName ) )
+	{
+		foreach( const MapValue & v, d->m_map[ channelName ] )
+		{
+			if( v.source() == s )
+			{
+				s = v.source();
+				isRegistered = v.isRegistered();
+
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
 void
 SourcesManager::sourceUpdated( const Como::Source & source )
 {

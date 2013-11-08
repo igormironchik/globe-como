@@ -212,6 +212,8 @@ Source::setSource( const Como::Source & source )
 	}
 
 	d->m_fillColor = ColorForLevel::instance().color( level );
+
+	update();
 }
 
 SourceCfg
@@ -242,6 +244,22 @@ Source::setCfg( const SourceCfg & cfg )
 
 	d->m_width = cfg.size().width();
 	d->m_height = cfg.size().height();
+}
+
+void
+Source::disconnected()
+{
+	d->m_fillColor = ColorForLevel::instance().disconnectedColor();
+
+	update();
+}
+
+void
+Source::deregistered()
+{
+	d->m_fillColor = ColorForLevel::instance().deregisteredColor();
+
+	update();
 }
 
 QRectF

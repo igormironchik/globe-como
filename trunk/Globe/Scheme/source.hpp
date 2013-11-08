@@ -106,6 +106,12 @@ public:
 	//! Set configuration.
 	void setCfg( const SourceCfg & cfg );
 
+	//! Notify about disconnecting.
+	void disconnected();
+
+	//! Notify about deregistering.
+	void deregistered();
+
 	//! \return Bounding rectangle.
 	QRectF boundingRect() const;
 

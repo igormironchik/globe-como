@@ -36,6 +36,8 @@
 
 #include <Globe/Core/sources_dialog.hpp>
 #include <Globe/Core/log.hpp>
+#include <Globe/Core/channels.hpp>
+#include <Globe/Core/sources.hpp>
 
 // Qt include.
 #include <QWidget>
@@ -80,6 +82,53 @@ public:
 
 
 //
+// Key
+//
+
+//! Key for sources map.
+class Key {
+public:
+	Key( const Como::Source & source, const QString & channelName )
+		:	m_source( source )
+		,	m_channelName( channelName )
+		,	m_key( m_channelName + m_source.typeName() + m_source.name() )
+	{
+	}
+
+	//! \return Source.
+	const Como::Source & source() const
+	{
+		return m_source;
+	}
+
+	//! \return Channel name.
+	const QString & channelName() const
+	{
+		return m_channelName;
+	}
+
+	//! \return String key.
+	const QString & key() const
+	{
+		return m_key;
+	}
+
+	friend bool operator < ( const Key & k1, const Key & k2 )
+	{
+		return k1.key() < k2.key();
+	}
+
+private:
+	//! Source.
+	Como::Source m_source;
+	//! Channel name.
+	QString m_channelName;
+	//! String key.
+	QString m_key;
+}; // class Key
+
+
+//
 // ScenePrivate
 //
 
@@ -106,6 +155,64 @@ public:
 			s->setEditMode( mode );
 	}
 
+	//! Source deregistered.
+	void sourceDeregistered( const Como::Source & s, const QString & channel )
+	{
+		QMapIterator< Key, Source* > it( m_sources );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			if( it.key().channelName() == channel &&
+				it.key().source() == s )
+					it.value()->deregistered();
+		}
+	}
+
+	//! Channel disconnected.
+	void channelDisconnected( const QString & channel )
+	{
+		QMapIterator< Key, Source* > it( m_sources );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			if( it.key().channelName() == channel )
+					it.value()->disconnected();
+		}
+	}
+
+	//! Channel deregistered.
+	void channelDeregistered( const QString & channel )
+	{
+		QMapIterator< Key, Source* > it( m_sources );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			if( it.key().channelName() == channel )
+					it.value()->deregistered();
+		}
+	}
+
+	//! Update source.
+	void updateSource( const Como::Source & s, const QString & channel )
+	{
+		QMapIterator< Key, Source* > it( m_sources );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			if( it.key().channelName() == channel &&
+				it.key().source() == s )
+					it.value()->setSource( s );
+		}
+	}
+
 	//! Mode of the scene.
 	SceneMode m_mode;
 	//! Edit mode of the scene.
@@ -113,27 +220,10 @@ public:
 	//! Parent widget.
 	QWidget * m_parentWidget;
 	//! Source items.
-	QMap< QString, Source* > m_sources;
+	QMap< Key, Source* > m_sources;
 	//! Selection.
 	Selection m_selection;
 }; // class ScenePrivate
-
-
-//
-// createKey
-//
-
-//! Create key for the source.
-QString createKey( const Como::Source & source, const QString & channelName )
-{
-	QString key;
-
-	key.append( channelName );
-	key.append( source.typeName() );
-	key.append( source.name() );
-
-	return key;
-}
 
 
 //
@@ -165,6 +255,9 @@ Scene::setMode( SceneMode mode )
 	d->m_mode = mode;
 
 	d->notifyItemsAboutModeChange( d->m_mode );
+
+	if( d->m_mode == ViewScene )
+		syncSources();
 }
 
 EditSceneMode
@@ -192,13 +285,16 @@ Scene::setParentWidget( QWidget * parent )
 void
 Scene::removeSource( Source * source )
 {
-	const QString key = createKey( source->source(), source->channelName() );
+	const Key key( source->source(), source->channelName() );
 
 	removeItem( source );
 
 	d->m_selection.removeItem( source );
 
 	d->m_sources.remove( key );
+
+	if( !isChannelInUse( source->channelName() ) )
+		removeChannel( source->channelName() );
 }
 
 void
@@ -217,7 +313,7 @@ Scene::loadScheme( const QString & fileName )
 			Como::Source source( s.type(), s.sourceName(), s.typeName(),
 				QVariant(), QString() );
 
-			const QString key = createKey( source, s.channelName() );
+			const Key key( source, s.channelName() );
 
 			if( !d->m_sources.contains( key ) )
 			{
@@ -232,6 +328,10 @@ Scene::loadScheme( const QString & fileName )
 				d->m_sources.insert( key, item );
 			}
 		}
+
+		populateChannels();
+
+		syncSources();
 
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Scheme successfully loaded from file \"%1\"." )
@@ -312,7 +412,7 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 					if( dlg.exec() == QDialog::Accepted )
 					{
-						const QString key = createKey( source, channel );
+						const Key key( source, channel );
 
 						if( !d->m_sources.contains( key ) )
 						{
@@ -323,6 +423,9 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 							item->setEditMode( d->m_editMode );
 
 							addItem( item );
+
+							if( !isChannelInUse( channel ) )
+								addChannel( channel );
 
 							d->m_sources.insert( key, item );
 						}
@@ -406,6 +509,67 @@ Scene::keyPressEvent( QKeyEvent * keyEvent )
 }
 
 void
+Scene::channelRemoved( Channel * channel )
+{
+	if( d->m_mode == ViewScene )
+	{
+		d->channelDisconnected( channel->name() );
+	}
+}
+
+void
+Scene::sourceUpdated( const Como::Source & source )
+{
+	if( d->m_mode == ViewScene )
+	{
+		Channel * channel = qobject_cast< Channel* > ( sender() );
+
+		if( channel )
+			d->updateSource( source, channel->name() );
+	}
+}
+
+void
+Scene::sourceDeregistered( const Como::Source & source )
+{
+	if( d->m_mode == ViewScene )
+	{
+		Channel * channel = qobject_cast< Channel* > ( sender() );
+
+		if( channel )
+			d->sourceDeregistered( source, channel->name() );
+	}
+}
+
+void
+Scene::connected()
+{
+	if( d->m_mode == ViewScene )
+	{
+		Channel * channel = qobject_cast< Channel* > ( sender() );
+
+		d->channelDeregistered( channel->name() );
+	}
+}
+
+void
+Scene::disconnected()
+{
+	if( d->m_mode == ViewScene )
+	{
+		Channel * channel = qobject_cast< Channel* > ( sender() );
+
+		d->channelDisconnected( channel->name() );
+	}
+}
+
+void
+Scene::newSource( const Como::Source & s, const QString & channel )
+{
+	d->updateSource( s, channel );
+}
+
+void
 Scene::init()
 {
 	QWidget w;
@@ -417,6 +581,129 @@ Scene::init()
 	item->setPos( 0, 0 );
 
 	addItem( item );
+
+	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel* ) ),
+		this, SLOT( channelRemoved( Channel* ) ) );
+	connect( &SourcesManager::instance(),
+		SIGNAL( newSource( const Como::Source &, const QString & ) ),
+		this,
+		SLOT( newSource( const Como::Source & , const QString & ) ) );
+}
+
+void
+Scene::populateChannels()
+{
+	QStringList channels;
+
+	QMapIterator< Key, Source* > it( d->m_sources );
+
+	while( it.hasNext() )
+	{
+		it.next();
+
+		if( !channels.contains( it.key().channelName() ) )
+			channels.append( it.key().channelName() );
+	}
+
+	foreach( const QString & name, channels )
+		addChannel( name );
+}
+
+void
+Scene::addChannel( const QString & name )
+{
+	Channel * channel = ChannelsManager::instance().channelByName( name );
+
+	if( channel )
+	{
+		connect( channel, SIGNAL( sourceUpdated( const Como::Source & ) ),
+			this, SLOT( sourceUpdated( const Como::Source & ) ) );
+		connect( channel, SIGNAL( sourceDeregistered( const Como::Source & ) ),
+			this, SLOT( sourceDeregistered( const Como::Source & ) ) );
+		connect( channel, SIGNAL( connected() ),
+			this, SLOT( connected() ) );
+		connect( channel, SIGNAL( disconnected() ),
+			this, SLOT( disconnected() ) );
+	}
+	else
+		QMessageBox::critical( 0, tr( "Channel is unavailable..." ),
+			tr( "Channe' \"%1\" is unavailable." )
+				.arg( name ) );
+}
+
+void
+Scene::removeChannel( const QString & name )
+{
+	Channel * channel = ChannelsManager::instance().channelByName( name );
+
+	if( channel )
+		disconnect( channel, 0, 0, 0 );
+}
+
+bool
+Scene::isChannelInUse( const QString & name )
+{
+	QMapIterator< Key, Source* > it( d->m_sources );
+
+	while( it.hasNext() )
+	{
+		it.next();
+
+		if( it.key().channelName() == name )
+			return true;
+	}
+
+	return false;
+}
+
+void
+Scene::syncSources()
+{
+	QList< QString > channels;
+
+	{
+		QMapIterator< Key, Source* > it( d->m_sources );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			if( !channels.contains( it.key().channelName() ) )
+				channels.append( it.key().channelName() );
+
+			Como::Source s = it.value()->source();
+			bool isRegistered = false;
+
+			if( SourcesManager::instance().syncSource( it.key().channelName(),
+				s, isRegistered ) )
+			{
+				it.value()->setSource( s );
+
+				if( !isRegistered )
+					it.value()->deregistered();
+			}
+		}
+	}
+
+	QMap< QString, bool > connectedDisconnected;
+
+	foreach( const QString & name, channels )
+	{
+		Channel * channel = ChannelsManager::instance().channelByName( name );
+
+		if( channel )
+			connectedDisconnected.insert( name, channel->isConnected() );
+	}
+
+	QMapIterator< QString, bool > it( connectedDisconnected );
+
+	while( it.hasNext() )
+	{
+		it.next();
+
+		if( !it.value() )
+			d->channelDisconnected( it.key() );
+	}
 }
 
 } /* namespace Scheme */

@@ -86,6 +86,10 @@ public:
 	//! \return List of deregistered sources in the given \arg channel channel.
 	QList< Como::Source > deregisteredSources( const QString & channelName ) const;
 
+	//! Sync source. \return Was source synced.
+	bool syncSource( const QString & channelName,
+		Como::Source & s, bool & isRegistered );
+
 private slots:
 	//! Source updated or registered.
 	void sourceUpdated( const Como::Source & source );

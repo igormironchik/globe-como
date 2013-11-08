@@ -4,7 +4,7 @@ TARGET = Globe.Scheme
 DESTDIR = ../../lib
 INCLUDEPATH += . ../..
 CONFIG += qt staticlib
-QT += gui widgets
+QT += gui widgets sql
 
 INCLUDEPATH += $$PWD/.. $$PWD/../..
 DEPENDPATH += $$PWD/.. $$PWD/../..

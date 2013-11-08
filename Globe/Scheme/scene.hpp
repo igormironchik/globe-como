@@ -83,6 +83,11 @@ public:
 	//! Remove source from the scene.
 	void removeSource( Source * source );
 
+	//! Load scheme.
+	void loadScheme( const QString & fileName );
+	//! Save scheme.
+	void saveScheme( const QString & fileName );
+
 protected:
 	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
 	void keyPressEvent( QKeyEvent * keyEvent );

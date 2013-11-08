@@ -76,6 +76,8 @@ public slots:
 	void loadScheme( const QString & fileName );
 	//! Create new scheme.
 	void createNewScheme( const QString & fileName );
+	//! Save scheme.
+	void saveScheme();
 
 private slots:
 	//! Edit mode changed.

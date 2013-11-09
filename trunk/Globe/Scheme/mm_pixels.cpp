@@ -72,7 +72,7 @@ QPointF pointFromMm( const QPointF & p )
 	const qreal x = p.x() * dpiX * inchInMm;
 	const qreal y = p.y() * dpiY * inchInMm;
 
-	return QPointF( x, y );
+	return QPointF( qRound64( x ), qRound64( y ) );
 }
 
 
@@ -104,7 +104,7 @@ QSizeF sizeFromMm( const QSizeF & s )
 	const qreal width = s.width() * dpiX * inchInMm;
 	const qreal height = s.height() * dpiY * inchInMm;
 
-	return QSizeF( width, height );
+	return QSizeF( qRound64( width ), qRound64( height ) );
 }
 
 } /* namespace Scheme */

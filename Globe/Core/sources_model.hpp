@@ -66,6 +66,9 @@ public:
 	//! Clear model.
 	void clear();
 
+	//! Set channel name.
+	void setChannelName( const QString & name );
+
 	//! \return Como source for the given index.
 	const Como::Source & source( const QModelIndex & index ) const;
 
@@ -90,6 +93,9 @@ public:
 	//! \return Header data.
 	QVariant headerData( int section, Qt::Orientation orientation,
 		int role = Qt::DisplayRole ) const;
+
+	QStringList mimeTypes() const;
+	QMimeData * mimeData( const QModelIndexList & indexes ) const;
 
 private:
 	Q_DISABLE_COPY( SourcesModel )

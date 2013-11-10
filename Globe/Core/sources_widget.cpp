@@ -161,6 +161,7 @@ SourcesWidget::selectChannel( const QString & channelName )
 {
 	if( !channelName.isEmpty() )
 	{
+		d->m_model->setChannelName( channelName );
 		d->m_model->initModel( SourcesManager::instance().sources( channelName ) );
 		d->m_ui.m_view->setChannelName( channelName );
 

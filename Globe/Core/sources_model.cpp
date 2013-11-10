@@ -34,6 +34,10 @@
 
 // Qt include.
 #include <QList>
+#include <QByteArray>
+#include <QDataStream>
+#include <QMimeData>
+#include <QStringList>
 
 
 namespace Globe {
@@ -46,6 +50,8 @@ class SourcesModelPrivate {
 public:
 	//! Data.
 	QList< Como::Source > m_data;
+	//! Channel name.
+	QString m_channelName;
 }; // class SourcesModelPrivate
 
 
@@ -99,6 +105,12 @@ SourcesModel::clear()
 	beginResetModel();
 	d->m_data.clear();
 	endResetModel();
+}
+
+void
+SourcesModel::setChannelName( const QString & name )
+{
+	d->m_channelName = name;
 }
 
 const Como::Source &
@@ -211,9 +223,11 @@ SourcesModel::setData( const QModelIndex & index, const QVariant & value, int ro
 Qt::ItemFlags
 SourcesModel::flags( const QModelIndex & index ) const
 {
-	Q_UNUSED( index )
-
-	return ( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+	if( index.isValid() )
+		return ( Qt::ItemIsDragEnabled | Qt::ItemIsSelectable |
+			Qt::ItemIsEnabled );
+	else
+		return ( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
 }
 
 QVariant
@@ -234,6 +248,37 @@ SourcesModel::headerData( int section, Qt::Orientation orientation, int role ) c
 	}
 
 	return QVariant();
+}
+
+QStringList
+SourcesModel::mimeTypes() const
+{
+	QStringList types;
+	types << "application/como.source";
+	return types;
+}
+
+QMimeData *
+SourcesModel::mimeData( const QModelIndexList & indexes ) const
+{
+	QMimeData * mimeData = new QMimeData();
+	QByteArray encodedData;
+
+	QDataStream stream( &encodedData, QIODevice::WriteOnly );
+
+	const Como::Source & s = source( indexes.first() );
+
+	stream << d->m_channelName;
+	stream << (quint16) s.type();
+	stream << s.name();
+	stream << s.typeName();
+	stream << s.dateTime();
+	stream << s.description();
+	stream << s.value();
+
+	mimeData->setData( "application/como.source", encodedData );
+
+	return mimeData;
 }
 
 } /* namespace Globe */

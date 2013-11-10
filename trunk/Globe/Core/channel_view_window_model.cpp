@@ -36,6 +36,9 @@
 
 // Qt include.
 #include <QList>
+#include <QByteArray>
+#include <QDataStream>
+#include <QMimeData>
 
 
 namespace Globe {
@@ -474,9 +477,11 @@ ChannelViewWindowModel::setData( const QModelIndex & index, const QVariant & val
 Qt::ItemFlags
 ChannelViewWindowModel::flags( const QModelIndex & index ) const
 {
-	Q_UNUSED( index )
-
-	return ( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
+	if( index.isValid() )
+		return ( Qt::ItemIsDragEnabled | Qt::ItemIsSelectable |
+			Qt::ItemIsEnabled );
+	else
+		return ( Qt::ItemIsSelectable | Qt::ItemIsEnabled );
 }
 
 QVariant
@@ -499,6 +504,37 @@ ChannelViewWindowModel::headerData( int section, Qt::Orientation orientation, in
 	}
 
 	return QVariant();
+}
+
+QStringList
+ChannelViewWindowModel::mimeTypes() const
+{
+	QStringList types;
+	types << "application/como.source";
+	return types;
+}
+
+QMimeData *
+ChannelViewWindowModel::mimeData( const QModelIndexList & indexes ) const
+{
+	QMimeData * mimeData = new QMimeData();
+	QByteArray encodedData;
+
+	QDataStream stream( &encodedData, QIODevice::WriteOnly );
+
+	const Como::Source & s = source( indexes.first() );
+
+	stream << d->m_channelName;
+	stream << (quint16) s.type();
+	stream << s.name();
+	stream << s.typeName();
+	stream << s.dateTime();
+	stream << s.description();
+	stream << s.value();
+
+	mimeData->setData( "application/como.source", encodedData );
+
+	return mimeData;
 }
 
 } /* namespace Globe */

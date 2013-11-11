@@ -33,6 +33,8 @@
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/selection.hpp>
 #include <Globe/Scheme/scheme_cfg.hpp>
+#include <Globe/Scheme/text.hpp>
+#include <Globe/Scheme/text_cfg.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
 #include <Globe/Core/log.hpp>
@@ -46,6 +48,8 @@
 #include <QGraphicsItem>
 #include <QMessageBox>
 #include <QKeyEvent>
+#include <QMap>
+#include <QList>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -146,6 +150,9 @@ public:
 	{
 		foreach( Source * s, m_sources )
 			s->setMode( mode );
+
+		foreach( Text * t, m_texts )
+			t->setMode( mode );
 	}
 
 	//! Notify all items about scene edit mode changes.
@@ -153,6 +160,9 @@ public:
 	{
 		foreach( Source * s, m_sources )
 			s->setEditMode( mode );
+
+		foreach( Text * t, m_texts )
+			t->setEditMode( mode );
 	}
 
 	//! Source deregistered.
@@ -223,6 +233,8 @@ public:
 	QMap< Key, Source* > m_sources;
 	//! Selection.
 	Selection m_selection;
+	//! Text items.
+	QList< Text* > m_texts;
 }; // class ScenePrivate
 
 
@@ -298,6 +310,16 @@ Scene::removeSource( Source * source )
 }
 
 void
+Scene::removeText( Text * text )
+{
+	removeItem( text );
+
+	d->m_selection.removeItem( text );
+
+	d->m_texts.removeOne( text );
+}
+
+void
 Scene::loadScheme( const QString & fileName )
 {
 	SchemeCfgTag tag;
@@ -327,6 +349,18 @@ Scene::loadScheme( const QString & fileName )
 
 				d->m_sources.insert( key, item );
 			}
+		}
+
+		foreach( const TextCfg & t, cfg.texts() )
+		{
+			Text * text = new Text( t.text(), &d->m_selection, this );
+			text->setMode( d->m_mode );
+			text->setEditMode( d->m_editMode );
+			text->setCfg( t );
+
+			addItem( text );
+
+			d->m_texts.append( text );
 		}
 
 		populateChannels();
@@ -367,6 +401,13 @@ Scene::saveScheme( const QString & fileName )
 			sources.append( s->cfg() );
 
 		cfg.setSources( sources );
+
+		QList< TextCfg > texts;
+
+		foreach( Text * t, d->m_texts )
+			texts.append( t->cfg() );
+
+		cfg.setTexts( texts );
 
 		SchemeCfgTag tag( cfg );
 
@@ -446,6 +487,16 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 				case EditSceneNewText :
 				{
+					Text * text = new Text( tr( "Text" ),
+						&d->m_selection, this );
+					text->setPos( mouseEvent->scenePos() );
+					text->setMode( d->m_mode );
+					text->setEditMode( d->m_editMode );
+
+					addItem( text );
+
+					d->m_texts.append( text );
+
 					mouseEvent->accept();
 				}
 				break;

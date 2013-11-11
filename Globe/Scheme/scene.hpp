@@ -54,6 +54,7 @@ class Channel;
 namespace Scheme {
 
 class Source;
+class Text;
 
 
 //
@@ -88,6 +89,8 @@ public:
 
 	//! Remove source from the scene.
 	void removeSource( Source * source );
+	//! Remove text item from the scene.
+	void removeText( Text * text );
 
 	//! Load scheme.
 	void loadScheme( const QString & fileName );

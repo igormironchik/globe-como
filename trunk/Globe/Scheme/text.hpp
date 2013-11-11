@@ -32,7 +32,7 @@
 #define GLOBE__SCHEME__TEXT_HPP__INCLUDED
 
 // Qt include.
-#include <QGraphicsTextItem>
+#include <QGraphicsObject>
 #include <QScopedPointer>
 
 // Globe include.
@@ -57,7 +57,7 @@ class TextPrivate;
 
 //! Graphics item that will display text on scheme.
 class Text
-	:	public QGraphicsTextItem
+	:	public QGraphicsObject
 	,	public Selectable
 {
 	Q_OBJECT
@@ -122,6 +122,8 @@ private slots:
 	void changeFont();
 	//! Change size.
 	void changeSize();
+	//! Change text.
+	void changeText();
 
 private:
 	Q_DISABLE_COPY( Text )

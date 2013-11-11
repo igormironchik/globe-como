@@ -23,6 +23,7 @@ HEADERS += enums.hpp \
            source_cfg.hpp \
            text.hpp \
            text_cfg.hpp \
+           text_dialog.hpp \
            view.hpp \
            window.hpp \
            window_cfg.hpp
@@ -37,8 +38,10 @@ SOURCES += item_base_cfg.cpp \
            source_cfg.cpp \
            text.cpp \
            text_cfg.cpp \
+           text_dialog.cpp \
            view.cpp \
            window.cpp \
            window_cfg.cpp
 
-FORMS +=   size_dialog.ui
+FORMS +=   size_dialog.ui \
+           text_dialog.ui

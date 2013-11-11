@@ -44,13 +44,16 @@ SchemeCfg::SchemeCfg()
 {
 }
 
-SchemeCfg::SchemeCfg( const QList< SourceCfg > & sources )
+SchemeCfg::SchemeCfg( const QList< SourceCfg > & sources,
+	const QList< TextCfg > & texts )
 	:	m_sources( sources )
+	,	m_texts( texts )
 {
 }
 
 SchemeCfg::SchemeCfg( const SchemeCfg & other )
 	:	m_sources( other.sources() )
+	,	m_texts( other.texts() )
 {
 }
 
@@ -60,6 +63,7 @@ SchemeCfg::operator = ( const SchemeCfg & other )
 	if( this != &other )
 	{
 		m_sources = other.sources();
+		m_texts = other.texts();
 	}
 
 	return *this;
@@ -77,6 +81,18 @@ SchemeCfg::setSources( const QList< SourceCfg > & s )
 	m_sources = s;
 }
 
+const QList< TextCfg > &
+SchemeCfg::texts() const
+{
+	return m_texts;
+}
+
+void
+SchemeCfg::setTexts( const QList< TextCfg > & t )
+{
+	m_texts = t;
+}
+
 
 //
 // SchemeCfgTag
@@ -86,12 +102,14 @@ SchemeCfg::setSources( const QList< SourceCfg > & s )
 SchemeCfgTag::SchemeCfgTag()
 	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
+	,	m_texts( *this, QLatin1String( "text" ), false )
 {
 }
 
 SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
 	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
+	,	m_texts( *this, QLatin1String( "text" ), false )
 {
 	foreach( const SourceCfg & s, cfg.sources() )
 	{
@@ -99,6 +117,14 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
 			t( new SourceCfgTag( s, QLatin1String( "source" ) ) );
 
 		m_sources.setValue( t );
+	}
+
+	foreach( const TextCfg & c, cfg.texts() )
+	{
+		QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag
+			t( new TextCfgTag( c, QLatin1String( "text" ) ) );
+
+		m_texts.setValue( t );
 	}
 
 	setDefined();
@@ -118,6 +144,16 @@ SchemeCfgTag::cfg() const
 	}
 
 	cfg.setSources( sources );
+
+	QList< TextCfg > texts;
+
+	foreach( QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag t,
+		m_texts.values() )
+	{
+		texts.append( t->textCfg() );
+	}
+
+	cfg.setTexts( texts );
 
 	return cfg;
 }

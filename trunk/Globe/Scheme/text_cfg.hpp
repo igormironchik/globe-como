@@ -28,19 +28,15 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SCHEME__SCHEME_CFG__INCLUDED
-#define GLOBE__SCHEME__SCHEME_CFG__INCLUDED
-
-// Globe include.
-#include <Globe/Scheme/source_cfg.hpp>
-#include <Globe/Scheme/text_cfg.hpp>
-
-// Qt include.
-#include <QList>
+#ifndef GLOBE__SCHEME__TEXT_CFG_HPP__INCLUDED
+#define GLOBE__SCHEME__TEXT_CFG_HPP__INCLUDED
 
 // QtConfFile include.
 #include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
+#include <QtConfFile/TagScalar>
+
+// Globe include.
+#include <Globe/Scheme/item_base_cfg.hpp>
 
 
 namespace Globe {
@@ -48,64 +44,65 @@ namespace Globe {
 namespace Scheme {
 
 //
-// SchemeCfg
+// TextCfg
 //
 
-//! Scheme configuration.
-class SchemeCfg {
+//! Configuration of the text item on the scheme.
+class TextCfg
+	:	public ItemBaseCfg
+{
 public:
-	SchemeCfg();
+	TextCfg();
 
-	SchemeCfg( const QList< SourceCfg > & sources,
-		const QList< TextCfg > & texts );
+	TextCfg( const QString & text,
+		const QPointF & pos, const QSizeF & size,
+		const QFont & font );
 
-	SchemeCfg( const SchemeCfg & other );
+	explicit TextCfg( const ItemBaseCfg & cfg );
 
-	SchemeCfg & operator = ( const SchemeCfg & other );
+	TextCfg( const TextCfg & other );
 
-	//! \return Sources.
-	const QList< SourceCfg > & sources() const;
-	//! Set sources.
-	void setSources( const QList< SourceCfg > & s );
+	TextCfg & operator = ( const TextCfg & other );
 
-	//! \return Texts.
-	const QList< TextCfg > & texts() const;
-	//! Set texts.
-	void setTexts( const QList< TextCfg > & t );
+	virtual ~TextCfg();
+
+	//! \return Text.
+	const QString & text() const;
+	//! Set text.
+	void setText( const QString & t );
 
 private:
-	//! Sources.
-	QList< SourceCfg > m_sources;
-	//! Texts.
-	QList< TextCfg > m_texts;
-}; // class SchemeCfg
+	//! Text.
+	QString m_text;
+}; // class TextCfg
 
 
 //
-// SchemeCfgTag
+// TextCfgTag
 //
 
-//! Tag with scheme configuration.
-class SchemeCfgTag
+//! Tag with text item configuration.
+class TextCfgTag
 	:	public QtConfFile::TagNoValue
 {
 public:
-	SchemeCfgTag();
+	TextCfgTag( const QString & name, bool isMandatory = false );
 
-	explicit SchemeCfgTag( const SchemeCfg & cfg );
+	TextCfgTag( const TextCfg & cfg, const QString & name,
+		bool isMandatory() = false );
 
 	//! \return Configuration.
-	SchemeCfg cfg() const;
+	TextCfg textCfg() const;
 
 private:
-	//! Sources.
-	QtConfFile::TagVectorOfTags< SourceCfgTag > m_sources;
-	//! Texts.
-	QtConfFile::TagVectorOfTags< TextCfgTag > m_texts;
-}; // class SchemeCfgTag
+	//! Text.
+	QtConfFile::TagScalar< QString > m_text;
+	//! Item base cfg.
+	ItemBaseCfgTag m_baseCfg;
+}; // class TextCfgTag
 
 } /* namespace Scheme */
 
 } /* namespace Globe */
 
-#endif // GLOBE__SCHEME__SCHEME_CFG__INCLUDED
+#endif // GLOBE__SCHEME__TEXT_CFG_HPP__INCLUDED

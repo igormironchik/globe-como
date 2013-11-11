@@ -28,19 +28,8 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef GLOBE__SCHEME__SCHEME_CFG__INCLUDED
-#define GLOBE__SCHEME__SCHEME_CFG__INCLUDED
-
 // Globe include.
-#include <Globe/Scheme/source_cfg.hpp>
 #include <Globe/Scheme/text_cfg.hpp>
-
-// Qt include.
-#include <QList>
-
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
 
 
 namespace Globe {
@@ -48,64 +37,95 @@ namespace Globe {
 namespace Scheme {
 
 //
-// SchemeCfg
+// TextCfg
 //
 
-//! Scheme configuration.
-class SchemeCfg {
-public:
-	SchemeCfg();
 
-	SchemeCfg( const QList< SourceCfg > & sources,
-		const QList< TextCfg > & texts );
-
-	SchemeCfg( const SchemeCfg & other );
-
-	SchemeCfg & operator = ( const SchemeCfg & other );
-
-	//! \return Sources.
-	const QList< SourceCfg > & sources() const;
-	//! Set sources.
-	void setSources( const QList< SourceCfg > & s );
-
-	//! \return Texts.
-	const QList< TextCfg > & texts() const;
-	//! Set texts.
-	void setTexts( const QList< TextCfg > & t );
-
-private:
-	//! Sources.
-	QList< SourceCfg > m_sources;
-	//! Texts.
-	QList< TextCfg > m_texts;
-}; // class SchemeCfg
-
-
-//
-// SchemeCfgTag
-//
-
-//! Tag with scheme configuration.
-class SchemeCfgTag
-	:	public QtConfFile::TagNoValue
+TextCfg::TextCfg()
 {
-public:
-	SchemeCfgTag();
+}
 
-	explicit SchemeCfgTag( const SchemeCfg & cfg );
+TextCfg::TextCfg( const QString & text,
+	const QPointF & pos, const QSizeF & size,
+	const QFont & font )
+	:	ItemBaseCfg( pos, size, font )
+	,	m_text( text )
+{
+}
 
-	//! \return Configuration.
-	SchemeCfg cfg() const;
+TextCfg::TextCfg( const ItemBaseCfg & cfg )
+	:	ItemBaseCfg( cfg )
+{
+}
 
-private:
-	//! Sources.
-	QtConfFile::TagVectorOfTags< SourceCfgTag > m_sources;
-	//! Texts.
-	QtConfFile::TagVectorOfTags< TextCfgTag > m_texts;
-}; // class SchemeCfgTag
+TextCfg::TextCfg( const TextCfg & other )
+	:	ItemBaseCfg( other )
+	,	m_text( other.text() )
+{
+}
+
+TextCfg &
+TextCfg::operator = ( const TextCfg & other )
+{
+	if( this != &other )
+	{
+		ItemBaseCfg::operator = ( other );
+
+		m_text = other.text();
+	}
+
+	return *this;
+}
+
+TextCfg::~TextCfg()
+{
+}
+
+const QString &
+TextCfg::text() const
+{
+	return m_text;
+}
+
+void
+TextCfg::setText( const QString & t )
+{
+	m_text = t;
+}
+
+
+//
+// TextCfgTag
+//
+
+TextCfgTag::TextCfgTag( const QString & name, bool isMandatory )
+	:	QtConfFile::TagNoValue( name, isMandatory )
+	,	m_text( *this, QLatin1String( "text" ), true )
+	,	m_baseCfg( *this, QLatin1String( "ui" ), true )
+{
+}
+
+TextCfgTag::TextCfgTag( const TextCfg & cfg, const QString & name,
+	bool isMandatory() )
+	:	QtConfFile::TagNoValue( name, isMandatory )
+	,	m_text( *this, QLatin1String( "text" ), true )
+	,	m_baseCfg( cfg, *this, QLatin1String( "ui" ), true )
+{
+	m_text.setValue( cfg.text() );
+
+	setDefined();
+}
+
+TextCfg
+TextCfgTag::textCfg() const
+{
+	TextCfg cfg( m_baseCfg.baseCfg() );
+
+	cfg.setText( m_text.value() );
+
+	return cfg;
+}
 
 } /* namespace Scheme */
 
 } /* namespace Globe */
-
-#endif // GLOBE__SCHEME__SCHEME_CFG__INCLUDED

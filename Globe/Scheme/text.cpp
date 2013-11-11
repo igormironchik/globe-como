@@ -33,6 +33,7 @@
 #include <Globe/Scheme/selection.hpp>
 #include <Globe/Scheme/scene.hpp>
 #include <Globe/Scheme/size_dialog.hpp>
+#include <Globe/Scheme/text_dialog.hpp>
 
 // Qt include.
 #include <QPainter>
@@ -55,7 +56,7 @@ namespace Scheme {
 
 class TextPrivate {
 public:
-	TextPrivate( Selection * selection, Scene * scene )
+	TextPrivate( const QString & text, Selection * selection, Scene * scene )
 		:	m_mode( ViewScene )
 		,	m_editMode( EditSceneSelect )
 		,	m_state( ItemNotSelected )
@@ -65,6 +66,7 @@ public:
 		,	m_height( 25 )
 		,	m_selection( selection )
 		,	m_scene( scene )
+		,	m_text( text )
 	{
 	}
 
@@ -86,6 +88,10 @@ public:
 	Selection * m_selection;
 	//! Scene.
 	Scene * m_scene;
+	//! Text.
+	QString m_text;
+	//! Font.
+	QFont m_font;
 }; // class TextPrivate
 
 
@@ -94,9 +100,8 @@ public:
 //
 
 Text::Text( const QString & text, Selection * selection, Scene * scene )
-	:	d( new TextPrivate( selection, scene ) )
+	:	d( new TextPrivate( text, selection, scene ) )
 {
-	setPlainText( text );
 }
 
 void
@@ -172,12 +177,12 @@ Text::cfg() const
 {
 	TextCfg cfg;
 
-	cfg.setText( toPlainText() );
+	cfg.setText( d->m_text );
 	cfg.setPos( pos() );
 	cfg.setSize( QSizeF( d->m_width, d->m_height ) );
 
-	if( QApplication::font() != font() )
-		cfg.setFont( font() );
+	if( QApplication::font() != d->m_font )
+		cfg.setFont( d->m_font );
 
 	return cfg;
 }
@@ -186,7 +191,7 @@ void
 Text::setCfg( const TextCfg & cfg )
 {
 	if( cfg.isFontSet() )
-		setFont( cfg.font() );
+		d->m_font = cfg.font();
 
 	setPos( cfg.pos() );
 
@@ -206,7 +211,8 @@ void
 Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	QWidget * widget )
 {
-	QGraphicsTextItem::paint( painter, option, widget );
+	Q_UNUSED( option )
+	Q_UNUSED( widget )
 
 	if( d->m_state == ItemSelected )
 	{
@@ -220,6 +226,13 @@ Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		painter->drawRect( boundingRect().width() - 3,
 			boundingRect().height() - 3, 3, 3 );
 	}
+
+	painter->setPen( Qt::black );
+
+	painter->setFont( d->m_font );
+
+	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
+		d->m_text );
 }
 
 void
@@ -288,7 +301,7 @@ Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 		}
 	}
 	else
-		QGraphicsTextItem::mouseMoveEvent( event );
+		QGraphicsObject::mouseMoveEvent( event );
 }
 
 void
@@ -301,7 +314,7 @@ Text::mousePressEvent( QGraphicsSceneMouseEvent * event )
 				d->m_leftButtonPressed = true;
 	}
 
-	QGraphicsTextItem::mousePressEvent( event );
+	QGraphicsObject::mousePressEvent( event );
 }
 
 void
@@ -322,10 +335,10 @@ Text::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 			event->accept();
 		}
 		else
-			QGraphicsTextItem::mouseReleaseEvent( event );
+			QGraphicsObject::mouseReleaseEvent( event );
 	}
 	else
-		QGraphicsTextItem::mouseReleaseEvent( event );
+		QGraphicsObject::mouseReleaseEvent( event );
 }
 
 void
@@ -335,7 +348,7 @@ Text::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 		d->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
-		QGraphicsTextItem::hoverEnterEvent( event );
+		QGraphicsObject::hoverEnterEvent( event );
 }
 
 void
@@ -348,7 +361,7 @@ Text::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
 	}
 	else
-		QGraphicsTextItem::hoverLeaveEvent( event );
+		QGraphicsObject::hoverLeaveEvent( event );
 }
 
 void
@@ -358,7 +371,7 @@ Text::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 		d->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
-		QGraphicsTextItem::hoverMoveEvent( event );
+		QGraphicsObject::hoverMoveEvent( event );
 }
 
 void
@@ -406,6 +419,8 @@ Text::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 
 		QMenu menu;
 
+		menu.addAction( QIcon( ":/img/add_text_22x22.png" ),
+			tr( "Change Text" ), this, SLOT( changeText() ) );
 		menu.addAction( QIcon( ":/img/character_set_22x22.png" ),
 			tr( "Change Font" ), this, SLOT( changeFont() ) );
 		menu.addAction( QIcon( ":/img/transform_scale_22x22.png" ),
@@ -426,11 +441,11 @@ Text::removeItemFromScene()
 void
 Text::changeFont()
 {
-	QFontDialog dlg( font() );
+	QFontDialog dlg( d->m_font );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		setFont( dlg.selectedFont() );
+		d->m_font = dlg.selectedFont();
 		update();
 	}
 }
@@ -448,6 +463,20 @@ Text::changeSize()
 		d->m_width = width;
 		d->m_height = height;
 
+		update();
+	}
+}
+
+void
+Text::changeText()
+{
+	QString text = d->m_text;
+
+	TextDialog dlg( text );
+
+	if( dlg.exec() == QDialog::Accepted )
+	{
+		d->m_text = text;
 		update();
 	}
 }

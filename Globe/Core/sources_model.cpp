@@ -254,7 +254,7 @@ QStringList
 SourcesModel::mimeTypes() const
 {
 	QStringList types;
-	types << "application/como.source";
+	types << QLatin1String( "application/como.source" );
 	return types;
 }
 
@@ -276,7 +276,8 @@ SourcesModel::mimeData( const QModelIndexList & indexes ) const
 	stream << s.description();
 	stream << s.value();
 
-	mimeData->setData( "application/como.source", encodedData );
+	mimeData->setData( QLatin1String( "application/como.source" ),
+		encodedData );
 
 	return mimeData;
 }

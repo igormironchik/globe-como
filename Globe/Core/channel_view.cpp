@@ -240,6 +240,7 @@ ChannelView::init()
 	setSelectionMode( QAbstractItemView::ExtendedSelection );
 	setSelectionBehavior( QAbstractItemView::SelectRows );
 	setWordWrap( true );
+	setDragDropMode( QAbstractItemView::DragOnly );
 
 	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
 		tr( "Copy" ), this );

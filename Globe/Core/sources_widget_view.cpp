@@ -152,6 +152,7 @@ SourcesWidgetView::init()
 	setSortingEnabled( true );
 	setRootIsDecorated( false );
 	setAlternatingRowColors( true );
+	setDragDropMode( QAbstractItemView::DragOnly );
 }
 
 } /* namespace Globe */

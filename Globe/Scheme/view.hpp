@@ -63,6 +63,10 @@ public:
 	//! \return Scene.
 	Scene * scene();
 
+protected:
+	void dragEnterEvent( QDragEnterEvent * event );
+	void dropEvent( QDropEvent * event );
+
 private:
 	//! Init.
 	void init();

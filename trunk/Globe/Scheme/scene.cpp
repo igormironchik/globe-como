@@ -391,7 +391,24 @@ Scene::saveScheme( const QString & fileName )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 	}
+}
 
+void
+Scene::addSource( const QString & channelName, const Como::Source & source,
+	const QPointF & pos )
+{
+	Source * item = new Source( source, channelName,
+		&d->m_selection, this );
+	item->setPos( pos );
+	item->setMode( d->m_mode );
+	item->setEditMode( d->m_editMode );
+
+	addItem( item );
+
+	if( !isChannelInUse( channelName ) )
+		addChannel( channelName );
+
+	d->m_sources.insert( Key( source, channelName ), item );
 }
 
 void
@@ -415,20 +432,8 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 						const Key key( source, channel );
 
 						if( !d->m_sources.contains( key ) )
-						{
-							Source * item = new Source( source, channel,
-								&d->m_selection, this );
-							item->setPos( mouseEvent->scenePos() );
-							item->setMode( d->m_mode );
-							item->setEditMode( d->m_editMode );
-
-							addItem( item );
-
-							if( !isChannelInUse( channel ) )
-								addChannel( channel );
-
-							d->m_sources.insert( key, item );
-						}
+							addSource( channel, source,
+								mouseEvent->scenePos() );
 						else
 							QMessageBox::warning( 0,
 								tr( "Source already on the scheme..." ),

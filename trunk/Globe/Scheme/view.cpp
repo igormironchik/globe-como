@@ -32,6 +32,15 @@
 #include <Globe/Scheme/view.hpp>
 #include <Globe/Scheme/scene.hpp>
 
+// Qt include.
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QByteArray>
+
+// Como include.
+#include <Como/Source>
+
 
 namespace Globe {
 
@@ -75,8 +84,52 @@ View::scene()
 }
 
 void
+View::dragEnterEvent( QDragEnterEvent * event )
+{
+	if( d->m_scene->mode() == EditScene &&
+		event->mimeData()->hasFormat( QLatin1String( "application/como.source" ) ) )
+			event->acceptProposedAction();
+}
+
+void
+View::dropEvent( QDropEvent * event )
+{
+	if( d->m_scene->mode() == EditScene )
+	{
+		QByteArray data = event->mimeData()->data(
+			QLatin1String( "application/como.source" ) );
+
+		QDataStream stream( &data, QIODevice::ReadOnly );
+
+		QString channelName, sourceName, typeName, description;
+		QDateTime dateTime;
+		QVariant value;
+		quint16 uintType;
+
+		stream >> channelName;
+		stream >> uintType;
+		stream >> sourceName;
+		stream >> typeName;
+		stream >> dateTime;
+		stream >> description;
+		stream >> value;
+
+		Como::Source source( (Como::Source::Type) uintType,
+			sourceName, typeName, value, description );
+		source.setDateTime( dateTime );
+
+		d->m_scene->addSource( channelName, source,
+			mapToScene( event->pos() ) );
+
+		event->acceptProposedAction();
+	}
+}
+
+void
 View::init()
 {
+	setAcceptDrops( true );
+
 	d->m_scene = new Scene( this );
 
 	d->m_scene->setParentWidget( this );

@@ -94,6 +94,10 @@ public:
 	//! Save scheme.
 	void saveScheme( const QString & fileName );
 
+	//! Add source item.
+	void addSource( const QString & channelName, const Como::Source & source,
+		const QPointF & pos );
+
 protected:
 	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
 	void keyPressEvent( QKeyEvent * keyEvent );

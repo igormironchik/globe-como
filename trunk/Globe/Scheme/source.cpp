@@ -212,6 +212,8 @@ Source::setSource( const Como::Source & source )
 
 	d->m_fillColor = ColorForLevel::instance().color( level );
 
+	setToolTip( source.description() );
+
 	update();
 }
 

@@ -168,16 +168,12 @@ public:
 	//! Source deregistered.
 	void sourceDeregistered( const Como::Source & s, const QString & channel )
 	{
-		QMapIterator< Key, Source* > it( m_sources );
+		const Key key( s, channel );
 
-		while( it.hasNext() )
-		{
-			it.next();
+		QMap< Key, Source* >::Iterator it = m_sources.find( key );
 
-			if( it.key().channelName() == channel &&
-				it.key().source() == s )
-					it.value()->deregistered();
-		}
+		if( it != m_sources.end() )
+			it.value()->deregistered();
 	}
 
 	//! Channel disconnected.
@@ -211,16 +207,12 @@ public:
 	//! Update source.
 	void updateSource( const Como::Source & s, const QString & channel )
 	{
-		QMapIterator< Key, Source* > it( m_sources );
+		const Key key( s, channel );
 
-		while( it.hasNext() )
-		{
-			it.next();
+		QMap< Key, Source* >::Iterator it = m_sources.find( key );
 
-			if( it.key().channelName() == channel &&
-				it.key().source() == s )
-					it.value()->setSource( s );
-		}
+		if( it != m_sources.end() )
+			it.value()->setSource( s );
 	}
 
 	//! Mode of the scene.

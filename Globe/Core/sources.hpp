@@ -99,6 +99,8 @@ private slots:
 	void channelCreated( Channel * channel );
 	//! Channel removed.
 	void channelRemoved( Channel * channel );
+	//! Channel disconnected.
+	void channelDisconnected();
 
 private:
 	Q_DISABLE_COPY( SourcesManager )

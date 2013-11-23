@@ -340,6 +340,9 @@ SourcesManager::channelCreated( Channel * channel )
 
 	connect( channel, SIGNAL( sourceDeregistered( const Como::Source & ) ),
 		this, SLOT( sourceDeregistered( const Como::Source & ) ) );
+
+	connect( channel, SIGNAL( disconnected() ),
+		this, SLOT( channelDisconnected() ) );
 }
 
 void
@@ -348,6 +351,18 @@ SourcesManager::channelRemoved( Channel * channel )
 	d->m_map.remove( channel->name() );
 
 	disconnect( channel, 0, 0, 0 );
+}
+
+void
+SourcesManager::channelDisconnected()
+{
+	Channel * channel = qobject_cast< Channel* > ( sender() );
+
+	QList< MapValue > & sources = d->m_map[ channel->name() ];
+
+	for( QList< MapValue >::Iterator it = sources.begin(),
+		last = sources.end(); it != last; ++it )
+			it->setRegistered( false );
 }
 
 } /* namespace Globe */

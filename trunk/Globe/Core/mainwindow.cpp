@@ -42,6 +42,7 @@
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/sources_mainwindow.hpp>
 #include <Globe/Core/log_event_view_window.hpp>
+#include <Globe/Core/log_sources_window.hpp>
 #include <Globe/Core/sources.hpp>
 #include <Globe/Core/sounds.hpp>
 #include <Globe/Core/utils.hpp>
@@ -199,6 +200,7 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	PropertiesManager::instance().initMenu( d->m_menu );
 	SourcesMainWindow::instance().initMenu( d->m_menu );
 	LogEventWindow::instance().initMenu( d->m_menu );
+	LogSourcesWindow::instance().initMenu( d->m_menu );
 	Sounds::instance().initMenu( d->m_menu );
 
 	checkPathAndCreateIfNotExists( QLatin1String( "./etc/schemes" ) );

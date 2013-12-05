@@ -3,7 +3,7 @@ TEMPLATE = app
 TARGET = Globe
 DESTDIR = ../..
 QT += core gui network sql widgets multimedia
-CONFIG += console
+CONFIG += windows
 
 win32 {
     RC_FILE = globe.rc

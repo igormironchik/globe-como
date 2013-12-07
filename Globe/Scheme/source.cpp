@@ -194,6 +194,27 @@ Source::source() const
 	return d->m_source;
 }
 
+static inline QString createToolTip( const QString & channelName,
+	const Como::Source & s )
+{
+	QString res;
+
+	res.append( QLatin1String( "<b>Channel:</b> " ) );
+	res.append( channelName );
+	res.append( QLatin1String( "<br><b>Type:</b> " ) );
+	res.append( s.typeName() );
+	res.append( QLatin1String( "<br><b>Name:</b> " ) );
+	res.append( s.name() );
+
+	if( !s.description().isEmpty() )
+	{
+		res.append( QLatin1String( "<br><b>Description:</b> " ) );
+		res.append( s.description() );
+	}
+
+	return res;
+}
+
 void
 Source::setSource( const Como::Source & source )
 {
@@ -212,7 +233,7 @@ Source::setSource( const Como::Source & source )
 
 	d->m_fillColor = ColorForLevel::instance().color( level );
 
-	setToolTip( source.description() );
+	setToolTip( createToolTip( d->m_channelName, source ) );
 
 	update();
 }

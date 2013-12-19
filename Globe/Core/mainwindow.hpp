@@ -39,6 +39,11 @@
 #include <Globe/Core/windows_cfg.hpp>
 
 
+QT_BEGIN_NAMESPACE
+class QSessionManager;
+QT_END_NAMESPACE
+
+
 namespace Globe {
 
 namespace Scheme {
@@ -91,6 +96,8 @@ public slots:
 	void save();
 	//! Show scheme.
 	void showScheme( const QString & cfgFile, bool newScheme = false );
+	//! Session finished.
+	void sessionFinished( QSessionManager & );
 
 protected:
 	friend class Configuration;

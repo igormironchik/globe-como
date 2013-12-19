@@ -146,6 +146,10 @@ int main( int argc, char ** argv )
 
 	Globe::MainWindow::instance().init( toolWindows );
 
+	QObject::connect( app.data(), SIGNAL( commitDataRequest( QSessionManager & ) ),
+		&Globe::MainWindow::instance(),
+		SLOT( sessionFinished( QSessionManager & ) ) );
+
 	QTimer::singleShot( 0, &Globe::MainWindow::instance(), SLOT( start() ) );
 
 	return app->exec();

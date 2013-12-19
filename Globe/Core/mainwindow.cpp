@@ -57,6 +57,7 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QFileDialog>
+#include <QSessionManager>
 
 
 namespace Globe {
@@ -325,6 +326,12 @@ MainWindow::save()
 	saveConfiguration();
 
 	d->m_cfgWasSaved = false;
+}
+
+void
+MainWindow::sessionFinished( QSessionManager & )
+{
+	saveConfiguration();
 }
 
 void

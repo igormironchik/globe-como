@@ -34,6 +34,7 @@
 
 // Qt include.
 #include <QDragEnterEvent>
+#include <QDragMoveEvent>
 #include <QDropEvent>
 #include <QMimeData>
 #include <QByteArray>
@@ -85,6 +86,14 @@ View::scene()
 
 void
 View::dragEnterEvent( QDragEnterEvent * event )
+{
+	if( d->m_scene->mode() == EditScene &&
+		event->mimeData()->hasFormat( QLatin1String( "application/como.source" ) ) )
+			event->acceptProposedAction();
+}
+
+void
+View::dragMoveEvent( QDragMoveEvent * event )
 {
 	if( d->m_scene->mode() == EditScene &&
 		event->mimeData()->hasFormat( QLatin1String( "application/como.source" ) ) )

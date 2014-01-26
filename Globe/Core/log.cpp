@@ -1013,7 +1013,7 @@ Log::eraseSourcesLog()
 	QDateTime from = QDateTime::currentDateTime();
 
 	if( d->m_cfg.sourcesLogDays() > 0 )
-		from.addDays( -d->m_cfg.sourcesLogDays() );
+		from = from.addDays( -d->m_cfg.sourcesLogDays() );
 
 	QSqlQuery eraseQuery( QLatin1String(
 		"DELETE FROM sourcesLog WHERE dateTime < ?" ) );

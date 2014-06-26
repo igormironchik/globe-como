@@ -226,20 +226,21 @@ LogEventWindow::init()
 
 	setCentralWidget( centralWidget );
 
-	connect( d->m_selector->navigationWidget(), SIGNAL( executeButtonClicked() ),
-		this, SLOT( selectFromLog() ) );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToNextPageButtonClicked() ), this,
-		SLOT( nextLogPage() ) );
+		&SelectQueryNavigation::executeButtonClicked,
+		this, &LogEventWindow::selectFromLog );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToPreviousPageButtonClicked() ), this,
-		SLOT( prevLogPage() ) );
+		&SelectQueryNavigation::goToNextPageButtonClicked,
+		this, &LogEventWindow::nextLogPage );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToStartPageButtonClicked() ), this,
-		SLOT( goToFirstLogPage() ) );
+		&SelectQueryNavigation::goToPreviousPageButtonClicked,
+		this, &LogEventWindow::prevLogPage );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToEndPageButtonClicked() ), this,
-		SLOT( goToLastLogPage() ) );
+		&SelectQueryNavigation::goToStartPageButtonClicked,
+		this, &LogEventWindow::goToFirstLogPage );
+	connect( d->m_selector->navigationWidget(),
+		&SelectQueryNavigation::goToEndPageButtonClicked,
+		this, &LogEventWindow::goToLastLogPage );
 }
 
 void

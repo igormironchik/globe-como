@@ -116,10 +116,8 @@ ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 	:	QAbstractTableModel( parent )
 	,	d( new ChannelViewWindowModelPrivate )
 {
-	connect( &SourcesManager::instance(),
-		SIGNAL( newSource( const Como::Source &, const QString & ) ),
-		this,
-		SLOT( newSource( const Como::Source &, const QString & ) ) );
+	connect( &SourcesManager::instance(), &SourcesManager::newSource,
+		this, &ChannelViewWindowModel::newSource );
 }
 
 ChannelViewWindowModel::~ChannelViewWindowModel()
@@ -142,18 +140,14 @@ ChannelViewWindowModel::initModel( const QString & channelName )
 
 			d->m_isConnected = channel->isConnected();
 
-			connect( channel, SIGNAL( connected() ), this,
-				SLOT( connected() ) );
-			connect( channel, SIGNAL( disconnected() ), this,
-				SLOT( disconnected() ) );
-			connect( channel,
-				SIGNAL( sourceDeregistered( const Como::Source & ) ),
-				this,
-				SLOT( sourceDeregistered( const Como::Source & ) ) );
-			connect( channel,
-				SIGNAL( sourceUpdated( const Como::Source & ) ),
-				this,
-				SLOT( sourceUpdated( const Como::Source & ) ) );
+			connect( channel, &Channel::connected,
+				this, &ChannelViewWindowModel::connected );
+			connect( channel, &Channel::disconnected,
+				this, &ChannelViewWindowModel::disconnected );
+			connect( channel, &Channel::sourceDeregistered,
+				this, &ChannelViewWindowModel::sourceDeregistered );
+			connect( channel, &Channel::sourceUpdated,
+				this, &ChannelViewWindowModel::sourceUpdated );
 
 			const QList< Como::Source > registered = SourcesManager::instance()
 				.registeredSources( d->m_channelName );
@@ -235,16 +229,7 @@ ChannelViewWindowModel::clear()
 			.channelByName( d->m_channelName );
 
 		if( oldChannel )
-		{
-			disconnect( oldChannel, SIGNAL( connected() ), this, 0 );
-			disconnect( oldChannel, SIGNAL( disconnected() ), this, 0 );
-			disconnect( oldChannel,
-				SIGNAL( sourceDeregistered( const Como::Source & ) ),
-				this, 0 );
-			disconnect( oldChannel,
-				SIGNAL( sourceUpdated( const Como::Source & ) ),
-				this, 0 );
-		}
+			disconnect( oldChannel, 0, this, 0 );
 	}
 
 	endResetModel();

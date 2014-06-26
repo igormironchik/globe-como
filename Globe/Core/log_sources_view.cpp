@@ -108,10 +108,10 @@ LogSourcesView::init()
 	addAction( d->m_copyAction );
 	addAction( d->m_selectAllAction );
 
-	connect( d->m_copyAction, SIGNAL( triggered() ),
-		this, SLOT( copyImplementation() ) );
-	connect( d->m_selectAllAction, SIGNAL( triggered() ),
-		this, SLOT( selectAllImplementation() ) );
+	connect( d->m_copyAction, &QAction::triggered,
+		this, &LogSourcesView::copyImplementation );
+	connect( d->m_selectAllAction, &QAction::triggered,
+		this, &LogSourcesView::selectAllImplementation );
 
 	d->m_model = new LogSourcesModel( this );
 

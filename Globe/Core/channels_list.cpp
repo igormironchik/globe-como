@@ -287,18 +287,21 @@ ChannelsList::init()
 		tr( "Delete Channel" ), this );
 	d->m_showChannelViewAction = new QAction( tr( "Show Channel View" ), this );
 
-	connect( d->m_channelsToShowWidget, SIGNAL( displayAllChannels() ),
-		this, SLOT( showAll() ) );
-	connect( d->m_channelsToShowWidget, SIGNAL( displayConnectedChannels() ),
-		this, SLOT( showConnectedOnly() ) );
-	connect( d->m_channelsToShowWidget, SIGNAL( displayDisconnectedChannels() ),
-		this, SLOT( showDisconnectedOnly() ) );
-	connect( d->m_addChannelAction, SIGNAL( triggered() ),
-		this, SLOT( addChannel() ) );
-	connect( d->m_delChannelAction, SIGNAL( triggered() ),
-		this, SLOT( delChannel() ) );
-	connect( d->m_showChannelViewAction, SIGNAL( triggered() ),
-		this, SLOT( showChannelView() ) );
+	connect( d->m_channelsToShowWidget, &ChannelsToShow::displayAllChannels,
+		this, &ChannelsList::showAll );
+	connect( d->m_channelsToShowWidget, &ChannelsToShow::displayConnectedChannels,
+		this, &ChannelsList::showConnectedOnly );
+	connect( d->m_channelsToShowWidget, &ChannelsToShow::displayDisconnectedChannels,
+		this, &ChannelsList::showDisconnectedOnly );
+
+	void ( ChannelsList::*slot )() = &ChannelsList::addChannel;
+
+	connect( d->m_addChannelAction, &QAction::triggered,
+		this, slot );
+	connect( d->m_delChannelAction, &QAction::triggered,
+		this, &ChannelsList::delChannel );
+	connect( d->m_showChannelViewAction, &QAction::triggered,
+		this, &ChannelsList::showChannelView );
 }
 
 void
@@ -328,10 +331,10 @@ ChannelsList::addChannel( Channel * channel )
 
 			d->resizeWidgets( size() );
 
-			connect( channel, SIGNAL( connected() ),
-				this, SLOT( connected() ) );
-			connect( channel, SIGNAL( disconnected() ),
-				this, SLOT( disconnected() ) );
+			connect( channel, &Channel::connected,
+				this, &ChannelsList::connected );
+			connect( channel, &Channel::disconnected,
+				this, &ChannelsList::disconnected );
 
 			if( d->m_channelsToShowWidget->shownChannelsMode() == ShowConnectedOnly &&
 				!channel->isConnected() )

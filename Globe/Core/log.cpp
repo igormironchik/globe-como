@@ -255,11 +255,14 @@ Log::privateInit()
 {
 	d->m_timer = new QTimer( this );
 
-	connect( d->m_timer, SIGNAL( timeout() ),
-		this, SLOT( eraseSourcesLog() ) );
+	connect( d->m_timer, &QTimer::timeout,
+		this, &Log::eraseSourcesLog );
 
-	connect( &DB::instance(), SIGNAL( ready() ), this, SLOT( dbReady() ) );
-	connect( &DB::instance(), SIGNAL( error() ), this, SLOT( dbError() ) );
+	connect( &DB::instance(), &DB::ready,
+		this, &Log::dbReady );
+
+	connect( &DB::instance(), &DB::error,
+		this, &Log::dbError );
 }
 
 Log &

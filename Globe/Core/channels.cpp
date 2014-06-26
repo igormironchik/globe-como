@@ -105,42 +105,45 @@ Channel::Channel( const QString & name,
 {
 	setObjectName( QString( "Channel" ) );
 
-	connect( this, SIGNAL( aboutToConnectToHost() ),
-		this, SLOT( connectToHostImplementation() ),
+	connect( this, &Channel::aboutToConnectToHost,
+		this, &Channel::connectToHostImplementation,
 		Qt::QueuedConnection );
 
-	connect( this, SIGNAL( aboutToDisconnectFromHost() ),
-		this, SLOT( disconnectFromHostImplementation() ),
+	connect( this, &Channel::aboutToDisconnectFromHost,
+		this, &Channel::disconnectFromHostImplementation,
 		Qt::QueuedConnection );
 
-	connect( this, SIGNAL( aboutToReconnectToHost() ),
-		this, SLOT( reconnectToHostImplementation() ),
+	connect( this, &Channel::aboutToReconnectToHost,
+		this, &Channel::reconnectToHostImplementation,
 		Qt::QueuedConnection );
 
-	connect( this, SIGNAL( aboutToChangeUpdateTimeout() ),
-		this, SLOT( changeUpdateTimeoutImplementation() ),
+	connect( this, &Channel::aboutToChangeUpdateTimeout,
+		this, &Channel::changeUpdateTimeoutImplementation,
 		Qt::QueuedConnection );
 
-	connect( d->m_socket, SIGNAL( connected() ),
-		this, SLOT( socketConnected() ) );
+	connect( d->m_socket, &Como::ClientSocket::connected,
+		this, &Channel::socketConnected );
 
-	connect( d->m_socket, SIGNAL( disconnected() ),
-		this, SLOT( socketDisconnected() ) );
+	connect( d->m_socket, &Como::ClientSocket::disconnected,
+		this, &Channel::socketDisconnected );
 
-	connect( d->m_socket, SIGNAL( sourceHasUpdatedValue( const Como::Source & ) ),
-		this, SLOT( sourceHasUpdatedValue( const Como::Source & ) ) );
+	connect( d->m_socket, &Como::ClientSocket::sourceHasUpdatedValue,
+		this, &Channel::sourceHasUpdatedValue );
 
-	connect( d->m_socket, SIGNAL( error( QAbstractSocket::SocketError ) ),
-		this, SLOT( socketError( QAbstractSocket::SocketError ) ) );
+	void ( Como::ClientSocket::*signal )( QAbstractSocket::SocketError ) =
+		&Como::ClientSocket::error;
 
-	connect( d->m_socket, SIGNAL( sourceDeinitialized( const Como::Source & ) ),
-		this, SLOT( sourceHasDeregistered( const Como::Source & ) ) );
+	connect( d->m_socket, signal,
+		this, &Channel::socketError );
 
-	connect( d->m_rateTimer, SIGNAL( timeout() ),
-		this, SLOT( updateMessagesRate() ) );
+	connect( d->m_socket, &Como::ClientSocket::sourceDeinitialized,
+		this, &Channel::sourceHasDeregistered );
 
-	connect( d->m_updateTimer, SIGNAL( timeout() ),
-		this, SLOT( updateSourcesValue() ) );
+	connect( d->m_rateTimer, &QTimer::timeout,
+		this, &Channel::updateMessagesRate );
+
+	connect( d->m_updateTimer, &QTimer::timeout,
+		this, &Channel::updateSourcesValue );
 
 	d->m_rateTimer->start( 1000 );
 }
@@ -534,8 +537,8 @@ public:
 		:	m_channelAndThread( channelAndThread )
 	{
 		if( m_channelAndThread.channel()->isConnected() )
-			connect( m_channelAndThread.channel(), SIGNAL( disconnected() ),
-				this, SLOT( jobDone() ) );
+			connect( m_channelAndThread.channel(), &Channel::disconnected,
+				this, &ChannelAndThreadDeleter::jobDone );
 		else
 			jobDone();
 	}

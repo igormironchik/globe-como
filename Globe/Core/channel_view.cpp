@@ -261,14 +261,14 @@ ChannelView::init()
 	addAction( d->m_selectAllAction );
 	addAction( d->m_fillColorAction );
 
-	connect( d->m_copyAction, SIGNAL( triggered() ),
-		this, SLOT( copyImplementation() ) );
-	connect( d->m_selectAllAction, SIGNAL( triggered() ),
-		this, SLOT( selectAllImplementation() ) );
-	connect( d->m_fillColorAction, SIGNAL( changed() ),
-		this, SLOT( fillWithColorChanged() ) );
-	connect( &ColorForLevel::instance(), SIGNAL( changed() ),
-		this, SLOT( colorForLevelChanged() ) );
+	connect( d->m_copyAction, &QAction::triggered,
+		this, &ChannelView::copyImplementation );
+	connect( d->m_selectAllAction, &QAction::triggered,
+		this, &ChannelView::selectAllImplementation );
+	connect( d->m_fillColorAction, &QAction::changed,
+		this, &ChannelView::fillWithColorChanged );
+	connect( &ColorForLevel::instance(), &ColorForLevel::changed,
+		this, &ChannelView::colorForLevelChanged );
 
 	d->m_model = new ChannelViewWindowModel( this );
 

@@ -89,59 +89,53 @@ ConfigurationDialog::init()
 {
 	d->m_ui.setupUi( this );
 
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( newSettingsAccepted() ) );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &ConfigurationDialog::newSettingsAccepted );
 
-	connect( d->m_ui.m_menu,
-		SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
-		this, SLOT( changePage( QListWidgetItem *, QListWidgetItem * ) ) );
+	connect( d->m_ui.m_menu, &QListWidget::currentItemChanged,
+		this, &ConfigurationDialog::changePage );
 
-	connect( d->m_ui.m_resetColorsToDefaultSettings,
-		SIGNAL( clicked() ), this, SLOT( resetColorsToDefaultValues() ) );
+	connect( d->m_ui.m_resetColorsToDefaultSettings, &QPushButton::clicked,
+		this, &ConfigurationDialog::resetColorsToDefaultValues );
 
-	connect( d->m_ui.m_enableSourcesLog, SIGNAL( stateChanged( int ) ),
-		this, SLOT( sourcesLogStateChanged( int ) ) );
+	connect( d->m_ui.m_enableSourcesLog, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::sourcesLogStateChanged );
 
-	connect( d->m_ui.m_enableCriticalSound,
-		SIGNAL( stateChanged( int ) ), this,
-		SLOT( criticalSoundStateChanged( int ) ) );
+	connect( d->m_ui.m_enableCriticalSound, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::criticalSoundStateChanged );
 
-	connect( d->m_ui.m_enableErrorSound,
-		SIGNAL( stateChanged( int ) ), this,
-		SLOT( errorSoundStateChanged( int ) ) );
+	connect( d->m_ui.m_enableErrorSound, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::errorSoundStateChanged );
 
-	connect( d->m_ui.m_enableWarningSound,
-		SIGNAL( stateChanged( int ) ), this,
-		SLOT( warningSoundStateChanged( int ) ) );
+	connect( d->m_ui.m_enableWarningSound, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::warningSoundStateChanged );
 
-	connect( d->m_ui.m_enableDebugSound,
-		SIGNAL( stateChanged( int ) ), this,
-		SLOT( debugSoundStateChanged( int ) ) );
+	connect( d->m_ui.m_enableDebugSound, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::debugSoundStateChanged );
 
-	connect( d->m_ui.m_enableInfoSound,
-		SIGNAL( stateChanged( int ) ), this,
-		SLOT( infoSoundStateChanged( int ) ) );
+	connect( d->m_ui.m_enableInfoSound, &QCheckBox::stateChanged,
+		this, &ConfigurationDialog::infoSoundStateChanged );
 
-	connect( d->m_ui.m_criticalSoundButton, SIGNAL( clicked() ),
-		this, SLOT( criticalSoundButtonClicked() ) );
+	connect( d->m_ui.m_criticalSoundButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::criticalSoundButtonClicked );
 
-	connect( d->m_ui.m_errorSoundButton, SIGNAL( clicked() ),
-		this, SLOT( errorSoundButtonClicked() ) );
+	connect( d->m_ui.m_errorSoundButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::errorSoundButtonClicked );
 
-	connect( d->m_ui.m_warningSoundButton, SIGNAL( clicked() ),
-		this, SLOT( warningSoundButtonClicked() ) );
+	connect( d->m_ui.m_warningSoundButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::warningSoundButtonClicked );
 
-	connect( d->m_ui.m_debugSoundButton, SIGNAL( clicked() ),
-		this, SLOT( debugSoundButtonClicked() ) );
+	connect( d->m_ui.m_debugSoundButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::debugSoundButtonClicked );
 
-	connect( d->m_ui.m_infoSoundButton, SIGNAL( clicked() ),
-		this, SLOT( infoSoundButtonClicked() ) );
+	connect( d->m_ui.m_infoSoundButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::infoSoundButtonClicked );
 
-	connect( d->m_ui.m_clearEventLogButton, SIGNAL( clicked() ),
-		this, SLOT( clearEventLog() ) );
+	connect( d->m_ui.m_clearEventLogButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::clearEventLog );
 
-	connect( d->m_ui.m_clearSourcesLogButton, SIGNAL( clicked() ),
-		this, SLOT( clearSourcesLog() ) );
+	connect( d->m_ui.m_clearSourcesLogButton, &QToolButton::clicked,
+		this, &ConfigurationDialog::clearSourcesLog );
 
 	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
 		QLatin1String( "sounds" ) );

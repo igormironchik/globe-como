@@ -110,14 +110,14 @@ LogEventSelector::init()
 {
 	d->m_ui.setupUi( this );
 
-	connect( d->m_ui.m_from, SIGNAL( dateTimeChanged( const QDateTime & ) ),
-		this, SLOT( startDateTimeChanged( const QDateTime & ) ) );
-	connect( d->m_ui.m_to, SIGNAL( dateTimeChanged( const QDateTime & ) ),
-		this, SLOT( endDateTimeChanged( const QDateTime & ) ) );
-	connect( d->m_ui.m_fromLaunchButton, SIGNAL( clicked() ),
-		this, SLOT( setStartTimeToLaunchTime() ) );
-	connect( d->m_ui.m_toCurrentTimeButton, SIGNAL( clicked() ),
-		this, SLOT( setEndTimeToCurrent() ) );
+	connect( d->m_ui.m_from, &QDateTimeEdit::dateTimeChanged,
+		this, &LogEventSelector::startDateTimeChanged );
+	connect( d->m_ui.m_to, &QDateTimeEdit::dateTimeChanged,
+		this, &LogEventSelector::endDateTimeChanged );
+	connect( d->m_ui.m_fromLaunchButton, &QToolButton::clicked,
+		this, &LogEventSelector::setStartTimeToLaunchTime );
+	connect( d->m_ui.m_toCurrentTimeButton, &QToolButton::clicked,
+		this, &LogEventSelector::setEndTimeToCurrent );
 }
 
 const LogEventSelectorCfg &

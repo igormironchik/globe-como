@@ -76,8 +76,10 @@ ChannelsToShow::init()
 {
 	d->m_ui.setupUi( this );
 
-	connect( d->m_ui.m_shownChannels, SIGNAL( currentIndexChanged( int ) ),
-		this, SLOT( displayModeChanged( int ) ) );
+	void ( QComboBox::*signal) ( int ) = &QComboBox::currentIndexChanged;
+
+	connect( d->m_ui.m_shownChannels, signal,
+		this, &ChannelsToShow::displayModeChanged );
 
 	setShownChannelsMode( d->m_shownChannels );
 }

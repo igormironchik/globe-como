@@ -232,20 +232,20 @@ ChannelWidget::init()
 
 	mainLayout->addLayout( controlsLayout );
 
-	connect( d->m_timeoutWidget, SIGNAL( timeoutChanged( int ) ),
-		this, SLOT( timeoutChanged( int ) ) );
-	connect( d->m_channel, SIGNAL( messagesRate( int ) ),
-		this, SLOT( messageRate( int ) ) );
-	connect( d->m_channel, SIGNAL( connected() ),
-		this, SLOT( connected() ) );
-	connect( d->m_channel, SIGNAL( disconnected() ),
-		this, SLOT( disconnected() ) );
-	connect( d->m_connectButton, SIGNAL( clicked() ),
-		this, SLOT( connectButtonClicked() ) );
-	connect( d->m_disconnectButton, SIGNAL( clicked() ),
-		this, SLOT( disconnectButtonClicked() ) );
-	connect( d->m_reconnectButton, SIGNAL( clicked() ),
-		this, SLOT( reconnectButtonClicked() ) );
+	connect( d->m_timeoutWidget, &ChannelTimeoutWidget::timeoutChanged,
+		this, &ChannelWidget::timeoutChanged );
+	connect( d->m_channel, &Channel::messagesRate,
+		this, &ChannelWidget::messageRate );
+	connect( d->m_channel, &Channel::connected,
+		this, &ChannelWidget::connected );
+	connect( d->m_channel, &Channel::disconnected,
+		this, &ChannelWidget::disconnected );
+	connect( d->m_connectButton, &QToolButton::clicked,
+		this, &ChannelWidget::connectButtonClicked );
+	connect( d->m_disconnectButton, &QToolButton::clicked,
+		this, &ChannelWidget::disconnectButtonClicked );
+	connect( d->m_reconnectButton, &QToolButton::clicked,
+		this, &ChannelWidget::reconnectButtonClicked );
 }
 
 QSize

@@ -269,16 +269,19 @@ ChannelAttributesDialog::init()
 
 	d->stateChanged();
 
-	connect( d->m_ui.m_name, SIGNAL( textEdited( const QString & ) ),
-		this, SLOT( nameEdited( const QString & ) ) );
-	connect( d->m_ui.m_ip, SIGNAL( textEdited( const QString & ) ),
-		this, SLOT( ipEdited( const QString & ) ) );
-	connect( d->m_ui.m_port, SIGNAL( valueChanged( int ) ),
-		this, SLOT( portEdited( int ) ) );
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accepted() ) );
-	connect( d->m_checkButton, SIGNAL( clicked() ),
-		this, SLOT( checkFields() ) );
+	connect( d->m_ui.m_name, &QLineEdit::textEdited,
+		this, &ChannelAttributesDialog::nameEdited );
+	connect( d->m_ui.m_ip, &QLineEdit::textEdited,
+		this, &ChannelAttributesDialog::ipEdited );
+
+	void ( QSpinBox::*signal )( int ) = &QSpinBox::valueChanged;
+
+	connect( d->m_ui.m_port, signal,
+		this, &ChannelAttributesDialog::portEdited );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &ChannelAttributesDialog::accepted );
+	connect( d->m_checkButton, &QPushButton::clicked,
+		this, &ChannelAttributesDialog::checkFields );
 }
 
 void

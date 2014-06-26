@@ -226,20 +226,21 @@ LogSourcesWindow::init()
 
 	setCentralWidget( centralWidget );
 
-	connect( d->m_selector->navigationWidget(), SIGNAL( executeButtonClicked() ),
-		this, SLOT( selectFromLog() ) );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToNextPageButtonClicked() ), this,
-		SLOT( nextLogPage() ) );
+		&SelectQueryNavigation::executeButtonClicked,
+		this, &LogSourcesWindow::selectFromLog );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToPreviousPageButtonClicked() ), this,
-		SLOT( prevLogPage() ) );
+		&SelectQueryNavigation::goToNextPageButtonClicked,
+		this, &LogSourcesWindow::nextLogPage );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToStartPageButtonClicked() ), this,
-		SLOT( goToFirstLogPage() ) );
+		&SelectQueryNavigation::goToPreviousPageButtonClicked,
+		this, &LogSourcesWindow::prevLogPage );
 	connect( d->m_selector->navigationWidget(),
-		SIGNAL( goToEndPageButtonClicked() ), this,
-		SLOT( goToLastLogPage() ) );
+		&SelectQueryNavigation::goToStartPageButtonClicked,
+		this, &LogSourcesWindow::goToFirstLogPage );
+	connect( d->m_selector->navigationWidget(),
+		&SelectQueryNavigation::goToEndPageButtonClicked,
+		this, &LogSourcesWindow::goToLastLogPage );
 }
 
 void

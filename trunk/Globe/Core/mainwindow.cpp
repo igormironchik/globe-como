@@ -145,8 +145,8 @@ MainWindow::list()
 void
 MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 {
-	connect( qApp, SIGNAL( aboutToQuit() ),
-		this, SLOT( aboutToQuit() ) );
+	connect( qApp, &QApplication::aboutToQuit,
+		this, &MainWindow::aboutToQuit );
 
 	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
 

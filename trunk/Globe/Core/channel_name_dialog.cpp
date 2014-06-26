@@ -97,11 +97,13 @@ ChannelNameDialog::init( const QStringList & names )
 {
 	d->m_ui.setupUi( this );
 
-	connect( d->m_ui.m_channel, SIGNAL( currentIndexChanged( int ) ),
-		this, SLOT( currentIndexChanged( int ) ) );
+	void ( QComboBox::*signal )( int ) = &QComboBox::currentIndexChanged;
 
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accepted() ) );
+	connect( d->m_ui.m_channel, signal,
+		this, &ChannelNameDialog::currentIndexChanged );
+
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &ChannelNameDialog::accepted );
 
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 

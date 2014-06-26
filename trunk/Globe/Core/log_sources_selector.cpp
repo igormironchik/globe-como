@@ -84,21 +84,20 @@ LogSourcesSelector::init()
 
 	d->m_ui.m_channel->addItems( SourcesManager::instance().channelsNames() );
 
-	connect( d->m_ui.m_fromLaunchButton, SIGNAL( clicked() ),
-		this, SLOT( setStartTimeToLaunchTime() ) );
-	connect( d->m_ui.m_toCurrentTimeButton, SIGNAL( clicked() ),
-		this, SLOT( setEndTimeToCurrent() ) );
-	connect( d->m_ui.m_channel, SIGNAL( currentTextChanged( const QString & ) ),
-		this, SLOT( channelNameChanged( const QString & ) ) );
-	connect( &ChannelsManager::instance(), SIGNAL( channelCreated( Channel * ) ),
-		this, SLOT( chanelCreated( Channel * ) ) );
-	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel * ) ),
-		this, SLOT( channelRemoved( Channel * ) ) );
-	connect( &SourcesManager::instance(),
-		SIGNAL( newSource( const Como::Source &, const QString & ) ),
-		this, SLOT( newSource( const Como::Source &, const QString & ) ) );
-	connect( d->m_ui.m_type, SIGNAL( currentTextChanged( const QString & ) ),
-		this, SLOT( typeChanged( QString ) ) );
+	connect( d->m_ui.m_fromLaunchButton, &QToolButton::clicked,
+		this, &LogSourcesSelector::setStartTimeToLaunchTime );
+	connect( d->m_ui.m_toCurrentTimeButton, &QToolButton::clicked,
+		this, &LogSourcesSelector::setEndTimeToCurrent );
+	connect( d->m_ui.m_channel, &QComboBox::currentTextChanged,
+		this, &LogSourcesSelector::channelNameChanged );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelCreated,
+		this, &LogSourcesSelector::chanelCreated );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelRemoved,
+		this, &LogSourcesSelector::channelRemoved );
+	connect( &SourcesManager::instance(), &SourcesManager::newSource,
+		this, &LogSourcesSelector::newSource );
+	connect( d->m_ui.m_type, &QComboBox::currentTextChanged,
+		this, &LogSourcesSelector::typeChanged );
 }
 
 SelectQueryNavigation *

@@ -34,7 +34,7 @@
 // Qt include.
 #include <QPaintDevice>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 
 
 namespace Globe {
@@ -50,8 +50,8 @@ static const qreal inchInMm = 0.0393700787;
 
 QPointF pointToMm( const QPointF & p )
 {
-	const qreal dpiX = QApplication::desktop()->physicalDpiX();
-	const qreal dpiY = QApplication::desktop()->physicalDpiY();
+	const qreal dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+	const qreal dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
 
 	const qreal x = p.x() / dpiX / inchInMm;
 	const qreal y = p.y() / dpiY / inchInMm;
@@ -66,8 +66,8 @@ QPointF pointToMm( const QPointF & p )
 
 QPointF pointFromMm( const QPointF & p )
 {
-	const qreal dpiX = QApplication::desktop()->physicalDpiX();
-	const qreal dpiY = QApplication::desktop()->physicalDpiY();
+	const qreal dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+	const qreal dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
 
 	const qreal x = p.x() * dpiX * inchInMm;
 	const qreal y = p.y() * dpiY * inchInMm;
@@ -82,8 +82,8 @@ QPointF pointFromMm( const QPointF & p )
 
 QSizeF sizeToMm( const QSizeF & s )
 {
-	const qreal dpiX = QApplication::desktop()->physicalDpiX();
-	const qreal dpiY = QApplication::desktop()->physicalDpiY();
+	const qreal dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+	const qreal dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
 
 	const qreal width = s.width() / dpiX / inchInMm;
 	const qreal height = s.height() / dpiY / inchInMm;
@@ -98,8 +98,8 @@ QSizeF sizeToMm( const QSizeF & s )
 
 QSizeF sizeFromMm( const QSizeF & s )
 {
-	const qreal dpiX = QApplication::desktop()->physicalDpiX();
-	const qreal dpiY = QApplication::desktop()->physicalDpiY();
+	const qreal dpiX = QApplication::primaryScreen()->physicalDotsPerInchX();
+	const qreal dpiY = QApplication::primaryScreen()->physicalDotsPerInchY();
 
 	const qreal width = s.width() * dpiX * inchInMm;
 	const qreal height = s.height() * dpiY * inchInMm;

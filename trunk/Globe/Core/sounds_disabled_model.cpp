@@ -131,15 +131,11 @@ DisabledSoundsModel::DisabledSoundsModel( QObject * parent )
 	:	QAbstractTableModel( parent )
 	,	d( new DisabledSoundsModelPrivate )
 {
-	connect( &DisabledSounds::instance(),
-		SIGNAL( soundsDisabled( const Como::Source &, const QString &,
-			const QDateTime & ) ),
-		this, SLOT( soundsDisabled( const Como::Source &, const QString &,
-			const QDateTime & ) ) );
+	connect( &DisabledSounds::instance(), &DisabledSounds::soundsDisabled,
+		this, &DisabledSoundsModel::soundsDisabled );
 
-	connect( &DisabledSounds::instance(),
-		SIGNAL( soundsEnabled( const Como::Source & , const QString & ) ),
-		this, SLOT( soundsEnabled( const Como::Source &, const QString & ) ) );
+	connect( &DisabledSounds::instance(), &DisabledSounds::soundsEnabled,
+		this, &DisabledSoundsModel::soundsEnabled );
 }
 
 DisabledSoundsModel::~DisabledSoundsModel()

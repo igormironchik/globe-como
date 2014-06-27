@@ -230,10 +230,10 @@ PropertiesList::init()
 	setItemDelegateForColumn( 1, d->m_expressionDelegate );
 	setItemDelegateForColumn( 3, d->m_levelDelegate );
 
-	connect( d->m_model, SIGNAL( wrongProperties() ),
-		this, SLOT( propertiesWrong() ) );
-	connect( d->m_model, SIGNAL( changed() ),
-		this, SLOT( propertiesChanged() ) );
+	connect( d->m_model, &PropertiesListModel::wrongProperties,
+		this, &PropertiesList::propertiesWrong );
+	connect( d->m_model, &PropertiesListModel::changed,
+		this, &PropertiesList::propertiesChanged );
 }
 
 Properties
@@ -532,12 +532,16 @@ PropertiesWidget::init()
 
 	vBox->addWidget( d->m_conditions );
 
-	connect( d->m_conditions, SIGNAL( wrongProperties() ),
-		this, SLOT( propertiesWrong() ) );
-	connect( d->m_conditions, SIGNAL( changed() ),
-		this, SLOT( propertiesChanged() ) );
-	connect( d->m_priority, SIGNAL( valueChanged(int) ),
-		this, SLOT( priorityChanged( int ) ) );
+	connect( d->m_conditions, &PropertiesList::wrongProperties,
+		this, &PropertiesWidget::propertiesWrong );
+
+	connect( d->m_conditions, &PropertiesList::changed,
+		this, &PropertiesWidget::propertiesChanged );
+
+	void ( QSpinBox::*signal ) ( int ) = &QSpinBox::valueChanged;
+
+	connect( d->m_priority, signal,
+		this, &PropertiesWidget::priorityChanged );
 }
 
 } /* namespace Globe */

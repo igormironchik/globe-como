@@ -285,8 +285,8 @@ Sounds::init()
 
 	d->m_player = new QMediaPlayer( this );
 
-	connect( d->m_player, SIGNAL( stateChanged( QMediaPlayer::State ) ),
-		this, SLOT( playerStateChanged( QMediaPlayer::State ) ) );
+	connect( d->m_player, &QMediaPlayer::stateChanged,
+		this, &Sounds::playerStateChanged );
 
 	d->m_tabs = new QTabWidget( this );
 

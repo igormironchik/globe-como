@@ -90,21 +90,23 @@ SourcesWidget::init()
 
 	d->m_ui.m_channel->setInsertPolicy( QComboBox::InsertAlphabetically );
 
-	connect( &SourcesManager::instance(),
-		SIGNAL( newSource( const Como::Source &, const QString & ) ),
-		this, SLOT( newSource( const Como::Source &, const QString & ) ) );
+	connect( &SourcesManager::instance(), &SourcesManager::newSource,
+		this, &SourcesWidget::newSource );
 
-	connect( &ChannelsManager::instance(), SIGNAL( channelCreated( Channel * ) ),
-		this, SLOT( channelCreated( Channel * ) ) );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelCreated,
+		this, &SourcesWidget::channelCreated );
 
-	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel * ) ),
-		this, SLOT( channelRemoved( Channel * ) ) );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelRemoved,
+		this, &SourcesWidget::channelRemoved );
 
-	connect( d->m_ui.m_channel, SIGNAL( currentIndexChanged( const QString & ) ),
-		this, SLOT( selectChannel( const QString & ) ) );
+	void ( QComboBox::*signal ) ( const QString & ) =
+		&QComboBox::currentIndexChanged;
 
-	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
-		this, SLOT( itemActivated( const QModelIndex & ) ) );
+	connect( d->m_ui.m_channel, signal,
+		this, &SourcesWidget::selectChannel );
+
+	connect( d->m_ui.m_view, &SourcesWidgetView::clicked,
+		this, &SourcesWidget::itemActivated );
 
 	foreach( const QString & channelName, SourcesManager::instance().channelsNames() )
 		d->m_ui.m_channel->addItem( channelName );

@@ -103,16 +103,22 @@ SourceManualDialog::init()
 
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accepted() ) );
-	connect( d->m_ui.m_buttons, SIGNAL( rejected() ),
-		this, SLOT( reject() ) );
-	connect( d->m_ui.m_channel, SIGNAL( currentIndexChanged( int ) ),
-		this, SLOT( channelWasSet( int ) ) );
-	connect( d->m_ui.m_name, SIGNAL( textChanged( const QString & ) ),
-		this, SLOT( nameWasSet( const QString & ) ) );
-	connect( d->m_ui.m_typeName, SIGNAL( textChanged( const QString & ) ),
-		this, SLOT( typeWasSet( const QString & ) ) );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &SourceManualDialog::accepted );
+
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::rejected,
+		this, &SourceManualDialog::reject );
+
+	void ( QComboBox::*signal ) ( int ) = &QComboBox::currentIndexChanged;
+
+	connect( d->m_ui.m_channel, signal,
+		this, &SourceManualDialog::channelWasSet );
+
+	connect( d->m_ui.m_name, &QLineEdit::textChanged,
+		this, &SourceManualDialog::nameWasSet );
+
+	connect( d->m_ui.m_typeName, &QLineEdit::textChanged,
+		this, &SourceManualDialog::typeWasSet );
 
 	foreach( const QString & channelName, SourcesManager::instance().channelsNames() )
 		d->m_ui.m_channel->addItem( channelName );

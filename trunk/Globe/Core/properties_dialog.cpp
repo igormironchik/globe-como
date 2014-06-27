@@ -127,16 +127,16 @@ PropertiesDialog::init()
 
 	d->m_buttons->addButton( openButton, QDialogButtonBox::ActionRole );
 
-	connect( d->m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accept() ) );
-	connect( d->m_buttons, SIGNAL( rejected() ),
-		this, SLOT( reject() ) );
-	connect( d->m_properties, SIGNAL( wrongProperties() ),
-		this, SLOT( wrongProperties() ) );
-	connect( d->m_properties, SIGNAL( changed() ),
-		this, SLOT( propertiesChanged() ) );
-	connect( openButton, SIGNAL( clicked() ),
-		this, SLOT( openProperties() ) );
+	connect( d->m_buttons, &QDialogButtonBox::accepted,
+		this, &PropertiesDialog::accept );
+	connect( d->m_buttons, &QDialogButtonBox::rejected,
+		this, &PropertiesDialog::reject );
+	connect( d->m_properties, &PropertiesWidget::wrongProperties,
+		this, &PropertiesDialog::wrongProperties );
+	connect( d->m_properties, &PropertiesWidget::changed,
+		this, &PropertiesDialog::propertiesChanged );
+	connect( openButton, &QPushButton::clicked,
+		this, &PropertiesDialog::openProperties );
 }
 
 void

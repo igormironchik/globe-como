@@ -95,14 +95,14 @@ PropertiesCfgFileNameDialog::init()
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setDefault( true );
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accepted() ) );
-	connect( d->m_ui.m_buttons, SIGNAL( rejected() ),
-		this, SLOT( reject() ) );
-	connect( d->m_ui.m_fileName, SIGNAL( textChanged( const QString & ) ),
-		this, SLOT( fileNameChanged( const QString & ) ) );
-	connect( d->m_ui.m_selectButton, SIGNAL( clicked() ),
-		this, SLOT( selectFile() ) );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &PropertiesCfgFileNameDialog::accepted );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::rejected,
+		this, &PropertiesCfgFileNameDialog::reject );
+	connect( d->m_ui.m_fileName, &QLineEdit::textChanged,
+		this, &PropertiesCfgFileNameDialog::fileNameChanged );
+	connect( d->m_ui.m_selectButton, &QToolButton::clicked,
+		this, &PropertiesCfgFileNameDialog::selectFile );
 }
 
 void

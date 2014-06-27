@@ -120,16 +120,20 @@ SourcesDialog::init()
 	layout->addWidget( line );
 	layout->addWidget( d->m_buttons );
 
-	connect( d->m_widget, SIGNAL( sourceSelected( const Como::Source & ) ),
-		this, SLOT( sourceSelected( const Como::Source & ) ) );
-	connect( d->m_widget, SIGNAL( channelSelected( const QString & ) ),
-		this, SLOT( channelSelected( const QString & ) ) );
-	connect( d->m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accept() ) );
-	connect( d->m_buttons, SIGNAL( rejected() ),
-		this, SLOT( reject() ) );
-	connect( d->m_setManuallyButton, SIGNAL( clicked() ),
-		this, SLOT( setSourceManually() ) );
+	connect( d->m_widget, &SourcesWidget::sourceSelected,
+		this, &SourcesDialog::sourceSelected );
+
+	connect( d->m_widget, &SourcesWidget::channelSelected,
+		this, &SourcesDialog::channelSelected );
+
+	connect( d->m_buttons, &QDialogButtonBox::accepted,
+		this, &SourcesDialog::accept );
+
+	connect( d->m_buttons, &QDialogButtonBox::rejected,
+		this, &SourcesDialog::reject );
+
+	connect( d->m_setManuallyButton, &QPushButton::clicked,
+		this, &SourcesDialog::setSourceManually );
 }
 
 void

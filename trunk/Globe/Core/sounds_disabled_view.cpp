@@ -129,8 +129,8 @@ DisabledSoundsView::init()
 
 	setModel( d->m_sortModel );
 
-	connect( d->m_model, SIGNAL( resortNeeded() ),
-		this, SLOT( resort() ) );
+	connect( d->m_model, &DisabledSoundsModel::resortNeeded,
+		this, &DisabledSoundsView::resort );
 }
 
 } /* namespace Globe */

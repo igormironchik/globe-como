@@ -189,10 +189,11 @@ SourcesManager::SourcesManager( QObject * parent )
 	:	QObject( parent )
 	,	d( new SourcesManagerPrivate )
 {
-	connect( &ChannelsManager::instance(), SIGNAL( channelCreated( Channel * ) ),
-		this, SLOT( channelCreated( Channel * ) ) );
-	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel * ) ),
-		this, SLOT( channelRemoved( Channel * ) ) );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelCreated,
+		this, &SourcesManager::channelCreated );
+
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelRemoved,
+		this, &SourcesManager::channelRemoved );
 }
 
 SourcesManager::~SourcesManager()
@@ -335,14 +336,14 @@ SourcesManager::channelCreated( Channel * channel )
 	if( d->m_map.find( channel->name() ) == d->m_map.end() )
 		d->m_map.insert( channel->name(), QList< MapValue > () );
 
-	connect( channel, SIGNAL( sourceUpdated( const Como::Source & ) ),
-		this, SLOT( sourceUpdated( const Como::Source & ) ) );
+	connect( channel, &Channel::sourceUpdated,
+		this, &SourcesManager::sourceUpdated );
 
-	connect( channel, SIGNAL( sourceDeregistered( const Como::Source & ) ),
-		this, SLOT( sourceDeregistered( const Como::Source & ) ) );
+	connect( channel, &Channel::sourceDeregistered,
+		this, &SourcesManager::sourceDeregistered );
 
-	connect( channel, SIGNAL( disconnected() ),
-		this, SLOT( channelDisconnected() ) );
+	connect( channel, &Channel::disconnected,
+		this, &SourcesManager::channelDisconnected );
 }
 
 void

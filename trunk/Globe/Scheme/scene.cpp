@@ -630,12 +630,11 @@ Scene::init()
 
 	addItem( item );
 
-	connect( &ChannelsManager::instance(), SIGNAL( channelRemoved( Channel* ) ),
-		this, SLOT( channelRemoved( Channel* ) ) );
-	connect( &SourcesManager::instance(),
-		SIGNAL( newSource( const Como::Source &, const QString & ) ),
-		this,
-		SLOT( newSource( const Como::Source & , const QString & ) ) );
+	connect( &ChannelsManager::instance(), &ChannelsManager::channelRemoved,
+		this, &Scene::channelRemoved );
+
+	connect( &SourcesManager::instance(), &SourcesManager::newSource,
+		this, &Scene::newSource );
 }
 
 void
@@ -664,14 +663,17 @@ Scene::addChannel( const QString & name )
 
 	if( channel )
 	{
-		connect( channel, SIGNAL( sourceUpdated( const Como::Source & ) ),
-			this, SLOT( sourceUpdated( const Como::Source & ) ) );
-		connect( channel, SIGNAL( sourceDeregistered( const Como::Source & ) ),
-			this, SLOT( sourceDeregistered( const Como::Source & ) ) );
-		connect( channel, SIGNAL( connected() ),
-			this, SLOT( connected() ) );
-		connect( channel, SIGNAL( disconnected() ),
-			this, SLOT( disconnected() ) );
+		connect( channel, &Channel::sourceUpdated,
+			this, &Scene::sourceUpdated );
+
+		connect( channel, &Channel::sourceDeregistered,
+			this, &Scene::sourceDeregistered );
+
+		connect( channel, &Channel::connected,
+			this, &Scene::connected );
+
+		connect( channel, &Channel::disconnected,
+			this, &Scene::disconnected );
 	}
 	else
 		QMessageBox::critical( 0, tr( "Channel is unavailable..." ),

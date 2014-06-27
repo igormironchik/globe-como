@@ -76,10 +76,13 @@ SizeDialog::SizeDialog( int & width, int & height,
 	d->m_ui.m_width->setValue( width );
 	d->m_ui.m_height->setValue( height );
 
-	connect( d->m_ui.m_width, SIGNAL( valueChanged( int ) ),
-		this, SLOT( widthChanged( int ) ) );
-	connect( d->m_ui.m_height, SIGNAL( valueChanged( int ) ),
-		this, SLOT( heightChanged( int ) ) );
+	void ( QSpinBox::*signal ) ( int ) = &QSpinBox::valueChanged;
+
+	connect( d->m_ui.m_width, signal,
+		this, &SizeDialog::widthChanged );
+
+	connect( d->m_ui.m_height, signal,
+		this, &SizeDialog::heightChanged );
 }
 
 SizeDialog::~SizeDialog()

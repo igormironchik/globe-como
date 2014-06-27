@@ -71,8 +71,8 @@ TextDialog::TextDialog( QString & text, QWidget * parent,
 	d->m_ui.setupUi( this );
 	d->m_ui.m_edit->setPlainText( text );
 
-	connect( d->m_ui.m_edit, SIGNAL( textChanged() ),
-		this, SLOT( textChanged() ) );
+	connect( d->m_ui.m_edit, &QPlainTextEdit::textChanged,
+		this, &TextDialog::textChanged );
 }
 
 TextDialog::~TextDialog()

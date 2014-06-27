@@ -177,20 +177,18 @@ DisableSoundToDialog::init()
 	d->m_textColor = d->m_ui.m_relativeDateTimeEdit->palette()
 		.color( QPalette::Text );
 
-	connect( d->m_ui.m_currentDateTimeButton, SIGNAL( clicked() ),
-		this, SLOT( setDateTimeToCurrent() ) );
+	connect( d->m_ui.m_currentDateTimeButton, &QToolButton::clicked,
+		this, &DisableSoundToDialog::setDateTimeToCurrent );
 
 	connect( d->m_ui.m_buttons->button( QDialogButtonBox::Ok ),
-		SIGNAL( clicked() ), this,
-		SLOT( acceptButtonClicked() ) );
+		&QPushButton::clicked,
+		this, &DisableSoundToDialog::acceptButtonClicked );
 
-	connect( d->m_ui.m_actualDateTimeEdit,
-		SIGNAL( dateTimeChanged( const QDateTime & ) ), this,
-		SLOT( actualDateTimeChanged( const QDateTime & ) ) );
+	connect( d->m_ui.m_actualDateTimeEdit, &QDateTimeEdit::dateTimeChanged,
+		this, &DisableSoundToDialog::actualDateTimeChanged );
 
-	connect( d->m_ui.m_relativeDateTimeEdit,
-		SIGNAL( textChanged( const QString & ) ), this,
-		SLOT( relativeDateTimeChanged( const QString & ) ) );
+	connect( d->m_ui.m_relativeDateTimeEdit, &QLineEdit::textChanged,
+		this, &DisableSoundToDialog::relativeDateTimeChanged );
 }
 
 bool

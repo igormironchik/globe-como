@@ -231,8 +231,8 @@ DisabledSounds::initTimer()
 {
 	d->m_timer->start( 60 * 1000 );
 
-	connect( d->m_timer, SIGNAL( timeout() ),
-		this, SLOT( checkAndEnableIf() ) );
+	connect( d->m_timer, &QTimer::timeout,
+		this, &DisabledSounds::checkAndEnableIf );
 
 	checkAndEnableIf();
 }

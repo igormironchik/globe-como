@@ -48,7 +48,8 @@ ToolWindowObject::ToolWindowObject( QAction * action, QMainWindow * toolWindow,
 	,	m_toolWindow( toolWindow )
 	,	m_action( action )
 {
-	connect( action, SIGNAL( triggered() ), this, SLOT( showToolWindow() ) );
+	connect( action, &QAction::triggered,
+		this, &ToolWindowObject::showToolWindow );
 }
 
 QAction *

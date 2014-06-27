@@ -80,8 +80,8 @@ PropertiesKeyTypeDialog::init()
 
 	setWindowTitle( tr( "Select propertie's type..." ) );
 
-	connect( d->m_ui.m_buttons, SIGNAL( accepted() ),
-		this, SLOT( accepted() ) );
+	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
+		this, &PropertiesKeyTypeDialog::accepted );
 }
 
 void

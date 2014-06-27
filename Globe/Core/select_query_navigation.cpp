@@ -120,16 +120,20 @@ SelectQueryNavigation::init()
 {
 	d->m_ui.setupUi( this );
 
-	connect( d->m_ui.m_exec, SIGNAL( clicked() ),
-		this, SLOT( execute() ) );
-	connect( d->m_ui.m_toBegin, SIGNAL( clicked() ),
-		this, SLOT( goToStartPage() ) );
-	connect( d->m_ui.m_prev, SIGNAL( clicked() ),
-		this, SLOT( goToPreviousPage() ) );
-	connect( d->m_ui.m_next, SIGNAL( clicked() ),
-		this, SLOT( goToNextPage() ) );
-	connect( d->m_ui.m_toEnd, SIGNAL( clicked() ),
-		this, SLOT( goToEndPage() ) );
+	connect( d->m_ui.m_exec, &QCommandLinkButton::clicked,
+		this, &SelectQueryNavigation::execute );
+
+	connect( d->m_ui.m_toBegin, &QToolButton::clicked,
+		this, &SelectQueryNavigation::goToStartPage );
+
+	connect( d->m_ui.m_prev, &QToolButton::clicked,
+		this, &SelectQueryNavigation::goToPreviousPage );
+
+	connect( d->m_ui.m_next, &QToolButton::clicked,
+		this, &SelectQueryNavigation::goToNextPage );
+
+	connect( d->m_ui.m_toEnd, &QToolButton::clicked,
+		this, &SelectQueryNavigation::goToEndPage );
 }
 
 } /* namespace Globe */

@@ -196,14 +196,26 @@ PropertiesManager::init()
 	showAction->setShortcut( QKeySequence( tr( "Alt+P" ) ) );
 	d->m_toolWindowObject = new ToolWindowObject( showAction, this, this );
 
-	connect( d->m_ui.m_addAction, SIGNAL( triggered() ),
-		this, SLOT( addProperties() ) );
-	connect( d->m_ui.m_removeAction, SIGNAL( triggered() ),
-		this, SLOT( removeProperties() ) );
-	connect( d->m_ui.m_view, SIGNAL( clicked( const QModelIndex & ) ),
-		this, SLOT( itemSelected( const QModelIndex & ) ) );
-	connect( d->m_ui.m_editAction, SIGNAL( triggered() ),
-		this, SLOT( editProperties() ) );
+	void ( PropertiesManager::*addPropertiesSlot ) () =
+		&PropertiesManager::addProperties;
+
+	connect( d->m_ui.m_addAction, &QAction::triggered,
+		this, addPropertiesSlot );
+
+	void ( PropertiesManager::*removePropertiesSlot ) () =
+		&PropertiesManager::removeProperties;
+
+	connect( d->m_ui.m_removeAction, &QAction::triggered,
+		this, removePropertiesSlot );
+
+	connect( d->m_ui.m_view, &QTreeView::clicked,
+		this, &PropertiesManager::itemSelected );
+
+	void ( PropertiesManager::*editPropertiesSlot ) () =
+		&PropertiesManager::editProperties;
+
+	connect( d->m_ui.m_editAction, &QAction::triggered,
+		this, editPropertiesSlot );
 }
 
 void

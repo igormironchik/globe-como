@@ -3,6 +3,8 @@ TEMPLATE = subdirs
 
 SUBDIRS = Core \
           Scheme \
-          App
+          App \
+          LogViewer
 
 App.depends = Core Scheme
+LogViewer.depends = Core

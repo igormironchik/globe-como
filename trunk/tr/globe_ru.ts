@@ -1767,11 +1767,6 @@ Do you want to delete this file?</source>
 <context>
     <name>LogEventSelector</name>
     <message>
-        <location filename="../Globe/Core/log_event_selector.ui" line="26"/>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
-    <message>
         <location filename="../Globe/Core/log_event_selector.ui" line="64"/>
         <source>From</source>
         <translation>С</translation>
@@ -1794,11 +1789,6 @@ Do you want to delete this file?</source>
 </context>
 <context>
     <name>LogSourcesSelector</name>
-    <message>
-        <location filename="../Globe/Core/log_sources_selector.ui" line="26"/>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
     <message>
         <location filename="../Globe/Core/log_sources_selector.ui" line="40"/>
         <source>From</source>
@@ -1861,6 +1851,11 @@ Do you want to delete this file?</source>
 <context>
     <name>PropertiesKeyTypeDialog</name>
     <message>
+        <location filename="../Globe/Core/properties_key_type_dialog.ui" line="14"/>
+        <source>Select properties type...</source>
+        <translation>Выберите тип свойств...</translation>
+    </message>
+    <message>
         <location filename="../Globe/Core/properties_key_type_dialog.ui" line="20"/>
         <source>Properties Type</source>
         <translation>Тип свойств</translation>
@@ -1890,8 +1885,8 @@ Do you want to delete this file?</source>
     <name>PropertiesMainWindow</name>
     <message>
         <location filename="../Globe/Core/properties_mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation>Главное окно</translation>
+        <source>Properties</source>
+        <translation>Свойства</translation>
     </message>
     <message>
         <location filename="../Globe/Core/properties_mainwindow.ui" line="33"/>
@@ -1936,11 +1931,6 @@ Do you want to delete this file?</source>
 </context>
 <context>
     <name>SelectQueryNavigation</name>
-    <message>
-        <location filename="../Globe/Core/select_query_navigation.ui" line="26"/>
-        <source>Form</source>
-        <translation>Форма</translation>
-    </message>
     <message>
         <location filename="../Globe/Core/select_query_navigation.ui" line="44"/>
         <source>Select from Log</source>
@@ -1987,6 +1977,11 @@ Do you want to delete this file?</source>
 </context>
 <context>
     <name>SourceManualDialog</name>
+    <message>
+        <location filename="../Globe/Core/source_manual_dialog.ui" line="14"/>
+        <source>Fill in the form...</source>
+        <translation>Заполните форму</translation>
+    </message>
     <message>
         <location filename="../Globe/Core/source_manual_dialog.ui" line="22"/>
         <source>Name of the Channel</source>

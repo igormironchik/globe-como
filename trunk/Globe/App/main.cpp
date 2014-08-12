@@ -125,7 +125,7 @@ int main( int argc, char ** argv )
 	app->setWindowIcon( appIcon );
 
 	QTranslator appTranslator;
-	appTranslator.load( "./tr/" + QLocale::system().name() );
+	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
 	app->installTranslator( &appTranslator );
 
 	Globe::checkDirAndCreateIfNotExists( QLatin1String( "./" ),

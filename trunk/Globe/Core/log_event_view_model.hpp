@@ -36,7 +36,7 @@
 #include <QScopedPointer>
 
 // Globe include.
-#include<Globe/Core/log.hpp>
+#include <Globe/Core/log.hpp>
 
 
 namespace Globe {

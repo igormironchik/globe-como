@@ -148,22 +148,22 @@ public:
 
 		if( m_isNameSet && !m_isNameUnique )
 		{
-			m_message = m_parent->tr( "Channel with the given name already exists." );
+			m_message = ChannelAttributesDialog::tr( "Channel with the given name already exists." );
 			return;
 		}
 		else if( !m_isNameSet )
 		{
-			m_message = m_parent->tr( "Enter name of the channel." );
+			m_message = ChannelAttributesDialog::tr( "Enter name of the channel." );
 			return;
 		}
 		else if( !m_isIPSet )
 		{
-			m_message = m_parent->tr( "Enter IP address of the channel." );
+			m_message = ChannelAttributesDialog::tr( "Enter IP address of the channel." );
 			return;
 		}
 		else if( !m_isPortSet )
 		{
-			m_message = m_parent->tr( "Enter port number." );
+			m_message = ChannelAttributesDialog::tr( "Enter port number." );
 			return;
 		}
 
@@ -174,7 +174,7 @@ public:
 				highlightError( m_ui.m_ip );
 				highlightError( m_ui.m_port );
 
-				m_message = m_parent->tr(
+				m_message = ChannelAttributesDialog::tr(
 					"Channel with the given IP and port already exists." );
 
 				return;
@@ -184,7 +184,7 @@ public:
 				highlightNormal( m_ui.m_ip );
 				highlightNormal( m_ui.m_port );
 
-				m_message = m_parent->tr( "All is OK." );
+				m_message = ChannelAttributesDialog::tr( "All is OK." );
 			}
 		}
 

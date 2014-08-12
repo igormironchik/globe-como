@@ -67,7 +67,27 @@
       <widget class="QComboBox" name="m_valueType">
        <item>
         <property name="text">
+         <string>String</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
          <string>Int</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>UInt</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>LongLong</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>ULongLong</string>
         </property>
        </item>
        <item>
@@ -77,7 +97,12 @@
        </item>
        <item>
         <property name="text">
-         <string>String</string>
+         <string>DateTime</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Time</string>
         </property>
        </item>
       </widget>

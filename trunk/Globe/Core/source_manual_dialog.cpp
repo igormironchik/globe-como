@@ -126,12 +126,19 @@ SourceManualDialog::init()
 
 static inline Como::Source::Type typeFromComboBox( int index )
 {
-	if( index == 0 )
-		return Como::Source::Int;
-	else if( index == 1 )
-		return Como::Source::Double;
-	else
-		return Como::Source::String;
+	switch( index )
+	{
+		case 0 : return Como::Source::String;
+		case 1 : return Como::Source::Int;
+		case 2 : return Como::Source::UInt;
+		case 3 : return Como::Source::LongLong;
+		case 4 : return Como::Source::ULongLong;
+		case 5 : return Como::Source::Double;
+		case 6 : return Como::Source::DateTime;
+		case 7 : return Como::Source::Time;
+
+		default : return Como::Source::String;
+	}
 }
 
 void

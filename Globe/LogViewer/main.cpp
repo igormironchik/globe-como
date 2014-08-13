@@ -36,17 +36,17 @@
 #include <QString>
 #include <QDebug>
 #include <QSharedPointer>
-
-// Globe icnlude.
-#include <Globe/Core/configuration.hpp>
-#include <Globe/Core/log_event_view_window.hpp>
-#include <Globe/Core/log_sources_window.hpp>
+#include <QTimer>
 
 // QtArg include.
 #include <QtArg/CmdLine>
 #include <QtArg/Arg>
 #include <QtArg/Exceptions>
 #include <QtArg/Help>
+
+// LogViewer include.
+#include <LogViewer/configuration.hpp>
+#include <LogViewer/mainwindow.hpp>
 
 
 //
@@ -65,7 +65,7 @@ static QSharedPointer< QApplication > viewerApplication( int argc = 0, char ** a
 
 int main( int argc, char ** argv )
 {
-	QString cfgFile;
+	QString cfgFile = QLatin1String( "./etc/Globe.cfg" );;
 
 	try{
 		QtArgCmdLine cmdLine( argc, argv );
@@ -99,21 +99,22 @@ int main( int argc, char ** argv )
 
 	QSharedPointer< QApplication > app = viewerApplication( argc, argv );
 
-//	QIcon appIcon( ":/img/globe_256x256.png" );
-//	appIcon.addFile( ":/img/globe_128x128.png" );
-//	appIcon.addFile( ":/img/globe_64x64.png" );
-//	appIcon.addFile( ":/img/globe_48x48.png" );
-//	appIcon.addFile( ":/img/globe_32x32.png" );
-//	appIcon.addFile( ":/img/globe_22x22.png" );
-//	appIcon.addFile( ":/img/globe_16x16.png" );
-//	appIcon.addFile( ":/img/globe_8x8.png" );
-//	app->setWindowIcon( appIcon );
+	QIcon appIcon( ":/img/viewer_128x128.png" );
+	appIcon.addFile( ":/img/viewer_64x64.png" );
+	appIcon.addFile( ":/img/viewer_48x48.png" );
+	appIcon.addFile( ":/img/viewer_32x32.png" );
+	appIcon.addFile( ":/img/viewer_22x22.png" );
+	appIcon.addFile( ":/img/viewer_16x16.png" );
+	app->setWindowIcon( appIcon );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
 	app->installTranslator( &appTranslator );
 
-	Globe::Configuration::instance().setCfgFile( cfgFile );
+	LogViewer::Configuration::instance().setCfgFileName( cfgFile );
+
+	QTimer::singleShot( 0, &LogViewer::MainWindow::instance(),
+		SLOT( start() ) );
 
 	return app->exec();
 }

@@ -39,6 +39,8 @@
 #include <QItemSelectionModel>
 #include <QApplication>
 #include <QClipboard>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 
 namespace Globe {
@@ -211,6 +213,23 @@ LogEventView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 		painter->fillRect( option.rect, Qt::red );
 
 	QTreeView::drawRow( painter, option, index );
+}
+
+void
+LogEventView::contextMenuEvent( QContextMenuEvent * event )
+{
+	QMenu menu( this );
+
+	const QModelIndexList indexes = selectionModel()->selectedRows();
+
+	if( !indexes.isEmpty() )
+		menu.addAction( d->m_copyAction );
+
+	menu.addAction( d->m_selectAllAction );
+
+	menu.exec( event->globalPos() );
+
+	event->accept();
 }
 
 } /* namespace Globe */

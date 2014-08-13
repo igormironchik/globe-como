@@ -107,8 +107,12 @@ int main( int argc, char ** argv )
 	appIcon.addFile( ":/img/viewer_16x16.png" );
 	app->setWindowIcon( appIcon );
 
+	QTranslator globeTranslator;
+	globeTranslator.load( "./tr/globe_" + QLocale::system().name() );
+	app->installTranslator( &globeTranslator );
+
 	QTranslator appTranslator;
-	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
+	appTranslator.load( "./tr/logviewer_" + QLocale::system().name() );
 	app->installTranslator( &appTranslator );
 
 	LogViewer::Configuration::instance().setCfgFileName( cfgFile );

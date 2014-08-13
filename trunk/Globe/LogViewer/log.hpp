@@ -28,78 +28,67 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef LOGVIEWER__MAINWINDOW_HPP__INCLUDED
-#define LOGVIEWER__MAINWINDOW_HPP__INCLUDED
+#ifndef LOGVIEWER__LOG_HPP__INCLUDED
+#define LOGVIEWER__LOG_HPP__INCLUDED
 
 // Qt include.
-#include <QMainWindow>
+#include <QObject>
 #include <QScopedPointer>
+#include <QSqlQuery>
 
-// Globe include.
-#include <Globe/Core/log_event_view_model.hpp>
+
+QT_BEGIN_NAMESPACE
+class QDateTime;
+QT_END_NAMESPACE
 
 
 namespace LogViewer {
 
 //
-// MainWindow
+// Log
 //
 
-class MainWindowPrivate;
+class LogPrivate;
 
-//! Window with event log.
-class MainWindow
-	:	public QMainWindow
+//! Log.
+class Log
+	:	public QObject
 {
 	Q_OBJECT
 
-private:
-	MainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
-
-	~MainWindow();
+signals:
+	//! Emits when error occured.
+	void error();
+	//! Emits when log is ready.
+	void ready();
 
 public:
-	//! \return Instance.
-	static MainWindow & instance();
+	//! \return Instance of the log.
+	static Log & instance();
 
-private:
-	//! Init.
+	//! \return Date & time as string.
+	QString dateTimeToString( const QDateTime & dt );
+
+	//! Read all records from the event's log.
+	QSqlQuery readAllEventLog();
+	//! Read event's log for the given period of time.
+	QSqlQuery readEventLog( const QDateTime & from,
+		const QDateTime & to );
+
+	//! Initialize.
 	void init();
-	//! Set navigation buttons.
-	void setNavigationButtons();
-	//! \return List with log records.
-	QList< Globe::LogEventRecord > readLog();
-	//! \return List with log records.
-	QList< Globe::LogEventRecord > readLogFirstTime();
-
-public slots:
-	//! Start application.
-	void start();
-
-private slots:
-	//! Error in configuration.
-	void cfgError( const QString & what );
-	//! Error in log.
-	void logError();
-	//! Log is ready.
-	void logReady();
-	//! Select from log.
-	void selectFromLog();
-	//! Next log page.
-	void nextLogPage();
-	//! Previous log page.
-	void prevLogPage();
-	//! Go to the first log page.
-	void goToFirstLogPage();
-	//! Go to the last log page.
-	void goToLastLogPage();
 
 private:
-	Q_DISABLE_COPY( MainWindow )
+	Log( QObject * parent = 0 );
 
-	QScopedPointer< MainWindowPrivate > d;
-}; // class MainWindow
+	~Log();
+
+private:
+	Q_DISABLE_COPY( Log )
+
+	QScopedPointer< LogPrivate > d;
+}; // class Log
 
 } /* namespace LogViewer */
 
-#endif // LOGVIEWER__MAINWINDOW_HPP__INCLUDED
+#endif // LOGVIEWER__LOG_HPP__INCLUDED

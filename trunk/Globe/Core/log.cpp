@@ -53,7 +53,7 @@ namespace Globe {
 //
 
 //! State of the DB.
-enum DBSTate {
+enum DBState {
 	//! Unknown state.
 	UnknownDBState = 0,
 	//! All is ok in the DB.
@@ -147,7 +147,7 @@ public:
 	}
 
 	//! State of the DB.
-	DBSTate m_dbState;
+	DBState m_dbState;
 	//! Configuration.
 	LogCfg m_cfg;
 	//! State of  the log.

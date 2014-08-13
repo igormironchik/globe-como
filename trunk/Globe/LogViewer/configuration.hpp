@@ -28,78 +28,55 @@
 	OTHER DEALINGS IN THE SOFTWARE.
 */
 
-#ifndef LOGVIEWER__MAINWINDOW_HPP__INCLUDED
-#define LOGVIEWER__MAINWINDOW_HPP__INCLUDED
+#ifndef LOGVIEWER__CONFIGURATION_HPP__INCLUDED
+#define LOGVIEWER__CONFIGURATION_HPP__INCLUDED
 
 // Qt include.
-#include <QMainWindow>
-#include <QScopedPointer>
-
-// Globe include.
-#include <Globe/Core/log_event_view_model.hpp>
+#include <QString>
+#include <QObject>
 
 
 namespace LogViewer {
 
 //
-// MainWindow
+// Configuration
 //
 
-class MainWindowPrivate;
-
-//! Window with event log.
-class MainWindow
-	:	public QMainWindow
+//! Configuration.
+class Configuration
+	:	public QObject
 {
 	Q_OBJECT
 
-private:
-	MainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+signals:
+	//! Emits when error occured.
+	void error( const QString & );
 
-	~MainWindow();
+private:
+	Configuration();
+
+	~Configuration();
 
 public:
 	//! \return Instance.
-	static MainWindow & instance();
+	static Configuration & instance();
+
+	//! Set cfg file name.
+	void setCfgFileName( const QString & file );
+
+	//! Read configuration.
+	void readConfiguration();
+
+	//! \return File name of the DB.
+	const QString & dbFileName() const;
 
 private:
-	//! Init.
-	void init();
-	//! Set navigation buttons.
-	void setNavigationButtons();
-	//! \return List with log records.
-	QList< Globe::LogEventRecord > readLog();
-	//! \return List with log records.
-	QList< Globe::LogEventRecord > readLogFirstTime();
-
-public slots:
-	//! Start application.
-	void start();
-
-private slots:
-	//! Error in configuration.
-	void cfgError( const QString & what );
-	//! Error in log.
-	void logError();
-	//! Log is ready.
-	void logReady();
-	//! Select from log.
-	void selectFromLog();
-	//! Next log page.
-	void nextLogPage();
-	//! Previous log page.
-	void prevLogPage();
-	//! Go to the first log page.
-	void goToFirstLogPage();
-	//! Go to the last log page.
-	void goToLastLogPage();
-
-private:
-	Q_DISABLE_COPY( MainWindow )
-
-	QScopedPointer< MainWindowPrivate > d;
-}; // class MainWindow
+	//! File name of the DB.
+	QString m_dbFileName;
+	//! Cfg file name.
+	QString m_cfgFileName;
+}; // class Configuration
 
 } /* namespace LogViewer */
 
-#endif // LOGVIEWER__MAINWINDOW_HPP__INCLUDED
+#endif // LOGVIEWER__CONFIGURATION_HPP__INCLUDED

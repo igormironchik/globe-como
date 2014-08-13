@@ -9,12 +9,17 @@ win32 {
     RC_FILE = log_viewer.rc
 }
 
-RESOURCES = ../Core/resources.qrc
+RESOURCES = ../Core/resources.qrc \
+            log_viewer_resources.qrc
 
-HEADERS += mainwindow.hpp
+HEADERS += mainwindow.hpp \
+           configuration.hpp \
+           log.hpp
 
 SOURCES += main.cpp \
-           mainwindow.cpp
+           mainwindow.cpp \
+           configuration.cpp \
+           log.cpp
 
 win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme

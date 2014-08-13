@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/viewer_16x16.png</file>
+        <file>img/viewer_22x22.png</file>
+        <file>img/viewer_32x32.png</file>
+        <file>img/viewer_48x48.png</file>
+        <file>img/viewer_64x64.png</file>
+        <file>img/viewer_128x128.png</file>
+    </qresource>
+</RCC>

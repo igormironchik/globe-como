@@ -148,7 +148,7 @@ static QString boolToString( bool value )
 void
 ChannelView::copyImplementation()
 {
-	QModelIndexList indexes = selectionModel()->selectedRows();
+	QModelIndexList indexes = selectionModel()->selectedIndexes();
 
 	const int size = indexes.size();
 
@@ -159,7 +159,9 @@ ChannelView::copyImplementation()
 
 	QString text;
 
-	for( int i = 0; i < d->m_model->columnCount(); ++i )
+	const int columnsCount = d->m_model->columnCount();
+
+	for( int i = 0; i < columnsCount; ++i )
 	{
 		text.append( d->m_model->headerData( i, Qt::Horizontal,
 			Qt::DisplayRole ).toString() );
@@ -170,24 +172,20 @@ ChannelView::copyImplementation()
 	text.append( tr( "Registered" ) );
 	text.append( QLatin1String( ";\n" ) );
 
-	for( int i = 0; i < size; ++i )
+	for( int i = 0, c = 1; i < size; ++i, ++c )
 	{
-		const Como::Source & source = d->m_model->source( indexes[ i ] );
-		const bool isRegistered = d->m_model->isRegistered( indexes[ i ] );
-		const int priority = d->m_model->priority( indexes[ i ] );
+		text.append( d->m_model->data( indexes[ i ] ).toString() );
+		text.append( QLatin1String( ";" ) );
 
-		text.append( source.name() );
-		text.append( QLatin1String( ";" ) );
-		text.append( source.typeName() );
-		text.append( QLatin1String( ";" ) );
-		text.append( source.value().toString() );
-		text.append( QLatin1String( ";" ) );
-		text.append( source.dateTime().toString() );
-		text.append( QLatin1String( ";" ) );
-		text.append( QString::number( priority ) );
-		text.append( QLatin1String( ";" ) );
-		text.append( boolToString( isRegistered ) );
-		text.append( QLatin1String( ";\n" ) );
+		if( c == columnsCount )
+		{
+			const bool isRegistered = d->m_model->isRegistered( indexes[ i ] );
+
+			text.append( boolToString( isRegistered ) );
+			text.append( QLatin1String( ";\n" ) );
+
+			c = 0;
+		}
 	}
 
 	clipboard->setText( text );

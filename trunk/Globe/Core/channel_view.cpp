@@ -37,6 +37,8 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QTableView>
+#include <QContextMenuEvent>
+#include <QMenu>
 
 // Globe include.
 #include <Globe/Core/channel_view.hpp>
@@ -228,6 +230,27 @@ ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	}
 
 	QTreeView::drawRow( painter, option, index );
+}
+
+void
+ChannelView::contextMenuEvent( QContextMenuEvent * event )
+{
+	QMenu menu( this );
+
+	const QModelIndexList indexes = selectionModel()->selectedRows();
+
+	if( !indexes.isEmpty() )
+		menu.addAction( d->m_copyAction );
+
+	menu.addAction( d->m_selectAllAction );
+
+	menu.addSeparator();
+
+	menu.addAction( d->m_fillColorAction );
+
+	menu.exec( event->globalPos() );
+
+	event->accept();
 }
 
 void

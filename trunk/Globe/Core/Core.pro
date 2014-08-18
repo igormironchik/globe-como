@@ -58,6 +58,7 @@ HEADERS += application_cfg.hpp \
            properties_dialog.hpp \
            properties_key_type_dialog.hpp \
 		   properties_manager.hpp \
+		   properties_manager_view.hpp \
 		   properties_map.hpp \
            properties_model.hpp \
            properties_widget.hpp \
@@ -133,6 +134,7 @@ SOURCES += application_cfg.cpp \
            properties_dialog.cpp \
            properties_key_type_dialog.cpp \
 		   properties_manager.cpp \
+		   properties_manager_view.cpp \
 		   properties_map.cpp \
            properties_model.cpp \
            properties_widget.cpp \

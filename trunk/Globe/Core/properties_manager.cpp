@@ -189,6 +189,8 @@ PropertiesManager::init()
 	d->m_ui.m_view->setSortingEnabled( true );
 	d->m_ui.m_view->setRootIsDecorated( false );
 	d->m_ui.m_view->setAlternatingRowColors( true );
+	d->m_ui.m_view->setActions( d->m_ui.m_addAction,
+		d->m_ui.m_editAction, d->m_ui.m_removeAction );
 
 	d->m_ui.m_directory->setText( d->m_directoryName );
 
@@ -208,7 +210,7 @@ PropertiesManager::init()
 	connect( d->m_ui.m_removeAction, &QAction::triggered,
 		this, removePropertiesSlot );
 
-	connect( d->m_ui.m_view, &QTreeView::clicked,
+	connect( d->m_ui.m_view, &PropertiesManagerView::clicked,
 		this, &PropertiesManager::itemSelected );
 
 	void ( PropertiesManager::*editPropertiesSlot ) () =

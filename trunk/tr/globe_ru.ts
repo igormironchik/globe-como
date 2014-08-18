@@ -305,22 +305,22 @@ You can mix that attributes.</source>
 <context>
     <name>Globe::ChannelView</name>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="170"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="174"/>
         <source>Registered</source>
         <translation>Зарегистрирован</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="246"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="267"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="251"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="272"/>
         <source>Select All</source>
         <translation>Выбрать все</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="255"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="276"/>
         <source>Fill With Color</source>
         <translation>Залить цветом</translation>
     </message>
@@ -783,14 +783,34 @@ in &quot;%1&quot; file.</source>
 <context>
     <name>Globe::ConfigurationDialog</name>
     <message>
-        <location filename="../Globe/Core/configuration_dialog.cpp" line="345"/>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="346"/>
         <source>Open Sound</source>
         <translation>Открыть звуковой файл</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/configuration_dialog.cpp" line="347"/>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="348"/>
         <source>Sound Files (*.wav *.mp3 *.ogg)</source>
         <translation>Звуковые файлы (*.wav *.mp3 *.ogg)</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="389"/>
+        <source>Event log was cleared...</source>
+        <translation>Лог событий был очищен...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="390"/>
+        <source>Event log was cleared.</source>
+        <translation>Лог событий был очищен.</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="398"/>
+        <source>Sources log was cleared...</source>
+        <translation>Лог источников данных был очищен...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/configuration_dialog.cpp" line="399"/>
+        <source>Sources log was cleared.</source>
+        <translation>Лог источников данных был очищен.</translation>
     </message>
 </context>
 <context>
@@ -893,12 +913,12 @@ Default database will be used: &quot;%2&quot;.</source>
 <context>
     <name>Globe::Log</name>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="922"/>
+        <location filename="../Globe/Core/log.cpp" line="980"/>
         <source>Unable to read log configuration...</source>
         <translation>Не удалось загрузить конфигурацию лога...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="923"/>
+        <location filename="../Globe/Core/log.cpp" line="981"/>
         <source>Unable to read log configuration...
 
 %1</source>
@@ -907,12 +927,12 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="961"/>
+        <location filename="../Globe/Core/log.cpp" line="1019"/>
         <source>Unable to save log configuration...</source>
         <translation>Не удалось сохранить конфигурацию лога...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="962"/>
+        <location filename="../Globe/Core/log.cpp" line="1020"/>
         <source>Unable to save log configuration...
 
 %1</source>
@@ -924,12 +944,12 @@ Default database will be used: &quot;%2&quot;.</source>
 <context>
     <name>Globe::LogEventView</name>
     <message>
-        <location filename="../Globe/Core/log_event_view.cpp" line="99"/>
+        <location filename="../Globe/Core/log_event_view.cpp" line="101"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log_event_view.cpp" line="104"/>
+        <location filename="../Globe/Core/log_event_view.cpp" line="106"/>
         <source>Select All</source>
         <translation>Выбрать все</translation>
     </message>
@@ -1034,12 +1054,12 @@ Default database will be used: &quot;%2&quot;.</source>
 <context>
     <name>Globe::LogSourcesView</name>
     <message>
-        <location filename="../Globe/Core/log_sources_view.cpp" line="100"/>
+        <location filename="../Globe/Core/log_sources_view.cpp" line="102"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log_sources_view.cpp" line="105"/>
+        <location filename="../Globe/Core/log_sources_view.cpp" line="107"/>
         <source>Select All</source>
         <translation>Выбрать все</translation>
     </message>
@@ -1341,31 +1361,31 @@ Default database will be used: &quot;%2&quot;.</source>
         <translation>Менеджер свойств</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="195"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="197"/>
         <source>&amp;Properties</source>
         <translation>&amp;Свойства</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="196"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="198"/>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="226"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="228"/>
         <source>&amp;Tools</source>
         <translation>&amp;Инструменты</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="424"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="491"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="572"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="426"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="493"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="574"/>
         <source>Unable to save properties...</source>
         <translation>Не удалось сохранитьсвойства...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="425"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="492"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="573"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="427"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="494"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="575"/>
         <source>Unable to save properties...
 
 %1</source>
@@ -1374,12 +1394,12 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="607"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="609"/>
         <source>Unable to save properties configuration...</source>
         <translation>Не удалось сохранить конфигурацию свойств...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="608"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="610"/>
         <source>Unable to save properties configuration...
 
 %1</source>
@@ -1388,13 +1408,13 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="646"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="704"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="648"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="706"/>
         <source>Unable to read properties configuration...</source>
         <translation>Не удалось загрузить конфигурацию свойств...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="647"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="649"/>
         <source>Unable to read properties configuration...
 
 %1
@@ -1407,7 +1427,7 @@ Do you want to delete this file?</source>
 Хотите ли Вы удалить этот файл?</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="705"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="707"/>
         <source>Unable to read properties configuration...
 
 %1</source>
@@ -1416,18 +1436,18 @@ Do you want to delete this file?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="784"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="803"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="786"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="805"/>
         <source>Deletion of the propertie...</source>
         <translation>Удаление свойства...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="785"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="787"/>
         <source>You are about to delete propertie. Are you sure?</source>
         <translation>Вы собираетесь удалить свойство. Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="804"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="806"/>
         <source>Delete the file &quot;%1&quot; with propertie defenitions?</source>
         <translation>Удалить файл &quot;%1&quot; с определениями свойства?</translation>
     </message>
@@ -1823,6 +1843,50 @@ Do you want to delete this file?</source>
         <location filename="../Globe/Core/log_sources_selector.ui" line="185"/>
         <source>Source Name</source>
         <translation>Источник данных</translation>
+    </message>
+</context>
+<context>
+    <name>LogViewer::Configuration</name>
+    <message>
+        <location filename="../Globe/LogViewer/configuration.cpp" line="93"/>
+        <source>Unable to load Globe&apos;s configuration file...
+
+%1</source>
+        <translation>Ну удалось загрузить конфигурационный файл Globe...
+
+%1</translation>
+    </message>
+    <message>
+        <location filename="../Globe/LogViewer/configuration.cpp" line="109"/>
+        <source>Unable to read DB configuration...
+
+%1</source>
+        <translation>Не удалось загрузить конфигурацию БД...
+
+%1</translation>
+    </message>
+</context>
+<context>
+    <name>LogViewer::MainWindow</name>
+    <message>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="115"/>
+        <source>Event Log</source>
+        <translation>Лог событий</translation>
+    </message>
+    <message>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="235"/>
+        <source>Error in configuration...</source>
+        <translation>Ошибка в конфигурации...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="244"/>
+        <source>Unable to open database...</source>
+        <translation>Не удалось открыть БД...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="245"/>
+        <source>Unable to open database.</source>
+        <translation>Не удалось открыть БД.</translation>
     </message>
 </context>
 <context>

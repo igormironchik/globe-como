@@ -36,8 +36,6 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QTimer>
-#include <QRunnable>
-#include <QThreadPool>
 
 // Globe include.
 #include <Globe/Core/log.hpp>
@@ -139,60 +137,6 @@ static inline QString dateTimeToString( const QDateTime & dt )
 {
 	return dt.toString( QLatin1String( "yyyy-MM-dd hh:mm:ss.zzz" ) );
 }
-
-
-//
-// SourcesLogWritter
-//
-
-class SourcesLogWritter
-	:	public QRunnable
-{
-public:
-	void setData( const QDateTime & dateTime,
-		const QString & channelName,
-		Como::Source::Type type,
-		const QString & sourceName,
-		const QString & typeName,
-		const QVariant & value,
-		const QString & desc )
-	{
-		m_dateTime = dateTime;
-		m_channelName = channelName;
-		m_type = type;
-		m_sourceName = sourceName;
-		m_typeName = typeName;
-		m_value = value;
-		m_desc = desc;
-	}
-
-	void run()
-	{
-		QSqlQuery insert( QLatin1String(
-			"INSERT INTO sourcesLog ( dateTime, channelName, type, "
-			"sourceName, typeName, value, desc ) "
-			"VALUES ( ?, ?, ?, ?, ?, ?, ? )" ) );
-
-		insert.addBindValue( dateTimeToString( m_dateTime ) );
-		insert.addBindValue( m_channelName );
-		insert.addBindValue( (int) m_type );
-		insert.addBindValue( m_sourceName );
-		insert.addBindValue( m_typeName );
-		insert.addBindValue( m_value.toString() );
-		insert.addBindValue( m_desc );
-
-		insert.exec();
-	}
-
-private:
-	QDateTime m_dateTime;
-	QString m_channelName;
-	Como::Source::Type m_type;
-	QString m_sourceName;
-	QString m_typeName;
-	QVariant m_value;
-	QString m_desc;
-}; // class SourcesLogWritter
 
 
 //
@@ -379,12 +323,20 @@ Log::writeMsgToSourcesLog( const QDateTime & dateTime,
 		if( d->m_logState == ReadyLogState &&
 			d->m_dbState == AllIsOkDBState )
 		{
-			SourcesLogWritter * sourcesLogWritter = new SourcesLogWritter;
+			QSqlQuery insert( QLatin1String(
+				"INSERT INTO sourcesLog ( dateTime, channelName, type, "
+				"sourceName, typeName, value, desc ) "
+				"VALUES ( ?, ?, ?, ?, ?, ?, ? )" ) );
 
-			sourcesLogWritter->setData( dateTime, channelName,
-				type, sourceName, typeName, value, desc );
+			insert.addBindValue( dateTimeToString( dateTime ) );
+			insert.addBindValue( channelName );
+			insert.addBindValue( (int) type );
+			insert.addBindValue( sourceName );
+			insert.addBindValue( typeName );
+			insert.addBindValue( value.toString() );
+			insert.addBindValue( desc );
 
-			QThreadPool::globalInstance()->start( sourcesLogWritter );
+			insert.exec();
 		}
 	}
 }

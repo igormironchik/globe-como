@@ -50,6 +50,7 @@
 #include <QToolButton>
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QMessageBox>
 
 
 namespace Globe {
@@ -384,12 +385,18 @@ void
 ConfigurationDialog::clearEventLog()
 {
 	Log::instance().clearEventsLog();
+
+	QMessageBox::information( this, tr( "Event log was cleared..." ),
+		tr( "Event log was cleared." ) );
 }
 
 void
 ConfigurationDialog::clearSourcesLog()
 {
 	Log::instance().clearSourcesLog();
+
+	QMessageBox::information( this, tr( "Sources log was cleared..." ),
+		tr( "Sources log was cleared." ) );
 }
 
 } /* namespace Globe */

@@ -40,6 +40,8 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QPainter>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 
 namespace Globe {
@@ -196,6 +198,23 @@ LogSourcesView::drawRow( QPainter * painter, const QStyleOptionViewItem & option
 		ColorForLevel::instance().color( level ) );
 
 	QTreeView::drawRow( painter, option, index );
+}
+
+void
+LogSourcesView::contextMenuEvent( QContextMenuEvent * event )
+{
+	QMenu menu( this );
+
+	const QModelIndexList indexes = selectionModel()->selectedRows();
+
+	if( !indexes.isEmpty() )
+		menu.addAction( d->m_copyAction );
+
+	menu.addAction( d->m_selectAllAction );
+
+	menu.exec( event->globalPos() );
+
+	event->accept();
 }
 
 } /* namespace Globe */

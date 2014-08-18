@@ -164,8 +164,6 @@ private:
 	//! Insert record into event's log.
 	void insertMsgIntoEventLog( LogLevel level, const QDateTime & dateTime,
 		const QString & msg );
-	//! Convert QDateTime into string.
-	QString dateTimeToString( const QDateTime & dt );
 
 private slots:
 	//! DB is ready.

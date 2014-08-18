@@ -45,7 +45,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QTreeView" name="m_view"/>
+     <widget class="Globe::PropertiesManagerView" name="m_view"/>
     </item>
    </layout>
    <zorder>m_view</zorder>
@@ -108,6 +108,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Globe::PropertiesManagerView</class>
+   <extends>QTreeView</extends>
+   <header>properties_manager_view.hpp</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="resources.qrc"/>
   <include location="resources.qrc"/>

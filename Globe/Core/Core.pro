@@ -179,3 +179,7 @@ FORMS	 = channels_to_show.ui \
            source_manual_dialog.ui \
 		   sources_widget.ui \
 		   sounds_disabled_to_dialog.ui
+		   
+exists( ../../como_defines.pri ) {
+    include( ../../como_defines.pri )
+}

@@ -45,3 +45,7 @@ SOURCES += item_base_cfg.cpp \
 
 FORMS +=   size_dialog.ui \
            text_dialog.ui
+           
+exists( ../../como_defines.pri ) {
+    include( ../../como_defines.pri )
+}

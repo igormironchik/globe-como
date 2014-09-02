@@ -27,3 +27,7 @@ else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/Q
 else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../../lib/libQtConfFile.a $$OUT_PWD/../../lib/libComo.a $$OUT_PWD/../../lib/Globe.Core.a $$OUT_PWD/../../lib/Globe.Scheme.a
 
 include ( ../../QtArg/qtarg.pri )
+
+exists( ../../como_defines.pri ) {
+    include( ../../como_defines.pri )
+}

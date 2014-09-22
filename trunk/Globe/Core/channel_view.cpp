@@ -44,6 +44,7 @@
 #include <Globe/Core/channel_view.hpp>
 #include <Globe/Core/channel_view_window_model.hpp>
 #include <Globe/Core/color_for_level.hpp>
+#include <Globe/Core/properties_manager.hpp>
 
 
 namespace Globe {
@@ -60,6 +61,10 @@ public:
 		,	m_copyAction( 0 )
 		,	m_selectAllAction( 0 )
 		,	m_fillColorAction( 0 )
+		,	m_editPropertiesAction( 0 )
+		,	m_deletePropertiesAction( 0 )
+		,	m_addPropertiesAction( 0 )
+		,	m_promotePropertiesAction( 0 )
 	{
 	}
 
@@ -73,6 +78,18 @@ public:
 	QAction * m_selectAllAction;
 	//! Action for turning on/off coloring of view.
 	QAction * m_fillColorAction;
+	//! Action for editing of properties.
+	QAction * m_editPropertiesAction;
+	//! Action for deleteion of properties.
+	QAction * m_deletePropertiesAction;
+	//! Action for adding of properties.
+	QAction * m_addPropertiesAction;
+	//! Action for promoting of properties.
+	QAction * m_promotePropertiesAction;
+	//! Current source.
+	Como::Source m_currentSource;
+	//! Key for current properties.
+	PropertiesKey m_currentKey;
 }; // class ChannelViewPrivate
 
 
@@ -208,6 +225,31 @@ ChannelView::colorForLevelChanged()
 }
 
 void
+ChannelView::addProperties()
+{
+	PropertiesManager::instance().addProperties( d->m_currentSource,
+		d->m_model->channelName(), this );
+}
+
+void
+ChannelView::editProperties()
+{
+	PropertiesManager::instance().editProperties( d->m_currentKey, this );
+}
+
+void
+ChannelView::deleteProperties()
+{
+	PropertiesManager::instance().removeProperties( d->m_currentKey, this );
+}
+
+void
+ChannelView::promoteProperties()
+{
+	PropertiesManager::instance().promoteProperties( d->m_currentKey, this );
+}
+
+void
 ChannelView::drawRow( QPainter * painter, const QStyleOptionViewItem & option,
 	const QModelIndex & index ) const
 {
@@ -247,6 +289,27 @@ ChannelView::contextMenuEvent( QContextMenuEvent * event )
 	menu.addSeparator();
 
 	menu.addAction( d->m_fillColorAction );
+
+	const QModelIndex index = d->m_sortModel->mapToSource( currentIndex() );
+
+	if( index.isValid() )
+	{
+		menu.addSeparator();
+
+		d->m_currentSource = d->m_model->source( index );
+
+		const Properties * p = PropertiesManager::instance().findProperties(
+			d->m_currentSource, d->m_model->channelName(), &d->m_currentKey );
+
+		if( p )
+		{
+			menu.addAction( d->m_editPropertiesAction );
+			menu.addAction( d->m_promotePropertiesAction );
+			menu.addAction( d->m_deletePropertiesAction );
+		}
+		else
+			menu.addAction( d->m_addPropertiesAction );
+	}
 
 	menu.exec( event->globalPos() );
 
@@ -290,6 +353,24 @@ ChannelView::init()
 		this, &ChannelView::fillWithColorChanged );
 	connect( &ColorForLevel::instance(), &ColorForLevel::changed,
 		this, &ChannelView::colorForLevelChanged );
+
+	d->m_addPropertiesAction = new QAction( QIcon( ":/img/add_22x22.png" ),
+		tr( "Add Properties" ), this );
+	d->m_editPropertiesAction = new QAction( QIcon( ":/img/edit_22x22.png" ),
+		tr( "Edit Properties" ), this );
+	d->m_deletePropertiesAction = new QAction( QIcon( ":/img/remove_22x22.png" ),
+		tr( "Delete Properties" ), this );
+	d->m_promotePropertiesAction = new QAction( QIcon( ":/img/export_22x22.png" ),
+		tr( "Promote Properties To" ), this );
+
+	connect( d->m_addPropertiesAction, &QAction::triggered,
+		this, &ChannelView::addProperties );
+	connect( d->m_editPropertiesAction, &QAction::triggered,
+		this, &ChannelView::editProperties );
+	connect( d->m_deletePropertiesAction, &QAction::triggered,
+		this, &ChannelView::deleteProperties );
+	connect( d->m_promotePropertiesAction, &QAction::triggered,
+		this, &ChannelView::promoteProperties );
 
 	d->m_model = new ChannelViewWindowModel( this );
 

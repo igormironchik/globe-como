@@ -66,11 +66,12 @@ static const QString defaultConfigurationDirectory =
 
 class PropertiesManagerPrivate {
 public:
-	PropertiesManagerPrivate()
+	explicit PropertiesManagerPrivate( PropertiesManager * parent )
 		:	m_model( 0 )
 		,	m_sortModel( 0 )
 		,	m_directoryName( defaultConfigurationDirectory )
 		,	m_toolWindowObject( 0 )
+		,	m_parent( parent )
 	{
 	}
 
@@ -128,6 +129,133 @@ public:
 		keyExists = false;
 	}
 
+	//! Save new properties.
+	void saveNewProperties( const PropertiesKey & key, const Properties & p,
+		const Como::Source & source,
+		PropertiesKeyType type,
+		const QString & sourceAsString,
+		const QString & keyAsString,
+		const QString & channelName,
+		QWidget * parent )
+	{
+		QString fileName;
+
+		PropertiesCfgFileNameDialog fileNameDialog( fileName,
+			m_directoryName, ( parent ? parent : m_parent ) );
+
+		if( fileNameDialog.exec() == QDialog::Accepted )
+		{
+			PropertiesValue value( fileName, source.type(), p );
+
+			if( type == ExactlyThisSource )
+				m_exactlyThisSourceMap.insert( key, value );
+			else if( type == ExactlyThisSourceInAnyChannel )
+				m_exactlyThisSourceInAnyChannelMap.insert( key, value );
+			else if( type == ExactlyThisTypeOfSource )
+				m_exactlyThisTypeOfSourceMap.insert( key, value );
+			else
+				m_exactlyThisTypeOfSourceInAnyChannelMap.insert( key, value );
+
+			m_model->addPropertie( key, value );
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Properties for source %1\n"
+					"and key %2\n"
+					"from channel \"%3\" has been added.\n"
+					"New properties will be saved into file \"%4\"." )
+						.arg( sourceAsString )
+						.arg( keyAsString )
+						.arg( channelName )
+						.arg( fileName ) );
+
+			try {
+				savePropertiesConfiguration( m_directoryName + fileName,
+					p, source.type() );
+
+				Log::instance().writeMsgToEventLog( LogLevelInfo,
+					QString( "Properties for source %1\n"
+						"and key %2\n"
+						"from channel \"%3\" was saved in file \"%4\"." )
+							.arg( sourceAsString )
+							.arg( keyAsString )
+							.arg( channelName )
+							.arg( fileName ) );
+			}
+			catch( const QtConfFile::Exception & x )
+			{
+				Log::instance().writeMsgToEventLog( LogLevelError,
+					QString( "Unable to save properties for source %1\n"
+						"and key %2\n"
+						"from channel \"%3\" to file \"%4\".\n"
+						"%5" )
+							.arg( sourceAsString )
+							.arg( keyAsString )
+							.arg( channelName )
+							.arg( fileName )
+							.arg( x.whatAsQString() ) );
+
+				QMessageBox::critical( 0,
+					QObject::tr( "Unable to save properties..." ),
+					QObject::tr( "Unable to save properties...\n\n%1" )
+						.arg( x.whatAsQString() ) );
+			}
+		}
+	}
+
+	//! Save old properties.
+	void saveOldProperties( PropertiesMap::Iterator & it, const Properties & p,
+		const QString & sourceAsString, const QString & keyAsString,
+		const QString & channelName )
+	{
+		it.value().properties() = p;
+
+		const QString propertieConfFileName =
+			m_directoryName + it.value().confFileName();
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Properties for source %1\n"
+				"and key %2\n"
+				"from channel \"%3\" has been changed.\n"
+				"New properties will be saved into file \"%4\"." )
+					.arg( sourceAsString )
+					.arg( keyAsString )
+					.arg( channelName )
+					.arg( propertieConfFileName ) );
+
+		try {
+			savePropertiesConfiguration( propertieConfFileName,
+				it.value().properties(), it.value().valueType() );
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Properties for source %1\n"
+					"and key %2\n"
+					"from channel \"%3\"\n"
+					"was saved in file \"%4\"." )
+						.arg( sourceAsString )
+						.arg( keyAsString )
+						.arg( channelName )
+						.arg( propertieConfFileName ) );
+		}
+		catch( const QtConfFile::Exception & x )
+		{
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to save properties for source %1\n"
+					"and key %2\n"
+					"from channel \"%3\" to file \"%4\".\n"
+					"%5" )
+						.arg( sourceAsString )
+						.arg( keyAsString )
+						.arg( channelName )
+						.arg( propertieConfFileName )
+						.arg( x.whatAsQString() ) );
+
+			QMessageBox::critical( 0,
+				QObject::tr( "Unable to save properties..." ),
+				QObject::tr( "Unable to save properties...\n\n%1" )
+					.arg( x.whatAsQString() ) );
+		}
+	}
+
 	//! Properties map for "ExactlyThisSource" key's type.
 	PropertiesMap m_exactlyThisSourceMap;
 	//! Properties map for "ExactlyThisSourceInAnyChannel" key's type.
@@ -146,6 +274,8 @@ public:
 	QSortFilterProxyModel * m_sortModel;
 	//! Tool window object.
 	ToolWindowObject * m_toolWindowObject;
+	//! Parent.
+	PropertiesManager * m_parent;
 }; // class PropertiesManagerPrivate
 
 
@@ -155,7 +285,7 @@ public:
 
 PropertiesManager::PropertiesManager( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new PropertiesManagerPrivate )
+	,	d( new PropertiesManagerPrivate( this ) )
 {
 	init();
 }
@@ -190,7 +320,8 @@ PropertiesManager::init()
 	d->m_ui.m_view->setRootIsDecorated( false );
 	d->m_ui.m_view->setAlternatingRowColors( true );
 	d->m_ui.m_view->setActions( d->m_ui.m_addAction,
-		d->m_ui.m_editAction, d->m_ui.m_removeAction );
+		d->m_ui.m_editAction, d->m_ui.m_removeAction,
+		d->m_ui.m_promoteAction );
 
 	d->m_ui.m_directory->setText( d->m_directoryName );
 
@@ -218,6 +349,12 @@ PropertiesManager::init()
 
 	connect( d->m_ui.m_editAction, &QAction::triggered,
 		this, editPropertiesSlot );
+
+	void ( PropertiesManager::*promotePropertiesSlot ) () =
+		&PropertiesManager::promoteProperties;
+
+	connect( d->m_ui.m_promoteAction, &QAction::triggered,
+		this, promotePropertiesSlot );
 }
 
 void
@@ -380,121 +517,16 @@ PropertiesManager::addProperties( const Como::Source & source,
 		{
 			if( propertiesExists )
 			{
-				it.value().properties() =
-					propertiesDialog.propertiesWidget()->properties();
-
-				const QString propertieConfFileName =
-					d->m_directoryName + it.value().confFileName();
-
-				Log::instance().writeMsgToEventLog( LogLevelInfo,
-					QString( "Properties for source %1\n"
-						"and key %2\n"
-						"from channel \"%3\" has been changed.\n"
-						"New properties will be saved into file \"%4\"." )
-							.arg( sourceAsString )
-							.arg( keyAsString )
-							.arg( channelName )
-							.arg( propertieConfFileName ) );
-
-				try {
-					savePropertiesConfiguration( propertieConfFileName,
-						it.value().properties(), it.value().valueType() );
-
-					Log::instance().writeMsgToEventLog( LogLevelInfo,
-						QString( "Properties for source %1\n"
-							"and key %2\n"
-							"from channel \"%3\"\n"
-							"was saved in file \"%4\"." )
-								.arg( sourceAsString )
-								.arg( keyAsString )
-								.arg( channelName )
-								.arg( propertieConfFileName ) );
-				}
-				catch( const QtConfFile::Exception & x )
-				{
-					Log::instance().writeMsgToEventLog( LogLevelError,
-						QString( "Unable to save properties for source %1\n"
-							"and key %2\n"
-							"from channel \"%3\" to file \"%4\".\n"
-							"%5" )
-								.arg( sourceAsString )
-								.arg( keyAsString )
-								.arg( channelName )
-								.arg( propertieConfFileName )
-								.arg( x.whatAsQString() ) );
-
-					QMessageBox::critical( 0, tr( "Unable to save properties..." ),
-						tr( "Unable to save properties...\n\n%1" )
-							.arg( x.whatAsQString() ) );
-				}
+				d->saveOldProperties( it,
+					propertiesDialog.propertiesWidget()->properties(),
+					sourceAsString, keyAsString, channelName );
 			}
 			else
 			{
-				QString fileName;
-
-				PropertiesCfgFileNameDialog fileNameDialog( fileName,
-					d->m_directoryName, ( parent ? parent : this ) );
-
-				if( fileNameDialog.exec() == QDialog::Accepted )
-				{
-					const Properties properties =
-						propertiesDialog.propertiesWidget()->properties();
-
-					PropertiesValue value( fileName,
-						source.type(), properties );
-
-					if( type == ExactlyThisSource )
-						d->m_exactlyThisSourceMap.insert( key, value );
-					else if( type == ExactlyThisSourceInAnyChannel )
-						d->m_exactlyThisSourceInAnyChannelMap.insert( key, value );
-					else if( type == ExactlyThisTypeOfSource )
-						d->m_exactlyThisTypeOfSourceMap.insert( key, value );
-					else
-						d->m_exactlyThisTypeOfSourceInAnyChannelMap.insert( key, value );
-
-					d->m_model->addPropertie( key, value );
-
-					Log::instance().writeMsgToEventLog( LogLevelInfo,
-						QString( "Properties for source %1\n"
-							"and key %2\n"
-							"from channel \"%3\" has been added.\n"
-							"New properties will be saved into file \"%4\"." )
-								.arg( sourceAsString )
-								.arg( keyAsString )
-								.arg( channelName )
-								.arg( fileName ) );
-
-					try {
-						savePropertiesConfiguration( d->m_directoryName + fileName,
-							properties, source.type() );
-
-						Log::instance().writeMsgToEventLog( LogLevelInfo,
-							QString( "Properties for source %1\n"
-								"and key %2\n"
-								"from channel \"%3\" was saved in file \"%4\"." )
-									.arg( sourceAsString )
-									.arg( keyAsString )
-									.arg( channelName )
-									.arg( fileName ) );
-					}
-					catch( const QtConfFile::Exception & x )
-					{
-						Log::instance().writeMsgToEventLog( LogLevelError,
-							QString( "Unable to save properties for source %1\n"
-								"and key %2\n"
-								"from channel \"%3\" to file \"%4\".\n"
-								"%5" )
-									.arg( sourceAsString )
-									.arg( keyAsString )
-									.arg( channelName )
-									.arg( fileName )
-									.arg( x.whatAsQString() ) );
-
-						QMessageBox::critical( 0, tr( "Unable to save properties..." ),
-							tr( "Unable to save properties...\n\n%1" )
-								.arg( x.whatAsQString() ) );
-					}
-				}
+				d->saveNewProperties( key,
+					propertiesDialog.propertiesWidget()->properties(),
+					source, type, sourceAsString, keyAsString,
+					channelName, parent );
 			}
 		}
 	}
@@ -574,6 +606,114 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 				QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 					tr( "Unable to save properties...\n\n%1" )
 						.arg( x.whatAsQString() ) );
+			}
+		}
+	}
+}
+
+void
+PropertiesManager::promoteProperties( const PropertiesKey & key,
+	QWidget * parent )
+{
+	Como::Source source;
+	QString channelName;
+
+	SourcesDialog sourcesDialog( source, channelName, this );
+
+	if( sourcesDialog.exec() == QDialog::Accepted )
+	{
+		PropertiesKeyType type = NotDefinedKeyType;
+
+		PropertiesKeyTypeDialog	keyTypeDialog( type, ( parent ? parent : this ) );
+
+		if( keyTypeDialog.exec() == QDialog::Accepted )
+		{
+			PropertiesKey newKey = createKey( type, source, channelName );
+
+			const QString sourceAsString = sourceToString( source );
+			const QString keyAsString = keyToString( newKey );
+
+			PropertiesDialog propertiesDialog( d->m_directoryName,
+				source.type(), ( parent ? parent : this ) );
+
+			PropertiesMap::Iterator it, from;
+			bool propertiesExists = false;
+
+			d->findByKey( newKey, it, propertiesExists );
+
+			QMessageBox::StandardButton button = QMessageBox::NoButton;
+
+			if( propertiesExists )
+			{
+				button = QMessageBox::question( 0,
+					tr( "Such properties already exists..." ),
+					tr( "Do you want to edit existing properties?" ),
+					QMessageBox::StandardButtons(
+						QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel ),
+					QMessageBox::Cancel );
+
+				switch( button )
+				{
+					case QMessageBox::Yes :
+						propertiesDialog.propertiesWidget()->
+							setProperties( it.value().properties() );
+
+						break;
+
+					case QMessageBox::No :
+						{
+							propertiesExists = false;
+
+							d->findByKey( key, from, propertiesExists );
+
+							if( propertiesExists )
+								propertiesDialog.propertiesWidget()->
+									setProperties( from.value().properties() );
+						}
+
+						break;
+
+					case QMessageBox::Cancel :
+						return;
+
+					default :
+						return;
+				}
+			}
+			else
+			{
+				propertiesExists = false;
+
+				d->findByKey( key, from, propertiesExists );
+
+				if( propertiesExists )
+					propertiesDialog.propertiesWidget()->
+						setProperties( from.value().properties() );
+			}
+
+			if( propertiesDialog.exec() == QDialog::Accepted )
+			{
+				switch( button )
+				{
+					case QMessageBox::Yes :
+						{
+							d->saveOldProperties( it,
+								propertiesDialog.propertiesWidget()->properties(),
+								sourceAsString, keyAsString, channelName );
+						}
+
+						break;
+
+					default :
+						{
+							d->saveNewProperties( newKey,
+								propertiesDialog.propertiesWidget()->properties(),
+								source, type, sourceAsString, keyAsString,
+								channelName, parent );
+						}
+
+						break;
+				}
 			}
 		}
 	}
@@ -821,6 +961,7 @@ PropertiesManager::removeProperties()
 
 			d->m_ui.m_removeAction->setEnabled( false );
 			d->m_ui.m_editAction->setEnabled( false );
+			d->m_ui.m_promoteAction->setEnabled( false );
 		}
 	}
 }
@@ -832,6 +973,7 @@ PropertiesManager::itemSelected( const QModelIndex & index )
 	{
 		d->m_ui.m_removeAction->setEnabled( true );
 		d->m_ui.m_editAction->setEnabled( true );
+		d->m_ui.m_promoteAction->setEnabled( true );
 	}
 }
 
@@ -843,6 +985,16 @@ PropertiesManager::editProperties()
 
 	if( index.isValid() )
 		editProperties( d->m_model->key( index.row() ) );
+}
+
+void
+PropertiesManager::promoteProperties()
+{
+	const QModelIndex index = d->m_sortModel->mapToSource(
+		d->m_ui.m_view->currentIndex() );
+
+	if( index.isValid() )
+		promoteProperties( d->m_model->key( index.row() ) );
 }
 
 } /* namespace Globe */

@@ -81,6 +81,8 @@ public:
 	void removeProperties( const PropertiesKey & key, QWidget * parent = 0 );
 	//! Edit properties.
 	void editProperties( const PropertiesKey & key, QWidget * parent = 0 );
+	//! Promote properties to the new one.
+	void promoteProperties( const PropertiesKey & key, QWidget * parent = 0 );
 
 	//! Save properties manager configuration.
 	void saveConfiguration( const QString & fileName );
@@ -116,6 +118,8 @@ private slots:
 	void itemSelected( const QModelIndex & index );
 	//! Edit properties.
 	void editProperties();
+	//! Promote properties.
+	void promoteProperties();
 
 private:
 	Q_DISABLE_COPY( PropertiesManager )

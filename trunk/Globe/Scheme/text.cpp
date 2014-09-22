@@ -290,7 +290,7 @@ Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 			break;
 		}
 
-		if( x != pos().x() || y != pos().y() )
+		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )
 			setPos( x, y );
 
 		if( width != d->m_width || height != d->m_height )

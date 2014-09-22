@@ -62,7 +62,8 @@ public:
 	virtual ~PropertiesManagerView();
 
 	//! Set actions.
-	void setActions( QAction * add, QAction * edit, QAction * del );
+	void setActions( QAction * add, QAction * edit,
+		QAction * del, QAction * promote );
 
 protected:
 	virtual void contextMenuEvent( QContextMenuEvent * e );

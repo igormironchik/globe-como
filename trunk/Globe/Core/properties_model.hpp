@@ -65,10 +65,14 @@ public:
 
 	//! \return Properties key for the given row.
 	PropertiesKey key( int row ) const;
+	//! \return Row for the given key.
+	int rowForKey( const PropertiesKey & key ) const;
 	// Add propertie.
 	void addPropertie( const PropertiesKey & key, const PropertiesValue & value );
 	//! Remove propertie.
 	void removePropertie( int row );
+	//! Remove propertie.
+	void removePropertie( const PropertiesKey & key );
 
 	//! Clear model.
 	void clear();

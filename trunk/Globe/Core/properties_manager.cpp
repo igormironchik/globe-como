@@ -535,21 +535,56 @@ PropertiesManager::addProperties( const Como::Source & source,
 void
 PropertiesManager::removeProperties( const PropertiesKey & key,
 	QWidget * parent )
-{
-	Q_UNUSED( parent )
+{	
+	QMessageBox::StandardButton deletePropertieButton =
+		QMessageBox::question( parent, tr( "Deletion of the propertie..." ),
+			tr( "You are about to delete propertie. Are you sure?" ),
+			QMessageBox::Ok | QMessageBox::Cancel,
+			QMessageBox::Cancel );
 
-	if( key.keyType() == ExactlyThisSource )
-		d->m_exactlyThisSourceMap.remove( key );
-	else if( key.keyType() == ExactlyThisSourceInAnyChannel )
-		d->m_exactlyThisSourceInAnyChannelMap.remove( key );
-	else if( key.keyType() == ExactlyThisTypeOfSource )
-		d->m_exactlyThisTypeOfSourceMap.remove( key );
-	else
-		d->m_exactlyThisTypeOfSourceInAnyChannelMap.remove( key );
+	if( deletePropertieButton == QMessageBox::Ok )
+	{
+		PropertiesMap::Iterator it;
+		bool propertiesExists = false;
 
-	Log::instance().writeMsgToEventLog( LogLevelInfo,
-		QString( "Properties for key %1 was deleted." )
-			.arg( keyToString( key ) ) );
+		d->findByKey( key, it, propertiesExists );
+
+		if( propertiesExists )
+		{
+			QMessageBox::StandardButton deleteFileButton =
+				QMessageBox::question( parent,
+					tr( "Deletion of the propertie..." ),
+					tr( "Delete the file \"%1\" with propertie defenitions?" )
+						.arg( it.value().confFileName() ),
+					QMessageBox::Ok | QMessageBox::Cancel,
+					QMessageBox::Cancel );
+
+			if( deleteFileButton == QMessageBox::Ok )
+			{
+				QFile confFile( d->m_directoryName + it.value().confFileName() );
+				confFile.remove();
+			}
+		}
+
+		if( key.keyType() == ExactlyThisSource )
+			d->m_exactlyThisSourceMap.remove( key );
+		else if( key.keyType() == ExactlyThisSourceInAnyChannel )
+			d->m_exactlyThisSourceInAnyChannelMap.remove( key );
+		else if( key.keyType() == ExactlyThisTypeOfSource )
+			d->m_exactlyThisTypeOfSourceMap.remove( key );
+		else
+			d->m_exactlyThisTypeOfSourceInAnyChannelMap.remove( key );
+
+		Log::instance().writeMsgToEventLog( LogLevelInfo,
+			QString( "Properties for key %1 was deleted." )
+				.arg( keyToString( key ) ) );
+
+		d->m_model->removePropertie( key );
+
+		d->m_ui.m_removeAction->setEnabled( false );
+		d->m_ui.m_editAction->setEnabled( false );
+		d->m_ui.m_promoteAction->setEnabled( false );
+	}
 }
 
 void
@@ -921,49 +956,7 @@ PropertiesManager::removeProperties()
 		d->m_ui.m_view->currentIndex() );
 
 	if( index.isValid() )
-	{
-		QMessageBox::StandardButton deletePropertieButton =
-			QMessageBox::question( 0, tr( "Deletion of the propertie..." ),
-				tr( "You are about to delete propertie. Are you sure?" ),
-				QMessageBox::Ok | QMessageBox::Cancel,
-				QMessageBox::Ok );
-
-		if( deletePropertieButton == QMessageBox::Ok )
-		{
-			const int row = index.row();
-
-			PropertiesKey key = d->m_model->key( row );
-
-			PropertiesMap::Iterator it;
-			bool propertiesExists = false;
-
-			d->findByKey( key, it, propertiesExists );
-
-			if( propertiesExists )
-			{
-				QMessageBox::StandardButton deleteFileButton =
-					QMessageBox::question( 0, tr( "Deletion of the propertie..." ),
-						tr( "Delete the file \"%1\" with propertie defenitions?" )
-							.arg( it.value().confFileName() ),
-						QMessageBox::Ok | QMessageBox::Cancel,
-						QMessageBox::Ok );
-
-				if( deleteFileButton == QMessageBox::Ok )
-				{
-					QFile confFile( d->m_directoryName + it.value().confFileName() );
-					confFile.remove();
-				}
-			}
-
-			removeProperties( key );
-
-			d->m_model->removePropertie( row );
-
-			d->m_ui.m_removeAction->setEnabled( false );
-			d->m_ui.m_editAction->setEnabled( false );
-			d->m_ui.m_promoteAction->setEnabled( false );
-		}
-	}
+		removeProperties( d->m_model->key( index.row() ), this );
 }
 
 void

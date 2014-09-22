@@ -90,6 +90,24 @@ public:
 
 class PropertiesModelPrivate {
 public:
+	//! \return Index for the given key.
+	int index( const PropertiesKey & key )
+	{
+		int i = 0;
+
+		foreach( const PropertiesModelData & d, m_data )
+		{
+			if( d.m_channelName == key.channelName() &&
+				d.m_sourceName == key.name() &&
+				d.m_typeName == key.typeName() )
+					return i;
+
+			++i;
+		}
+
+		return -1;
+	}
+
 	//! Data.
 	QList< PropertiesModelData > m_data;
 }; // class PropertiesPropertiesModelPrivate
@@ -163,6 +181,12 @@ PropertiesModel::key( int row ) const
 	return key;
 }
 
+int
+PropertiesModel::rowForKey( const PropertiesKey & key ) const
+{
+	return d->index( key );
+}
+
 void
 PropertiesModel::addPropertie( const PropertiesKey & key,
 	const PropertiesValue & value )
@@ -181,6 +205,15 @@ void
 PropertiesModel::removePropertie( int row )
 {
 	removeRow( row );
+}
+
+void
+PropertiesModel::removePropertie( const PropertiesKey & key )
+{
+	const int row = rowForKey( key );
+
+	if( row != -1 )
+		removePropertie( row );
 }
 
 void

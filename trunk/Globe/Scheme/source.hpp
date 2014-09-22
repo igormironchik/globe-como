@@ -139,6 +139,14 @@ private slots:
 	void changeFont();
 	//! Change size.
 	void changeSize();
+	//! Add properties.
+	void addProperties();
+	//! Edit properties.
+	void editProperties();
+	//! Delete properties.
+	void deleteProperties();
+	//! Promote properties.
+	void promoteProperties();
 
 private:
 	Q_DISABLE_COPY( Source )

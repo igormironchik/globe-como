@@ -47,6 +47,7 @@
 #include <QFont>
 #include <QFontDialog>
 #include <QApplication>
+#include <QGraphicsView>
 
 
 namespace Globe {
@@ -101,6 +102,8 @@ public:
 	QFont m_font;
 	//! Scene.
 	Scene * m_scene;
+	//! Current properties key.
+	PropertiesKey m_currentKey;
 }; // class SourcePrivate
 
 
@@ -502,21 +505,39 @@ Source::detectResizeMode( const QPointF & pos )
 void
 Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
+	QMenu menu;
+
 	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect )
 	{
-		event->accept();
-
-		QMenu menu;
-
 		menu.addAction( QIcon( ":/img/character_set_22x22.png" ),
 			tr( "Change Font" ), this, SLOT( changeFont() ) );
 		menu.addAction( QIcon( ":/img/transform_scale_22x22.png" ),
 			tr( "Change Size" ), this, SLOT( changeSize() ) );
 		menu.addAction( QIcon( ":/img/remove_22x22.png" ),
 			tr( "Delete Source" ), this, SLOT( removeItemFromScene() ) );
-
-		menu.exec( event->screenPos() );
 	}
+	else
+	{
+		const Properties * p = PropertiesManager::instance().findProperties(
+			source(), channelName(), &d->m_currentKey );
+
+		if( p )
+		{
+			menu.addAction( QIcon( ":/img/edit_22x22.png" ),
+				tr( "Edit Properties" ), this, SLOT( editProperties() ) );
+			menu.addAction( QIcon( ":/img/export_22x22.png" ),
+				tr( "Promote Properties To" ), this, SLOT( promoteProperties() ) );
+			menu.addAction( QIcon( ":/img/remove_22x22.png" ),
+				tr( "Delete Properties" ), this, SLOT( deleteProperties() ) );
+		}
+		else
+			menu.addAction( QIcon( ":/img/add_22x22.png" ),
+				tr( "Add Properties" ), this, SLOT( addProperties() ) );
+	}
+
+	menu.exec( event->screenPos() );
+
+	event->accept();
 }
 
 void
@@ -552,6 +573,34 @@ Source::changeSize()
 
 		update();
 	}
+}
+
+void
+Source::addProperties()
+{
+	PropertiesManager::instance().addProperties( source(), channelName(),
+		d->m_scene->views().first() );
+}
+
+void
+Source::editProperties()
+{
+	PropertiesManager::instance().editProperties( d->m_currentKey,
+		d->m_scene->views().first() );
+}
+
+void
+Source::deleteProperties()
+{
+	PropertiesManager::instance().removeProperties( d->m_currentKey,
+		d->m_scene->views().first() );
+}
+
+void
+Source::promoteProperties()
+{
+	PropertiesManager::instance().promoteProperties( d->m_currentKey,
+		d->m_scene->views().first() );
 }
 
 } /* namespace Scheme */

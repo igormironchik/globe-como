@@ -68,6 +68,9 @@ public:
 
 	~ChannelViewWindowModel();
 
+	//! \return Channel's name.
+	const QString & channelName() const;
+
 	//! Init model.
 	void initModel( const QString & channelName );
 

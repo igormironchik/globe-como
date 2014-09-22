@@ -124,6 +124,12 @@ ChannelViewWindowModel::~ChannelViewWindowModel()
 {
 }
 
+const QString &
+ChannelViewWindowModel::channelName() const
+{
+	return d->m_channelName;
+}
+
 void
 ChannelViewWindowModel::initModel( const QString & channelName )
 {

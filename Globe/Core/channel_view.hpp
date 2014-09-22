@@ -91,6 +91,14 @@ private slots:
 	void fillWithColorChanged();
 	//! Color for level correspondence changed.
 	void colorForLevelChanged();
+	//! Add properties.
+	void addProperties();
+	//! Edit properties.
+	void editProperties();
+	//! Delete properties.
+	void deleteProperties();
+	//! Promote properties.
+	void promoteProperties();
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

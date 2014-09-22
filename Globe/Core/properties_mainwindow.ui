@@ -64,6 +64,7 @@
    <addaction name="m_addAction"/>
    <addaction name="m_editAction"/>
    <addaction name="m_removeAction"/>
+   <addaction name="m_promoteAction"/>
   </widget>
   <action name="m_addAction">
    <property name="icon">
@@ -105,6 +106,21 @@
    </property>
    <property name="toolTip">
     <string>Edit Properties</string>
+   </property>
+  </action>
+  <action name="m_promoteAction">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/img/export_22x22.png</normaloff>:/img/export_22x22.png</iconset>
+   </property>
+   <property name="text">
+    <string>Promote</string>
+   </property>
+   <property name="toolTip">
+    <string>Promote properties to the new one</string>
    </property>
   </action>
  </widget>

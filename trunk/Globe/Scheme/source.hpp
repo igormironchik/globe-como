@@ -112,6 +112,9 @@ public:
 	//! Notify about deregistering.
 	void deregistered();
 
+	//! Notify about changes in properties.
+	void propertiesChanged();
+
 	//! \return Bounding rectangle.
 	QRectF boundingRect() const;
 

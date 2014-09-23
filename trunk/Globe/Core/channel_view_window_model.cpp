@@ -118,6 +118,10 @@ ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 {
 	connect( &SourcesManager::instance(), &SourcesManager::newSource,
 		this, &ChannelViewWindowModel::newSource );
+
+	connect( &PropertiesManager::instance(),
+		&PropertiesManager::propertiesChanged,
+		this, &ChannelViewWindowModel::propertiesChanged );
 }
 
 ChannelViewWindowModel::~ChannelViewWindowModel()
@@ -388,6 +392,40 @@ ChannelViewWindowModel::newSource( const Como::Source & source,
 {
 	if( channelName == d->m_channelName )
 		sourceUpdated( source );
+}
+
+void
+ChannelViewWindowModel::propertiesChanged()
+{
+	const int size = d->m_data.size();
+
+	for( int i = 0; i < size; ++i )
+	{
+		ChannelViewWindowModelData & data = d->m_data[ i ];
+
+		const Properties * props = PropertiesManager::instance().findProperties(
+			data.m_source, d->m_channelName, 0 );
+
+		int priority = 0;
+		Level level = None;
+
+		if( props )
+		{
+			priority = props->priority();
+
+			level = props->checkConditions( data.m_source.value(),
+				data.m_source.type() ).level();
+		}
+
+		if( priority != data.m_priority || level != data.m_level )
+		{
+			data.m_priority = priority;
+			data.m_level = level;
+
+			emit dataChanged( QAbstractTableModel::index( i, sourceNameColumn ),
+				QAbstractTableModel::index( i, priorityColumn ) );
+		}
+	}
 }
 
 int

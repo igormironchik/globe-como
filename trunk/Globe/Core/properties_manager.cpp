@@ -528,6 +528,8 @@ PropertiesManager::addProperties( const Como::Source & source,
 					source, type, sourceAsString, keyAsString,
 					channelName, parent );
 			}
+
+			emit propertiesChanged();
 		}
 	}
 }
@@ -584,6 +586,8 @@ PropertiesManager::removeProperties( const PropertiesKey & key,
 		d->m_ui.m_removeAction->setEnabled( false );
 		d->m_ui.m_editAction->setEnabled( false );
 		d->m_ui.m_promoteAction->setEnabled( false );
+
+		emit propertiesChanged();
 	}
 }
 
@@ -617,6 +621,8 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 
 			it.value().properties() =
 				propertiesDialog.propertiesWidget()->properties();
+
+			emit propertiesChanged();
 
 			try {
 				savePropertiesConfiguration( fileName, it.value().properties(),
@@ -749,6 +755,8 @@ PropertiesManager::promoteProperties( const PropertiesKey & key,
 
 						break;
 				}
+
+				emit propertiesChanged();
 			}
 		}
 	}

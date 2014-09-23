@@ -40,6 +40,7 @@
 #include <Globe/Core/log.hpp>
 #include <Globe/Core/channels.hpp>
 #include <Globe/Core/sources.hpp>
+#include <Globe/Core/properties_manager.hpp>
 
 // Qt include.
 #include <QWidget>
@@ -618,6 +619,13 @@ Scene::newSource( const Como::Source & s, const QString & channel )
 }
 
 void
+Scene::propertiesChanged()
+{
+	foreach( Source * s, d->m_sources )
+		s->propertiesChanged();
+}
+
+void
 Scene::init()
 {
 	QWidget w;
@@ -635,6 +643,10 @@ Scene::init()
 
 	connect( &SourcesManager::instance(), &SourcesManager::newSource,
 		this, &Scene::newSource );
+
+	connect( &PropertiesManager::instance(),
+		&PropertiesManager::propertiesChanged,
+		this, &Scene::propertiesChanged );
 }
 
 void

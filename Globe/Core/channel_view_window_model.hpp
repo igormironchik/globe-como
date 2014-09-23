@@ -122,6 +122,8 @@ private slots:
 	void disconnected();
 	//! New source available.
 	void newSource( const Como::Source & source, const QString & channelName );
+	//! Properties changed.
+	void propertiesChanged();
 
 private:
 	Q_DISABLE_COPY( ChannelViewWindowModel )

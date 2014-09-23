@@ -118,6 +118,8 @@ private slots:
 	void disconnected();
 	//! New source available.
 	void newSource( const Como::Source & s, const QString & channel );
+	//! Properties changed.
+	void propertiesChanged();
 
 private:
 	//! Init.

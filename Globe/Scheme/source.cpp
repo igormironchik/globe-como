@@ -287,6 +287,30 @@ Source::deregistered()
 	update();
 }
 
+void
+Source::propertiesChanged()
+{
+	const Properties * props = PropertiesManager::instance().findProperties(
+		d->m_source, d->m_channelName, 0 );
+
+	Level level = None;
+
+	if( props )
+	{
+		level = props->checkConditions( d->m_source.value(),
+			d->m_source.type() ).level();
+	}
+
+	const QColor newColor = ColorForLevel::instance().color( level );
+
+	if( d->m_fillColor != newColor )
+	{
+		d->m_fillColor = newColor;
+
+		update();
+	}
+}
+
 QRectF
 Source::boundingRect() const
 {

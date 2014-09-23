@@ -59,6 +59,10 @@ class PropertiesManager
 {
 	Q_OBJECT
 
+signals:
+	//! Emits everu time when properties changed.
+	void propertiesChanged();
+
 private:
 	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 

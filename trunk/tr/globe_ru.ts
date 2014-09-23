@@ -305,24 +305,44 @@ You can mix that attributes.</source>
 <context>
     <name>Globe::ChannelView</name>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="174"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="191"/>
         <source>Registered</source>
         <translation>Зарегистрирован</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="267"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="330"/>
         <source>Copy</source>
         <translation>Скопировать</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="272"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="335"/>
         <source>Select All</source>
         <translation>Выбрать все</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view.cpp" line="276"/>
+        <location filename="../Globe/Core/channel_view.cpp" line="339"/>
         <source>Fill With Color</source>
         <translation>Залить цветом</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_view.cpp" line="358"/>
+        <source>Add Properties</source>
+        <translation>Добавить свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_view.cpp" line="360"/>
+        <source>Edit Properties</source>
+        <translation>Редактировать свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_view.cpp" line="362"/>
+        <source>Delete Properties</source>
+        <translation>Удалить свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_view.cpp" line="364"/>
+        <source>Promote Properties To</source>
+        <translation>Преобразовать свойства в</translation>
     </message>
 </context>
 <context>
@@ -360,27 +380,27 @@ because there is no such channel.</source>
 <context>
     <name>Globe::ChannelViewWindowModel</name>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="482"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="526"/>
         <source>Source Name</source>
         <translation>Источник данных</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="483"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="527"/>
         <source>Type Name</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="484"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="528"/>
         <source>Value</source>
         <translation>Значение</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="485"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="529"/>
         <source>Date &amp; Time</source>
         <translation>Дата и время</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="486"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="530"/>
         <source>Pr.</source>
         <translation>Пр.</translation>
     </message>
@@ -913,12 +933,12 @@ Default database will be used: &quot;%2&quot;.</source>
 <context>
     <name>Globe::Log</name>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="980"/>
+        <location filename="../Globe/Core/log.cpp" line="932"/>
         <source>Unable to read log configuration...</source>
         <translation>Не удалось загрузить конфигурацию лога...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="981"/>
+        <location filename="../Globe/Core/log.cpp" line="933"/>
         <source>Unable to read log configuration...
 
 %1</source>
@@ -927,12 +947,12 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="1019"/>
+        <location filename="../Globe/Core/log.cpp" line="971"/>
         <source>Unable to save log configuration...</source>
         <translation>Не удалось сохранить конфигурацию лога...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/log.cpp" line="1020"/>
+        <location filename="../Globe/Core/log.cpp" line="972"/>
         <source>Unable to save log configuration...
 
 %1</source>
@@ -1356,36 +1376,32 @@ Default database will be used: &quot;%2&quot;.</source>
 <context>
     <name>Globe::PropertiesManager</name>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="180"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="310"/>
         <source>Properties Manager</source>
         <translation>Менеджер свойств</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="197"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="328"/>
         <source>&amp;Properties</source>
         <translation>&amp;Свойства</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="198"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="329"/>
         <source>Alt+P</source>
         <translation>Alt+P</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="228"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="365"/>
         <source>&amp;Tools</source>
         <translation>&amp;Инструменты</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="426"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="493"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="574"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="647"/>
         <source>Unable to save properties...</source>
         <translation>Не удалось сохранитьсвойства...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="427"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="494"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="575"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="648"/>
         <source>Unable to save properties...
 
 %1</source>
@@ -1394,12 +1410,22 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="609"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="690"/>
+        <source>Such properties already exists...</source>
+        <translation>Такие свойства уже существуют...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/properties_manager.cpp" line="691"/>
+        <source>Do you want to edit existing properties?</source>
+        <translation>Вы хотите редактировать существующие свойства?</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/properties_manager.cpp" line="792"/>
         <source>Unable to save properties configuration...</source>
         <translation>Не удалось сохранить конфигурацию свойств...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="610"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="793"/>
         <source>Unable to save properties configuration...
 
 %1</source>
@@ -1408,13 +1434,13 @@ Default database will be used: &quot;%2&quot;.</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="648"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="706"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="831"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="889"/>
         <source>Unable to read properties configuration...</source>
         <translation>Не удалось загрузить конфигурацию свойств...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="649"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="832"/>
         <source>Unable to read properties configuration...
 
 %1
@@ -1427,7 +1453,7 @@ Do you want to delete this file?</source>
 Хотите ли Вы удалить этот файл?</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="707"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="890"/>
         <source>Unable to read properties configuration...
 
 %1</source>
@@ -1436,18 +1462,18 @@ Do you want to delete this file?</source>
 %1</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="786"/>
-        <location filename="../Globe/Core/properties_manager.cpp" line="805"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="542"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="558"/>
         <source>Deletion of the propertie...</source>
         <translation>Удаление свойства...</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="787"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="543"/>
         <source>You are about to delete propertie. Are you sure?</source>
         <translation>Вы собираетесь удалить свойство. Вы уверены?</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_manager.cpp" line="806"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="559"/>
         <source>Delete the file &quot;%1&quot; with propertie defenitions?</source>
         <translation>Удалить файл &quot;%1&quot; с определениями свойства?</translation>
     </message>
@@ -1455,32 +1481,32 @@ Do you want to delete this file?</source>
 <context>
     <name>Globe::PropertiesModel</name>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="214"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="247"/>
         <source>any</source>
         <translation>любой</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="325"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="358"/>
         <source>Source name</source>
         <translation>Источник данных</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="326"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="359"/>
         <source>Type Name</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="327"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="360"/>
         <source>Channel Name</source>
         <translation>Имя канала</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="328"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="361"/>
         <source>Value Type</source>
         <translation>Тип значения</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_model.cpp" line="329"/>
+        <location filename="../Globe/Core/properties_model.cpp" line="362"/>
         <source>Configuration file</source>
         <translation>Конфигурационный файл</translation>
     </message>
@@ -1496,12 +1522,12 @@ Do you want to delete this file?</source>
 <context>
     <name>Globe::Scheme::Scene</name>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="376"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="377"/>
         <source>Unable to read scheme configuration...</source>
         <translation>Не удалось загрузить конфигурацию схемы...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="377"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="378"/>
         <source>Unable to read scheme configuration from file &quot;%1&quot;
 
 %2</source>
@@ -1510,12 +1536,12 @@ Do you want to delete this file?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="422"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="423"/>
         <source>Unable to save scheme configuration...</source>
         <translation>Не удалось сохранить конфигурацию схемы...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="423"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="424"/>
         <source>Unable to save scheme configuration to file &quot;%1&quot;.
 
 %2</source>
@@ -1524,27 +1550,27 @@ Do you want to delete this file?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="472"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="473"/>
         <source>Source already on the scheme...</source>
         <translation>Источник уже на схеме...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="473"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="474"/>
         <source>Source already on the scheme.</source>
         <translation>Источник уже на схеме.</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="482"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="483"/>
         <source>Text</source>
         <translation>Текст</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="679"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="691"/>
         <source>Channel is unavailable...</source>
         <translation>Канал недоступен...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="680"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="692"/>
         <source>Channe&apos; &quot;%1&quot; is unavailable.</source>
         <translation>Канал &quot;%1&quot; не доступен.</translation>
     </message>
@@ -1552,19 +1578,39 @@ Do you want to delete this file?</source>
 <context>
     <name>Globe::Scheme::Source</name>
     <message>
-        <location filename="../Globe/Scheme/source.cpp" line="512"/>
+        <location filename="../Globe/Scheme/source.cpp" line="537"/>
         <source>Change Font</source>
         <translation>Изменить шрифт</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/source.cpp" line="514"/>
+        <location filename="../Globe/Scheme/source.cpp" line="539"/>
         <source>Change Size</source>
         <translation>Изменить размер</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/source.cpp" line="516"/>
+        <location filename="../Globe/Scheme/source.cpp" line="541"/>
         <source>Delete Source</source>
         <translation>Удалить источник</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Scheme/source.cpp" line="551"/>
+        <source>Edit Properties</source>
+        <translation>Редактировать свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Scheme/source.cpp" line="553"/>
+        <source>Promote Properties To</source>
+        <translation>Преобразовать свойства в</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Scheme/source.cpp" line="555"/>
+        <source>Delete Properties</source>
+        <translation>Удалить свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Scheme/source.cpp" line="559"/>
+        <source>Add Properties</source>
+        <translation>Добавить свойства</translation>
     </message>
 </context>
 <context>
@@ -1963,34 +2009,63 @@ Do you want to delete this file?</source>
         <translation>тулбар</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="74"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="75"/>
         <source>Add</source>
         <translation>Добавить</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="77"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="78"/>
         <source>Add New Propertie</source>
         <translation>Добавить новое свойство</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="89"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="90"/>
         <source>Remove</source>
         <translation>Удалить</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="92"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="93"/>
         <source>Remove Selected Propertie</source>
         <translation>Удалить выбранное свойство</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="104"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="105"/>
         <source>Edit</source>
         <translation>Редактировать</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/properties_mainwindow.ui" line="107"/>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="108"/>
         <source>Edit Properties</source>
         <translation>Редактировать свойства</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="120"/>
+        <source>Promote</source>
+        <translation>Преобразовать</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/properties_mainwindow.ui" line="123"/>
+        <source>Promote properties to the new one</source>
+        <translation>Преобразовать свойства в новые</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <location filename="../Globe/Core/properties_manager.cpp" line="198"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="253"/>
+        <source>Unable to save properties...</source>
+        <translation>Не удалось сохранитьсвойства...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/properties_manager.cpp" line="199"/>
+        <location filename="../Globe/Core/properties_manager.cpp" line="254"/>
+        <source>Unable to save properties...
+
+%1</source>
+        <translation>Не удалось сохранитьсвойства...
+
+%1</translation>
     </message>
 </context>
 <context>

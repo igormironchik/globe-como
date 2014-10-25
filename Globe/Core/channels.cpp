@@ -38,8 +38,6 @@
 // Qt include.
 #include <QTimer>
 #include <QList>
-#include <QMutex>
-#include <QMutexLocker>
 #include <QThread>
 #include <QMap>
 
@@ -52,47 +50,28 @@ namespace Globe {
 
 class ChannelPrivate {
 public:
-	ChannelPrivate( QObject * parent,
+	ChannelPrivate( Channel * parent,
 		const QString & name,
 		const QHostAddress & address,
 		quint16 port )
-		:	m_name( name )
+		:	q( parent )
+		,	m_name( name )
 		,	m_address( address )
 		,	m_port( port )
-		,	m_socket( new Como::ClientSocket( parent ) )
-		,	m_rateTimer( new QTimer( parent ) )
-		,	m_updateTimeout( 0 )
-		,	m_updateTimer( new QTimer( parent ) )
-		,	m_messagesCount( 0 )
-		,	m_isConnected( false )
-		,	m_isDisconnectedByUser( true )
 	{}
 
+	virtual ~ChannelPrivate()
+	{}
+
+	//! Parent.
+	Channel * q;
 	//! Name of the channel.
 	QString m_name;
 	//! Host address.
 	QHostAddress m_address;
 	//! Port.
 	quint16 m_port;
-	//! Socket implemetation.
-	Como::ClientSocket * m_socket;
-	//! Timer for updating messages rate per second.
-	QTimer * m_rateTimer;
-	//! Update of source's value timeout in ms.
-	int m_updateTimeout;
-	//! Timer for updating source's value.
-	QTimer * m_updateTimer;
-	//! Count of messages in the current second.
-	int m_messagesCount;
-	//! List of sources.
-	QList< Como::Source > m_sources;
-	//! Mutex for guard m_updateTimeout.
-	QMutex m_mutex;
-	//! Is channel in connected state?
-	bool m_isConnected;
-	//! Is channel was disconnected by user?
-	bool m_isDisconnectedByUser;
-}; // class Channel::ChannelPrivate
+}; // class ChannelPrivate
 
 
 //
@@ -104,57 +83,16 @@ Channel::Channel( const QString & name,
 	:	d( new ChannelPrivate( this, name, address, port ) )
 {
 	setObjectName( QString( "Channel" ) );
+}
 
-	connect( this, &Channel::aboutToConnectToHost,
-		this, &Channel::connectToHostImplementation,
-		Qt::QueuedConnection );
-
-	connect( this, &Channel::aboutToDisconnectFromHost,
-		this, &Channel::disconnectFromHostImplementation,
-		Qt::QueuedConnection );
-
-	connect( this, &Channel::aboutToReconnectToHost,
-		this, &Channel::reconnectToHostImplementation,
-		Qt::QueuedConnection );
-
-	connect( this, &Channel::aboutToChangeUpdateTimeout,
-		this, &Channel::changeUpdateTimeoutImplementation,
-		Qt::QueuedConnection );
-
-	connect( d->m_socket, &Como::ClientSocket::connected,
-		this, &Channel::socketConnected );
-
-	connect( d->m_socket, &Como::ClientSocket::disconnected,
-		this, &Channel::socketDisconnected );
-
-	connect( d->m_socket, &Como::ClientSocket::sourceHasUpdatedValue,
-		this, &Channel::sourceHasUpdatedValue );
-
-	void ( Como::ClientSocket::*signal )( QAbstractSocket::SocketError ) =
-		&Como::ClientSocket::error;
-
-	connect( d->m_socket, signal,
-		this, &Channel::socketError );
-
-	connect( d->m_socket, &Como::ClientSocket::sourceDeinitialized,
-		this, &Channel::sourceHasDeregistered );
-
-	connect( d->m_rateTimer, &QTimer::timeout,
-		this, &Channel::updateMessagesRate );
-
-	connect( d->m_updateTimer, &QTimer::timeout,
-		this, &Channel::updateSourcesValue );
-
-	d->m_rateTimer->start( 1000 );
+Channel::Channel( ChannelPrivate * dd )
+	:	d( dd )
+{
+	setObjectName( QString( "Channel" ) );
 }
 
 Channel::~Channel()
 {
-	d->m_rateTimer->stop();
-	d->m_updateTimer->stop();
-
-	d->m_socket->disconnectFromHost();
-	d->m_socket->waitForDisconnected();
 }
 
 const QString &
@@ -175,148 +113,281 @@ Channel::portNumber() const
 	return d->m_port;
 }
 
-int
-Channel::timeout() const
-{
-	QMutexLocker lock( &d->m_mutex );
-
-	return d->m_updateTimeout;
-}
-
-bool
-Channel::isConnected() const
-{
-	QMutexLocker lock( &d->m_mutex );
-
-	return d->m_isConnected;
-}
-
-bool
-Channel::isMustBeConnected() const
-{
-	QMutexLocker lock( &d->m_mutex );
-
-	return !d->m_isDisconnectedByUser;
-}
-
 void
 Channel::connectToHost()
 {
-	emit aboutToConnectToHost();
+	connectToHostImplementation();
 }
 
 void
 Channel::disconnectFromHost()
 {
-	emit aboutToDisconnectFromHost();
+	disconnectFromHostImplementation();
 }
 
 void
 Channel::reconnectToHost()
 {
-	emit aboutToReconnectToHost();
+	reconnectToHostImplementation();
 }
 
 void
 Channel::updateTimeout( int msecs )
 {
-	QMutexLocker lock( &d->m_mutex );
+	updateTimeoutImplementation( msecs );
+}
 
-	d->m_updateTimeout = msecs;
 
-	emit aboutToChangeUpdateTimeout();
+//
+// ChannelAndThreadDeleter
+//
+
+class ChannelAndThreadDeleter
+	:	public QObject
+{
+	Q_OBJECT
+
+public:
+	ChannelAndThreadDeleter( bool isConnected,
+		QThread * thread, Como::ClientSocket * socket )
+		:	m_thread( thread )
+		,	m_socket( socket )
+	{
+		if( isConnected )
+			connect( m_socket, &Como::ClientSocket::disconnected,
+				this, &ChannelAndThreadDeleter::jobDone );
+		else
+			jobDone();
+	}
+
+public slots:
+	void jobDone()
+	{
+		m_socket->disconnect();
+		m_thread->disconnect();
+		m_thread->quit();
+		m_thread->wait();
+		m_socket->deleteLater();
+		m_thread->deleteLater();
+
+		deleteLater();
+	}
+
+private:
+	QThread * m_thread;
+	Como::ClientSocket * m_socket;
+}; // class ChannelAndThreadDeleter
+
+
+//
+// ComoChannelPrivate
+//
+
+class ComoChannelPrivate
+	:	public ChannelPrivate
+{
+public:
+	ComoChannelPrivate( ComoChannel * parent,
+		const QString & name,
+		const QHostAddress & address,
+		quint16 port )
+		:	ChannelPrivate( parent, name, address, port )
+		,	m_thread( 0 )
+		,	m_socket( 0 )
+		,	m_rateTimer( 0 )
+		,	m_updateTimeout( 0 )
+		,	m_updateTimer( 0 )
+		,	m_messagesCount( 0 )
+		,	m_isConnected( false )
+		,	m_isDisconnectedByUser( true )
+	{}
+
+	virtual ~ComoChannelPrivate()
+	{
+		ChannelAndThreadDeleter * deleter = new ChannelAndThreadDeleter(
+			m_isConnected, m_thread, m_socket );
+
+		Q_UNUSED( deleter )
+	}
+
+	void init()
+	{
+		m_thread = new QThread;
+		m_socket = new Como::ClientSocket;
+
+		ComoChannel * q = q_func();
+
+		m_rateTimer = new QTimer( q );
+		m_updateTimer = new QTimer( q );
+
+		m_socket->moveToThread( m_thread );
+		m_thread->start();
+	}
+
+	inline ComoChannel * q_func()
+		{ return static_cast< ComoChannel* >( q ); }
+
+	inline const ComoChannel * q_func() const
+		{ return static_cast< const ComoChannel* >( q ); }
+
+
+	//! Thread for the socket.
+	QThread * m_thread;
+	//! Socket implemetation.
+	Como::ClientSocket * m_socket;
+	//! Timer for updating messages rate per second.
+	QTimer * m_rateTimer;
+	//! Update of source's value timeout in ms.
+	int m_updateTimeout;
+	//! Timer for updating source's value.
+	QTimer * m_updateTimer;
+	//! Count of messages in the current second.
+	int m_messagesCount;
+	//! List of sources.
+	QList< Como::Source > m_sources;
+	//! Is channel in connected state?
+	bool m_isConnected;
+	//! Is channel was disconnected by user?
+	bool m_isDisconnectedByUser;
+}; // class ComoChannelPrivate
+
+
+//
+// ComoChannel
+//
+
+ComoChannel::ComoChannel( const QString & name,
+	const QHostAddress & address, quint16 port )
+	:	Channel( new ComoChannelPrivate( this, name, address, port ) )
+{
+	ComoChannelPrivate * d = d_func();
+
+	d->init();
+
+	connect( this, &ComoChannel::aboutToConnectToHost,
+		d->m_socket, &Como::ClientSocket::connectTo,
+		Qt::QueuedConnection );
+
+	connect( this, &ComoChannel::aboutToDisconnectFromHost,
+		d->m_socket, &Como::ClientSocket::disconnectFrom,
+		Qt::QueuedConnection );
+
+	connect( this, &ComoChannel::aboutToSendGetListOfSources,
+		d->m_socket, &Como::ClientSocket::sendGetListOfSourcesMessage,
+		Qt::QueuedConnection );
+
+	connect( d->m_socket, &Como::ClientSocket::connected,
+		this, &ComoChannel::socketConnected,
+		Qt::QueuedConnection );
+
+	connect( d->m_socket, &Como::ClientSocket::disconnected,
+		this, &ComoChannel::socketDisconnected,
+		Qt::QueuedConnection );
+
+	connect( d->m_socket, &Como::ClientSocket::sourceHasUpdatedValue,
+		this, &ComoChannel::sourceHasUpdatedValue,
+		Qt::QueuedConnection );
+
+	void ( Como::ClientSocket::*signal )( QAbstractSocket::SocketError ) =
+		&Como::ClientSocket::error;
+
+	connect( d->m_socket, signal,
+		this, &ComoChannel::socketError,
+		Qt::QueuedConnection );
+
+	connect( d->m_socket, &Como::ClientSocket::sourceDeinitialized,
+		this, &ComoChannel::sourceHasDeregistered,
+		Qt::QueuedConnection );
+
+	connect( d->m_rateTimer, &QTimer::timeout,
+		this, &ComoChannel::updateMessagesRate );
+
+	connect( d->m_updateTimer, &QTimer::timeout,
+		this, &ComoChannel::updateSourcesValue );
+
+	d->m_rateTimer->start( 1000 );
+}
+
+ComoChannel::~ComoChannel()
+{
+	ComoChannelPrivate * d = d_func();
+
+	d->m_rateTimer->stop();
+	d->m_updateTimer->stop();
+}
+
+int
+ComoChannel::timeout() const
+{
+	const ComoChannelPrivate * d = d_func();
+
+	return d->m_updateTimeout;
+}
+
+bool
+ComoChannel::isConnected() const
+{
+	const ComoChannelPrivate * d = d_func();
+
+	return d->m_isConnected;
+}
+
+bool
+ComoChannel::isMustBeConnected() const
+{
+	const ComoChannelPrivate * d = d_func();
+
+	return !d->m_isDisconnectedByUser;
 }
 
 void
-Channel::connectToHostImplementation()
+ComoChannel::activate()
 {
-	{
-		QMutexLocker lock( &d->m_mutex );
-
-		d->m_isDisconnectedByUser = false;
-	}
-
-	if( d->m_socket->state() == QAbstractSocket::UnconnectedState )
-		d->m_socket->connectToHost( d->m_address, d->m_port );
 }
 
 void
-Channel::disconnectFromHostImplementation()
+ComoChannel::deactivate()
 {
-	{
-		QMutexLocker lock( &d->m_mutex );
-
-		d->m_isDisconnectedByUser = true;
-	}
-
-	if( d->m_socket->state() != QAbstractSocket::UnconnectedState )
-		d->m_socket->disconnectFromHost();
 }
 
 void
-Channel::reconnectToHostImplementation()
+ComoChannel::connectToHostImplementation()
 {
-	{
-		QMutexLocker lock( &d->m_mutex );
+	ComoChannelPrivate * d = d_func();
 
-		d->m_isDisconnectedByUser = false;
-	}
+	d->m_isDisconnectedByUser = false;
 
-	if( d->m_socket->state() != QAbstractSocket::UnconnectedState )
-		d->m_socket->disconnectFromHost();
+	emit aboutToConnectToHost( d->m_address, d->m_port );
 }
 
 void
-Channel::socketDisconnected()
+ComoChannel::disconnectFromHostImplementation()
 {
-	{
-		QMutexLocker lock( &d->m_mutex );
+	ComoChannelPrivate * d = d_func();
 
-		d->m_isConnected = false;
-	}
+	d->m_isDisconnectedByUser = true;
 
-	emit disconnected();
-
-	{
-		QMutexLocker lock( &d->m_mutex );
-
-		if( !d->m_isDisconnectedByUser )
-			d->m_socket->connectToHost( d->m_address, d->m_port );
-	}
+	emit aboutToDisconnectFromHost();
 }
 
 void
-Channel::socketConnected()
+ComoChannel::reconnectToHostImplementation()
 {
-	{
-		QMutexLocker lock( &d->m_mutex );
+	ComoChannelPrivate * d = d_func();
 
-		d->m_isConnected = true;
-	}
+	d->m_isDisconnectedByUser = false;
 
-	emit connected();
-
-	d->m_socket->sendGetListOfSourcesMessage();
+	emit aboutToDisconnectFromHost();
 }
 
 void
-Channel::socketError( QAbstractSocket::SocketError socketError )
+ComoChannel::updateTimeoutImplementation( int msecs )
 {
-	if( socketError != QAbstractSocket::RemoteHostClosedError )
-	{
-		QMutexLocker lock( &d->m_mutex );
-
-		if( !d->m_isDisconnectedByUser )
-			d->m_socket->connectToHost( d->m_address, d->m_port );
-	}
-}
-
-void
-Channel::changeUpdateTimeoutImplementation()
-{
-	QMutexLocker lock( &d->m_mutex );
+	ComoChannelPrivate * d = d_func();
 
 	d->m_updateTimer->stop();
+
+	d->m_updateTimeout = msecs;
 
 	if( d->m_updateTimeout > 0 )
 		d->m_updateTimer->start( d->m_updateTimeout );
@@ -325,11 +396,48 @@ Channel::changeUpdateTimeoutImplementation()
 }
 
 void
-Channel::sourceHasUpdatedValue( const Como::Source & source )
+ComoChannel::socketDisconnected()
 {
-	++d->m_messagesCount;
+	ComoChannelPrivate * d = d_func();
 
-	QMutexLocker lock( &d->m_mutex );
+	d->m_isConnected = false;
+
+	emit disconnected();
+
+	if( !d->m_isDisconnectedByUser )
+		emit aboutToConnectToHost( d->m_address, d->m_port );
+}
+
+void
+ComoChannel::socketConnected()
+{
+	ComoChannelPrivate * d = d_func();
+
+	d->m_isConnected = true;
+
+	emit connected();
+
+	emit aboutToSendGetListOfSources();
+}
+
+void
+ComoChannel::socketError( QAbstractSocket::SocketError socketError )
+{
+	if( socketError != QAbstractSocket::RemoteHostClosedError )
+	{
+		ComoChannelPrivate * d = d_func();
+
+		if( !d->m_isDisconnectedByUser )
+			emit aboutToConnectToHost( d->m_address, d->m_port );
+	}
+}
+
+void
+ComoChannel::sourceHasUpdatedValue( const Como::Source & source )
+{
+	ComoChannelPrivate * d = d_func();
+
+	++d->m_messagesCount;
 
 	if( d->m_updateTimeout > 0 )
 	{
@@ -345,11 +453,11 @@ Channel::sourceHasUpdatedValue( const Como::Source & source )
 }
 
 void
-Channel::sourceHasDeregistered( const Como::Source & source )
+ComoChannel::sourceHasDeregistered( const Como::Source & source )
 {
-	++d->m_messagesCount;
+	ComoChannelPrivate * d = d_func();
 
-	QMutexLocker lock( &d->m_mutex );
+	++d->m_messagesCount;
 
 	if( d->m_updateTimeout > 0 )
 	{
@@ -365,78 +473,25 @@ Channel::sourceHasDeregistered( const Como::Source & source )
 }
 
 void
-Channel::updateMessagesRate()
+ComoChannel::updateMessagesRate()
 {
+	ComoChannelPrivate * d = d_func();
+
 	emit messagesRate( d->m_messagesCount );
 
 	d->m_messagesCount = 0;
 }
 
 void
-Channel::updateSourcesValue()
+ComoChannel::updateSourcesValue()
 {
+	ComoChannelPrivate * d = d_func();
+
 	foreach( const Como::Source & source, d->m_sources )
 		emit sourceUpdated( source );
 
 	d->m_sources.clear();
 }
-
-
-//
-// ChannelAndThread
-//
-
-//! Thread for channel.
-class ChannelAndThread
-{
-public:
-	ChannelAndThread()
-		:	m_channel( 0 )
-		,	m_thread( 0 )
-	{
-	}
-
-	ChannelAndThread( Channel * channel, QThread * thread )
-		:	m_channel( channel )
-		,	m_thread( thread )
-	{
-	}
-
-	ChannelAndThread( const ChannelAndThread & other )
-		:	m_channel( other.channel() )
-		,	m_thread( other.thread() )
-	{
-	}
-
-	ChannelAndThread & operator = ( const ChannelAndThread & other )
-	{
-		if( this != &other )
-		{
-			m_channel = other.channel();
-			m_thread = other.thread();
-		}
-
-		return *this;
-	}
-
-	//! \return Channel.
-	Channel * channel() const
-	{
-		return m_channel;
-	}
-
-	//! \return Thread.
-	QThread * thread() const
-	{
-		return m_thread;
-	}
-
-private:
-	//! Channel.
-	Channel * m_channel;
-	//! Thread.
-	QThread * m_thread;
-}; // class ChannelThread
 
 
 //
@@ -450,7 +505,7 @@ public:
 	}
 
 	//! Channels.
-	QMap< QString, ChannelAndThread > m_channels;
+	QMap< QString, Channel* > m_channels;
 }; // class ChannelsManager::ChannelsManagerPrivate
 
 
@@ -479,7 +534,7 @@ Channel *
 ChannelsManager::channelByName( const QString & name ) const
 {
 	if( d->m_channels.contains( name ) )
-		return d->m_channels[ name ].channel();
+		return d->m_channels[ name ];
 	else
 		return 0;
 }
@@ -487,7 +542,8 @@ ChannelsManager::channelByName( const QString & name ) const
 
 Channel *
 ChannelsManager::createChannel(	const QString & name,
-	const QHostAddress & hostAddress, quint16 port )
+	const QHostAddress & hostAddress, quint16 port,
+	ChannelType type )
 {
 	Channel * ch = channelByName( name );
 
@@ -499,89 +555,59 @@ ChannelsManager::createChannel(	const QString & name,
 		else
 			return 0;
 	}
-	else if( isAddressAndPortUnique( hostAddress, port ) )
+
+	switch( type )
 	{
-		ch = new Channel( name, hostAddress, port );
+		case ComoChannelType :
+			{
+				if( isAddressAndPortUnique( hostAddress, port ) )
+				{
+					ch = new ComoChannel( name, hostAddress, port );
 
-		QThread * thread = new QThread( this );
-		ch->moveToThread( thread );
-		d->m_channels.insert( name, ChannelAndThread( ch, thread ) );
-		thread->start();
+					d->m_channels.insert( name, ch );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Channel created. Name \"%1\", ip \"%2\" and port %3." )
-				.arg( name )
-				.arg( hostAddress.toString() )
-				.arg( QString::number( port ) ) );
+					ch->activate();
 
-		emit channelCreated( ch );
+					Log::instance().writeMsgToEventLog( LogLevelInfo,
+						QString( "Channel created. Name \"%1\", ip \"%2\" and port %3." )
+							.arg( name )
+							.arg( hostAddress.toString() )
+							.arg( QString::number( port ) ) );
 
-		return ch;
+					emit channelCreated( ch );
+
+					return ch;
+				}
+				else
+					return 0;
+			}
+		break;
+
+		default :
+			return 0;
 	}
-	else
-		return 0;
 }
-
-
-//
-// ChannelAndThreadDeleter
-//
-
-class ChannelAndThreadDeleter
-	:	public QObject
-{
-	Q_OBJECT
-
-public:
-	ChannelAndThreadDeleter( const ChannelAndThread & channelAndThread )
-		:	m_channelAndThread( channelAndThread )
-	{
-		if( m_channelAndThread.channel()->isConnected() )
-			connect( m_channelAndThread.channel(), &Channel::disconnected,
-				this, &ChannelAndThreadDeleter::jobDone );
-		else
-			jobDone();
-	}
-
-public slots:
-	void jobDone()
-	{
-		m_channelAndThread.channel()->disconnect();
-		m_channelAndThread.thread()->disconnect();
-		m_channelAndThread.thread()->quit();
-		m_channelAndThread.thread()->wait();
-		m_channelAndThread.channel()->deleteLater();
-		m_channelAndThread.thread()->deleteLater();
-
-		deleteLater();
-	}
-
-private:
-	ChannelAndThread m_channelAndThread;
-}; // class ChannelAndThreadDeleter
 
 void
 ChannelsManager::removeChannel( const QString & name )
 {
 	if( d->m_channels.contains( name ) )
 	{
-		ChannelAndThread channelAndThread = d->m_channels[ name ];
+		Channel * ch = d->m_channels[ name ];
+
 		d->m_channels.remove( name );
 
-		ChannelAndThreadDeleter * deleter = new ChannelAndThreadDeleter(
-			channelAndThread );
-
-		Q_UNUSED( deleter )
-
-		channelAndThread.channel()->disconnectFromHost();
+		ch->deactivate();
 
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Channel removed. Name \"%1\", ip \"%2\" and port %3." )
 				.arg( name )
-				.arg( channelAndThread.channel()->hostAddress().toString() )
-				.arg( QString::number( channelAndThread.channel()->portNumber() ) ) );
+				.arg( ch->hostAddress().toString() )
+				.arg( QString::number( ch->portNumber() ) ) );
 
-		emit channelRemoved( channelAndThread.channel() );
+		emit channelRemoved( ch );
+
+		ch->deleteLater();
 	}
 }
 
@@ -595,11 +621,11 @@ bool
 ChannelsManager::isAddressAndPortUnique( const QHostAddress & hostAddress,
 	quint16 port )
 {
-	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+	for( QMap< QString, Channel* >::ConstIterator it = d->m_channels.begin(),
 		last = d->m_channels.end(); it != last; ++it )
 	{
-		if( it.value().channel()->hostAddress() == hostAddress &&
-			it.value().channel()->portNumber() == port )
+		if( it.value()->hostAddress() == hostAddress &&
+			it.value()->portNumber() == port )
 				return false;
 	}
 
@@ -611,10 +637,10 @@ ChannelsManager::channels() const
 {
 	QList< Channel* > channels;
 
-	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+	for( QMap< QString, Channel* >::ConstIterator it = d->m_channels.begin(),
 		last = d->m_channels.end(); it != last; ++it )
 	{
-		channels.append( it.value().channel() );
+		channels.append( it.value() );
 	}
 
 	return channels;
@@ -623,15 +649,11 @@ ChannelsManager::channels() const
 void
 ChannelsManager::shutdown()
 {
-	for( QMap< QString, ChannelAndThread >::ConstIterator it = d->m_channels.begin(),
+	for( QMap< QString, Channel* >::ConstIterator it = d->m_channels.begin(),
 		last = d->m_channels.end(); it != last; ++it )
 	{
-		ChannelAndThreadDeleter * deleter = new ChannelAndThreadDeleter(
-			it.value() );
-
-		Q_UNUSED( deleter )
-
-		it.value().channel()->disconnectFromHost();
+		it.value()->deactivate();
+		it.value()->deleteLater();
 	}
 }
 

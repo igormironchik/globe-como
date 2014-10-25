@@ -334,6 +334,7 @@ Scene::loadScheme( const QString & fileName )
 			{
 				Source * item = new Source( source, s.channelName(),
 					&d->m_selection, this );
+
 				item->setMode( d->m_mode );
 				item->setEditMode( d->m_editMode );
 				item->setCfg( s );
@@ -755,6 +756,8 @@ Scene::syncSources()
 
 		if( channel )
 			connectedDisconnected.insert( name, channel->isConnected() );
+		else
+			connectedDisconnected.insert( name, false );
 	}
 
 	QMapIterator< QString, bool > it( connectedDisconnected );

@@ -38,6 +38,7 @@
 #include <QList>
 #include <QDebug>
 #include <QSharedPointer>
+#include <QHostAddress>
 
 // Globe icnlude.
 #include <Globe/Core/mainwindow.hpp>
@@ -78,6 +79,7 @@ static QSharedPointer< QApplication > globeApplication( int argc = 0, char ** ar
 int main( int argc, char ** argv )
 {
 	qRegisterMetaType< Como::Source > ( "Como::Source" );
+	qRegisterMetaType< QHostAddress > ( "QHostAddress" );
 
 	QString cfgFile;
 

@@ -51,6 +51,9 @@ static const int sourceNameColumn = 3;
 static const int valueColumn = 4;
 
 
+class Channel;
+
+
 //
 // ChannelViewWindowModel
 //
@@ -124,6 +127,8 @@ private slots:
 	void newSource( const Como::Source & source, const QString & channelName );
 	//! Properties changed.
 	void propertiesChanged();
+	//! Channel removed.
+	void channelRemoved( Channel * ch );
 
 private:
 	Q_DISABLE_COPY( ChannelViewWindowModel )

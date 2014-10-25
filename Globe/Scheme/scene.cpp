@@ -739,12 +739,10 @@ Scene::syncSources()
 
 			if( SourcesManager::instance().syncSource( it.key().channelName(),
 				s, isRegistered ) )
-			{
-				it.value()->setSource( s );
+					it.value()->setSource( s );
 
-				if( !isRegistered )
-					it.value()->deregistered();
-			}
+			if( !isRegistered )
+				it.value()->deregistered();
 		}
 	}
 

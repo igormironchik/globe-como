@@ -51,9 +51,7 @@ class ChannelPrivate;
 //
 
 /*!
-	Channel in the Globe.
-
-	Channel will live in the separate thread.
+	Interface of the channel in the Globe.
 */
 class Channel
 	:	public QObject
@@ -69,22 +67,10 @@ signals:
 	void connected();
 	//! Disconnected from host.
 	void disconnected();
-	//! About to connect to host.
-	void aboutToConnectToHost();
-	//! About to disconnect from host.
-	void aboutToDisconnectFromHost();
-	//! About to reconnect to host.
-	void aboutToReconnectToHost();
-	//! About to change update timeout.
-	void aboutToChangeUpdateTimeout();
 	//! Rate of the messages per second.
 	void messagesRate( int );
 
 public:
-	/*!
-		New channel will not connected to the host automaticaly.
-		You should call connectToHost() manually.
-	*/
 	Channel(
 		//! Name of the channel.
 		const QString & name,
@@ -93,7 +79,11 @@ public:
 		//! Port.
 		quint16 port );
 
-	~Channel();
+	Channel(
+		//! Channel private.
+		ChannelPrivate * dd );
+
+	virtual ~Channel();
 
 	//! \return Name of the channel.
 	const QString & name() const;
@@ -102,11 +92,11 @@ public:
 	//! \return Port.
 	quint16 portNumber() const;
 	//! \return Timeout in the channel.
-	int timeout() const;
+	virtual int timeout() const = 0;
 	//! \return Is channel in connected state.
-	bool isConnected() const;
+	virtual bool isConnected() const = 0;
 	//! \return Whether the user wants to make this channel connected.
-	bool isMustBeConnected() const;
+	virtual bool isMustBeConnected() const = 0;
 
 public slots:
 	//! Forcibly connect to host.
@@ -127,13 +117,91 @@ public slots:
 		//! Timeout in milliseconds.
 		int msecs );
 
-private slots:
-	//! Forcibly connect to host.
+protected:
+	friend class ChannelsManager;
+
+	//! Activate channel.
+	virtual void activate() = 0;
+	//! Deactivate channel.
+	virtual void deactivate() = 0;
+
+	//! Implementation of the "connect to host" operation.
+	virtual void connectToHostImplementation() = 0;
+	//! Implementation of the "Disconnect from host" operation.
+	virtual void disconnectFromHostImplementation() = 0;
+	//! Implementation of the "reconnect to host" operation.
+	virtual void reconnectToHostImplementation() = 0;
+	//! Implementation of the "update timeout" operation.
+	virtual void updateTimeoutImplementation( int msecs ) = 0;
+
+protected:
+	QScopedPointer< ChannelPrivate > d;
+
+private:
+	Q_DISABLE_COPY( Channel )
+}; // class Channel
+
+
+//
+// ComoChannel
+//
+
+class ComoChannelPrivate;
+
+/*!
+	Como channel in the Globe.
+*/
+class ComoChannel
+	:	public Channel
+{
+	Q_OBJECT
+
+signals:
+	//! About to connect to host.
+	void aboutToConnectToHost( const QHostAddress &, quint16 );
+	//! About to disconnect from host.
+	void aboutToDisconnectFromHost();
+	//! About to send "GetListOfSources" message.
+	void aboutToSendGetListOfSources();
+
+public:
+	/*!
+		New channel will not connected to the host automaticaly.
+		You should call connectToHost() manually.
+	*/
+	ComoChannel(
+		//! Name of the channel.
+		const QString & name,
+		//! Host address.
+		const QHostAddress & address,
+		//! Port.
+		quint16 port );
+
+	~ComoChannel();
+
+	//! \return Timeout in the channel.
+	int timeout() const;
+	//! \return Is channel in connected state.
+	bool isConnected() const;
+	//! \return Whether the user wants to make this channel connected.
+	bool isMustBeConnected() const;
+
+protected:
+	//! Activate channel.
+	void activate();
+	//! Deactivate channel.
+	void deactivate();
+
+	//! Implementation of the "connect to host" operation.
 	void connectToHostImplementation();
-	//! Disconnect from host.
+	//! Implementation of the "Disconnect from host" operation.
 	void disconnectFromHostImplementation();
-	//! Reconnect to host. I.e. disconnect and then connect again.
+	//! Implementation of the "reconnect to host" operation.
 	void reconnectToHostImplementation();
+	//! Implementation of the "update timeout" operation.
+	void updateTimeoutImplementation( int msecs );
+
+private slots:
 	//! Socket implementation has been disconnected.
 	void socketDisconnected();
 	//! Socket implementation has been connected.
@@ -148,14 +216,17 @@ private slots:
 	void updateSourcesValue();
 	//! Socket's error.
 	void socketError( QAbstractSocket::SocketError socketError );
-	//! Change update timeout.
-	void changeUpdateTimeoutImplementation();
 
 private:
-	Q_DISABLE_COPY( Channel )
+	Q_DISABLE_COPY( ComoChannel )
 
-	QScopedPointer< ChannelPrivate > d;
-}; // class Channel
+	friend class ComoChannelPrivate;
+
+	inline ComoChannelPrivate * d_func()
+		{ return reinterpret_cast< ComoChannelPrivate* > ( d.data() ); }
+	inline const ComoChannelPrivate * d_func() const
+		{ return reinterpret_cast< const ComoChannelPrivate* >( d.data() ); }
+}; // class ComoChannel
 
 
 class ChannelsManagerPrivate;
@@ -182,6 +253,12 @@ private:
 	~ChannelsManager();
 
 public:
+	//! Supported types of the channels.
+	enum ChannelType {
+		//! Como channel.
+		ComoChannelType
+	}; // enum ChannelType
+
 	//! \return Instance.
 	static ChannelsManager & instance();
 
@@ -214,7 +291,9 @@ public:
 		//! Host address.
 		const QHostAddress & hostAddress,
 		//! Port.
-		quint16 port );
+		quint16 port,
+		//! Type of the channel.
+		ChannelType type = ComoChannelType );
 
 	//! Remove channel.
 	void removeChannel( const QString & name );

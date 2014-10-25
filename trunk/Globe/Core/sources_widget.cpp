@@ -150,6 +150,7 @@ SourcesWidget::channelRemoved( Channel * channel )
 	{
 		if( index == d->m_ui.m_channel->currentIndex() )
 		{
+			d->m_ui.m_channel->removeItem( index );
 			d->m_ui.m_channel->setCurrentIndex( -1 );
 			d->m_model->clear();
 		}

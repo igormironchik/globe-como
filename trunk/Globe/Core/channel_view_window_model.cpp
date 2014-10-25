@@ -122,6 +122,10 @@ ChannelViewWindowModel::ChannelViewWindowModel( QObject * parent )
 	connect( &PropertiesManager::instance(),
 		&PropertiesManager::propertiesChanged,
 		this, &ChannelViewWindowModel::propertiesChanged );
+
+	connect( &ChannelsManager::instance(),
+		&ChannelsManager::channelRemoved,
+		this, &ChannelViewWindowModel::channelRemoved );
 }
 
 ChannelViewWindowModel::~ChannelViewWindowModel()
@@ -426,6 +430,13 @@ ChannelViewWindowModel::propertiesChanged()
 				QAbstractTableModel::index( i, priorityColumn ) );
 		}
 	}
+}
+
+void
+ChannelViewWindowModel::channelRemoved( Channel * ch )
+{
+	if( ch->name() == d->m_channelName )
+		disconnected();
 }
 
 int

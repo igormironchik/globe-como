@@ -40,6 +40,7 @@
 #include <QList>
 #include <QThread>
 #include <QMap>
+#include <QMetaObject>
 
 
 namespace Globe {
@@ -158,7 +159,8 @@ public:
 			connect( m_socket, &Como::ClientSocket::disconnected,
 				this, &ChannelAndThreadDeleter::jobDone );
 
-			m_socket->disconnectFromHost();
+			QMetaObject::invokeMethod( m_socket, "disconnectFrom",
+				Qt::QueuedConnection );
 		}
 		else
 			jobDone();

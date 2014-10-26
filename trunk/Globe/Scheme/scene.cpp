@@ -228,6 +228,8 @@ public:
 	Selection m_selection;
 	//! Text items.
 	QList< Text* > m_texts;
+	//! Configuration file.
+	QString m_cfgFile;
 }; // class ScenePrivate
 
 
@@ -322,6 +324,8 @@ Scene::loadScheme( const QString & fileName )
 			QTextCodec::codecForName( "UTF-8" ) );
 
 		SchemeCfg cfg = tag.cfg();
+
+		d->m_cfgFile = fileName;
 
 		foreach( const SourceCfg & s, cfg.sources() )
 		{
@@ -689,9 +693,19 @@ Scene::addChannel( const QString & name )
 			this, &Scene::disconnected );
 	}
 	else
+	{
+		Log::instance().writeMsgToEventLog( LogLevelError,
+			QString( "Channel \"%1\" is unavailable for the\n"
+					 "scheme \"%2\"." )
+				.arg( name )
+				.arg( d->m_cfgFile ) );
+
 		QMessageBox::critical( 0, tr( "Channel is unavailable..." ),
-			tr( "Channe' \"%1\" is unavailable." )
-				.arg( name ) );
+			tr( "Channel \"%1\" is unavailable for the\n"
+				"scheme \"%2\"." )
+				.arg( name )
+				.arg( d->m_cfgFile ) );
+	}
 }
 
 void

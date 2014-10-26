@@ -380,27 +380,27 @@ because there is no such channel.</source>
 <context>
     <name>Globe::ChannelViewWindowModel</name>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="526"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="537"/>
         <source>Source Name</source>
         <translation>Источник данных</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="527"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="538"/>
         <source>Type Name</source>
         <translation>Тип</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="528"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="539"/>
         <source>Value</source>
         <translation>Значение</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="529"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="540"/>
         <source>Date &amp; Time</source>
         <translation>Дата и время</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_view_window_model.cpp" line="530"/>
+        <location filename="../Globe/Core/channel_view_window_model.cpp" line="541"/>
         <source>Pr.</source>
         <translation>Пр.</translation>
     </message>
@@ -480,6 +480,18 @@ because there is no such channel.</source>
 	Имя: %1
 	Адрес: %2
 	Порт: %3</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channels_list.cpp" line="604"/>
+        <source>You are about to delete channel...</source>
+        <translation>Вы собираетесь удалить канал...</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channels_list.cpp" line="605"/>
+        <source>You are about to delete channel &quot;%1&quot;.
+Are you sure?</source>
+        <translation>Вы собираетесь удалить канал &quot;%1&quot;.
+Вы уверены?</translation>
     </message>
 </context>
 <context>
@@ -1522,12 +1534,12 @@ Do you want to delete this file?</source>
 <context>
     <name>Globe::Scheme::Scene</name>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="377"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="382"/>
         <source>Unable to read scheme configuration...</source>
         <translation>Не удалось загрузить конфигурацию схемы...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="378"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="383"/>
         <source>Unable to read scheme configuration from file &quot;%1&quot;
 
 %2</source>
@@ -1536,12 +1548,12 @@ Do you want to delete this file?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="423"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="428"/>
         <source>Unable to save scheme configuration...</source>
         <translation>Не удалось сохранить конфигурацию схемы...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="424"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="429"/>
         <source>Unable to save scheme configuration to file &quot;%1&quot;.
 
 %2</source>
@@ -1550,29 +1562,31 @@ Do you want to delete this file?</source>
 %2</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="473"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="478"/>
         <source>Source already on the scheme...</source>
         <translation>Источник уже на схеме...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="474"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="479"/>
         <source>Source already on the scheme.</source>
         <translation>Источник уже на схеме.</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="483"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="488"/>
         <source>Text</source>
         <translation>Текст</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="691"/>
+        <location filename="../Globe/Scheme/scene.cpp" line="703"/>
         <source>Channel is unavailable...</source>
         <translation>Канал недоступен...</translation>
     </message>
     <message>
-        <location filename="../Globe/Scheme/scene.cpp" line="692"/>
-        <source>Channe&apos; &quot;%1&quot; is unavailable.</source>
-        <translation>Канал &quot;%1&quot; не доступен.</translation>
+        <location filename="../Globe/Scheme/scene.cpp" line="704"/>
+        <source>Channel &quot;%1&quot; is unavailable for the
+scheme &quot;%2&quot;.</source>
+        <translation>Канал &quot;%1&quot; не доступен для
+схемы &quot;%2&quot;.</translation>
     </message>
 </context>
 <context>

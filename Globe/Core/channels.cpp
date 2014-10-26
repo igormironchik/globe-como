@@ -154,8 +154,12 @@ public:
 		,	m_socket( socket )
 	{
 		if( isConnected )
+		{
 			connect( m_socket, &Como::ClientSocket::disconnected,
 				this, &ChannelAndThreadDeleter::jobDone );
+
+			m_socket->disconnectFromHost();
+		}
 		else
 			jobDone();
 	}

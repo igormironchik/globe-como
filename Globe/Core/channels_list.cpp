@@ -600,18 +600,26 @@ ChannelsList::delChannel()
 		const ChannelWidgetAndLine & widgetAndLine =
 			d->m_widgets.at( d->m_currentWidgetIndex );
 
-		ChannelsManager::instance().removeChannel(
-			widgetAndLine.widget()->channel()->name() );
+		if( QMessageBox::question( this,
+				tr( "You are about to delete channel..." ),
+				tr( "You are about to delete channel \"%1\".\n"
+					"Are you sure?" )
+					.arg( widgetAndLine.widget()->channel()->name() ) )
+			== QMessageBox::Yes )
+		{
+			ChannelsManager::instance().removeChannel(
+				widgetAndLine.widget()->channel()->name() );
 
-		widgetAndLine.widget()->hide();
-		widgetAndLine.line()->hide();
-		widgetAndLine.widget()->deleteLater();
-		widgetAndLine.line()->deleteLater();
+			widgetAndLine.widget()->hide();
+			widgetAndLine.line()->hide();
+			widgetAndLine.widget()->deleteLater();
+			widgetAndLine.line()->deleteLater();
 
-		d->m_widgets.removeAt( d->m_currentWidgetIndex );
-		d->m_currentWidgetIndex = -1;
+			d->m_widgets.removeAt( d->m_currentWidgetIndex );
+			d->m_currentWidgetIndex = -1;
 
-		d->updateWidgetsPosition();
+			d->updateWidgetsPosition();
+		}
 	}
 }
 

@@ -36,11 +36,15 @@
 #include <QtConfFile/TagNoValue>
 #include <QtConfFile/ConstraintMinMax>
 #include <QtConfFile/TagVectorOfTags>
+#include <QtConfFile/ConstraintOneOf>
 
 // Qt include.
 #include <QHostAddress>
 #include <QString>
 #include <QList>
+
+// Globe include.
+#include <Globe/Core/channels.hpp>
 
 
 namespace Globe {
@@ -55,7 +59,8 @@ public:
 	ChannelCfg();
 
 	ChannelCfg( const QString & name, const QHostAddress & address,
-		quint16 port, bool isMustBeConnected, int timeout );
+		quint16 port, bool isMustBeConnected, int timeout,
+		ChannelType type );
 
 	ChannelCfg( const ChannelCfg & other );
 
@@ -86,6 +91,11 @@ public:
 	//! Set timeout in the channel.
 	void setTimeout( int t );
 
+	//! \return Type of the channel.
+	ChannelType channelType() const;
+	//! Set channel's type.
+	void setChannelType( ChannelType type );
+
 private:
 	//! Name of the channel.
 	QString m_name;
@@ -97,6 +107,8 @@ private:
 	bool m_isMustBeConnected;
 	//! Timeout in the channel.
 	int m_timeout;
+	//! Type of the channel.
+	ChannelType m_type;
 }; // class ChannelCfg
 
 
@@ -142,6 +154,10 @@ private:
 	QtConfFile::TagScalar< int > m_timeout;
 	//! Consatrint for the timeout.
 	QtConfFile::ConstraintMinMax< int > m_timeoutConstraint;
+	//! Channel's type.
+	QtConfFile::TagScalar< QString > m_type;
+	//! Constraint for the type of the channel.
+	QtConfFile::ConstraintOneOf< QString > m_typeConstraint;
 }; // class ChannelTag
 
 

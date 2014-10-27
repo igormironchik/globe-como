@@ -378,7 +378,8 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 	foreach( const ChannelCfg & channelCfg, cfg )
 	{
 		Channel * channel = ChannelsManager::instance().createChannel(
-			channelCfg.name(), channelCfg.address(), channelCfg.port() );
+			channelCfg.name(), channelCfg.address(), channelCfg.port(),
+			channelCfg.channelType() );
 
 		if( channel )
 		{
@@ -841,6 +842,7 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 		chCfg.setPort( channel->portNumber() );
 		chCfg.setMustBeConnected( channel->isMustBeConnected() );
 		chCfg.setTimeout( channel->timeout() );
+		chCfg.setChannelType( channel->channelType() );
 
 		channelsCfg.append( chCfg );
 	}

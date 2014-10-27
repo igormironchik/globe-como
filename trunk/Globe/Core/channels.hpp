@@ -44,6 +44,17 @@
 
 namespace Globe {
 
+//
+// ChannelType
+//
+
+//! Supported types of the channels.
+enum ChannelType {
+	//! Como channel.
+	ComoChannelType = 1
+}; // enum ChannelType
+
+
 class ChannelPrivate;
 
 //
@@ -97,6 +108,8 @@ public:
 	virtual bool isConnected() const = 0;
 	//! \return Whether the user wants to make this channel connected.
 	virtual bool isMustBeConnected() const = 0;
+	//! \return Type of the channel.
+	virtual ChannelType channelType() const = 0;
 
 public slots:
 	//! Forcibly connect to host.
@@ -185,6 +198,8 @@ public:
 	bool isConnected() const;
 	//! \return Whether the user wants to make this channel connected.
 	bool isMustBeConnected() const;
+	//! \return Type of the channel.
+	ChannelType channelType() const;
 
 protected:
 	//! Activate channel.
@@ -253,12 +268,6 @@ private:
 	~ChannelsManager();
 
 public:
-	//! Supported types of the channels.
-	enum ChannelType {
-		//! Como channel.
-		ComoChannelType
-	}; // enum ChannelType
-
 	//! \return Instance.
 	static ChannelsManager & instance();
 

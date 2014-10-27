@@ -346,6 +346,12 @@ ComoChannel::isMustBeConnected() const
 	return !d->m_isDisconnectedByUser;
 }
 
+ChannelType
+ComoChannel::channelType() const
+{
+	return ComoChannelType;
+}
+
 void
 ComoChannel::activate()
 {

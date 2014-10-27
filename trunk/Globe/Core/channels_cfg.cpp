@@ -42,16 +42,19 @@ ChannelCfg::ChannelCfg()
 	:	m_port( 0 )
 	,	m_isMustBeConnected( false )
 	,	m_timeout( 0 )
+	,	m_type( ComoChannelType )
 {
 }
 
 ChannelCfg::ChannelCfg( const QString & name, const QHostAddress & address,
-	quint16 port, bool isMustBeConnected, int timeout )
+	quint16 port, bool isMustBeConnected, int timeout,
+	ChannelType type )
 	:	m_name( name )
 	,	m_address( address )
 	,	m_port( port )
 	,	m_isMustBeConnected( isMustBeConnected )
 	,	m_timeout( timeout )
+	,	m_type( type )
 {
 }
 
@@ -61,6 +64,7 @@ ChannelCfg::ChannelCfg( const ChannelCfg & other )
 	,	m_port( other.port() )
 	,	m_isMustBeConnected( other.isMustBeConnected() )
 	,	m_timeout( other.timeout() )
+	,	m_type( other.channelType() )
 {
 }
 
@@ -74,6 +78,7 @@ ChannelCfg::operator = ( const ChannelCfg & other )
 		m_port = other.port();
 		m_isMustBeConnected = other.isMustBeConnected();
 		m_timeout = other.timeout();
+		m_type = other.channelType();
 	}
 
 	return *this;
@@ -140,6 +145,64 @@ ChannelCfg::setTimeout( int t )
 	m_timeout = t;
 }
 
+ChannelType
+ChannelCfg::channelType() const
+{
+	return m_type;
+}
+
+void
+ChannelCfg::setChannelType( ChannelType type )
+{
+	m_type = type;
+}
+
+
+static const QString comoChannelTypeName = QLatin1String( "como" );
+
+
+//
+// channelTypeToString
+//
+
+static inline QString channelTypeToString( ChannelType type )
+{
+	switch( type )
+	{
+		case ComoChannelType :
+			return comoChannelTypeName;
+
+		default :
+			return comoChannelTypeName;
+	}
+}
+
+
+//
+// channelTypeFromString
+//
+
+static inline ChannelType channelTypeFromString( const QString & type )
+{
+	if( type == comoChannelTypeName )
+		return ComoChannelType;
+	else
+		return ComoChannelType;
+}
+
+
+//
+// initChannelTypeConstraint
+//
+
+static inline void initChannelTypeConstraint(
+	QtConfFile::TagScalar< QString > & tag,
+	QtConfFile::ConstraintOneOf< QString > & constraint )
+{
+	constraint.addValue( comoChannelTypeName );
+	tag.setConstraint( &constraint );
+}
+
 
 //
 // ChannelTag
@@ -153,9 +216,12 @@ ChannelTag::ChannelTag( const QString & name, bool isMandatory )
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
 	,	m_timeout( *this, QLatin1String( "timeout" ), false )
 	,	m_timeoutConstraint( 0, 10000 )
+	,	m_type( *this, QLatin1String( "type" ), false )
 {
 	m_port.setConstraint( &m_portConstraint );
 	m_timeout.setConstraint( &m_timeoutConstraint );
+
+	initChannelTypeConstraint( m_type, m_typeConstraint );
 }
 
 ChannelTag::ChannelTag( QtConfFile::Tag & owner, const QString & name,
@@ -167,9 +233,12 @@ ChannelTag::ChannelTag( QtConfFile::Tag & owner, const QString & name,
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
 	,	m_timeout( *this, QLatin1String( "timeout" ), false )
 	,	m_timeoutConstraint( 0, 10000 )
+	,	m_type( *this, QLatin1String( "type" ), false )
 {
 	m_port.setConstraint( &m_portConstraint );
 	m_timeout.setConstraint( &m_timeoutConstraint );
+
+	initChannelTypeConstraint( m_type, m_typeConstraint );
 }
 
 ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
@@ -181,13 +250,17 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
 	,	m_timeout( *this, QLatin1String( "timeout" ), false )
 	,	m_timeoutConstraint( 0, 10000 )
+	,	m_type( *this, QLatin1String( "type" ), false )
 {
 	m_port.setConstraint( &m_portConstraint );
 	m_timeout.setConstraint( &m_timeoutConstraint );
 
+	initChannelTypeConstraint( m_type, m_typeConstraint );
+
 	setValue( cfg.name() );
 	m_address.setValue( cfg.address().toString() );
 	m_port.setValue( cfg.port() );
+	m_type.setValue( channelTypeToString( cfg.channelType() ) );
 
 	if( cfg.isMustBeConnected() )
 		m_isMustBeConnected.setDefined();
@@ -205,13 +278,17 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg,
 	,	m_isMustBeConnected( *this, QLatin1String( "mustBeConnected" ), false )
 	,	m_timeout( *this, QLatin1String( "timeout" ), false )
 	,	m_timeoutConstraint( 0, 10000 )
+	,	m_type( *this, QLatin1String( "type" ), false )
 {
 	m_port.setConstraint( &m_portConstraint );
 	m_timeout.setConstraint( &m_timeoutConstraint );
 
+	initChannelTypeConstraint( m_type, m_typeConstraint );
+
 	setValue( cfg.name() );
 	m_address.setValue( cfg.address().toString() );
 	m_port.setValue( cfg.port() );
+	m_type.setValue( channelTypeToString( cfg.channelType() ) );
 
 	if( cfg.isMustBeConnected() )
 		m_isMustBeConnected.setDefined();
@@ -236,6 +313,9 @@ ChannelTag::cfg() const
 
 	if( m_timeout.isDefined() )
 		cfg.setTimeout( m_timeout.value() );
+
+	if( m_type.isDefined() )
+		cfg.setChannelType( channelTypeFromString( m_type.value() ) );
 
 	return cfg;
 }

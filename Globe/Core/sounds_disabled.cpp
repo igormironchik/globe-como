@@ -243,7 +243,7 @@ DisabledSounds::init()
 	d->m_timer = new QTimer( this );
 
 	QTimer::singleShot( ( 60 - QTime::currentTime().second() ) * 1000,
-		this, SLOT( initTimer() ) );
+		this, &DisabledSounds::initTimer );
 }
 
 void

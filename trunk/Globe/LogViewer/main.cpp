@@ -118,7 +118,7 @@ int main( int argc, char ** argv )
 	LogViewer::Configuration::instance().setCfgFileName( cfgFile );
 
 	QTimer::singleShot( 0, &LogViewer::MainWindow::instance(),
-		SLOT( start() ) );
+		&LogViewer::MainWindow::start );
 
 	return app->exec();
 }

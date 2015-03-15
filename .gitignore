@@ -1,0 +1,8 @@
+
+/**/debug/
+/**/release/
+/lib/
+/**/Makefile*
+/QtConfFile/
+/QtArg/
+/Como/

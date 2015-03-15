@@ -1,0 +1,11 @@
+Globe is a tool for monitoring applications through the Como sources.
+
+BEFORE COMPILATION
+
+ * Copy QtConfFile directory into the root from https://github.com/igormironchik/qt-conf-file
+ * Copy QtArg directory into the the root from https://github.com/igormironchik/qtargparser
+ * Copy Como directory into the root from https://github.com/igormironchik/components-observation
+ 
+COMPILLING
+ * Run qmake and make
+ 

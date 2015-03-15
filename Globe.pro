@@ -34,3 +34,8 @@ SUBDIRS = Como \
           Globe
 
 Globe.depends = Como QtConfFile
+
+libDir.commands = mkdir lib
+
+QMAKE_EXTRA_TARGETS += libDir
+

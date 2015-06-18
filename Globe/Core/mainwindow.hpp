@@ -72,6 +72,8 @@ private:
 
 	~MainWindow();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static MainWindow & instance();

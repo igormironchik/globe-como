@@ -59,6 +59,8 @@ private:
 
 	~SourcesMainWindow();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static SourcesMainWindow & instance();

@@ -70,6 +70,8 @@ private:
 
 	~SourcesManager();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static SourcesManager & instance();

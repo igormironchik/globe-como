@@ -83,6 +83,8 @@ private:
 
 	~Log();
 
+	static void cleanup();
+
 private:
 	Q_DISABLE_COPY( Log )
 

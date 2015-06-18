@@ -46,6 +46,7 @@
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QSqlQuery>
+#include <QCoreApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -104,12 +105,27 @@ LogEventWindow::~LogEventWindow()
 {
 }
 
+static LogEventWindow * logEventWindowInstancePointer = 0;
+
+void
+LogEventWindow::cleanup()
+{
+	delete logEventWindowInstancePointer;
+
+	logEventWindowInstancePointer = 0;
+}
+
 LogEventWindow &
 LogEventWindow::instance()
 {
-	static LogEventWindow inst;
+	if( !logEventWindowInstancePointer )
+	{
+		logEventWindowInstancePointer = new LogEventWindow;
 
-	return inst;
+		qAddPostRoutine( &LogEventWindow::cleanup );
+	}
+
+	return *logEventWindowInstancePointer;
 }
 
 ToolWindowObject *

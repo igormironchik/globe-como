@@ -67,6 +67,8 @@ private:
 
 	~Sounds();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static Sounds & instance();

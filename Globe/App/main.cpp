@@ -37,7 +37,6 @@
 #include <QTimer>
 #include <QList>
 #include <QDebug>
-#include <QSharedPointer>
 #include <QHostAddress>
 
 // Globe icnlude.
@@ -60,21 +59,6 @@
 #include <QtArg/Arg>
 #include <QtArg/Exceptions>
 #include <QtArg/Help>
-
-
-//
-// globeApplication
-//
-
-//! Singleton with QApplication.
-static QSharedPointer< QApplication > globeApplication( int argc = 0, char ** argv = 0 )
-{
-	static QSharedPointer< QApplication > app(
-		new QApplication( argc, argv ) );
-
-	return app;
-}
-
 
 int main( int argc, char ** argv )
 {
@@ -114,7 +98,7 @@ int main( int argc, char ** argv )
 		return 1;
 	}
 
-	QSharedPointer< QApplication > app = globeApplication( argc, argv );
+	QApplication app( argc, argv );
 
 	QIcon appIcon( ":/img/globe_256x256.png" );
 	appIcon.addFile( ":/img/globe_128x128.png" );
@@ -124,11 +108,11 @@ int main( int argc, char ** argv )
 	appIcon.addFile( ":/img/globe_22x22.png" );
 	appIcon.addFile( ":/img/globe_16x16.png" );
 	appIcon.addFile( ":/img/globe_8x8.png" );
-	app->setWindowIcon( appIcon );
+	app.setWindowIcon( appIcon );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
-	app->installTranslator( &appTranslator );
+	app.installTranslator( &appTranslator );
 
 	Globe::checkDirAndCreateIfNotExists( QLatin1String( "./" ),
 		QLatin1String( "etc" ) );
@@ -148,12 +132,12 @@ int main( int argc, char ** argv )
 
 	Globe::MainWindow::instance().init( toolWindows );
 
-	QObject::connect( app.data(), &QApplication::commitDataRequest,
+	QObject::connect( &app, &QApplication::commitDataRequest,
 		&Globe::MainWindow::instance(),
 		&Globe::MainWindow::sessionFinished );
 
 	QTimer::singleShot( 0, &Globe::MainWindow::instance(),
 		&Globe::MainWindow::start );
 
-	return app->exec();
+	return app.exec();
 }

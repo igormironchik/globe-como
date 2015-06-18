@@ -36,6 +36,7 @@
 #include <QMessageBox>
 #include <QVector>
 #include <QTimer>
+#include <QCoreApplication>
 
 // Globe include.
 #include <Globe/Core/log.hpp>
@@ -275,12 +276,27 @@ Log::privateInit()
 		this, &Log::dbError );
 }
 
+static Log * logInstancePointer = 0;
+
+void
+Log::cleanup()
+{
+	delete logInstancePointer;
+
+	logInstancePointer= 0;
+}
+
 Log &
 Log::instance()
 {
-	static Log log;
+	if( !logInstancePointer )
+	{
+		logInstancePointer = new Log;
 
-	return log;
+		qAddPostRoutine( &Log::cleanup );
+	}
+
+	return *logInstancePointer;
 }
 
 void

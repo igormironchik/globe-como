@@ -46,6 +46,7 @@
 #include <QHBoxLayout>
 #include <QWidget>
 #include <QSqlQuery>
+#include <QCoreApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -104,12 +105,27 @@ LogSourcesWindow::~LogSourcesWindow()
 {
 }
 
+static LogSourcesWindow * logSourcesWindowInstancePointer = 0;
+
+void
+LogSourcesWindow::cleanup()
+{
+	delete logSourcesWindowInstancePointer;
+
+	logSourcesWindowInstancePointer = 0;
+}
+
 LogSourcesWindow &
 LogSourcesWindow::instance()
 {
-	static LogSourcesWindow inst;
+	if( !logSourcesWindowInstancePointer )
+	{
+		logSourcesWindowInstancePointer = new LogSourcesWindow;
 
-	return inst;
+		qAddPostRoutine( &LogSourcesWindow::cleanup );
+	}
+
+	return *logSourcesWindowInstancePointer;
 }
 
 ToolWindowObject *

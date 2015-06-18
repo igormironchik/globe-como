@@ -65,6 +65,8 @@ private:
 
 	~DB();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static DB & instance();

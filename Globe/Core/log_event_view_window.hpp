@@ -60,6 +60,8 @@ private:
 
 	~LogEventWindow();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static LogEventWindow & instance();

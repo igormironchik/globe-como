@@ -41,6 +41,7 @@
 #include <QThread>
 #include <QMap>
 #include <QMetaObject>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -534,12 +535,27 @@ ChannelsManager::~ChannelsManager()
 {
 }
 
+static ChannelsManager * channelsManagerInstancePointer = 0;
+
+void
+ChannelsManager::cleanup()
+{
+	delete channelsManagerInstancePointer;
+
+	channelsManagerInstancePointer = 0;
+}
+
 ChannelsManager &
 ChannelsManager::instance()
 {
-	static ChannelsManager inst;
+	if( !channelsManagerInstancePointer )
+	{
+		channelsManagerInstancePointer = new ChannelsManager;
 
-	return inst;
+		qAddPostRoutine( &ChannelsManager::cleanup );
+	}
+
+	return *channelsManagerInstancePointer;
 }
 
 Channel *

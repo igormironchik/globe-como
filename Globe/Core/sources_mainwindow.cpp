@@ -43,6 +43,7 @@
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QCoreApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -84,12 +85,27 @@ SourcesMainWindow::~SourcesMainWindow()
 {
 }
 
+static SourcesMainWindow * sourcesMainWindowInstancePointer = 0;
+
+void
+SourcesMainWindow::cleanup()
+{
+	delete sourcesMainWindowInstancePointer;
+
+	sourcesMainWindowInstancePointer = 0;
+}
+
 SourcesMainWindow &
 SourcesMainWindow::instance()
 {
-	static SourcesMainWindow inst;
+	if( !sourcesMainWindowInstancePointer )
+	{
+		sourcesMainWindowInstancePointer = new SourcesMainWindow;
 
-	return inst;
+		qAddPostRoutine( &SourcesMainWindow::cleanup );
+	}
+
+	return *sourcesMainWindowInstancePointer;
 }
 
 ToolWindowObject *

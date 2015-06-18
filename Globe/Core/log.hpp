@@ -156,6 +156,8 @@ private:
 
 	~Log();
 
+	static void cleanup();
+
 	//! Initialize.
 	void init();
 	//! Private initialization.

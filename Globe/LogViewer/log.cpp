@@ -35,6 +35,7 @@
 #include <QSqlDatabase>
 #include <QFileInfo>
 #include <QVariant>
+#include <QCoreApplication>
 
 // LogViewer include.
 #include <LogViewer/log.hpp>
@@ -105,12 +106,27 @@ Log::init()
 		emit ready();
 }
 
+static Log * logInstancePointer = 0;
+
+void
+Log::cleanup()
+{
+	delete logInstancePointer;
+
+	logInstancePointer = 0;
+}
+
 Log &
 Log::instance()
 {
-	static Log log;
+	if( !logInstancePointer )
+	{
+		logInstancePointer = new Log;
 
-	return log;
+		qAddPostRoutine( &Log::cleanup );
+	}
+
+	return *logInstancePointer;
 }
 
 QString

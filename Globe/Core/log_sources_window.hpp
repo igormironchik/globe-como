@@ -60,6 +60,8 @@ private:
 
 	~LogSourcesWindow();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static LogSourcesWindow & instance();

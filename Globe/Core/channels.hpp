@@ -267,6 +267,8 @@ private:
 
 	~ChannelsManager();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static ChannelsManager & instance();

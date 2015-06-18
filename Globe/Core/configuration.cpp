@@ -56,6 +56,7 @@
 
 // Qt include.
 #include <QMessageBox>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -122,12 +123,27 @@ Configuration::~Configuration()
 {
 }
 
+static Configuration * configurationInstancePointer = 0;
+
+void
+Configuration::cleanup()
+{
+	delete configurationInstancePointer;
+
+	configurationInstancePointer = 0;
+}
+
 Configuration &
 Configuration::instance()
 {
-	static Configuration inst;
+	if( !configurationInstancePointer )
+	{
+		configurationInstancePointer = new Configuration;
 
-	return inst;
+		qAddPostRoutine( &Configuration::cleanup );
+	}
+
+	return *configurationInstancePointer;
 }
 
 void

@@ -68,6 +68,8 @@ private:
 
 	~PropertiesManager();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static PropertiesManager & instance();

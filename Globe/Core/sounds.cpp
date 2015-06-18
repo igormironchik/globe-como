@@ -47,6 +47,7 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 #include <QTabWidget>
+#include <QCoreApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -101,12 +102,27 @@ Sounds::~Sounds()
 {
 }
 
+static Sounds * soundsInstancePointer = 0;
+
+void
+Sounds::cleanup()
+{
+	delete soundsInstancePointer;
+
+	soundsInstancePointer = 0;
+}
+
 Sounds &
 Sounds::instance()
 {
-	static Sounds inst;
+	if( !soundsInstancePointer )
+	{
+		soundsInstancePointer = new Sounds;
 
-	return inst;
+		qAddPostRoutine( &Sounds::cleanup );
+	}
+
+	return *soundsInstancePointer;
 }
 
 ToolWindowObject *

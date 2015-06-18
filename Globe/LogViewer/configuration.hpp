@@ -57,6 +57,8 @@ private:
 
 	~Configuration();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static Configuration & instance();

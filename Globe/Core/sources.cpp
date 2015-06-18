@@ -38,6 +38,7 @@
 // Qt include.
 #include <QMap>
 #include <QList>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -200,12 +201,27 @@ SourcesManager::~SourcesManager()
 {
 }
 
+static SourcesManager * sourcesManagerInstancePointer = 0;
+
+void
+SourcesManager::cleanup()
+{
+	delete sourcesManagerInstancePointer;
+
+	sourcesManagerInstancePointer = 0;
+}
+
 SourcesManager &
 SourcesManager::instance()
 {
-	static SourcesManager inst;
+	if( !sourcesManagerInstancePointer )
+	{
+		sourcesManagerInstancePointer = new SourcesManager;
 
-	return inst;
+		qAddPostRoutine( &SourcesManager::cleanup );
+	}
+
+	return *sourcesManagerInstancePointer;
 }
 
 QList< QString >

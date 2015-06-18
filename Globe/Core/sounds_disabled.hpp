@@ -72,6 +72,8 @@ private:
 
 	~DisabledSounds();
 
+	static void cleanup();
+
 public:
 	//! \return Instance.
 	static DisabledSounds & instance();

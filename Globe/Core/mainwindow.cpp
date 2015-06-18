@@ -58,6 +58,7 @@
 #include <QCloseEvent>
 #include <QFileDialog>
 #include <QSessionManager>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -128,12 +129,27 @@ MainWindow::~MainWindow()
 {
 }
 
+static MainWindow * mainWindowInstancePointer = 0;
+
+void
+MainWindow::cleanup()
+{
+	delete mainWindowInstancePointer;
+
+	mainWindowInstancePointer = 0;
+}
+
 MainWindow &
 MainWindow::instance()
 {
-	static MainWindow inst;
+	if( !mainWindowInstancePointer )
+	{
+		mainWindowInstancePointer = new MainWindow;
 
-	return inst;
+		qAddPostRoutine( &MainWindow::cleanup );
+	}
+
+	return *mainWindowInstancePointer;
 }
 
 ChannelsList *

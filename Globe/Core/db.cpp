@@ -40,6 +40,7 @@
 // Qt include.
 #include <QMessageBox>
 #include <QFileInfo>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -83,12 +84,27 @@ DB::~DB()
 	d->m_connection.close();
 }
 
+static DB * dbInstancePointer = 0;
+
+void
+DB::cleanup()
+{
+	delete dbInstancePointer;
+
+	dbInstancePointer = 0;
+}
+
 DB &
 DB::instance()
 {
-	static DB inst;
+	if( !dbInstancePointer )
+	{
+		dbInstancePointer = new DB;
 
-	return inst;
+		qAddPostRoutine( &DB::cleanup );
+	}
+
+	return *dbInstancePointer;
 }
 
 bool

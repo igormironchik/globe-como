@@ -37,6 +37,7 @@
 // Qt include.
 #include <QTimer>
 #include <QMessageBox>
+#include <QCoreApplication>
 
 // QtConfFile include.
 #include <QtConfFile/Utils>
@@ -77,12 +78,27 @@ DisabledSounds::~DisabledSounds()
 {
 }
 
+static DisabledSounds * disabledSoundsInstancePointer = 0;
+
+void
+DisabledSounds::cleanup()
+{
+	delete disabledSoundsInstancePointer;
+
+	disabledSoundsInstancePointer = 0;
+}
+
 DisabledSounds &
 DisabledSounds::instance()
 {
-	static DisabledSounds inst;
+	if( !disabledSoundsInstancePointer )
+	{
+		disabledSoundsInstancePointer = new DisabledSounds;
 
-	return inst;
+		qAddPostRoutine( &DisabledSounds::cleanup );
+	}
+
+	return *disabledSoundsInstancePointer;
 }
 
 bool

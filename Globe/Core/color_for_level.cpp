@@ -38,6 +38,7 @@
 
 // Qt include.
 #include <QMessageBox>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -93,12 +94,27 @@ ColorForLevel::~ColorForLevel()
 {
 }
 
+static ColorForLevel * colorForLevelInstancePointer = 0;
+
+void
+ColorForLevel::cleanup()
+{
+	delete colorForLevelInstancePointer;
+
+	colorForLevelInstancePointer = 0;
+}
+
 ColorForLevel &
 ColorForLevel::instance()
 {
-	static ColorForLevel inst;
+	if( !colorForLevelInstancePointer )
+	{
+		colorForLevelInstancePointer = new ColorForLevel;
 
-	return inst;
+		qAddPostRoutine( &ColorForLevel::cleanup );
+	}
+
+	return *colorForLevelInstancePointer;
 }
 
 const QColor &

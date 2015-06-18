@@ -53,6 +53,7 @@
 #include <QMessageBox>
 #include <QCloseEvent>
 #include <QMenuBar>
+#include <QCoreApplication>
 
 
 namespace Globe {
@@ -294,12 +295,27 @@ PropertiesManager::~PropertiesManager()
 {
 }
 
+static PropertiesManager * propertiesManagerInstancePointer = 0;
+
+void
+PropertiesManager::cleanup()
+{
+	delete propertiesManagerInstancePointer;
+
+	propertiesManagerInstancePointer = 0;
+}
+
 PropertiesManager &
 PropertiesManager::instance()
 {
-	static PropertiesManager inst;
+	if( !propertiesManagerInstancePointer )
+	{
+		propertiesManagerInstancePointer = new PropertiesManager;
 
-	return inst;
+		qAddPostRoutine( &PropertiesManager::cleanup );
+	}
+
+	return *propertiesManagerInstancePointer;
 }
 
 void

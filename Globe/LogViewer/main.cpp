@@ -35,7 +35,6 @@
 #include <QTextStream>
 #include <QString>
 #include <QDebug>
-#include <QSharedPointer>
 #include <QTimer>
 
 // QtArg include.
@@ -47,20 +46,6 @@
 // LogViewer include.
 #include <LogViewer/configuration.hpp>
 #include <LogViewer/mainwindow.hpp>
-
-
-//
-// viewerApplication
-//
-
-//! Singleton with QApplication.
-static QSharedPointer< QApplication > viewerApplication( int argc = 0, char ** argv = 0 )
-{
-	static QSharedPointer< QApplication > app(
-		new QApplication( argc, argv ) );
-
-	return app;
-} // viewerApplication
 
 
 int main( int argc, char ** argv )
@@ -97,7 +82,7 @@ int main( int argc, char ** argv )
 		return 1;
 	}
 
-	QSharedPointer< QApplication > app = viewerApplication( argc, argv );
+	QApplication app( argc, argv );
 
 	QIcon appIcon( ":/img/viewer_128x128.png" );
 	appIcon.addFile( ":/img/viewer_64x64.png" );
@@ -105,20 +90,20 @@ int main( int argc, char ** argv )
 	appIcon.addFile( ":/img/viewer_32x32.png" );
 	appIcon.addFile( ":/img/viewer_22x22.png" );
 	appIcon.addFile( ":/img/viewer_16x16.png" );
-	app->setWindowIcon( appIcon );
+	app.setWindowIcon( appIcon );
 
 	QTranslator globeTranslator;
 	globeTranslator.load( "./tr/globe_" + QLocale::system().name() );
-	app->installTranslator( &globeTranslator );
+	app.installTranslator( &globeTranslator );
 
 	QTranslator appTranslator;
 	appTranslator.load( "./tr/logviewer_" + QLocale::system().name() );
-	app->installTranslator( &appTranslator );
+	app.installTranslator( &appTranslator );
 
 	LogViewer::Configuration::instance().setCfgFileName( cfgFile );
 
 	QTimer::singleShot( 0, &LogViewer::MainWindow::instance(),
 		&LogViewer::MainWindow::start );
 
-	return app->exec();
+	return app.exec();
 }

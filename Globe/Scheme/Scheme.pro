@@ -6,8 +6,8 @@ INCLUDEPATH += . ../..
 CONFIG += qt staticlib
 QT += gui widgets sql network
 
-INCLUDEPATH += $$PWD/.. $$PWD/../..
-DEPENDPATH += $$PWD/.. $$PWD/../..
+INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
+DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
 
 RESOURCES = scheme_resources.qrc
 

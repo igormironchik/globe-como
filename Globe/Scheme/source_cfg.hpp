@@ -115,7 +115,7 @@ public:
 	SourceCfgTag( const QString & name, bool isMandatory = false );
 
 	SourceCfgTag( const SourceCfg & cfg, const QString & name,
-		bool isMandatory() = false );
+		bool isMandatory = false );
 
 	//! \return Configuration.
 	SourceCfg sourceCfg() const;

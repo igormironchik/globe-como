@@ -104,6 +104,10 @@ Text::Text( const QString & text, Selection * selection, Scene * scene )
 {
 }
 
+Text::~Text()
+{
+}
+
 void
 Text::setMode( SceneMode mode )
 {
@@ -288,6 +292,9 @@ Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 					x += dx;
 				}
 			break;
+
+			default:
+				break;
 		}
 
 		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )

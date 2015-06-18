@@ -45,7 +45,7 @@ WindowCfg::WindowCfg()
 }
 
 WindowCfg::WindowCfg( const QString & schemeCfgFile,
-	WindowStateCfg & windowState )
+	const WindowStateCfg & windowState )
 	:	m_schemeCfgFile( schemeCfgFile )
 	,	m_windowState( windowState )
 {

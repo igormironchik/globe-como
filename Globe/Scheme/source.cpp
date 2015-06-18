@@ -119,6 +119,10 @@ Source::Source( const Como::Source & source, const QString & channelName,
 	setSource( source );
 }
 
+Source::~Source()
+{
+}
+
 void
 Source::setMode( SceneMode mode )
 {
@@ -404,6 +408,9 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 					x += dx;
 				}
 			break;
+
+			default:
+				break;
 		}
 
 		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )

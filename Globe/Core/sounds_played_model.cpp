@@ -57,10 +57,10 @@ PlayedSoundsModelRecord::PlayedSoundsModelRecord( const QDateTime & dt,
 
 PlayedSoundsModelRecord::PlayedSoundsModelRecord(
 	const PlayedSoundsModelRecord & other )
-	:	m_level( other.level() )
+	:	m_dateTime( other.dateTime() )
+	,	m_level( other.level() )
 	,	m_channelName( other.channelName() )
 	,	m_source( other.source() )
-	,	m_dateTime( other.dateTime() )
 {
 }
 

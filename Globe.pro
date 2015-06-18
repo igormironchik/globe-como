@@ -29,13 +29,12 @@ defineTest(minQtVersion) {
 
 TEMPLATE = subdirs
 
-SUBDIRS = Como \
-          QtConfFile \
+SUBDIRS = Como/Como \
+          QtConfFile/QtConfFile \
           Globe
 
-Globe.depends = Como QtConfFile
+Globe.depends = Como/Como QtConfFile/QtConfFile
 
 libDir.commands = mkdir lib
 
 QMAKE_EXTRA_TARGETS += libDir
-

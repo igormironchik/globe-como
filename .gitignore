@@ -3,6 +3,9 @@
 /**/release/
 /lib/
 /**/Makefile*
-/QtConfFile/
-/QtArg/
-/Como/
+/**/*.o
+/**/*.user
+/**/moc_*.cpp
+/**/*.moc
+/**/ui_*.h
+/**/qrc_*.cpp

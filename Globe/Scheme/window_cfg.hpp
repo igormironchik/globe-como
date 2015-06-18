@@ -52,7 +52,7 @@ public:
 	WindowCfg();
 
 	WindowCfg( const QString & schemeCfgFile,
-		WindowStateCfg & windowState );
+		const WindowStateCfg & windowState );
 
 	~WindowCfg();
 

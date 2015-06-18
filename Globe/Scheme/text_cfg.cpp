@@ -106,7 +106,7 @@ TextCfgTag::TextCfgTag( const QString & name, bool isMandatory )
 }
 
 TextCfgTag::TextCfgTag( const TextCfg & cfg, const QString & name,
-	bool isMandatory() )
+	bool isMandatory )
 	:	QtConfFile::TagNoValue( name, isMandatory )
 	,	m_text( *this, QLatin1String( "text" ), true )
 	,	m_baseCfg( cfg, *this, QLatin1String( "ui" ), true )

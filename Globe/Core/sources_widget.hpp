@@ -68,6 +68,7 @@ signals:
 
 public:
 	SourcesWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	~SourcesWidget();
 
 	//! \return Name of the current channel.
 	QString channelName() const;

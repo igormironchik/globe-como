@@ -1,6 +1,6 @@
 
 TEMPLATE = app
-TARGET = Globe
+TARGET = Globe.App
 DESTDIR = ../..
 QT += core gui network sql widgets multimedia
 CONFIG += windows
@@ -14,19 +14,37 @@ RESOURCES = ../Core/resources.qrc \
 
 SOURCES += main.cpp
 
-win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../lib -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
+win32:CONFIG(release, debug|release): LIBS += -L$$OUT_PWD/../../QtConfFile/lib \
+    -L$$OUT_PWD/../../Como/lib \
+    -L$$OUT_PWD/../../lib \
+    -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib \
+    -L$$OUT_PWD/../../QtConfFile/lib \
+    -L$$OUT_PWD/../../Como/lib \
+    -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
 else:symbian: LIBS += -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
-else:unix: LIBS += -L$$OUT_PWD/../../lib -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
+else:unix: LIBS += -L$$OUT_PWD/../../lib \
+    -L$$OUT_PWD/../../QtConfFile/lib \
+    -L$$OUT_PWD/../../Como/lib \
+    -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
 
-INCLUDEPATH += $$PWD/.. $$PWD/../..
-DEPENDPATH += $$PWD/.. $$PWD/../..
+INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtArg $$PWD/../../Como $$PWD/../../QtConfFile
+DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtArg $$PWD/../../Como $$PWD/../../QtConfFile
 
-win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/QtConfFile.lib $$OUT_PWD/../../lib/Como.lib $$OUT_PWD/../../lib/Globe.Core.lib $$OUT_PWD/../../lib/Globe.Scheme.lib
-else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../lib/QtConfFile.lib $$OUT_PWD/../../lib/Como.lib $$OUT_PWD/../../lib/Globe.Core.lib $$OUT_PWD/../../lib/Globe.Scheme.lib
-else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../../lib/libQtConfFile.a $$OUT_PWD/../../lib/libComo.a $$OUT_PWD/../../lib/Globe.Core.a $$OUT_PWD/../../lib/Globe.Scheme.a
+win32:CONFIG(release, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/QtConfFile.lib \
+    $$OUT_PWD/../../Como/lib/Como.lib \
+    $$OUT_PWD/../../lib/Globe.Core.lib \
+    $$OUT_PWD/../../lib/Globe.Scheme.lib
+else:win32:CONFIG(debug, debug|release): PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/QtConfFile.lib \
+    $$OUT_PWD/../../Como/lib/Como.lib \
+    $$OUT_PWD/../../lib/Globe.Core.lib \
+    $$OUT_PWD/../../lib/Globe.Scheme.lib
+else:unix:!symbian: PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/libQtConfFile.a \
+    $$OUT_PWD/../../Como/lib/libComo.a \
+    $$OUT_PWD/../../lib/libGlobe.Core.a \
+    $$OUT_PWD/../../lib/libGlobe.Scheme.a
 
-include ( ../../QtArg/qtarg.pri )
+include ( ../../QtArg/QtArg/qtarg.pri )
 
 exists( ../../como_defines.pri ) {
     include( ../../como_defines.pri )

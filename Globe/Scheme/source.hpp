@@ -68,6 +68,7 @@ class Source
 public:
 	Source( const Como::Source & source, const QString & channelName,
 		Selection * selection, Scene * scene );
+	~Source();
 
 	//! Set scene mode.
 	void setMode( SceneMode mode );

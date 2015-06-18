@@ -320,8 +320,8 @@ HeaderColumnTag::HeaderColumnTag( QtConfFile::Tag & owner, const QString & name,
 	:	QtConfFile::TagNoValue( owner, name, isMandatory )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_pos( *this, QLatin1String( "pos" ), true )
-	,	m_sizeConstraint( 0, 9999 )
 	,	m_posConstraint( 0, 4 )
+	,	m_sizeConstraint( 0, 9999 )
 {
 	m_size.setConstraint( &m_sizeConstraint );
 	m_pos.setConstraint( &m_posConstraint );
@@ -333,8 +333,8 @@ HeaderColumnTag::HeaderColumnTag( const HeaderColumnCfg & cfg,
 	:	QtConfFile::TagNoValue( owner, name, isMandatory )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_pos( *this, QLatin1String( "pos" ), true )
-	,	m_sizeConstraint( 0, 9999 )
 	,	m_posConstraint( 0, 4 )
+	,	m_sizeConstraint( 0, 9999 )
 {
 	m_size.setConstraint( &m_sizeConstraint );
 	m_pos.setConstraint( &m_posConstraint );

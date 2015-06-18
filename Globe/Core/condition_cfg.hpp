@@ -87,8 +87,8 @@ private:
 	T m_value;
 }; // class IfStatementTag
 
-inline
-void
+template<>
+inline void
 IfStatementTag< int >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -106,8 +106,8 @@ IfStatementTag< int >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< uint >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -125,8 +125,8 @@ IfStatementTag< uint >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< qlonglong >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -144,8 +144,8 @@ IfStatementTag< qlonglong >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< qulonglong >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -163,8 +163,8 @@ IfStatementTag< qulonglong >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< double >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -182,8 +182,8 @@ IfStatementTag< double >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< QString >::initValue( const QtConfFile::ParserInfo & info )
 {
 	Q_UNUSED( info )
@@ -191,8 +191,8 @@ IfStatementTag< QString >::initValue( const QtConfFile::ParserInfo & info )
 	m_value = QtConfFile::TagScalar< QString >::value();
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< QDateTime >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();
@@ -208,8 +208,8 @@ IfStatementTag< QDateTime >::initValue( const QtConfFile::ParserInfo & info )
 				.arg( str ) );
 }
 
-inline
-void
+template<>
+inline void
 IfStatementTag< QTime >::initValue( const QtConfFile::ParserInfo & info )
 {
 	const QString str = QtConfFile::TagScalar< QString >::value();

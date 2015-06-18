@@ -67,9 +67,9 @@ static const QString defaultConfigurationDirectory =
 class PropertiesManagerPrivate {
 public:
 	explicit PropertiesManagerPrivate( PropertiesManager * parent )
-		:	m_model( 0 )
+		:	m_directoryName( defaultConfigurationDirectory )
+		,	m_model( 0 )
 		,	m_sortModel( 0 )
-		,	m_directoryName( defaultConfigurationDirectory )
 		,	m_toolWindowObject( 0 )
 		,	m_parent( parent )
 	{

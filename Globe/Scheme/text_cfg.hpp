@@ -89,7 +89,7 @@ public:
 	TextCfgTag( const QString & name, bool isMandatory = false );
 
 	TextCfgTag( const TextCfg & cfg, const QString & name,
-		bool isMandatory() = false );
+		bool isMandatory = false );
 
 	//! \return Configuration.
 	TextCfg textCfg() const;

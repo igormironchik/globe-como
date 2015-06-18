@@ -169,7 +169,7 @@ SourceCfgTag::SourceCfgTag( const QString & name, bool isMandatory )
 }
 
 SourceCfgTag::SourceCfgTag( const SourceCfg & cfg, const QString & name,
-	bool isMandatory() )
+	bool isMandatory )
 	:	QtConfFile::TagNoValue( name, isMandatory )
 	,	m_type( *this, QLatin1String( "type" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )

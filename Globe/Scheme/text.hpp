@@ -65,6 +65,7 @@ class Text
 public:
 	Text( const QString & text,
 		Selection * selection, Scene * scene );
+	~Text();
 
 	//! Set scene mode.
 	void setMode( SceneMode mode );

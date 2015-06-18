@@ -75,6 +75,10 @@ SourcesWidget::SourcesWidget( QWidget * parent, Qt::WindowFlags f )
 	init();
 }
 
+SourcesWidget::~SourcesWidget()
+{
+}
+
 void
 SourcesWidget::init()
 {

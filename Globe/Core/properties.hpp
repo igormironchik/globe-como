@@ -135,7 +135,7 @@ public:
 
 		for( int i = 0; i < properties.conditionsAmount(); ++i )
 		{
-			QtConfFile::TagVectorOfTags< ConditionTag< T > >::PointerToTag tag(
+			typename QtConfFile::TagVectorOfTags< ConditionTag< T > >::PointerToTag tag(
 				new ConditionTag< T >( properties.conditionAt( i ),
 					QLatin1String( "if" ), true ) );
 

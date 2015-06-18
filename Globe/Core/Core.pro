@@ -9,8 +9,8 @@ CONFIG(debug, debug|release) {
 	DEFINES += GLOBE_CORE_DEBUG
 }
 
-INCLUDEPATH += $$PWD/.. $$PWD/../..
-DEPENDPATH += $$PWD/.. $$PWD/../..
+INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
+DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
 
 RESOURCES = resources.qrc
 
@@ -43,13 +43,13 @@ HEADERS += application_cfg.hpp \
            log_event_selector.hpp \
            log_event_view.hpp \
            log_event_view_model.hpp \
-		   log_event_view_window.hpp \
+           log_event_view_window.hpp \
            log_event_view_window_cfg.hpp \
-		   log_sources_selector.hpp \
-		   log_sources_view.hpp \
-		   log_sources_model.hpp \
-		   log_sources_window.hpp \
-		   log_sources_window_cfg.hpp \
+           log_sources_selector.hpp \
+           log_sources_view.hpp \
+           log_sources_model.hpp \
+           log_sources_window.hpp \
+           log_sources_window_cfg.hpp \
            mainwindow.hpp \
            mainwindow_cfg.hpp \
            properties.hpp \
@@ -57,9 +57,9 @@ HEADERS += application_cfg.hpp \
            properties_cfg_filename_dialog.hpp \
            properties_dialog.hpp \
            properties_key_type_dialog.hpp \
-		   properties_manager.hpp \
-		   properties_manager_view.hpp \
-		   properties_map.hpp \
+           properties_manager.hpp \
+           properties_manager_view.hpp \
+           properties_map.hpp \
            properties_model.hpp \
            properties_widget.hpp \
            properties_widget_model.hpp \
@@ -70,8 +70,8 @@ HEADERS += application_cfg.hpp \
            sounds_disabled.hpp \
            sounds_disabled_cfg.hpp \
            sounds_disabled_data.hpp \
-		   sounds_disabled_model.hpp \
-		   sounds_disabled_to_dialog.hpp \
+           sounds_disabled_model.hpp \
+           sounds_disabled_to_dialog.hpp \
            sounds_disabled_view.hpp \
            sounds_played_model.hpp \
            sounds_played_view.hpp \
@@ -121,11 +121,11 @@ SOURCES += application_cfg.cpp \
            log_event_view_model.cpp \
            log_event_view_window.cpp \
            log_event_view_window_cfg.cpp \
-		   log_sources_selector.cpp \
-		   log_sources_view.cpp \
-		   log_sources_model.cpp \
-		   log_sources_window.cpp \
-		   log_sources_window_cfg.cpp \
+           log_sources_selector.cpp \
+           log_sources_view.cpp \
+           log_sources_model.cpp \
+           log_sources_window.cpp \
+           log_sources_window_cfg.cpp \
            mainwindow.cpp \
            mainwindow_cfg.cpp \
            properties.cpp \
@@ -133,9 +133,9 @@ SOURCES += application_cfg.cpp \
            properties_cfg_filename_dialog.cpp \
            properties_dialog.cpp \
            properties_key_type_dialog.cpp \
-		   properties_manager.cpp \
-		   properties_manager_view.cpp \
-		   properties_map.cpp \
+           properties_manager.cpp \
+           properties_manager_view.cpp \
+           properties_map.cpp \
            properties_model.cpp \
            properties_widget.cpp \
            properties_widget_model.cpp \
@@ -146,8 +146,8 @@ SOURCES += application_cfg.cpp \
            sounds_disabled.cpp \
            sounds_disabled_cfg.cpp \
            sounds_disabled_data.cpp \
-		   sounds_disabled_model.cpp \
-		   sounds_disabled_to_dialog.cpp \
+           sounds_disabled_model.cpp \
+           sounds_disabled_to_dialog.cpp \
            sounds_disabled_view.cpp \
            sounds_played_model.cpp \
            sounds_played_view.cpp \
@@ -171,14 +171,14 @@ FORMS	 = channels_to_show.ui \
            channel_attributes.ui \
            configuration_dialog.ui \
            log_event_selector.ui \
-		   log_sources_selector.ui \
+           log_sources_selector.ui \
            properties_mainwindow.ui \
            properties_cfg_filename_dialog.ui \
            properties_key_type_dialog.ui \
            select_query_navigation.ui \
            source_manual_dialog.ui \
-		   sources_widget.ui \
-		   sounds_disabled_to_dialog.ui
+           sources_widget.ui \
+           sounds_disabled_to_dialog.ui
 		   
 exists( ../../como_defines.pri ) {
     include( ../../como_defines.pri )

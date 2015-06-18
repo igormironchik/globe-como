@@ -22,11 +22,11 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$OUT_PWD/../../lib \
     -L$$OUT_PWD/../../QtConfFile/lib \
     -L$$OUT_PWD/../../Como/lib \
     -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
-else:symbian: LIBS += -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
+else:symbian: LIBS += -lGlobe.Core -lGlobe.Scheme -lQtConfFile -lComo
 else:unix: LIBS += -L$$OUT_PWD/../../lib \
     -L$$OUT_PWD/../../QtConfFile/lib \
     -L$$OUT_PWD/../../Como/lib \
-    -lQtConfFile -lComo -lGlobe.Core -lGlobe.Scheme
+    -lGlobe.Core -lGlobe.Scheme -lQtConfFile -lComo
 
 INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtArg $$PWD/../../Como $$PWD/../../QtConfFile
 DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtArg $$PWD/../../Como $$PWD/../../QtConfFile

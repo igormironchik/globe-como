@@ -9,3 +9,4 @@
 /**/*.moc
 /**/ui_*.h
 /**/qrc_*.cpp
+/**/Globe.pro.user*

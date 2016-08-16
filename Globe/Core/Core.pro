@@ -2,7 +2,7 @@
 TEMPLATE = lib
 TARGET = Globe.Core
 DESTDIR = ../../lib
-QT += core gui network sql widgets multimedia
+QT += core gui network sql widgets multimedia xml
 CONFIG += qt staticlib
 
 CONFIG(debug, debug|release) {

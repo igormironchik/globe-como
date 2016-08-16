@@ -66,18 +66,18 @@ int main( int argc, char ** argv )
 			QLatin1String( "Configuration file of the application." ),
 			false, true );
 
-		QtArgHelp helpArg( &cmdLine );
+		QtArgHelp helpArg;
 		helpArg.printer()->setProgramDescription( "Tool for viewieng sources "
 			"in the remote applications" );
 		helpArg.printer()->setExecutableName( argv[0] );
 
-		cmdLine.addArg( &cfgFileArg );
-		cmdLine.addArg( &helpArg );
+		cmdLine.addParseable( cfgFileArg );
+		cmdLine.addParseable( helpArg );
 
 		cmdLine.parse();
 
 		if( cfgFileArg.isDefined() )
-			cfgFile = cfgFileArg.value().toString();
+			cfgFile = cfgFileArg.value();
 	}
 	catch( const QtArgHelpHasPrintedEx & )
 	{

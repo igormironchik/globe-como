@@ -2,7 +2,7 @@
 TEMPLATE = app
 TARGET = LogViewer.App
 DESTDIR = ../..
-QT += core gui network sql widgets multimedia
+QT += core gui network sql widgets multimedia xml
 CONFIG += windows
 
 win32 {

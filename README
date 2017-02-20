@@ -1,7 +1,0 @@
-Globe is a tool for monitoring applications through the Como sources.
- 
-COMPILLING
- * Run qmake and make
- 
-DON'T FORGET to init and update Git submodules.
- 

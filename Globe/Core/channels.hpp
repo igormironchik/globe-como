@@ -82,10 +82,6 @@ public:
 		//! Port.
 		quint16 port );
 
-	Channel(
-		//! Channel private.
-		ChannelPrivate * dd );
-
 	virtual ~Channel();
 
 	//! \return Name of the channel.
@@ -138,6 +134,10 @@ protected:
 	virtual void reconnectToHostImplementation() = 0;
 	//! Implementation of the "update timeout" operation.
 	virtual void updateTimeoutImplementation( int msecs ) = 0;
+
+	Channel(
+		//! Channel private.
+		ChannelPrivate * dd );
 
 protected:
 	QScopedPointer< ChannelPrivate > d;

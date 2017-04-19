@@ -540,7 +540,7 @@ public:
 		//! Host address.
 		const QHostAddress & hostAddress,
 		//! Port.
-		quint16 port )
+		quint16 port ) const
 	{
 		return new ComoChannel( name, hostAddress, port );
 	}

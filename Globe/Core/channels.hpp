@@ -55,7 +55,7 @@ public:
 		//! Host address.
 		const QHostAddress & hostAddress,
 		//! Port.
-		quint16 port ) = 0;
+		quint16 port ) const = 0;
 
 	//! \return Channel type.
 	virtual QString channelType() const = 0;

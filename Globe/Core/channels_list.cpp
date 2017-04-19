@@ -572,19 +572,23 @@ ChannelsList::addChannel()
 			{
 				Log::instance().writeMsgToEventLog( LogLevelError,
 					QString( "Unable to create channel with "
-						"name: \"%1\" address: \"%2\" and port: %3" )
+						"name: \"%1\" address: \"%2\", port: %3 "
+						"and type: \"%4\"" )
 							.arg( attributes.name() )
 							.arg( attributes.address().toString() )
-							.arg( QString::number( attributes.port() ) ) );
+							.arg( QString::number( attributes.port() ) )
+							.arg( attributes.type() ) );
 
 				QMessageBox::critical( 0, tr( "Unable to create channel..." ),
 					tr( "Unable to create channel with:\n"
 						"\tName: %1\n"
 						"\tAddress: %2\n"
-						"\tPort: %3" )
+						"\tPort: %3\n"
+						"\tType: %4" )
 							.arg( attributes.name() )
 							.arg( attributes.address().toString() )
-							.arg( QString::number( attributes.port() ) ) );
+							.arg( QString::number( attributes.port() ) )
+							.arg( attributes.type() ) );
 			}
 		}
 	}

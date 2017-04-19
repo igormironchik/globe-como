@@ -99,11 +99,9 @@ public:
 	//! Init.
 	void init();
 
-	inline ComoChannel *
-	ComoChannelPrivate::q_func();
+	inline ComoChannel * q_func();
 
-	inline const ComoChannel *
-	ComoChannelPrivate::q_func() const;
+	inline const ComoChannel * q_func() const;
 
 
 	//! Thread for the socket.

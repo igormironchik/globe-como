@@ -29,6 +29,7 @@
 #include <QString>
 #include <QHostAddress>
 #include <QList>
+#include <QtPlugin>
 
 // Como include.
 #include <Como/Source>
@@ -36,18 +37,54 @@
 
 namespace Globe {
 
+class Channel;
+
+
 //
-// ChannelType
+// ChannelPluginInterface
 //
 
-//! Supported types of the channels.
-enum ChannelType {
-	//! Como channel.
-	ComoChannelType = 1
-}; // enum ChannelType
+//! Interface of the channel plugin.
+class ChannelPluginInterface {
+public:
+	virtual ~ChannelPluginInterface() {}
+
+	virtual Channel * createChannel(
+		//! Name of the channel
+		const QString & name,
+		//! Host address.
+		const QHostAddress & hostAddress,
+		//! Port.
+		quint16 port ) = 0;
+
+	//! \return Channel type.
+	virtual QString channelType() const = 0;
+}; // class ChannelPluginInterface
 
 
-class ChannelPrivate;
+//
+// ChannelPrivate
+//
+
+class ChannelPrivate {
+public:
+	ChannelPrivate( Channel * parent,
+		const QString & name,
+		const QHostAddress & address,
+		quint16 port );
+
+	virtual ~ChannelPrivate();
+
+	//! Parent.
+	Channel * q;
+	//! Name of the channel.
+	QString m_name;
+	//! Host address.
+	QHostAddress m_address;
+	//! Port.
+	quint16 m_port;
+}; // class ChannelPrivate
+
 
 //
 // Channel
@@ -97,7 +134,7 @@ public:
 	//! \return Whether the user wants to make this channel connected.
 	virtual bool isMustBeConnected() const = 0;
 	//! \return Type of the channel.
-	virtual ChannelType channelType() const = 0;
+	virtual const QString & channelType() const = 0;
 
 public slots:
 	//! Forcibly connect to host.
@@ -145,95 +182,6 @@ protected:
 private:
 	Q_DISABLE_COPY( Channel )
 }; // class Channel
-
-
-//
-// ComoChannel
-//
-
-class ComoChannelPrivate;
-
-/*!
-	Como channel in the Globe.
-*/
-class ComoChannel
-	:	public Channel
-{
-	Q_OBJECT
-
-signals:
-	//! About to connect to host.
-	void aboutToConnectToHost( const QHostAddress &, quint16 );
-	//! About to disconnect from host.
-	void aboutToDisconnectFromHost();
-	//! About to send "GetListOfSources" message.
-	void aboutToSendGetListOfSources();
-
-public:
-	/*!
-		New channel will not connected to the host automaticaly.
-		You should call connectToHost() manually.
-	*/
-	ComoChannel(
-		//! Name of the channel.
-		const QString & name,
-		//! Host address.
-		const QHostAddress & address,
-		//! Port.
-		quint16 port );
-
-	~ComoChannel();
-
-	//! \return Timeout in the channel.
-	int timeout() const;
-	//! \return Is channel in connected state.
-	bool isConnected() const;
-	//! \return Whether the user wants to make this channel connected.
-	bool isMustBeConnected() const;
-	//! \return Type of the channel.
-	ChannelType channelType() const;
-
-protected:
-	//! Activate channel.
-	void activate();
-	//! Deactivate channel.
-	void deactivate();
-
-	//! Implementation of the "connect to host" operation.
-	void connectToHostImplementation();
-	//! Implementation of the "Disconnect from host" operation.
-	void disconnectFromHostImplementation();
-	//! Implementation of the "reconnect to host" operation.
-	void reconnectToHostImplementation();
-	//! Implementation of the "update timeout" operation.
-	void updateTimeoutImplementation( int msecs );
-
-private slots:
-	//! Socket implementation has been disconnected.
-	void socketDisconnected();
-	//! Socket implementation has been connected.
-	void socketConnected();
-	//! Como::Source has updated his value.
-	void sourceHasUpdatedValue( const Como::Source & source );
-	//! Como::Source has deregistered.
-	void sourceHasDeregistered( const Como::Source & source );
-	//! Update messages rate timer shots.
-	void updateMessagesRate();
-	//! Update source's values timer shots.
-	void updateSourcesValue();
-	//! Socket's error.
-	void socketError( QAbstractSocket::SocketError socketError );
-
-private:
-	Q_DISABLE_COPY( ComoChannel )
-
-	friend class ComoChannelPrivate;
-
-	inline ComoChannelPrivate * d_func()
-		{ return reinterpret_cast< ComoChannelPrivate* > ( d.data() ); }
-	inline const ComoChannelPrivate * d_func() const
-		{ return reinterpret_cast< const ComoChannelPrivate* >( d.data() ); }
-}; // class ComoChannel
 
 
 class ChannelsManagerPrivate;
@@ -296,7 +244,7 @@ public:
 		//! Port.
 		quint16 port,
 		//! Type of the channel.
-		ChannelType type = ComoChannelType );
+		const QString & channelType );
 
 	//! Remove channel.
 	void removeChannel( const QString & name );
@@ -311,6 +259,9 @@ public:
 	//! \return All available channels.
 	QList< Channel* > channels() const;
 
+	//! \return All supported types of channels.
+	QStringList supportedChannels() const;
+
 	//! Shutdown all channels.
 	void shutdown();
 
@@ -321,5 +272,9 @@ private:
 }; // class ChannelsManager
 
 } /* namespace Globe */
+
+#define ChannelPluginInterface_iid "Globe.ChannelPluginInterface"
+
+Q_DECLARE_INTERFACE( Globe::ChannelPluginInterface, ChannelPluginInterface_iid )
 
 #endif // GLOBE__CHANNELS_HPP__INCLUDED

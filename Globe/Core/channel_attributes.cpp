@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QToolTip>
 #include <QRegExp>
+#include <QComboBox>
 
 
 namespace Globe {
@@ -53,6 +54,8 @@ public:
 	QHostAddress m_address;
 	//! Port of the channel.
 	quint16 m_port;
+	//! Type.
+	QString m_type;
 }; // class ChannelAttributesPrivate
 
 
@@ -105,6 +108,18 @@ void
 ChannelAttributes::setPort( quint16 p )
 {
 	d->m_port = p;
+}
+
+const QString &
+ChannelAttributes::type() const
+{
+	return d->m_type;
+}
+
+void
+ChannelAttributes::setType( const QString & t )
+{
+	d->m_type = t;
 }
 
 
@@ -237,11 +252,11 @@ public:
 //
 
 ChannelAttributesDialog::ChannelAttributesDialog( ChannelAttributes & attributes,
-	QWidget * parent, Qt::WindowFlags f )
+	const QStringList & types, QWidget * parent, Qt::WindowFlags f )
 	:	QDialog( parent, f )
 	,	d( new ChannelAttributesDialogPrivate( attributes, this ) )
 {
-	init();
+	init( types );
 }
 
 ChannelAttributesDialog::~ChannelAttributesDialog()
@@ -249,7 +264,7 @@ ChannelAttributesDialog::~ChannelAttributesDialog()
 }
 
 void
-ChannelAttributesDialog::init()
+ChannelAttributesDialog::init( const QStringList & types )
 {
 	d->m_ui.setupUi( this );
 
@@ -258,6 +273,13 @@ ChannelAttributesDialog::init()
 		QDialogButtonBox::HelpRole );
 
 	d->m_textColor = d->m_ui.m_name->palette().color( QPalette::Text );
+
+	d->m_ui.m_type->addItems( types );
+
+	d->m_ui.m_type->setCurrentIndex( 0 );
+
+	if( types.size() == 1 )
+		d->m_ui.m_type->setEnabled( false );
 
 	d->stateChanged();
 
@@ -360,6 +382,7 @@ ChannelAttributesDialog::accepted()
 	d->m_attributes.setName( d->m_ui.m_name->text() );
 	d->m_attributes.setAddress( QHostAddress( d->m_ui.m_ip->text() ) );
 	d->m_attributes.setPort( d->m_ui.m_port->value() );
+	d->m_attributes.setType( d->m_ui.m_type->currentText() );
 
 	accept();
 }

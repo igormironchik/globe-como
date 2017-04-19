@@ -554,34 +554,44 @@ ChannelsList::addChannel()
 {
 	ChannelAttributes attributes;
 
-	ChannelAttributesDialog dlg( attributes, this );
+	const QStringList types = ChannelsManager::instance().supportedChannels();
 
-	if( QDialog::Accepted == dlg.exec() )
+	if( !types.isEmpty() )
 	{
-		Channel * channel = ChannelsManager::instance().createChannel(
-			attributes.name(), attributes.address(), attributes.port() );
+		ChannelAttributesDialog dlg( attributes, types, this );
 
-		if( channel )
-			addChannel( channel );
-		else
+		if( QDialog::Accepted == dlg.exec() )
 		{
-			Log::instance().writeMsgToEventLog( LogLevelError,
-				QString( "Unable to create channel with "
-					"name: \"%1\" address: \"%2\" and port: %3" )
-						.arg( attributes.name() )
-						.arg( attributes.address().toString() )
-						.arg( QString::number( attributes.port() ) ) );
+			Channel * channel = ChannelsManager::instance().createChannel(
+				attributes.name(), attributes.address(), attributes.port(),
+				attributes.type() );
 
-			QMessageBox::critical( 0, tr( "Unable to create channel..." ),
-				tr( "Unable to create channel with:\n"
-					"\tName: %1\n"
-					"\tAddress: %2\n"
-					"\tPort: %3" )
-						.arg( attributes.name() )
-						.arg( attributes.address().toString() )
-						.arg( QString::number( attributes.port() ) ) );
+			if( channel )
+				addChannel( channel );
+			else
+			{
+				Log::instance().writeMsgToEventLog( LogLevelError,
+					QString( "Unable to create channel with "
+						"name: \"%1\" address: \"%2\" and port: %3" )
+							.arg( attributes.name() )
+							.arg( attributes.address().toString() )
+							.arg( QString::number( attributes.port() ) ) );
+
+				QMessageBox::critical( 0, tr( "Unable to create channel..." ),
+					tr( "Unable to create channel with:\n"
+						"\tName: %1\n"
+						"\tAddress: %2\n"
+						"\tPort: %3" )
+							.arg( attributes.name() )
+							.arg( attributes.address().toString() )
+							.arg( QString::number( attributes.port() ) ) );
+			}
 		}
 	}
+	else
+		QMessageBox::critical( 0, tr( "Unable to create channel..." ),
+			tr( "Unable to create channel.\n"
+				"No one channel plugin has been loaded." ) );
 }
 
 void

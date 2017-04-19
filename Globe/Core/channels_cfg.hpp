@@ -52,7 +52,7 @@ public:
 
 	ChannelCfg( const QString & name, const QHostAddress & address,
 		quint16 port, bool isMustBeConnected, int timeout,
-		ChannelType type );
+		const QString & type );
 
 	ChannelCfg( const ChannelCfg & other );
 
@@ -84,9 +84,9 @@ public:
 	void setTimeout( int t );
 
 	//! \return Type of the channel.
-	ChannelType channelType() const;
+	const QString & channelType() const;
 	//! Set channel's type.
-	void setChannelType( ChannelType type );
+	void setChannelType( const QString & type );
 
 private:
 	//! Name of the channel.
@@ -100,7 +100,7 @@ private:
 	//! Timeout in the channel.
 	int m_timeout;
 	//! Type of the channel.
-	ChannelType m_type;
+	QString m_type;
 }; // class ChannelCfg
 
 
@@ -148,8 +148,6 @@ private:
 	QtConfFile::ConstraintMinMax< int > m_timeoutConstraint;
 	//! Channel's type.
 	QtConfFile::TagScalar< QString > m_type;
-	//! Constraint for the type of the channel.
-	QtConfFile::ConstraintOneOf< QString > m_typeConstraint;
 }; // class ChannelTag
 
 

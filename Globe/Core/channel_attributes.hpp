@@ -62,6 +62,11 @@ public:
 	//! Set port of the channel.
 	void setPort( quint16 p );
 
+	//! \return Type of the channel.
+	const QString & type() const;
+	//! Set type of the channel.
+	void setType( const QString & t );
+
 private:
 	Q_DISABLE_COPY( ChannelAttributes )
 
@@ -83,7 +88,8 @@ class ChannelAttributesDialog
 	Q_OBJECT
 
 public:
-	explicit ChannelAttributesDialog( ChannelAttributes & attributes,
+	ChannelAttributesDialog( ChannelAttributes & attributes,
+		const QStringList & types,
 		QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
 	~ChannelAttributesDialog();
@@ -103,7 +109,7 @@ private slots:
 
 private:
 	//! Init.
-	void init();
+	void init( const QStringList & types );
 
 private:
 	Q_DISABLE_COPY( ChannelAttributesDialog )

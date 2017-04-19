@@ -37,4 +37,6 @@ Globe.depends = Como/Como QtConfFile/QtConfFile
 
 libDir.commands = mkdir lib
 
-QMAKE_EXTRA_TARGETS += libDir
+pluginsDir.commands = mkdir plugins
+
+QMAKE_EXTRA_TARGETS += libDir pluginsDir

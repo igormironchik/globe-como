@@ -506,7 +506,7 @@ ChannelsList::resizeWidget( const QSize & size )
 void
 ChannelsList::connected()
 {
-	Channel * ch = dynamic_cast< Channel* > ( sender() );
+	Channel * ch = static_cast< Channel* > ( sender() );
 	const ChannelWidgetAndLine & w = d->findWidget( ch );
 
 	if( w.widget() )
@@ -529,7 +529,7 @@ ChannelsList::connected()
 void
 ChannelsList::disconnected()
 {
-	Channel * ch = dynamic_cast< Channel* > ( sender() );
+	Channel * ch = static_cast< Channel* > ( sender() );
 	const ChannelWidgetAndLine & w = d->findWidget( ch );
 
 	if( w.widget() )

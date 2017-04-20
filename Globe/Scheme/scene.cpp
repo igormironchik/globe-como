@@ -568,7 +568,7 @@ Scene::sourceUpdated( const Como::Source & source )
 {
 	if( d->m_mode == ViewScene )
 	{
-		Channel * channel = dynamic_cast< Channel* > ( sender() );
+		Channel * channel = static_cast< Channel* > ( sender() );
 
 		if( channel )
 			d->updateSource( source, channel->name() );
@@ -580,7 +580,7 @@ Scene::sourceDeregistered( const Como::Source & source )
 {
 	if( d->m_mode == ViewScene )
 	{
-		Channel * channel = dynamic_cast< Channel* > ( sender() );
+		Channel * channel = static_cast< Channel* > ( sender() );
 
 		if( channel )
 			d->sourceDeregistered( source, channel->name() );
@@ -592,7 +592,7 @@ Scene::connected()
 {
 	if( d->m_mode == ViewScene )
 	{
-		Channel * channel = dynamic_cast< Channel* > ( sender() );
+		Channel * channel = static_cast< Channel* > ( sender() );
 
 		d->channelDeregistered( channel->name() );
 	}
@@ -603,7 +603,7 @@ Scene::disconnected()
 {
 	if( d->m_mode == ViewScene )
 	{
-		Channel * channel = dynamic_cast< Channel* > ( sender() );
+		Channel * channel = static_cast< Channel* > ( sender() );
 
 		d->channelDisconnected( channel->name() );
 	}

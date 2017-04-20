@@ -180,6 +180,10 @@ ChannelsManagerPrivate::init()
 			else
 				loader.unload();
 		}
+		else
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Channel plugin wasn't loaded. Error: \"%1\"" )
+					.arg( loader.errorString() ) );
 	}
 }
 

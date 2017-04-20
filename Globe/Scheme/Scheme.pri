@@ -2,7 +2,6 @@
 RESOURCES += $$PWD/scheme_resources.qrc
 
 HEADERS += $$PWD/enums.hpp \
-           $$PWD/export.hpp \
            $$PWD/item_base_cfg.hpp \
            $$PWD/mm_pixels.hpp \
            $$PWD/scene.hpp \

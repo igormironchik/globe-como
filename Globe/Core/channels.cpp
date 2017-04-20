@@ -273,7 +273,7 @@ ChannelsManager::createChannel(	const QString & name,
 	{
 		if( isAddressAndPortUnique( hostAddress, port ) )
 		{
-			Channel * ch = d->m_plugins[ type ]->createChannel(
+			ch = d->m_plugins[ type ]->createChannel(
 				name, hostAddress, port );
 
 			d->m_channels.insert( name, ch );

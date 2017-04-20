@@ -540,7 +540,7 @@ public:
 		//! Port.
 		quint16 port ) const
 	{
-		return new ComoChannel( name, hostAddress, port );
+		return ( new ComoChannel( name, hostAddress, port ) );
 	}
 
 	QString channelType() const

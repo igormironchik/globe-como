@@ -264,7 +264,7 @@ SourcesManager::syncSource( const QString & channelName,
 void
 SourcesManager::sourceUpdated( const Como::Source & source )
 {
-	Channel * channel = qobject_cast< Channel* > ( sender() );
+	Channel * channel = dynamic_cast< Channel* > ( sender() );
 
 	QMap< QString, QList< MapValue > >::Iterator it =
 		d->m_map.find( channel->name() );
@@ -311,7 +311,7 @@ SourcesManager::sourceUpdated( const Como::Source & source )
 void
 SourcesManager::sourceDeregistered( const Como::Source & source )
 {
-	Channel * channel = qobject_cast< Channel* > ( sender() );
+	Channel * channel = dynamic_cast< Channel* > ( sender() );
 
 	QMap< QString, QList< MapValue > >::Iterator it =
 		d->m_map.find( channel->name() );
@@ -365,7 +365,7 @@ SourcesManager::channelRemoved( Channel * channel )
 void
 SourcesManager::channelDisconnected()
 {
-	Channel * channel = qobject_cast< Channel* > ( sender() );
+	Channel * channel = dynamic_cast< Channel* > ( sender() );
 
 	QList< MapValue > & sources = d->m_map[ channel->name() ];
 

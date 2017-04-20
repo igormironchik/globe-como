@@ -51,6 +51,7 @@
 #include <QFileDialog>
 #include <QSessionManager>
 #include <QCoreApplication>
+#include <QMessageBox>
 
 
 namespace Globe {
@@ -452,7 +453,15 @@ MainWindow::settings()
 void
 MainWindow::shutdown()
 {
-	saveConfiguration();
+	QMessageBox dlg( this );
+
+	dlg.setText( tr( "Would you liketo save configuration?" ) );
+	QPushButton * btn = dlg.addButton( tr( "Yes" ), QMessageBox::AcceptRole );
+	dlg.addButton( tr( "No" ), QMessageBox::RejectRole );
+	dlg.setDefaultButton( btn );
+
+	if( dlg.exec() == QDialog::Accepted )
+		saveConfiguration();
 
 	foreach( ChannelViewWindow * w, d->m_channelViewWindows )
 		w->close();

@@ -4,14 +4,14 @@
 <context>
     <name>LogViewer::Configuration</name>
     <message>
-        <location filename="../Globe/LogViewer/configuration.cpp" line="93"/>
+        <location filename="../Globe/LogViewer/configuration.cpp" line="103"/>
         <source>Unable to load Globe&apos;s configuration file...
 
 %1</source>
         <translation>Не удалось загрузить конфигурацию Globe...</translation>
     </message>
     <message>
-        <location filename="../Globe/LogViewer/configuration.cpp" line="109"/>
+        <location filename="../Globe/LogViewer/configuration.cpp" line="119"/>
         <source>Unable to read DB configuration...
 
 %1</source>
@@ -23,22 +23,22 @@
 <context>
     <name>LogViewer::MainWindow</name>
     <message>
-        <location filename="../Globe/LogViewer/mainwindow.cpp" line="115"/>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="122"/>
         <source>Event Log</source>
         <translation>Лог событий</translation>
     </message>
     <message>
-        <location filename="../Globe/LogViewer/mainwindow.cpp" line="235"/>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="242"/>
         <source>Error in configuration...</source>
         <translation>Ошибка в конфигурации...</translation>
     </message>
     <message>
-        <location filename="../Globe/LogViewer/mainwindow.cpp" line="244"/>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="251"/>
         <source>Unable to open database...</source>
         <translation>Не удалось открыть БД...</translation>
     </message>
     <message>
-        <location filename="../Globe/LogViewer/mainwindow.cpp" line="245"/>
+        <location filename="../Globe/LogViewer/mainwindow.cpp" line="252"/>
         <source>Unable to open database.</source>
         <translation>Не удалось открыть БД.</translation>
     </message>

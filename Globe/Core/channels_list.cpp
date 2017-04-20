@@ -579,7 +579,7 @@ ChannelsList::addChannel()
 							.arg( QString::number( attributes.port() ) )
 							.arg( attributes.type() ) );
 
-				QMessageBox::critical( 0, tr( "Unable to create channel..." ),
+				QMessageBox::critical( this, tr( "Unable to create channel..." ),
 					tr( "Unable to create channel with:\n"
 						"\tName: %1\n"
 						"\tAddress: %2\n"
@@ -593,7 +593,7 @@ ChannelsList::addChannel()
 		}
 	}
 	else
-		QMessageBox::critical( 0, tr( "Unable to create channel..." ),
+		QMessageBox::critical( this, tr( "Unable to create channel..." ),
 			tr( "Unable to create channel.\n"
 				"No one channel plugin has been loaded." ) );
 }

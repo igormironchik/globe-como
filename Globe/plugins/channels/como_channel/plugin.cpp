@@ -206,9 +206,9 @@ private:
 	friend class ComoChannelPrivate;
 
 	inline ComoChannelPrivate * d_func()
-		{ return reinterpret_cast< ComoChannelPrivate* > ( d.data() ); }
+		{ return static_cast< ComoChannelPrivate* > ( d.data() ); }
 	inline const ComoChannelPrivate * d_func() const
-		{ return reinterpret_cast< const ComoChannelPrivate* >( d.data() ); }
+		{ return static_cast< const ComoChannelPrivate* >( d.data() ); }
 }; // class ComoChannel
 
 

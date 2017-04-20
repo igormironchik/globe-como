@@ -145,7 +145,7 @@ public:
 	bool checkIPAndPort()
 	{
 		return ( ChannelsManager::instance().isAddressAndPortUnique(
-			QHostAddress( m_ui.m_ip->text() ), m_ui.m_port->value() ) );
+			QHostAddress( m_ui.m_ip->text() ), (quint16) m_ui.m_port->value() ) );
 	}
 
 	//! Print message about current state.
@@ -381,7 +381,7 @@ ChannelAttributesDialog::accepted()
 {
 	d->m_attributes.setName( d->m_ui.m_name->text() );
 	d->m_attributes.setAddress( QHostAddress( d->m_ui.m_ip->text() ) );
-	d->m_attributes.setPort( d->m_ui.m_port->value() );
+	d->m_attributes.setPort( (quint16) d->m_ui.m_port->value() );
 	d->m_attributes.setType( d->m_ui.m_type->currentText() );
 
 	accept();

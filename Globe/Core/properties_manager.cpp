@@ -82,6 +82,8 @@ public:
 	void findByKey( const PropertiesKey & key,
 		PropertiesMap::Iterator & it, bool & keyExists )
 	{
+		keyExists = false;
+
 		if( key.keyType() == ExactlyThisSource )
 		{
 			it = m_exactlyThisSourceMap.find( key );
@@ -118,8 +120,6 @@ public:
 
 			return;
 		}
-
-		keyExists = false;
 	}
 
 	//! Save new properties.

@@ -245,7 +245,7 @@ ChannelTag::cfg() const
 
 	cfg.setName( value() );
 	cfg.setAddress( QHostAddress( m_address.value() ) );
-	cfg.setPort( m_port.value() );
+	cfg.setPort( (quint16) m_port.value() );
 	cfg.setMustBeConnected( m_isMustBeConnected.isDefined() );
 
 	if( m_timeout.isDefined() )

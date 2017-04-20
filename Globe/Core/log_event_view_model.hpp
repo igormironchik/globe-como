@@ -29,6 +29,7 @@
 
 // Globe include.
 #include <Globe/Core/log.hpp>
+#include <Globe/Core/export.hpp>
 
 
 namespace Globe {
@@ -38,7 +39,7 @@ namespace Globe {
 //
 
 //! Record in event's log.
-class LogEventRecord {
+class CORE_EXPORT LogEventRecord {
 public:
 	LogEventRecord();
 
@@ -82,7 +83,7 @@ private:
 class LogEventViewModelPrivate;
 
 //! Model for the event log.
-class LogEventViewModel
+class CORE_EXPORT LogEventViewModel
 	:	public QAbstractTableModel
 {
 	Q_OBJECT

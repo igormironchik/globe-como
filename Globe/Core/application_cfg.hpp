@@ -31,6 +31,9 @@
 #include <QtConfFile/TagScalar>
 #include <QtConfFile/ConstraintMinMax>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -39,7 +42,7 @@ namespace Globe {
 //
 
 //! Configuration of the application.
-class ApplicationCfg {
+class CORE_EXPORT ApplicationCfg {
 public:
 	ApplicationCfg();
 
@@ -142,7 +145,7 @@ private:
 //
 
 //! Tag with the application's configuration.
-class ApplicationCfgTag
+class CORE_EXPORT ApplicationCfgTag
 	:	public QtConfFile::TagNoValue
 {
 public:

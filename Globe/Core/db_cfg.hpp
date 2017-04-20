@@ -27,6 +27,9 @@
 #include <QtConfFile/TagNoValue>
 #include <QtConfFile/TagScalar>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -35,7 +38,7 @@ namespace Globe {
 //
 
 //! Configuration of the DB.
-class DBCfg {
+class CORE_EXPORT DBCfg {
 public:
 	DBCfg();
 
@@ -59,7 +62,7 @@ private:
 //
 
 //! Tag with configuration of the DB.
-class DBTag
+class CORE_EXPORT DBTag
 	:	public QtConfFile::TagNoValue
 {
 public:

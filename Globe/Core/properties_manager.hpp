@@ -30,6 +30,7 @@
 // Globe include.
 #include <Globe/Core/tool_window.hpp>
 #include <Globe/Core/properties_map.hpp>
+#include <Globe/Core/export.hpp>
 
 QT_BEGIN_NAMESPACE
 class QModelIndex;
@@ -45,7 +46,7 @@ namespace Globe {
 class PropertiesManagerPrivate;
 
 //! Manager of all properties in application.
-class PropertiesManager
+class CORE_EXPORT PropertiesManager
 	:	public QMainWindow
 	,	public ToolWindow
 {

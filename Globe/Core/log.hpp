@@ -31,6 +31,9 @@
 // Como include.
 #include <Como/Source>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 QT_BEGIN_NAMESPACE
 class QDateTime;
@@ -67,7 +70,7 @@ enum LogLevel {
 class LogPrivate;
 
 //! Log.
-class Log
+class CORE_EXPORT Log
 	:	public QObject
 {
 	Q_OBJECT

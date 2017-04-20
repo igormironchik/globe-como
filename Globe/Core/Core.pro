@@ -1,9 +1,10 @@
 
 TEMPLATE = lib
 TARGET = Globe.Core
-DESTDIR = ../../lib
+DESTDIR = ../..
 QT += core gui network sql widgets multimedia xml
-CONFIG += qt staticlib
+CONFIG += qt shared
+DEFINES += GLOBE_CORE
 
 CONFIG(debug, debug|release) {
 	DEFINES += GLOBE_CORE_DEBUG
@@ -15,6 +16,7 @@ DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
 RESOURCES = resources.qrc
 
 HEADERS += application_cfg.hpp \
+           export.hpp \
            channel_attributes.hpp \
            channel_name_dialog.hpp \
            channels.hpp \
@@ -182,4 +184,35 @@ FORMS	 = channels_to_show.ui \
 		   
 exists( ../../como_defines.pri ) {
     include( ../../como_defines.pri )
+}
+
+include ( ../Scheme/Scheme.pri )
+
+
+unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
+
+INCLUDEPATH += $$PWD/../../Como
+DEPENDPATH += $$PWD/../../Como
+
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
+
+
+unix|win32: LIBS += -L$$OUT_PWD/../../QtConfFile/lib/ -lQtConfFile
+
+INCLUDEPATH += $$PWD/../../QtConfFile
+DEPENDPATH += $$PWD/../../QtConfFile
+
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/QtConfFile.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/libQtConfFile.a
+
+macx {
+	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.
+} else:linux-* {
+	QMAKE_RPATHDIR += \$\$ORIGIN
+	QMAKE_RPATHDIR += \$\$ORIGIN/.
+	RPATH = $$join( QMAKE_RPATHDIR, ":" )
+
+	QMAKE_LFLAGS += -Wl,-z,origin \'-Wl,-rpath,$${RPATH}\'
+	QMAKE_RPATHDIR =
 }

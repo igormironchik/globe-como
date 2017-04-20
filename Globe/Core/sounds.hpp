@@ -34,6 +34,7 @@
 // Globe include.
 #include <Globe/Core/condition.hpp>
 #include <Globe/Core/tool_window.hpp>
+#include <Globe/Core/export.hpp>
 
 
 namespace Globe {
@@ -48,7 +49,7 @@ class SoundsCfg;
 class SoundsPrivate;
 
 //! Sounds manager.
-class Sounds
+class CORE_EXPORT Sounds
 	:	public QMainWindow
 	,	public ToolWindow
 {

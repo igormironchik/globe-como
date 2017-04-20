@@ -27,6 +27,9 @@
 #include <QTreeView>
 #include <QScopedPointer>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -40,7 +43,7 @@ class LogEventViewModel;
 class LogEventViewPrivate;
 
 //! View of the event log.
-class LogEventView
+class CORE_EXPORT LogEventView
 	:	public QTreeView
 {
 	Q_OBJECT

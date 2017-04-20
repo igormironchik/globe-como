@@ -2,10 +2,9 @@
 TEMPLATE = subdirs
 
 SUBDIRS = Core \
-          Scheme \
           App \
-	  plugins \
+          plugins \
           LogViewer
 
-App.depends = Core Scheme
+App.depends = Core
 LogViewer.depends = Core

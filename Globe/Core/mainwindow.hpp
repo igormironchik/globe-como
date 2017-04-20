@@ -29,6 +29,7 @@
 
 // Globe include.
 #include <Globe/Core/windows_cfg.hpp>
+#include <Globe/Core/export.hpp>
 
 
 QT_BEGIN_NAMESPACE
@@ -54,7 +55,7 @@ class MainWindowPrivate;
 //
 
 //! Main window of the application.
-class MainWindow
+class CORE_EXPORT MainWindow
 	:	public QMainWindow
 {
 	Q_OBJECT

@@ -29,6 +29,7 @@
 // Globe include.
 #include <Globe/Core/log_sources_model.hpp>
 #include <Globe/Core/tool_window.hpp>
+#include <Globe/Core/export.hpp>
 
 
 namespace Globe {
@@ -40,7 +41,7 @@ namespace Globe {
 class LogSourcesWindowPrivate;
 
 //! Window with event log.
-class LogSourcesWindow
+class CORE_EXPORT LogSourcesWindow
 	:	public QMainWindow
 	,	public ToolWindow
 {

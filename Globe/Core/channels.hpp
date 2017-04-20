@@ -34,6 +34,9 @@
 // Como include.
 #include <Como/Source>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -45,7 +48,7 @@ class Channel;
 //
 
 //! Interface of the channel plugin.
-class ChannelPluginInterface {
+class CORE_EXPORT ChannelPluginInterface {
 public:
 	virtual ~ChannelPluginInterface() {}
 
@@ -66,7 +69,7 @@ public:
 // ChannelPrivate
 //
 
-class ChannelPrivate {
+class CORE_EXPORT ChannelPrivate {
 public:
 	ChannelPrivate( Channel * parent,
 		const QString & name,
@@ -93,7 +96,7 @@ public:
 /*!
 	Interface of the channel in the Globe.
 */
-class Channel
+class CORE_EXPORT Channel
 	:	public QObject
 {
 	Q_OBJECT

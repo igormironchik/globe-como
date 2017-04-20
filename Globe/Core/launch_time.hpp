@@ -26,6 +26,9 @@
 // Qt include.
 #include <QDateTime>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -34,7 +37,7 @@ namespace Globe {
 //
 
 //! Class that gives launch time of the application.
-class LaunchTime {
+class CORE_EXPORT LaunchTime {
 private:
 	LaunchTime();
 

@@ -28,6 +28,9 @@
 #include <QScopedPointer>
 #include <QDateTime>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -68,7 +71,7 @@ private:
 class LogEventSelectorPrivate;
 
 //! Selector for the event log.
-class LogEventSelector
+class CORE_EXPORT LogEventSelector
 	:	public QWidget
 {
 	Q_OBJECT

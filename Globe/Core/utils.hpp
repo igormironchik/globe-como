@@ -29,6 +29,9 @@
 // Como include.
 #include <Como/Source>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -46,7 +49,7 @@ QString relativeFilePath( const QString & fileName,
 //
 
 //!	Checks is directory exists and create one if not.
-void checkDirAndCreateIfNotExists( const QString & path,
+void CORE_EXPORT checkDirAndCreateIfNotExists( const QString & path,
 	const QString & dirName );
 
 

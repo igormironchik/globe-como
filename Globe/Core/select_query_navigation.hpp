@@ -27,6 +27,9 @@
 #include <QWidget>
 #include <QScopedPointer>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -37,7 +40,7 @@ namespace Globe {
 class SelectQueryNavigationPrivate;
 
 //! Navigation buttons throug the SELECT query.
-class SelectQueryNavigation
+class CORE_EXPORT SelectQueryNavigation
 	:	public QWidget
 {
 	Q_OBJECT

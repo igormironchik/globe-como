@@ -29,6 +29,7 @@
 
 // Globe include.
 #include <Globe/Core/tool_window.hpp>
+#include <Globe/Core/export.hpp>
 
 
 namespace Globe {
@@ -40,7 +41,7 @@ namespace Globe {
 class SourcesMainWindowPrivate;
 
 //! Main window with show all sources available in the application.
-class SourcesMainWindow
+class CORE_EXPORT SourcesMainWindow
 	:	public QMainWindow
 	,	public ToolWindow
 {

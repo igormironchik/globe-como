@@ -21,7 +21,7 @@
 */
 
 // Core include.
-#include <Core/channels.hpp>
+#include <Globe/Core/channels.hpp>
 
 // Como include.
 #include <Como/ClientSocket>

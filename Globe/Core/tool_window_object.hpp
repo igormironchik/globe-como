@@ -31,6 +31,9 @@ class QAction;
 class QMainWindow;
 QT_END_NAMESPACE
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -42,7 +45,7 @@ namespace Globe {
 	This type of object provides information for the tools menu
 	and is for the shown'hide operations of the tool window.
 */
-class ToolWindowObject
+class CORE_EXPORT ToolWindowObject
 	:	public QObject
 {
 	Q_OBJECT

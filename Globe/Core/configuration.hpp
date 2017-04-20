@@ -27,6 +27,9 @@
 #include <QObject>
 #include <QScopedPointer>
 
+// Globe include.
+#include <Globe/Core/export.hpp>
+
 
 namespace Globe {
 
@@ -37,7 +40,7 @@ namespace Globe {
 class ConfigurationPrivate;
 
 //! Configuration loader/saver.
-class Configuration
+class CORE_EXPORT Configuration
 	:	public QObject
 {
 	Q_OBJECT

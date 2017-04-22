@@ -67,9 +67,9 @@ int main( int argc, char ** argv )
 			false, true );
 
 		QtArgHelp helpArg;
-		helpArg.printer()->setProgramDescription( "Tool for viewieng sources "
+		helpArg.setProgramDescription( "Tool for viewieng sources "
 			"in the remote applications" );
-		helpArg.printer()->setExecutableName( argv[0] );
+		helpArg.setExecutableName( argv[0] );
 
 		cmdLine.addParseable( cfgFileArg );
 		cmdLine.addParseable( helpArg );

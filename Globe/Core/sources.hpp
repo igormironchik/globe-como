@@ -71,13 +71,13 @@ public:
 	//! \return List of names of available channels.
 	QList< QString > channelsNames() const;
 
-	//! \return List of sources in the given \arg channel channel.
+	//! \return List of sources in the given channel.
 	QList< Como::Source > sources( const QString & channelName ) const;
 
-	//! \return List of registered sources in the given \arg channel channel.
+	//! \return List of registered sources in the given channel.
 	QList< Como::Source > registeredSources( const QString & channelName ) const;
 
-	//! \return List of deregistered sources in the given \arg channel channel.
+	//! \return List of deregistered sources in the given channel.
 	QList< Como::Source > deregisteredSources( const QString & channelName ) const;
 
 	//! Sync source. \return Was source synced?

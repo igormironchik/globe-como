@@ -72,9 +72,9 @@ public:
 	Condition & otherwise();
 	//! \return Otherwise condition.
 	const Condition & otherwise() const;
-	//! Insert new condition to the new place with \arg index.
+	//! Insert new condition to the new place with index.
 	void insertCondition( const Condition & cond, int index );
-	//! Remove condition with the \arg index.
+	//! Remove condition with the index.
 	void removeCondition( int index );
 	//! Swap to conditions in the list.
 	void swapConditions( int i, int j );

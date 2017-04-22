@@ -76,7 +76,7 @@ public:
 	//! Add new properties.
 	void addProperties( const Como::Source & source,
 		const QString & channelName, QWidget * parent = 0 );
-	//! Remove properties for the given \arg source source.
+	//! Remove properties for the given source.
 	void removeProperties( const PropertiesKey & key, QWidget * parent = 0 );
 	//! Edit properties.
 	void editProperties( const PropertiesKey & key, QWidget * parent = 0 );

@@ -69,7 +69,7 @@ public:
 	{
 	}
 
-	//! \return Channel view window for the given \arg channelName channel.
+	//! \return Channel view window for the given channel.
 	ChannelViewWindow * channelViewWindow( const QString & channelName )
 	{
 		foreach( ChannelViewWindow * window, m_channelViewWindows )
@@ -79,7 +79,7 @@ public:
 		return 0;
 	}
 
-	//! \return Scheme window for the given \arg fileName configuration file.
+	//! \return Scheme window for the given configuration file.
 	Scheme::Window * schemeWindow( const QString & fileName )
 	{
 		foreach( Scheme::Window * window, m_schemeWindows )

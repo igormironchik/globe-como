@@ -79,7 +79,7 @@ public:
 	{
 	}
 
-	//! \return Index of the data with the given \arg source source.
+	//! \return Index of the data with the given source.
 	int findData( const Como::Source & source )
 	{
 		const int size = m_data.size();

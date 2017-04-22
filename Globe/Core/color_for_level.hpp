@@ -74,7 +74,7 @@ public:
 	//! \return Instance.
 	static ColorForLevel & instance();
 
-	//! \return Color for the given \arg level level.
+	//! \return Color for the given level.
 	const QColor & color( Level level ) const;
 
 	//! \return Color for deregistered sources.

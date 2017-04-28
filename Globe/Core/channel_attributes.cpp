@@ -137,6 +137,7 @@ public:
 		,	m_isPortSet( true )
 		,	m_parent( parent )
 		,	m_checkButton( 0 )
+		,	m_checkIPv4( true )
 	{
 	}
 
@@ -164,7 +165,7 @@ public:
 		}
 		else if( !m_isIPSet )
 		{
-			m_message = ChannelAttributesDialog::tr( "Enter IP address of the channel." );
+			m_message = ChannelAttributesDialog::tr( "Enter address of the channel." );
 			return;
 		}
 		else if( !m_isPortSet )
@@ -243,6 +244,8 @@ public:
 	QString m_message;
 	//! Check button.
 	QPushButton * m_checkButton;
+	//! Check IPv4?
+	bool m_checkIPv4;
 }; // class ChannelAttributesDialogPrivate
 
 
@@ -295,6 +298,8 @@ ChannelAttributesDialog::init( const QStringList & types )
 		this, &ChannelAttributesDialog::accepted );
 	connect( d->m_checkButton, &QPushButton::clicked,
 		this, &ChannelAttributesDialog::checkFields );
+	connect( d->m_ui.m_checkIPv4, &QCheckBox::stateChanged,
+		this, &ChannelAttributesDialog::checkIPv4Checked );
 }
 
 void
@@ -337,11 +342,20 @@ ChannelAttributesDialog::ipEdited( const QString & text )
 
 	if( text.length() )
 	{
-		if( !ipValidationRegExp.exactMatch( text ) )
+		if( d->m_checkIPv4 )
 		{
-			d->highlightError( d->m_ui.m_ip );
-			d->m_isIPSet = false;
-			d->stateChanged();
+			if( !ipValidationRegExp.exactMatch( text ) )
+			{
+				d->highlightError( d->m_ui.m_ip );
+				d->m_isIPSet = false;
+				d->stateChanged();
+			}
+			else
+			{
+				d->highlightNormal( d->m_ui.m_ip );
+				d->m_isIPSet = true;
+				d->stateChanged();
+			}
 		}
 		else
 		{
@@ -391,6 +405,17 @@ ChannelAttributesDialog::checkFields()
 {
 	QToolTip::showText( mapToGlobal( d->m_checkButton->pos() ),
 		d->m_message, this );
+}
+
+void
+ChannelAttributesDialog::checkIPv4Checked( int state )
+{
+	if( Qt::Checked == state )
+		d->m_checkIPv4 = true;
+	else
+		d->m_checkIPv4 = false;
+
+	ipEdited( d->m_ui.m_ip->text() );
 }
 
 } /* namespace Globe */

@@ -101,6 +101,8 @@ private slots:
 	void accepted();
 	//! Check fields.
 	void checkFields();
+	//! Check IPv4?
+	void checkIPv4Checked( int state );
 
 
 private:

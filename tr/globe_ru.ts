@@ -20,16 +20,25 @@
     </message>
     <message>
         <location filename="../Globe/Core/channel_attributes.ui" line="38"/>
-        <source>IP address</source>
-        <translation>IP адрес</translation>
+        <source>Address</source>
+        <translation>Адрес</translation>
     </message>
     <message>
         <location filename="../Globe/Core/channel_attributes.ui" line="48"/>
+        <source>Check IPv4</source>
+        <translation>Проверка IPv4</translation>
+    </message>
+    <message>
+        <source>IP address</source>
+        <translation type="vanished">IP адрес</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_attributes.ui" line="58"/>
         <source>Port</source>
         <translation>Порт</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.ui" line="65"/>
+        <location filename="../Globe/Core/channel_attributes.ui" line="75"/>
         <source>Type</source>
         <translation>Тип</translation>
     </message>
@@ -254,37 +263,41 @@ You can mix that attributes.</source>
 <context>
     <name>Globe::ChannelAttributesDialog</name>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="157"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="158"/>
         <source>Channel with the given name already exists.</source>
         <translation>Канал с заданным именем уже существует.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="162"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="163"/>
         <source>Enter name of the channel.</source>
         <translation>Введите имя канала.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="167"/>
         <source>Enter IP address of the channel.</source>
-        <translation>Введите IP адрес канала.</translation>
+        <translation type="vanished">Введите IP адрес канала.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="172"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="168"/>
+        <source>Enter address of the channel.</source>
+        <translation>Введите адрес канала.</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="173"/>
         <source>Enter port number.</source>
         <translation>Введите номер порта.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="183"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="184"/>
         <source>Channel with the given IP and port already exists.</source>
         <translation>Канал с заданным IP о портом уже существует.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="193"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="194"/>
         <source>All is OK.</source>
         <translation>Все в порядке.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="270"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="273"/>
         <source>Check</source>
         <translation>Проверить</translation>
     </message>

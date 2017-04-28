@@ -451,14 +451,13 @@ MainWindow::settings()
 void
 MainWindow::shutdown()
 {
-	QMessageBox dlg( this );
+	const QMessageBox::StandardButton btn = QMessageBox::question( this,
+		tr( "Saving configuration..." ),
+		tr( "Would you like to save configuration?" ),
+		QMessageBox::StandardButtons( QMessageBox::Save | QMessageBox::No ),
+		QMessageBox::Save );
 
-	dlg.setText( tr( "Would you like to save configuration?" ) );
-	QPushButton * btn = dlg.addButton( tr( "Yes" ), QMessageBox::AcceptRole );
-	dlg.addButton( tr( "No" ), QMessageBox::RejectRole );
-	dlg.setDefaultButton( btn );
-
-	if( dlg.exec() == QMessageBox::AcceptRole )
+	if( btn == QMessageBox::Save )
 		saveConfiguration();
 
 	foreach( ChannelViewWindow * w, d->m_channelViewWindows )

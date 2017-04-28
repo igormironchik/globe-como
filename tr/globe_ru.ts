@@ -29,10 +29,6 @@
         <translation>Проверка IPv4</translation>
     </message>
     <message>
-        <source>IP address</source>
-        <translation type="vanished">IP адрес</translation>
-    </message>
-    <message>
         <location filename="../Globe/Core/channel_attributes.ui" line="58"/>
         <source>Port</source>
         <translation>Порт</translation>
@@ -273,10 +269,6 @@ You can mix that attributes.</source>
         <translation>Введите имя канала.</translation>
     </message>
     <message>
-        <source>Enter IP address of the channel.</source>
-        <translation type="vanished">Введите IP адрес канала.</translation>
-    </message>
-    <message>
         <location filename="../Globe/Core/channel_attributes.cpp" line="168"/>
         <source>Enter address of the channel.</source>
         <translation>Введите адрес канала.</translation>
@@ -508,16 +500,6 @@ because there is no such channel.</source>
 No one channel plugin has been loaded.</source>
         <translation>Не удалось создать канал.
 Не был загружен ни один плагин канала.</translation>
-    </message>
-    <message>
-        <source>Unable to create channel with:
-	Name: %1
-	Address: %2
-	Port: %3</source>
-        <translation type="vanished">Не удалось создать канал:
-	Имя: %1
-	Адрес: %2
-	Порт: %3</translation>
     </message>
     <message>
         <location filename="../Globe/Core/channels_list.cpp" line="610"/>
@@ -1266,23 +1248,14 @@ Default database will be used: &quot;%2&quot;.</source>
         <translation>Открыть схему</translation>
     </message>
     <message>
+        <location filename="../Globe/Core/mainwindow.cpp" line="455"/>
+        <source>Saving configuration...</source>
+        <translation>Сохранение конфигурации...</translation>
+    </message>
+    <message>
         <location filename="../Globe/Core/mainwindow.cpp" line="456"/>
         <source>Would you like to save configuration?</source>
         <translation>Хотите сохранить конфигурацию?</translation>
-    </message>
-    <message>
-        <source>Would you liketo save configuration?</source>
-        <translation type="vanished">Хотите сохранить конфигурацию?</translation>
-    </message>
-    <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="457"/>
-        <source>Yes</source>
-        <translation>Да</translation>
-    </message>
-    <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="458"/>
-        <source>No</source>
-        <translation>Нет</translation>
     </message>
 </context>
 <context>
@@ -2190,7 +2163,7 @@ scheme &quot;%2&quot;.</source>
     <message>
         <location filename="../Globe/Core/source_manual_dialog.ui" line="14"/>
         <source>Fill in the form...</source>
-        <translation>Заполните форму</translation>
+        <translation>Заполните форму...</translation>
     </message>
     <message>
         <location filename="../Globe/Core/source_manual_dialog.ui" line="22"/>

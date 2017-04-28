@@ -550,7 +550,12 @@ public:
 		//! Port.
 		quint16 port ) const
 	{
-		return ( new ComoChannel( name, hostAddress, port ) );
+		QHostAddress addr( hostAddress );
+
+		if( !addr.isNull() )
+			return ( new ComoChannel( name, hostAddress, port ) );
+		else
+			return Q_NULLPTR;
 	}
 
 	QString channelType() const

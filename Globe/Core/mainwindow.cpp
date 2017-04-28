@@ -332,9 +332,9 @@ MainWindow::showScheme( const QString & cfgFile, bool newScheme )
 void
 MainWindow::save()
 {
-	d->m_cfgWasSaved = false;
-
 	saveConfiguration();
+
+	d->m_cfgWasSaved = false;
 }
 
 void

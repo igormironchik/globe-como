@@ -254,37 +254,37 @@ You can mix that attributes.</source>
 <context>
     <name>Globe::ChannelAttributesDialog</name>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="158"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="157"/>
         <source>Channel with the given name already exists.</source>
         <translation>Канал с заданным именем уже существует.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="163"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="162"/>
         <source>Enter name of the channel.</source>
         <translation>Введите имя канала.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="168"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="167"/>
         <source>Enter IP address of the channel.</source>
         <translation>Введите IP адрес канала.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="173"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="172"/>
         <source>Enter port number.</source>
         <translation>Введите номер порта.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="184"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="183"/>
         <source>Channel with the given IP and port already exists.</source>
         <translation>Канал с заданным IP о портом уже существует.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="194"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="193"/>
         <source>All is OK.</source>
         <translation>Все в порядке.</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/channel_attributes.cpp" line="271"/>
+        <location filename="../Globe/Core/channel_attributes.cpp" line="270"/>
         <source>Check</source>
         <translation>Проверить</translation>
     </message>
@@ -1237,33 +1237,37 @@ Default database will be used: &quot;%2&quot;.</source>
         <translation>Alt+C</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="419"/>
+        <location filename="../Globe/Core/mainwindow.cpp" line="417"/>
         <source>Save New Scheme</source>
         <translation>Сохранить новую схему</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="421"/>
-        <location filename="../Globe/Core/mainwindow.cpp" line="437"/>
+        <location filename="../Globe/Core/mainwindow.cpp" line="419"/>
+        <location filename="../Globe/Core/mainwindow.cpp" line="435"/>
         <source>Scheme (*.scheme)</source>
         <translation>Схема (*.scheme)</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="435"/>
+        <location filename="../Globe/Core/mainwindow.cpp" line="433"/>
         <source>Open Scheme</source>
         <translation>Открыть схему</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="458"/>
-        <source>Would you liketo save configuration?</source>
+        <location filename="../Globe/Core/mainwindow.cpp" line="456"/>
+        <source>Would you like to save configuration?</source>
         <translation>Хотите сохранить конфигурацию?</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="459"/>
+        <source>Would you liketo save configuration?</source>
+        <translation type="vanished">Хотите сохранить конфигурацию?</translation>
+    </message>
+    <message>
+        <location filename="../Globe/Core/mainwindow.cpp" line="457"/>
         <source>Yes</source>
         <translation>Да</translation>
     </message>
     <message>
-        <location filename="../Globe/Core/mainwindow.cpp" line="460"/>
+        <location filename="../Globe/Core/mainwindow.cpp" line="458"/>
         <source>No</source>
         <translation>Нет</translation>
     </message>

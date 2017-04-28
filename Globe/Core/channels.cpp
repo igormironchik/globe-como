@@ -43,7 +43,7 @@ namespace Globe {
 
 ChannelPrivate::ChannelPrivate( Channel * parent,
 	const QString & name,
-	const QHostAddress & address,
+	const QString & address,
 	quint16 port )
 	:	q( parent )
 	,	m_name( name )
@@ -62,7 +62,7 @@ ChannelPrivate::~ChannelPrivate()
 //
 
 Channel::Channel( const QString & name,
-	const QHostAddress & address, quint16 port )
+	const QString & address, quint16 port )
 	:	d( new ChannelPrivate( this, name, address, port ) )
 {
 	setObjectName( QString( "Channel" ) );
@@ -84,7 +84,7 @@ Channel::name() const
 	return d->m_name;
 }
 
-const QHostAddress &
+const QString &
 Channel::hostAddress() const
 {
 	return d->m_address;
@@ -259,7 +259,7 @@ ChannelsManager::channelByName( const QString & name ) const
 
 Channel *
 ChannelsManager::createChannel(	const QString & name,
-	const QHostAddress & hostAddress, quint16 port,
+	const QString & hostAddress, quint16 port,
 	const QString & type )
 {
 	Channel * ch = channelByName( name );
@@ -288,7 +288,7 @@ ChannelsManager::createChannel(	const QString & name,
 				QString( "Channel created. Name \"%1\", ip \"%2\", "
 						"port %3 and type \"%4\"." )
 					.arg( name )
-					.arg( hostAddress.toString() )
+					.arg( hostAddress )
 					.arg( QString::number( port ) )
 					.arg( type ) );
 
@@ -317,7 +317,7 @@ ChannelsManager::removeChannel( const QString & name )
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Channel removed. Name \"%1\", ip \"%2\" and port %3." )
 				.arg( name )
-				.arg( ch->hostAddress().toString() )
+				.arg( ch->hostAddress() )
 				.arg( QString::number( ch->portNumber() ) ) );
 
 		emit channelRemoved( ch );
@@ -333,7 +333,7 @@ ChannelsManager::isNameUnique( const QString & name )
 }
 
 bool
-ChannelsManager::isAddressAndPortUnique( const QHostAddress & hostAddress,
+ChannelsManager::isAddressAndPortUnique( const QString & hostAddress,
 	quint16 port )
 {
 	for( QMap< QString, Channel* >::ConstIterator it = d->m_channels.begin(),

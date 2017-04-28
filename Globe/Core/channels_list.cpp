@@ -575,7 +575,7 @@ ChannelsList::addChannel()
 						"name: \"%1\" address: \"%2\", port: %3 "
 						"and type: \"%4\"" )
 							.arg( attributes.name() )
-							.arg( attributes.address().toString() )
+							.arg( attributes.address() )
 							.arg( QString::number( attributes.port() ) )
 							.arg( attributes.type() ) );
 
@@ -586,7 +586,7 @@ ChannelsList::addChannel()
 						"\tPort: %3\n"
 						"\tType: %4" )
 							.arg( attributes.name() )
-							.arg( attributes.address().toString() )
+							.arg( attributes.address() )
 							.arg( QString::number( attributes.port() ) )
 							.arg( attributes.type() ) );
 			}

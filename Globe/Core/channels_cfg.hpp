@@ -31,7 +31,6 @@
 #include <QtConfFile/ConstraintOneOf>
 
 // Qt include.
-#include <QHostAddress>
 #include <QString>
 #include <QList>
 
@@ -50,7 +49,7 @@ class ChannelCfg {
 public:
 	ChannelCfg();
 
-	ChannelCfg( const QString & name, const QHostAddress & address,
+	ChannelCfg( const QString & name, const QString & address,
 		quint16 port, bool isMustBeConnected, int timeout,
 		const QString & type );
 
@@ -64,9 +63,9 @@ public:
 	void setName( const QString & name );
 
 	//! \return IP address of the channel.
-	const QHostAddress & address() const;
+	const QString & address() const;
 	//! Set address of the channel.
-	void setAddress( const QHostAddress & address );
+	void setAddress( const QString & address );
 
 	//! \return Port of the channel.
 	quint16 port() const;
@@ -92,7 +91,7 @@ private:
 	//! Name of the channel.
 	QString m_name;
 	//! Address of the channel.
-	QHostAddress m_address;
+	QString m_address;
 	//! Port of the channel.
 	quint16 m_port;
 	//! Whether the channel must be connected.

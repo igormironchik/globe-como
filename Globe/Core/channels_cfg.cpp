@@ -37,7 +37,7 @@ ChannelCfg::ChannelCfg()
 {
 }
 
-ChannelCfg::ChannelCfg( const QString & name, const QHostAddress & address,
+ChannelCfg::ChannelCfg( const QString & name, const QString & address,
 	quint16 port, bool isMustBeConnected, int timeout,
 	const QString & type )
 	:	m_name( name )
@@ -88,14 +88,14 @@ ChannelCfg::setName( const QString & name )
 	m_name = name;
 }
 
-const QHostAddress &
+const QString &
 ChannelCfg::address() const
 {
 	return m_address;
 }
 
 void
-ChannelCfg::setAddress( const QHostAddress & address )
+ChannelCfg::setAddress( const QString & address )
 {
 	m_address = address;
 }
@@ -197,7 +197,7 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
 	m_timeout.setConstraint( &m_timeoutConstraint );
 
 	setValue( cfg.name() );
-	m_address.setValue( cfg.address().toString() );
+	m_address.setValue( cfg.address() );
 	m_port.setValue( cfg.port() );
 	m_type.setValue( cfg.channelType() );
 
@@ -223,7 +223,7 @@ ChannelTag::ChannelTag( const ChannelCfg & cfg,
 	m_timeout.setConstraint( &m_timeoutConstraint );
 
 	setValue( cfg.name() );
-	m_address.setValue( cfg.address().toString() );
+	m_address.setValue( cfg.address() );
 	m_port.setValue( cfg.port() );
 	m_type.setValue( cfg.channelType() );
 
@@ -244,7 +244,7 @@ ChannelTag::cfg() const
 	ChannelCfg cfg;
 
 	cfg.setName( value() );
-	cfg.setAddress( QHostAddress( m_address.value() ) );
+	cfg.setAddress( m_address.value() );
 	cfg.setPort( (quint16) m_port.value() );
 	cfg.setMustBeConnected( m_isMustBeConnected.isDefined() );
 

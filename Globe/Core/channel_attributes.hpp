@@ -27,10 +27,6 @@
 #include <QDialog>
 #include <QScopedPointer>
 
-QT_BEGIN_NAMESPACE
-class QHostAddress;
-QT_END_NAMESPACE
-
 
 namespace Globe {
 
@@ -53,9 +49,9 @@ public:
 	void setName( const QString & name );
 
 	//! \return Address of the channel.
-	const QHostAddress & address() const;
+	const QString & address() const;
 	//! Set address of the channel.
-	void setAddress( const QHostAddress & addr );
+	void setAddress( const QString & addr );
 
 	//! \return Port of the channel.
 	quint16 port() const;

@@ -27,7 +27,6 @@
 #include "ui_channel_attributes.h"
 
 // Qt include.
-#include <QHostAddress>
 #include <QPushButton>
 #include <QColor>
 #include <QPushButton>
@@ -51,7 +50,7 @@ public:
 	//! Name of the channel.
 	QString m_name;
 	//! Address of the channel.
-	QHostAddress m_address;
+	QString m_address;
 	//! Port of the channel.
 	quint16 m_port;
 	//! Type.
@@ -86,14 +85,14 @@ ChannelAttributes::setName( const QString & name )
 	d->m_name = name;
 }
 
-const QHostAddress &
+const QString &
 ChannelAttributes::address() const
 {
 	return d->m_address;
 }
 
 void
-ChannelAttributes::setAddress( const QHostAddress & addr )
+ChannelAttributes::setAddress( const QString & addr )
 {
 	d->m_address = addr;
 }
@@ -145,7 +144,7 @@ public:
 	bool checkIPAndPort()
 	{
 		return ( ChannelsManager::instance().isAddressAndPortUnique(
-			QHostAddress( m_ui.m_ip->text() ), (quint16) m_ui.m_port->value() ) );
+			m_ui.m_ip->text(), (quint16) m_ui.m_port->value() ) );
 	}
 
 	//! Print message about current state.
@@ -380,7 +379,7 @@ void
 ChannelAttributesDialog::accepted()
 {
 	d->m_attributes.setName( d->m_ui.m_name->text() );
-	d->m_attributes.setAddress( QHostAddress( d->m_ui.m_ip->text() ) );
+	d->m_attributes.setAddress( d->m_ui.m_ip->text() );
 	d->m_attributes.setPort( (quint16) d->m_ui.m_port->value() );
 	d->m_attributes.setType( d->m_ui.m_type->currentText() );
 

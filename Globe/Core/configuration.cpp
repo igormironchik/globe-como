@@ -418,14 +418,14 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 			Log::instance().writeMsgToEventLog( LogLevelError, QString(
 				"Unable to create new channel...\n"
 				"Channel with address \"%1\" and port %2 already exists." )
-					.arg( channelCfg.address().toString() )
+					.arg( channelCfg.address() )
 					.arg( QString::number( channelCfg.port() ) ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
 				tr( "Unable to create new channel...\n\n"
 					"Channel with address \"%1\" and port %2 already exists." )
-					.arg( channelCfg.address().toString() )
+					.arg( channelCfg.address() )
 					.arg( QString::number( channelCfg.port() ) ) );
 		}
 	}

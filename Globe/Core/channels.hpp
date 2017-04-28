@@ -27,7 +27,6 @@
 #include <QObject>
 #include <QScopedPointer>
 #include <QString>
-#include <QHostAddress>
 #include <QList>
 #include <QtPlugin>
 
@@ -56,7 +55,7 @@ public:
 		//! Name of the channel
 		const QString & name,
 		//! Host address.
-		const QHostAddress & hostAddress,
+		const QString & hostAddress,
 		//! Port.
 		quint16 port ) const = 0;
 
@@ -73,7 +72,7 @@ class CORE_EXPORT ChannelPrivate {
 public:
 	ChannelPrivate( Channel * parent,
 		const QString & name,
-		const QHostAddress & address,
+		const QString & address,
 		quint16 port );
 
 	virtual ~ChannelPrivate();
@@ -83,7 +82,7 @@ public:
 	//! Name of the channel.
 	QString m_name;
 	//! Host address.
-	QHostAddress m_address;
+	QString m_address;
 	//! Port.
 	quint16 m_port;
 }; // class ChannelPrivate
@@ -118,7 +117,7 @@ public:
 		//! Name of the channel.
 		const QString & name,
 		//! Host address.
-		const QHostAddress & address,
+		const QString & address,
 		//! Port.
 		quint16 port );
 
@@ -127,7 +126,7 @@ public:
 	//! \return Name of the channel.
 	const QString & name() const;
 	//! \return Host address.
-	const QHostAddress & hostAddress() const;
+	const QString & hostAddress() const;
 	//! \return Port.
 	quint16 portNumber() const;
 	//! \return Timeout in the channel.
@@ -243,7 +242,7 @@ public:
 		//! Name of the channel
 		const QString & name,
 		//! Host address.
-		const QHostAddress & hostAddress,
+		const QString & hostAddress,
 		//! Port.
 		quint16 port,
 		//! Type of the channel.
@@ -256,7 +255,7 @@ public:
 	bool isNameUnique( const QString & name );
 
 	//! \return Is given \a hostAddress and \a port unique.
-	bool isAddressAndPortUnique( const QHostAddress & hostAddress,
+	bool isAddressAndPortUnique( const QString & hostAddress,
 		quint16 port );
 
 	//! \return All available channels.

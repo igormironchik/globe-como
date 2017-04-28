@@ -147,7 +147,7 @@ ChannelWidget::init()
 	ipLayout->setContentsMargins( 0, 0, 0, 0 );
 
 	d->m_ipLabel = new QLabel( this );
-	d->m_ipLabel->setText( d->m_channel->hostAddress().toString() +
+	d->m_ipLabel->setText( d->m_channel->hostAddress() +
 		":" + QString::number( d->m_channel->portNumber() ) );
 	d->m_ipLabel->setToolTip( tr( "IP address and port." ) );
 	ipLayout->addWidget( d->m_ipLabel );

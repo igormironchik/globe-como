@@ -332,9 +332,9 @@ MainWindow::showScheme( const QString & cfgFile, bool newScheme )
 void
 MainWindow::save()
 {
-	saveConfiguration();
-
 	d->m_cfgWasSaved = false;
+
+	saveConfiguration();
 }
 
 void
@@ -394,8 +394,6 @@ MainWindow::restoreWindows( const WindowsCfg & cfg )
 void
 MainWindow::aboutToQuit()
 {
-	saveConfiguration();
-
 	Log::instance().writeMsgToEventLog( LogLevelInfo,
 		QLatin1String( "Application finished." ) );
 }
@@ -455,12 +453,12 @@ MainWindow::shutdown()
 {
 	QMessageBox dlg( this );
 
-	dlg.setText( tr( "Would you liketo save configuration?" ) );
+	dlg.setText( tr( "Would you like to save configuration?" ) );
 	QPushButton * btn = dlg.addButton( tr( "Yes" ), QMessageBox::AcceptRole );
 	dlg.addButton( tr( "No" ), QMessageBox::RejectRole );
 	dlg.setDefaultButton( btn );
 
-	if( dlg.exec() == QDialog::Accepted )
+	if( dlg.exec() == QMessageBox::AcceptRole )
 		saveConfiguration();
 
 	foreach( ChannelViewWindow * w, d->m_channelViewWindows )

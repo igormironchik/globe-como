@@ -55,7 +55,6 @@
 int main( int argc, char ** argv )
 {
 	qRegisterMetaType< Como::Source > ( "Como::Source" );
-	qRegisterMetaType< QHostAddress > ( "QHostAddress" );
 
 	QString cfgFile;
 

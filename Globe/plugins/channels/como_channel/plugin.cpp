@@ -29,6 +29,7 @@
 // Qt include.
 #include <QThread>
 #include <QTimer>
+#include <QHostAddress>
 
 
 namespace Globe {
@@ -91,7 +92,7 @@ class ComoChannelPrivate
 public:
 	ComoChannelPrivate( ComoChannel * parent,
 		const QString & name,
-		const QHostAddress & address,
+		const QString & address,
 		quint16 port );
 
 	~ComoChannelPrivate();
@@ -154,7 +155,7 @@ public:
 		//! Name of the channel.
 		const QString & name,
 		//! Host address.
-		const QHostAddress & address,
+		const QString & address,
 		//! Port.
 		quint16 port );
 
@@ -219,7 +220,7 @@ private:
 
 ComoChannelPrivate::ComoChannelPrivate( ComoChannel * parent,
 	const QString & name,
-	const QHostAddress & address,
+	const QString & address,
 	quint16 port )
 	:	ChannelPrivate( parent, name, address, port )
 	,	m_thread( 0 )
@@ -273,7 +274,7 @@ ComoChannelPrivate::q_func() const
 //
 
 ComoChannel::ComoChannel( const QString & name,
-	const QHostAddress & address, quint16 port )
+	const QString & address, quint16 port )
 	:	Channel( new ComoChannelPrivate( this, name, address, port ) )
 {
 	ComoChannelPrivate * d = d_func();
@@ -381,7 +382,7 @@ ComoChannel::connectToHostImplementation()
 
 	d->m_isDisconnectedByUser = false;
 
-	emit aboutToConnectToHost( d->m_address, d->m_port );
+	emit aboutToConnectToHost( QHostAddress( d->m_address ), d->m_port );
 }
 
 void
@@ -429,7 +430,7 @@ ComoChannel::socketDisconnected()
 	emit disconnected();
 
 	if( !d->m_isDisconnectedByUser )
-		emit aboutToConnectToHost( d->m_address, d->m_port );
+		emit aboutToConnectToHost( QHostAddress( d->m_address ), d->m_port );
 }
 
 void
@@ -452,7 +453,7 @@ ComoChannel::socketError( QAbstractSocket::SocketError socketError )
 		ComoChannelPrivate * d = d_func();
 
 		if( !d->m_isDisconnectedByUser )
-			emit aboutToConnectToHost( d->m_address, d->m_port );
+			emit aboutToConnectToHost( QHostAddress( d->m_address ), d->m_port );
 	}
 }
 
@@ -532,11 +533,20 @@ class ComoChannelPlugin
 	Q_INTERFACES( Globe::ChannelPluginInterface )
 
 public:
+	ComoChannelPlugin()
+	{
+		qRegisterMetaType< QHostAddress > ( "QHostAddress" );
+	}
+
+	~ComoChannelPlugin()
+	{
+	}
+
 	Channel * createChannel(
 		//! Name of the channel
 		const QString & name,
 		//! Host address.
-		const QHostAddress & hostAddress,
+		const QString & hostAddress,
 		//! Port.
 		quint16 port ) const
 	{

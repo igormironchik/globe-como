@@ -7,7 +7,7 @@ through the given channel.
 
 # Channels
 
-![Main window]( http://igor-mironchik.besaba.com/images/globe/globe_mainwindow.png )
+![Main window]( https://image.ibb.co/bzVwvk/globe_mainwindow.png )
 
 To create channel user should click right mouse button in the main window to see context
 menu, where he can select "Add channel" action. At this point application will invoke dialog
@@ -33,7 +33,7 @@ channels and to show all available channels.
 
 # Sources window
 
-![Sources manager]( http://igor-mironchik.besaba.com/images/globe/globe_sources_manager.png )
+![Sources manager]( https://image.ibb.co/kCy5o5/globe_sources_manager.png )
 
 In the Globe, you can view all of the existing data sources, including the de-registered. Intended
 for this window "Sources window", access to which can be obtained from the menu "Tools". This window
@@ -44,7 +44,7 @@ window (this window will be explained later).
 
 # Properties manager
 
-![Properties manager]( http://igor-mironchik.besaba.com/images/globe/globe_properties_manager.png )
+![Properties manager]( https://image.ibb.co/dLwrT5/globe_properties_manager.png )
 
 From the "Tools" menu, you can call the properties  manager window. This window displays all the
 properties of the data sources. The properties you can edit, delete, add new ones. All changes in
@@ -61,7 +61,7 @@ do this in the properties manager window, and in the "Sources window".
 
 # Properties
 
-![Properties]( http://igor-mironchik.besaba.com/images/globe/globe_properties_dialog.v2.png )
+![Properties]( https://image.ibb.co/hfnbvk/globe_properties_dialog_v2.png )
 
 Data source properties is a set of conditions. The condition is a logical expression of the relationship
 and the value that should be compared to the current value of the data source. If the evaluation result
@@ -72,7 +72,7 @@ neither condition corresponds to the current value of the data source, it checks
 
 # Channel View
 
-![Channel view]( http://igor-mironchik.besaba.com/images/globe/globe_channel_view.png )
+![Channel view]( https://image.ibb.co/jx2Fo5/globe_channel_view.png )
 
 Channel View is a window that provides information about all sources in channel. To create Channel View
 you can use "File->New->Channel View" menu or context menu of the channel in the main window. If
@@ -85,7 +85,7 @@ about sources into the system's clipboard, that information copied in CSV format
 
 # Event's log
 
-![EVent log]( http://igor-mironchik.besaba.com/images/globe/globe_event_log.png )
+![EVent log]( https://image.ibb.co/f6LeFk/globe_event_log.png )
 
 The application keeps a log of events. Log is stored in the local database, which based on SQlite.
 User can at any time read event's log from menu "Tools->Event Log". In the event's log window
@@ -100,7 +100,7 @@ with special buttons. I hope that event's log will be very useful and convenient
 
 # Sounds
 
-![Sounds]( http://igor-mironchik.besaba.com/images/globe/globe_sounds.png )
+![Sounds]( https://image.ibb.co/gKxbvk/globe_sounds.png )
 
 The application can play sounds for specific level if configured so. One hundred last played sounds
 shown in the "Sounds" tool window. User can disable any sound deems necessary. Disabling of sound
@@ -112,7 +112,7 @@ level is performed in the configuration dialog.
 
 # Sources Log
 
-![Sources log]( http://igor-mironchik.besaba.com/images/globe/globe_sources_log.v2.png )
+![Sources log]( https://image.ibb.co/iWtGvk/globe_sources_log_v2.png )
 
 The application can store all information about changes in sources values in the database log.
 By default this function is disabled. User can enable it in settings dialog. Sources log stores
@@ -123,7 +123,7 @@ log tool window.
 
 # Scheme
 
-![Scheme]( http://igor-mironchik.besaba.com/images/globe/globe_scheme.png )
+![Scheme]( https://image.ibb.co/ezHy85/globe_scheme.png )
 
 Scheme it's window with source and text items. Source item represent Como source from any channel in the
 application. Scheme is editable in the GUI. For editing necessary to enable editing mode, for this in the

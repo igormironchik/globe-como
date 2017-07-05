@@ -32,6 +32,8 @@ unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
 INCLUDEPATH += $$PWD/../.. $$PWD/../../QtConfFile
 DEPENDPATH += $$PWD/../.. $$PWD/../../QtConfFile
 
+unix|win32: LIBS += -L$$OUT_PWD/../../QtConfFile/lib -lQtConfFile
+
 macx {
 	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.
 } else:linux-* {

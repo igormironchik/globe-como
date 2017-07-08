@@ -16,7 +16,8 @@ HEADERS += $$PWD/enums.hpp \
            $$PWD/text_dialog.hpp \
            $$PWD/view.hpp \
            $$PWD/window.hpp \
-           $$PWD/window_cfg.hpp
+           $$PWD/window_cfg.hpp \
+			$$PWD/aggregate.hpp
 
 SOURCES += $$PWD/item_base_cfg.cpp \
            $$PWD/mm_pixels.cpp \
@@ -31,7 +32,9 @@ SOURCES += $$PWD/item_base_cfg.cpp \
            $$PWD/text_dialog.cpp \
            $$PWD/view.cpp \
            $$PWD/window.cpp \
-           $$PWD/window_cfg.cpp
+           $$PWD/window_cfg.cpp \
+			$$PWD/aggregate.cpp \
+			$$PWD/selectable.cpp
 
 FORMS +=   $$PWD/size_dialog.ui \
            $$PWD/text_dialog.ui

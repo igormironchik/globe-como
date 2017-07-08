@@ -46,40 +46,20 @@ namespace Scheme {
 // TextPrivate
 //
 
-class TextPrivate {
+class TextPrivate
+	:	public SelectablePrivate
+{
 public:
 	TextPrivate( const QString & text, Selection * selection, Scene * scene )
-		:	m_mode( ViewScene )
-		,	m_editMode( EditSceneSelect )
-		,	m_state( ItemNotSelected )
-		,	m_resizeMode( NoResize )
-		,	m_leftButtonPressed( false )
-		,	m_width( 50 )
-		,	m_height( 25 )
-		,	m_selection( selection )
-		,	m_scene( scene )
+		:	SelectablePrivate( selection, scene )
 		,	m_text( text )
 	{
 	}
 
-	//! Mode of the scene.
-	SceneMode m_mode;
-	//! Edit mode of the scene.
-	EditSceneMode m_editMode;
-	//! Item state.
-	ItemState m_state;
-	//! Resize mode.
-	ResizeMode m_resizeMode;
-	//! Left mouse button was pressed.
-	bool m_leftButtonPressed;
-	//! Width.
-	qreal m_width;
-	//! Height.
-	qreal m_height;
-	//! Selection.
-	Selection * m_selection;
-	//! Scene.
-	Scene * m_scene;
+	~TextPrivate()
+	{
+	}
+
 	//! Text.
 	QString m_text;
 	//! Font.
@@ -92,7 +72,7 @@ public:
 //
 
 Text::Text( const QString & text, Selection * selection, Scene * scene )
-	:	d( new TextPrivate( text, selection, scene ) )
+	:	Selectable( new TextPrivate( text, selection, scene ) )
 {
 }
 
@@ -103,9 +83,11 @@ Text::~Text()
 void
 Text::setMode( SceneMode mode )
 {
-	d->m_mode = mode;
+	auto dd = d_ptr();
 
-	if( d->m_mode == EditScene )
+	dd->m_mode = mode;
+
+	if( dd->m_mode == EditScene )
 	{
 		setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable |
 			QGraphicsItem::ItemIsFocusable );
@@ -120,13 +102,13 @@ Text::setMode( SceneMode mode )
 void
 Text::setEditMode( EditSceneMode mode )
 {
-	d->m_editMode = mode;
+	d_ptr()->m_editMode = mode;
 }
 
 void
 Text::setItemState( ItemState st )
 {
-	d->m_state = st;
+	d_ptr()->m_state = st;
 
 	if( st == ItemSelected )
 		setAcceptHoverEvents( true );
@@ -163,7 +145,7 @@ Text::moveRight( int delta )
 void
 Text::deleteItem()
 {
-	d->m_scene->removeText( this );
+	d_ptr()->m_scene->removeText( this );
 
 	deleteLater();
 }
@@ -173,12 +155,14 @@ Text::cfg() const
 {
 	TextCfg cfg;
 
-	cfg.setText( d->m_text );
-	cfg.setPos( pos() );
-	cfg.setSize( QSizeF( d->m_width, d->m_height ) );
+	auto dd = d_ptr();
 
-	if( QApplication::font() != d->m_font )
-		cfg.setFont( d->m_font );
+	cfg.setText( dd->m_text );
+	cfg.setPos( pos() );
+	cfg.setSize( QSizeF( dd->m_width, dd->m_height ) );
+
+	if( QApplication::font() != dd->m_font )
+		cfg.setFont( dd->m_font );
 
 	return cfg;
 }
@@ -186,13 +170,15 @@ Text::cfg() const
 void
 Text::setCfg( const TextCfg & cfg )
 {
+	auto dd = d_ptr();
+
 	if( cfg.isFontSet() )
-		d->m_font = cfg.font();
+		dd->m_font = cfg.font();
 
 	setPos( cfg.pos() );
 
-	d->m_width = cfg.size().width();
-	d->m_height = cfg.size().height();
+	dd->m_width = cfg.size().width();
+	dd->m_height = cfg.size().height();
 
 	update();
 }
@@ -200,7 +186,9 @@ Text::setCfg( const TextCfg & cfg )
 QRectF
 Text::boundingRect() const
 {
-	return QRectF( 0, 0, d->m_width, d->m_height );
+	auto dd = d_ptr();
+
+	return QRectF( 0, 0, dd->m_width, dd->m_height );
 }
 
 void
@@ -210,7 +198,9 @@ Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED( option )
 	Q_UNUSED( widget )
 
-	if( d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_state == ItemSelected )
 	{
 		painter->setPen( Qt::blue );
 		painter->drawRect( boundingRect() );
@@ -225,17 +215,19 @@ Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 
 	painter->setPen( Qt::black );
 
-	painter->setFont( d->m_font );
+	painter->setFont( dd->m_font );
 
 	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
-		d->m_text );
+		dd->m_text );
 }
 
 void
 Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_leftButtonPressed && d->m_editMode == EditSceneSelect &&
-		( d->m_resizeMode & YesResize ) )
+	auto dd = d_ptr();
+
+	if( dd->m_leftButtonPressed && dd->m_editMode == EditSceneSelect &&
+		( dd->m_resizeMode & YesResize ) )
 	{
 		qreal x = pos().x();
 		qreal y = pos().y();
@@ -292,10 +284,10 @@ Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )
 			setPos( x, y );
 
-		if( width != d->m_width || height != d->m_height )
+		if( width != dd->m_width || height != dd->m_height )
 		{
-			d->m_width = width;
-			d->m_height = height;
+			dd->m_width = width;
+			dd->m_height = height;
 			update();
 		}
 	}
@@ -306,11 +298,13 @@ Text::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 void
 Text::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_mode == EditScene )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene )
 	{
-		if( d->m_editMode == EditSceneSelect &&
+		if( dd->m_editMode == EditSceneSelect &&
 			event->button() == Qt::LeftButton )
-				d->m_leftButtonPressed = true;
+				dd->m_leftButtonPressed = true;
 	}
 
 	QGraphicsObject::mousePressEvent( event );
@@ -319,17 +313,19 @@ Text::mousePressEvent( QGraphicsSceneMouseEvent * event )
 void
 Text::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_mode == EditScene )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene )
 	{
-		if( d->m_editMode == EditSceneSelect &&
+		if( dd->m_editMode == EditSceneSelect &&
 			event->button() == Qt::LeftButton )
 		{
-			d->m_leftButtonPressed = false;
+			dd->m_leftButtonPressed = false;
 
 			if( event->modifiers() == Qt::NoModifier )
-				d->m_selection->clear();
+				dd->m_selection->clear();
 
-			d->m_selection->addItem( this );
+			dd->m_selection->addItem( this );
 
 			event->accept();
 		}
@@ -343,8 +339,10 @@ Text::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 void
 Text::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
 		QGraphicsObject::hoverEnterEvent( event );
@@ -353,8 +351,10 @@ Text::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 void
 Text::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 	{
 		d->m_resizeMode = NoResize;
 		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
@@ -366,8 +366,10 @@ Text::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 void
 Text::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
 		QGraphicsObject::hoverMoveEvent( event );
@@ -376,43 +378,15 @@ Text::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 void
 Text::detectResizeMode( const QPointF & pos )
 {
-	const QRectF topLeftRect( 0, 0, 3, 3 );
-	const QRectF topRightRect( boundingRect().width() - 3, 0, 3, 3 );
-	const QRectF bottomLeftRect( 0, boundingRect().height() - 3, 3, 3 );
-	const QRectF bottomRightRect( boundingRect().width() - 3,
-		boundingRect().height() - 3, 3, 3 );
-
-	if( topLeftRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeTopLeft;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeFDiagCursor ) );
-	}
-	else if( topRightRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeTopRight;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeBDiagCursor ) );
-	}
-	else if( bottomLeftRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeBottomLeft;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeBDiagCursor ) );
-	}
-	else if( bottomRightRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeBottomRight;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeFDiagCursor ) );
-	}
-	else
-	{
-		d->m_resizeMode = NoResize;
-		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
-	}
+	Selectable::detectResizeMode( pos, boundingRect() );
 }
 
 void
 Text::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
 	{
 		event->accept();
 
@@ -440,11 +414,13 @@ Text::removeItemFromScene()
 void
 Text::changeFont()
 {
-	QFontDialog dlg( d->m_font );
+	auto dd = d_ptr();
+
+	QFontDialog dlg( dd->m_font );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		d->m_font = dlg.selectedFont();
+		dd->m_font = dlg.selectedFont();
 		update();
 	}
 }
@@ -452,15 +428,17 @@ Text::changeFont()
 void
 Text::changeSize()
 {
-	int width = d->m_width;
-	int height = d->m_height;
+	auto dd = d_ptr();
+
+	int width = dd->m_width;
+	int height = dd->m_height;
 
 	SizeDialog dlg( width, height );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		d->m_width = width;
-		d->m_height = height;
+		dd->m_width = width;
+		dd->m_height = height;
 
 		update();
 	}
@@ -469,15 +447,29 @@ Text::changeSize()
 void
 Text::changeText()
 {
-	QString text = d->m_text;
+	auto dd = d_ptr();
+
+	QString text = dd->m_text;
 
 	TextDialog dlg( text );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		d->m_text = text;
+		dd->m_text = text;
 		update();
 	}
+}
+
+TextPrivate *
+Text::d_ptr()
+{
+	return static_cast< TextPrivate* > ( d.data() );
+}
+
+const TextPrivate *
+Text::d_ptr() const
+{
+	return static_cast< TextPrivate* > ( d.data() );
 }
 
 } /* namespace Scheme */

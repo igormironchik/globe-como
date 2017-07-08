@@ -25,7 +25,6 @@
 
 // Qt include.
 #include <QGraphicsObject>
-#include <QScopedPointer>
 
 // Como include.
 #include <Como/Source>
@@ -63,28 +62,28 @@ public:
 	~Source();
 
 	//! Set scene mode.
-	void setMode( SceneMode mode );
+	void setMode( SceneMode mode ) Q_DECL_OVERRIDE;
 
 	//! Set edit scene mode.
-	void setEditMode( EditSceneMode mode );
+	void setEditMode( EditSceneMode mode ) Q_DECL_OVERRIDE;
 
 	//! Set item state.
-	void setItemState( ItemState st );
+	void setItemState( ItemState st ) Q_DECL_OVERRIDE;
 
 	//! Move up.
-	void moveUp( int delta );
+	void moveUp( int delta ) Q_DECL_OVERRIDE;
 
 	//! Move down.
-	void moveDown( int delta );
+	void moveDown( int delta ) Q_DECL_OVERRIDE;
 
 	//! Move left.
-	void moveLeft( int delta );
+	void moveLeft( int delta ) Q_DECL_OVERRIDE;
 
 	//! Move right.
-	void moveRight( int delta );
+	void moveRight( int delta ) Q_DECL_OVERRIDE;
 
 	//! Delete item.
-	void deleteItem();
+	void deleteItem() Q_DECL_OVERRIDE;
 
 	//! \return Channel name.
 	const QString & channelName() const;
@@ -109,20 +108,21 @@ public:
 	void propertiesChanged();
 
 	//! \return Bounding rectangle.
-	QRectF boundingRect() const;
+	QRectF boundingRect() const Q_DECL_OVERRIDE;
 
 	//! Paint item.
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
-		QWidget * widget );
+		QWidget * widget ) Q_DECL_OVERRIDE;
 
 protected:
-	void mouseMoveEvent( QGraphicsSceneMouseEvent * event );
-	void mousePressEvent( QGraphicsSceneMouseEvent * event );
-	void mouseReleaseEvent( QGraphicsSceneMouseEvent * event );
-	void hoverEnterEvent( QGraphicsSceneHoverEvent * event );
-	void hoverLeaveEvent( QGraphicsSceneHoverEvent * event );
-	void hoverMoveEvent( QGraphicsSceneHoverEvent * event );
-	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event );
+	void mouseMoveEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
+	void mousePressEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
+	void mouseReleaseEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
+	void hoverEnterEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
+	void hoverLeaveEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
+	void hoverMoveEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
+	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
+		Q_DECL_OVERRIDE;
 
 private:
 	//! Detect resize mode and change cursor.
@@ -145,9 +145,11 @@ private slots:
 	void promoteProperties();
 
 private:
-	Q_DISABLE_COPY( Source )
+	SourcePrivate * d_ptr();
+	const SourcePrivate * d_ptr() const;
 
-	QScopedPointer< SourcePrivate > d;
+private:
+	Q_DISABLE_COPY( Source )
 }; // class Source
 
 } /* namespace Scheme */

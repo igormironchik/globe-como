@@ -50,21 +50,19 @@ namespace Scheme {
 // SourcePrivate
 //
 
-class SourcePrivate {
+class SourcePrivate
+	:	public SelectablePrivate
+{
 public:
 	SourcePrivate( const Como::Source & source, const QString & channelName,
 		Selection * selection, Scene * scene )
-		:	m_source( source )
+		:	SelectablePrivate( selection, scene )
+		,	m_source( source )
 		,	m_channelName( channelName )
-		,	m_mode( ViewScene )
-		,	m_editMode( EditSceneSelect )
-		,	m_state( ItemNotSelected )
-		,	m_resizeMode( NoResize )
-		,	m_leftButtonPressed( false )
-		,	m_width( 50 )
-		,	m_height( 25 )
-		,	m_selection( selection )
-		,	m_scene( scene )
+	{
+	}
+
+	~SourcePrivate()
 	{
 	}
 
@@ -72,28 +70,10 @@ public:
 	Como::Source m_source;
 	//! Channel name.
 	QString m_channelName;
-	//! Mode of the scene.
-	SceneMode m_mode;
-	//! Edit mode of the scene.
-	EditSceneMode m_editMode;
-	//! Item state.
-	ItemState m_state;
 	//! Color for painting.
 	QColor m_fillColor;
-	//! Resize mode.
-	ResizeMode m_resizeMode;
-	//! Left mouse button was pressed.
-	bool m_leftButtonPressed;
-	//! Width.
-	qreal m_width;
-	//! Height.
-	qreal m_height;
-	//! Selection.
-	Selection * m_selection;
 	//! Font.
 	QFont m_font;
-	//! Scene.
-	Scene * m_scene;
 	//! Current properties key.
 	PropertiesKey m_currentKey;
 }; // class SourcePrivate
@@ -105,7 +85,7 @@ public:
 
 Source::Source( const Como::Source & source, const QString & channelName,
 	Selection * selection, Scene * scene )
-	:	d( new SourcePrivate( source, channelName, selection,
+	:	Selectable( new SourcePrivate( source, channelName, selection,
 			scene ) )
 {
 	setSource( source );
@@ -118,9 +98,11 @@ Source::~Source()
 void
 Source::setMode( SceneMode mode )
 {
-	d->m_mode = mode;
+	auto dd = d_ptr();
 
-	if( d->m_mode == EditScene )
+	dd->m_mode = mode;
+
+	if( dd->m_mode == EditScene )
 		setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable |
 			QGraphicsItem::ItemIsFocusable );
 	else
@@ -133,13 +115,13 @@ Source::setMode( SceneMode mode )
 void
 Source::setEditMode( EditSceneMode mode )
 {
-	d->m_editMode = mode;
+	d_ptr()->m_editMode = mode;
 }
 
 void
 Source::setItemState( ItemState st )
 {
-	d->m_state = st;
+	d_ptr()->m_state = st;
 
 	if( st == ItemSelected )
 		setAcceptHoverEvents( true );
@@ -176,7 +158,7 @@ Source::moveRight( int delta )
 void
 Source::deleteItem()
 {
-	d->m_scene->removeSource( this );
+	d_ptr()->m_scene->removeSource( this );
 
 	deleteLater();
 }
@@ -184,13 +166,13 @@ Source::deleteItem()
 const QString &
 Source::channelName() const
 {
-	return d->m_channelName;
+	return d_ptr()->m_channelName;
 }
 
 const Como::Source &
 Source::source() const
 {
-	return d->m_source;
+	return d_ptr()->m_source;
 }
 
 static inline QString createToolTip( const QString & channelName,
@@ -217,22 +199,24 @@ static inline QString createToolTip( const QString & channelName,
 void
 Source::setSource( const Como::Source & source )
 {
-	d->m_source = source;
+	auto dd = d_ptr();
+
+	dd->m_source = source;
 
 	const Properties * props = PropertiesManager::instance().findProperties(
-		d->m_source, d->m_channelName, 0 );
+		dd->m_source, dd->m_channelName, 0 );
 
 	Level level = None;
 
 	if( props )
 	{
-		level = props->checkConditions( d->m_source.value(),
-			d->m_source.type() ).level();
+		level = props->checkConditions( dd->m_source.value(),
+			dd->m_source.type() ).level();
 	}
 
-	d->m_fillColor = ColorForLevel::instance().color( level );
+	dd->m_fillColor = ColorForLevel::instance().color( level );
 
-	setToolTip( createToolTip( d->m_channelName, source ) );
+	setToolTip( createToolTip( dd->m_channelName, source ) );
 
 	update();
 }
@@ -242,15 +226,17 @@ Source::cfg() const
 {
 	SourceCfg cfg;
 
-	cfg.setChannelName( d->m_channelName );
-	cfg.setType( d->m_source.type() );
-	cfg.setTypeName( d->m_source.typeName() );
-	cfg.setSourceName( d->m_source.name() );
-	cfg.setPos( pos() );
-	cfg.setSize( QSizeF( d->m_width, d->m_height ) );
+	auto dd = d_ptr();
 
-	if( QApplication::font() != d->m_font )
-		cfg.setFont( d->m_font );
+	cfg.setChannelName( dd->m_channelName );
+	cfg.setType( dd->m_source.type() );
+	cfg.setTypeName( dd->m_source.typeName() );
+	cfg.setSourceName( dd->m_source.name() );
+	cfg.setPos( pos() );
+	cfg.setSize( QSizeF( dd->m_width, dd->m_height ) );
+
+	if( QApplication::font() != dd->m_font )
+		cfg.setFont( dd->m_font );
 
 	return cfg;
 }
@@ -258,19 +244,21 @@ Source::cfg() const
 void
 Source::setCfg( const SourceCfg & cfg )
 {
+	auto dd = d_ptr();
+
 	if( cfg.isFontSet() )
-		d->m_font = cfg.font();
+		dd->m_font = cfg.font();
 
 	setPos( cfg.pos() );
 
-	d->m_width = cfg.size().width();
-	d->m_height = cfg.size().height();
+	dd->m_width = cfg.size().width();
+	dd->m_height = cfg.size().height();
 }
 
 void
 Source::disconnected()
 {
-	d->m_fillColor = ColorForLevel::instance().disconnectedColor();
+	d_ptr()->m_fillColor = ColorForLevel::instance().disconnectedColor();
 
 	update();
 }
@@ -278,7 +266,7 @@ Source::disconnected()
 void
 Source::deregistered()
 {
-	d->m_fillColor = ColorForLevel::instance().deregisteredColor();
+	d_ptr()->m_fillColor = ColorForLevel::instance().deregisteredColor();
 
 	update();
 }
@@ -286,22 +274,24 @@ Source::deregistered()
 void
 Source::propertiesChanged()
 {
+	auto dd = d_ptr();
+
 	const Properties * props = PropertiesManager::instance().findProperties(
-		d->m_source, d->m_channelName, 0 );
+		dd->m_source, dd->m_channelName, 0 );
 
 	Level level = None;
 
 	if( props )
 	{
-		level = props->checkConditions( d->m_source.value(),
-			d->m_source.type() ).level();
+		level = props->checkConditions( dd->m_source.value(),
+			dd->m_source.type() ).level();
 	}
 
 	const QColor newColor = ColorForLevel::instance().color( level );
 
-	if( d->m_fillColor != newColor )
+	if( dd->m_fillColor != newColor )
 	{
-		d->m_fillColor = newColor;
+		dd->m_fillColor = newColor;
 
 		update();
 	}
@@ -310,7 +300,9 @@ Source::propertiesChanged()
 QRectF
 Source::boundingRect() const
 {
-	return QRectF( 0, 0, d->m_width, d->m_height );
+	auto dd = d_ptr();
+
+	return QRectF( 0, 0, dd->m_width, dd->m_height );
 }
 
 void
@@ -320,16 +312,18 @@ Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED( option )
 	Q_UNUSED( widget )
 
-	if( d->m_state == ItemNotSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_state == ItemNotSelected )
 		painter->setPen( Qt::black );
 	else
 		painter->setPen( Qt::blue );
 
-	painter->setBrush( d->m_fillColor );
+	painter->setBrush( dd->m_fillColor );
 
 	painter->drawRect( boundingRect() );
 
-	if( d->m_state == ItemSelected )
+	if( dd->m_state == ItemSelected )
 	{
 		painter->setBrush( Qt::blue );
 		painter->drawRect( 0, 0, 3, 3 );
@@ -341,24 +335,26 @@ Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 
 	painter->setPen( Qt::black );
 
-	painter->setFont( d->m_font );
+	painter->setFont( dd->m_font );
 
 	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
-		d->m_source.value().toString() );
+		dd->m_source.value().toString() );
 }
 
 void
 Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_leftButtonPressed && d->m_editMode == EditSceneSelect &&
-		( d->m_resizeMode & YesResize ) )
+	auto dd = d_ptr();
+
+	if( dd->m_leftButtonPressed && dd->m_editMode == EditSceneSelect &&
+		( dd->m_resizeMode & YesResize ) )
 	{
 		qreal x = pos().x();
 		qreal y = pos().y();
 		qreal width = boundingRect().width();
 		qreal height = boundingRect().height();
 
-		switch( d->m_resizeMode )
+		switch( dd->m_resizeMode )
 		{
 			case ResizeTopLeft :
 				{
@@ -408,10 +404,10 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )
 			setPos( x, y );
 
-		if( width != d->m_width || height != d->m_height )
+		if( width != dd->m_width || height != dd->m_height )
 		{
-			d->m_width = width;
-			d->m_height = height;
+			dd->m_width = width;
+			dd->m_height = height;
 			update();
 		}
 	}
@@ -422,11 +418,13 @@ Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
 void
 Source::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_mode == EditScene )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene )
 	{
-		if( d->m_editMode == EditSceneSelect &&
+		if( dd->m_editMode == EditSceneSelect &&
 			event->button() == Qt::LeftButton )
-				d->m_leftButtonPressed = true;
+				dd->m_leftButtonPressed = true;
 	}
 
 	QGraphicsObject::mousePressEvent( event );
@@ -435,17 +433,19 @@ Source::mousePressEvent( QGraphicsSceneMouseEvent * event )
 void
 Source::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 {
-	if( d->m_mode == EditScene )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene )
 	{
-		if( d->m_editMode == EditSceneSelect &&
+		if( dd->m_editMode == EditSceneSelect &&
 			event->button() == Qt::LeftButton )
 		{
-			d->m_leftButtonPressed = false;
+			dd->m_leftButtonPressed = false;
 
 			if( event->modifiers() == Qt::NoModifier )
-				d->m_selection->clear();
+				dd->m_selection->clear();
 
-			d->m_selection->addItem( this );
+			dd->m_selection->addItem( this );
 
 			event->accept();
 		}
@@ -459,8 +459,10 @@ Source::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 void
 Source::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
 		QGraphicsObject::hoverEnterEvent( event );
@@ -469,8 +471,10 @@ Source::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
 void
 Source::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 	{
 		d->m_resizeMode = NoResize;
 		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
@@ -482,8 +486,10 @@ Source::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
 void
 Source::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 {
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect &&
-		d->m_state == ItemSelected )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
+		dd->m_state == ItemSelected )
 			detectResizeMode( event->pos() );
 	else
 		QGraphicsObject::hoverMoveEvent( event );
@@ -492,37 +498,7 @@ Source::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 void
 Source::detectResizeMode( const QPointF & pos )
 {
-	const QRectF topLeftRect( 0, 0, 3, 3 );
-	const QRectF topRightRect( boundingRect().width() - 3, 0, 3, 3 );
-	const QRectF bottomLeftRect( 0, boundingRect().height() - 3, 3, 3 );
-	const QRectF bottomRightRect( boundingRect().width() - 3,
-		boundingRect().height() - 3, 3, 3 );
-
-	if( topLeftRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeTopLeft;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeFDiagCursor ) );
-	}
-	else if( topRightRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeTopRight;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeBDiagCursor ) );
-	}
-	else if( bottomLeftRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeBottomLeft;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeBDiagCursor ) );
-	}
-	else if( bottomRightRect.contains( pos ) )
-	{
-		d->m_resizeMode = ResizeBottomRight;
-		QApplication::setOverrideCursor( QCursor( Qt::SizeFDiagCursor ) );
-	}
-	else
-	{
-		d->m_resizeMode = NoResize;
-		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
-	}
+	Selectable::detectResizeMode( pos, boundingRect() );
 }
 
 void
@@ -530,7 +506,9 @@ Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
 	QMenu menu;
 
-	if( d->m_mode == EditScene && d->m_editMode == EditSceneSelect )
+	auto dd = d_ptr();
+
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
 	{
 		menu.addAction( QIcon( ":/img/character_set_22x22.png" ),
 			tr( "Change Font" ), this, SLOT( changeFont() ) );
@@ -542,7 +520,7 @@ Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 	else
 	{
 		const Properties * p = PropertiesManager::instance().findProperties(
-			source(), channelName(), &d->m_currentKey );
+			source(), channelName(), &dd->m_currentKey );
 
 		if( p )
 		{
@@ -572,11 +550,13 @@ Source::removeItemFromScene()
 void
 Source::changeFont()
 {
-	QFontDialog dlg( d->m_font );
+	auto dd = d_ptr();
+
+	QFontDialog dlg( dd->m_font );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		d->m_font = dlg.selectedFont();
+		dd->m_font = dlg.selectedFont();
 		update();
 	}
 }
@@ -584,15 +564,17 @@ Source::changeFont()
 void
 Source::changeSize()
 {
-	int width = d->m_width;
-	int height = d->m_height;
+	auto dd = d_ptr();
+
+	int width = dd->m_width;
+	int height = dd->m_height;
 
 	SizeDialog dlg( width, height );
 
 	if( dlg.exec() == QDialog::Accepted )
 	{
-		d->m_width = width;
-		d->m_height = height;
+		dd->m_width = width;
+		dd->m_height = height;
 
 		update();
 	}
@@ -602,28 +584,46 @@ void
 Source::addProperties()
 {
 	PropertiesManager::instance().addProperties( source(), channelName(),
-		d->m_scene->views().first() );
+		d_ptr()->m_scene->views().first() );
 }
 
 void
 Source::editProperties()
 {
-	PropertiesManager::instance().editProperties( d->m_currentKey,
-		d->m_scene->views().first() );
+	auto dd = d_ptr();
+
+	PropertiesManager::instance().editProperties( dd->m_currentKey,
+		dd->m_scene->views().first() );
 }
 
 void
 Source::deleteProperties()
 {
-	PropertiesManager::instance().removeProperties( d->m_currentKey,
-		d->m_scene->views().first() );
+	auto dd = d_ptr();
+
+	PropertiesManager::instance().removeProperties( dd->m_currentKey,
+		dd->m_scene->views().first() );
 }
 
 void
 Source::promoteProperties()
 {
-	PropertiesManager::instance().promoteProperties( d->m_currentKey,
-		d->m_scene->views().first() );
+	auto dd = d_ptr();
+
+	PropertiesManager::instance().promoteProperties( dd->m_currentKey,
+		dd->m_scene->views().first() );
+}
+
+SourcePrivate *
+Source::d_ptr()
+{
+	return static_cast< SourcePrivate* > ( d.data() );
+}
+
+const SourcePrivate *
+Source::d_ptr() const
+{
+	return static_cast< SourcePrivate* > ( d.data() );
 }
 
 } /* namespace Scheme */

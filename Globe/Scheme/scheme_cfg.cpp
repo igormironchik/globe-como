@@ -163,6 +163,15 @@ SchemeCfgTag::cfg() const
 
 	cfg.setTexts( texts );
 
+	QList< SchemeCfg > aggregates;
+
+	for( const auto & t : qAsConst( m_aggregates.values() ) )
+	{
+		aggregates.append( t->cfg() );
+	}
+
+	cfg.setAggregates( aggregates );
+
 	return cfg;
 }
 

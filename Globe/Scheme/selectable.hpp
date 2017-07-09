@@ -25,6 +25,7 @@
 
 // Qt include.
 #include <QScopedPointer>
+#include <QFont>
 
 // Globe include.
 #include <Globe/Scheme/enums.hpp>
@@ -74,6 +75,8 @@ public:
 	qreal m_width;
 	//! Height.
 	qreal m_height;
+	//! Font.
+	QFont m_font;
 }; // class SelectablePrivate;
 
 

@@ -52,7 +52,7 @@ public:
 //
 
 Aggregate::Aggregate( Selection * selection, Scene * scene )
-	:	Selectable( new AggregatePrivate( selection, scene ) )
+	:	BaseItem( new AggregatePrivate( selection, scene ) )
 {
 
 }
@@ -62,51 +62,11 @@ Aggregate::~Aggregate()
 }
 
 void
-Aggregate::setMode( SceneMode mode )
-{
-
-}
-
-void
-Aggregate::setEditMode( EditSceneMode mode )
-{
-
-}
-
-void
-Aggregate::setItemState( ItemState st )
-{
-
-}
-
-void
-Aggregate::moveUp( int delta )
-{
-
-}
-
-void
-Aggregate::moveDown( int delta )
-{
-
-}
-
-void
-Aggregate::moveLeft( int delta )
-{
-
-}
-
-void
-Aggregate::moveRight( int delta )
-{
-
-}
-
-void
 Aggregate::deleteItem()
 {
+//	d_ptr()->m_scene->removeSource( this );
 
+//	deleteLater();
 }
 
 SchemeCfg
@@ -123,51 +83,9 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 
 }
 
-QRectF
-Aggregate::boundingRect() const
-{
-	return QRectF();
-}
-
 void
 Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	QWidget * widget )
-{
-
-}
-
-void
-Aggregate::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
-{
-
-}
-
-void
-Aggregate::mousePressEvent( QGraphicsSceneMouseEvent * event )
-{
-
-}
-
-void
-Aggregate::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
-{
-
-}
-
-void
-Aggregate::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
-{
-
-}
-
-void
-Aggregate::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
-{
-
-}
-
-void
-Aggregate::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
 {
 
 }
@@ -178,10 +96,16 @@ Aggregate::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 
 }
 
-void
-Aggregate::detectResizeMode( const QPointF & pos )
+AggregatePrivate *
+Aggregate::d_ptr()
 {
+	return static_cast< AggregatePrivate* > ( d.data() );
+}
 
+const AggregatePrivate *
+Aggregate::d_ptr() const
+{
+	return static_cast< const AggregatePrivate* > ( d.data() );
 }
 
 } /* namespace Scheme */

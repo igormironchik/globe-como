@@ -23,16 +23,12 @@
 #ifndef GLOBE__SCHEME__SOURCE_HPP__INCLUDED
 #define GLOBE__SCHEME__SOURCE_HPP__INCLUDED
 
-// Qt include.
-#include <QGraphicsObject>
-
 // Como include.
 #include <Como/Source>
 
 // Globe include.
-#include <Globe/Scheme/enums.hpp>
-#include <Globe/Scheme/selectable.hpp>
 #include <Globe/Scheme/source_cfg.hpp>
+#include <Globe/Scheme/base_item.hpp>
 
 
 namespace Globe {
@@ -51,8 +47,7 @@ class SourcePrivate;
 
 //! Graphics item that will display Como source on scheme.
 class Source
-	:	public QGraphicsObject
-	,	public Selectable
+	:	public BaseItem
 {
 	Q_OBJECT
 
@@ -60,27 +55,6 @@ public:
 	Source( const Como::Source & source, const QString & channelName,
 		Selection * selection, Scene * scene );
 	~Source();
-
-	//! Set scene mode.
-	void setMode( SceneMode mode ) Q_DECL_OVERRIDE;
-
-	//! Set edit scene mode.
-	void setEditMode( EditSceneMode mode ) Q_DECL_OVERRIDE;
-
-	//! Set item state.
-	void setItemState( ItemState st ) Q_DECL_OVERRIDE;
-
-	//! Move up.
-	void moveUp( int delta ) Q_DECL_OVERRIDE;
-
-	//! Move down.
-	void moveDown( int delta ) Q_DECL_OVERRIDE;
-
-	//! Move left.
-	void moveLeft( int delta ) Q_DECL_OVERRIDE;
-
-	//! Move right.
-	void moveRight( int delta ) Q_DECL_OVERRIDE;
 
 	//! Delete item.
 	void deleteItem() Q_DECL_OVERRIDE;
@@ -107,34 +81,15 @@ public:
 	//! Notify about changes in properties.
 	void propertiesChanged();
 
-	//! \return Bounding rectangle.
-	QRectF boundingRect() const Q_DECL_OVERRIDE;
-
 	//! Paint item.
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		QWidget * widget ) Q_DECL_OVERRIDE;
 
 protected:
-	void mouseMoveEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
-	void mousePressEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
-	void mouseReleaseEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
-	void hoverEnterEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
-	void hoverLeaveEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
-	void hoverMoveEvent( QGraphicsSceneHoverEvent * event ) Q_DECL_OVERRIDE;
 	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 		Q_DECL_OVERRIDE;
 
-private:
-	//! Detect resize mode and change cursor.
-	void detectResizeMode( const QPointF & pos );
-
 private slots:
-	//! Remove this item from scene.
-	void removeItemFromScene();
-	//! Change font.
-	void changeFont();
-	//! Change size.
-	void changeSize();
 	//! Add properties.
 	void addProperties();
 	//! Edit properties.

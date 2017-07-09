@@ -22,22 +22,15 @@
 
 // Globe include.
 #include <Globe/Scheme/source.hpp>
-#include <Globe/Scheme/selection.hpp>
 #include <Globe/Scheme/scene.hpp>
-#include <Globe/Scheme/size_dialog.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
 
 // Qt include.
 #include <QPainter>
-#include <QGraphicsSceneMouseEvent>
-#include <QGraphicsSceneHoverEvent>
-#include <QCursor>
-#include <QGraphicsSceneContextMenuEvent>
 #include <QMenu>
-#include <QFont>
-#include <QFontDialog>
+#include <QGraphicsSceneContextMenuEvent>
 #include <QApplication>
 #include <QGraphicsView>
 
@@ -72,8 +65,6 @@ public:
 	QString m_channelName;
 	//! Color for painting.
 	QColor m_fillColor;
-	//! Font.
-	QFont m_font;
 	//! Current properties key.
 	PropertiesKey m_currentKey;
 }; // class SourcePrivate
@@ -85,7 +76,7 @@ public:
 
 Source::Source( const Como::Source & source, const QString & channelName,
 	Selection * selection, Scene * scene )
-	:	Selectable( new SourcePrivate( source, channelName, selection,
+	:	BaseItem( new SourcePrivate( source, channelName, selection,
 			scene ) )
 {
 	setSource( source );
@@ -93,66 +84,6 @@ Source::Source( const Como::Source & source, const QString & channelName,
 
 Source::~Source()
 {
-}
-
-void
-Source::setMode( SceneMode mode )
-{
-	auto dd = d_ptr();
-
-	dd->m_mode = mode;
-
-	if( dd->m_mode == EditScene )
-		setFlags( QGraphicsItem::ItemIsSelectable | QGraphicsItem::ItemIsMovable |
-			QGraphicsItem::ItemIsFocusable );
-	else
-	{
-		setFlags( 0 );
-		setItemState( ItemNotSelected );
-	}
-}
-
-void
-Source::setEditMode( EditSceneMode mode )
-{
-	d_ptr()->m_editMode = mode;
-}
-
-void
-Source::setItemState( ItemState st )
-{
-	d_ptr()->m_state = st;
-
-	if( st == ItemSelected )
-		setAcceptHoverEvents( true );
-	else
-		setAcceptHoverEvents( false );
-
-	update();
-}
-
-void
-Source::moveUp( int delta )
-{
-	setPos( pos().x(), pos().y() - delta );
-}
-
-void
-Source::moveDown( int delta )
-{
-	setPos( pos().x(), pos().y() + delta );
-}
-
-void
-Source::moveLeft( int delta )
-{
-	setPos( pos().x() - delta, pos().y() );
-}
-
-void
-Source::moveRight( int delta )
-{
-	setPos( pos().x() + delta, pos().y() );
 }
 
 void
@@ -297,14 +228,6 @@ Source::propertiesChanged()
 	}
 }
 
-QRectF
-Source::boundingRect() const
-{
-	auto dd = d_ptr();
-
-	return QRectF( 0, 0, dd->m_width, dd->m_height );
-}
-
 void
 Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	QWidget * widget )
@@ -339,166 +262,6 @@ Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 
 	painter->drawText( boundingRect(), Qt::AlignCenter | Qt::TextWordWrap,
 		dd->m_source.value().toString() );
-}
-
-void
-Source::mouseMoveEvent( QGraphicsSceneMouseEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_leftButtonPressed && dd->m_editMode == EditSceneSelect &&
-		( dd->m_resizeMode & YesResize ) )
-	{
-		qreal x = pos().x();
-		qreal y = pos().y();
-		qreal width = boundingRect().width();
-		qreal height = boundingRect().height();
-
-		switch( dd->m_resizeMode )
-		{
-			case ResizeTopLeft :
-				{
-					const qreal dx = event->pos().x();
-					const qreal dy = event->pos().y();
-					width -= dx;
-					height -= dy;
-					x += dx;
-					y += dy;
-				}
-			break;
-
-			case ResizeTopRight :
-				{
-					const qreal dx = event->pos().x() - boundingRect().width();
-					const qreal dy = event->pos().y();
-					width += dx;
-					height -= dy;
-					y += dy;
-				}
-			break;
-
-			case ResizeBottomRight :
-				{
-					const qreal dx = event->pos().x() - boundingRect().width();
-					const qreal dy = event->pos().y() - boundingRect().height();
-					width += dx;
-					height += dy;
-				}
-
-			break;
-
-			case ResizeBottomLeft :
-				{
-					const qreal dx = event->pos().x();
-					const qreal dy = event->pos().y() - boundingRect().height();
-					width -= dx;
-					height += dy;
-					x += dx;
-				}
-			break;
-
-			default:
-				break;
-		}
-
-		if( qAbs( x - pos().x() ) > 0.001 || qAbs( y - pos().y() ) > 0.001 )
-			setPos( x, y );
-
-		if( width != dd->m_width || height != dd->m_height )
-		{
-			dd->m_width = width;
-			dd->m_height = height;
-			update();
-		}
-	}
-	else
-		QGraphicsObject::mouseMoveEvent( event );
-}
-
-void
-Source::mousePressEvent( QGraphicsSceneMouseEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_mode == EditScene )
-	{
-		if( dd->m_editMode == EditSceneSelect &&
-			event->button() == Qt::LeftButton )
-				dd->m_leftButtonPressed = true;
-	}
-
-	QGraphicsObject::mousePressEvent( event );
-}
-
-void
-Source::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_mode == EditScene )
-	{
-		if( dd->m_editMode == EditSceneSelect &&
-			event->button() == Qt::LeftButton )
-		{
-			dd->m_leftButtonPressed = false;
-
-			if( event->modifiers() == Qt::NoModifier )
-				dd->m_selection->clear();
-
-			dd->m_selection->addItem( this );
-
-			event->accept();
-		}
-		else
-			QGraphicsObject::mouseReleaseEvent( event );
-	}
-	else
-		QGraphicsObject::mouseReleaseEvent( event );
-}
-
-void
-Source::hoverEnterEvent( QGraphicsSceneHoverEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
-		dd->m_state == ItemSelected )
-			detectResizeMode( event->pos() );
-	else
-		QGraphicsObject::hoverEnterEvent( event );
-}
-
-void
-Source::hoverLeaveEvent( QGraphicsSceneHoverEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
-		dd->m_state == ItemSelected )
-	{
-		d->m_resizeMode = NoResize;
-		QApplication::setOverrideCursor( QCursor( Qt::ArrowCursor ) );
-	}
-	else
-		QGraphicsObject::hoverLeaveEvent( event );
-}
-
-void
-Source::hoverMoveEvent( QGraphicsSceneHoverEvent * event )
-{
-	auto dd = d_ptr();
-
-	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect &&
-		dd->m_state == ItemSelected )
-			detectResizeMode( event->pos() );
-	else
-		QGraphicsObject::hoverMoveEvent( event );
-}
-
-void
-Source::detectResizeMode( const QPointF & pos )
-{
-	Selectable::detectResizeMode( pos, boundingRect() );
 }
 
 void
@@ -539,45 +302,6 @@ Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 	menu.exec( event->screenPos() );
 
 	event->accept();
-}
-
-void
-Source::removeItemFromScene()
-{
-	deleteItem();
-}
-
-void
-Source::changeFont()
-{
-	auto dd = d_ptr();
-
-	QFontDialog dlg( dd->m_font );
-
-	if( dlg.exec() == QDialog::Accepted )
-	{
-		dd->m_font = dlg.selectedFont();
-		update();
-	}
-}
-
-void
-Source::changeSize()
-{
-	auto dd = d_ptr();
-
-	int width = dd->m_width;
-	int height = dd->m_height;
-
-	SizeDialog dlg( width, height );
-
-	if( dlg.exec() == QDialog::Accepted )
-	{
-		dd->m_width = width;
-		dd->m_height = height;
-
-		update();
-	}
 }
 
 void
@@ -623,7 +347,7 @@ Source::d_ptr()
 const SourcePrivate *
 Source::d_ptr() const
 {
-	return static_cast< SourcePrivate* > ( d.data() );
+	return static_cast< const SourcePrivate* > ( d.data() );
 }
 
 } /* namespace Scheme */

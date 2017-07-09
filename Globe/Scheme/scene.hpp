@@ -47,6 +47,7 @@ namespace Scheme {
 
 class Source;
 class Text;
+class Aggregate;
 
 
 //
@@ -83,6 +84,8 @@ public:
 	void removeSource( Source * source );
 	//! Remove text item from the scene.
 	void removeText( Text * text );
+	//! Remove aggregate from the scene.
+	void removeAggregate( Aggregate * agg );
 
 	//! Load scheme.
 	void loadScheme( const QString & fileName );

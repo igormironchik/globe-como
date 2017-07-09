@@ -27,6 +27,7 @@
 #include <Globe/Scheme/scheme_cfg.hpp>
 #include <Globe/Scheme/text.hpp>
 #include <Globe/Scheme/text_cfg.hpp>
+#include <Globe/Scheme/aggregate.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
 #include <Globe/Core/log.hpp>
@@ -220,6 +221,8 @@ public:
 	Selection m_selection;
 	//! Text items.
 	QList< Text* > m_texts;
+	//! Aggregates.
+	QList< Aggregate* > m_agg;
 	//! Configuration file.
 	QString m_cfgFile;
 }; // class ScenePrivate
@@ -304,6 +307,22 @@ Scene::removeText( Text * text )
 	d->m_selection.removeItem( text );
 
 	d->m_texts.removeOne( text );
+}
+
+void
+Scene::removeAggregate( Aggregate * agg )
+{
+	removeItem( agg );
+
+	d->m_selection.removeItem( agg );
+
+	d->m_agg.removeOne( agg );
+
+	for( const auto & ch : qAsConst( agg->listOfChannels() ) )
+	{
+		if( !isChannelInUse( ch ) )
+			removeChannel( ch );
+	}
 }
 
 void
@@ -712,6 +731,12 @@ Scene::removeChannel( const QString & name )
 bool
 Scene::isChannelInUse( const QString & name )
 {
+	for( const auto * agg : qAsConst( d->m_agg ) )
+	{
+		if( agg->listOfChannels().contains( name ) )
+			return true;
+	}
+
 	QMapIterator< Key, Source* > it( d->m_sources );
 
 	while( it.hasNext() )

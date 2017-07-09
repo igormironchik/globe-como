@@ -22,6 +22,16 @@
 
 // Globe include.
 #include <Globe/Scheme/aggregate.hpp>
+#include <Globe/Scheme/source.hpp>
+#include <Globe/Scheme/text.hpp>
+#include <Globe/Scheme/scene.hpp>
+
+// Qt include.
+#include <QList>
+#include <QPainter>
+#include <QMenu>
+#include <QIcon>
+#include <QGraphicsSceneContextMenuEvent>
 
 
 namespace Globe {
@@ -44,6 +54,17 @@ public:
 	~AggregatePrivate()
 	{
 	}
+
+	//! Sources.
+	QList< Source* > m_sources;
+	//! Texts.
+	QList< Text* > m_text;
+	//! Aggregates.
+	QList< Aggregate* > m_agg;
+	//! Current color.
+	QColor m_fillColor;
+	//! Channels.
+	QStringList m_channels;
 }; // class AggregatePrivate;
 
 
@@ -64,9 +85,9 @@ Aggregate::~Aggregate()
 void
 Aggregate::deleteItem()
 {
-//	d_ptr()->m_scene->removeSource( this );
+	d_ptr()->m_scene->removeAggregate( this );
 
-//	deleteLater();
+	deleteLater();
 }
 
 SchemeCfg
@@ -83,17 +104,59 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 
 }
 
+const QStringList &
+Aggregate::listOfChannels() const
+{
+	return d_ptr()->m_channels;
+}
+
 void
 Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	QWidget * widget )
 {
+	Q_UNUSED( option )
+	Q_UNUSED( widget )
 
+	auto dd = d_ptr();
+
+	if( dd->m_state == ItemNotSelected )
+		painter->setPen( Qt::black );
+	else
+		painter->setPen( Qt::blue );
+
+	painter->setBrush( dd->m_fillColor );
+
+	painter->drawRect( boundingRect() );
+
+	if( dd->m_state == ItemSelected )
+	{
+		painter->setBrush( Qt::blue );
+		painter->drawRect( 0, 0, 3, 3 );
+		painter->drawRect( boundingRect().width() - 3, 0, 3, 3 );
+		painter->drawRect( 0, boundingRect().height() - 3, 3, 3 );
+		painter->drawRect( boundingRect().width() - 3,
+			boundingRect().height() - 3, 3, 3 );
+	}
 }
 
 void
 Aggregate::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
+	auto dd = d_ptr();
 
+	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
+	{
+		QMenu menu;
+
+		menu.addAction( QIcon( ":/img/transform_scale_22x22.png" ),
+			tr( "Change Size" ), this, SLOT( changeSize() ) );
+		menu.addAction( QIcon( ":/img/remove_22x22.png" ),
+			tr( "Delete Source" ), this, SLOT( removeItemFromScene() ) );
+
+		menu.exec( event->screenPos() );
+	}
+
+	event->accept();
 }
 
 AggregatePrivate *

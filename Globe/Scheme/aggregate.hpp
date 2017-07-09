@@ -60,6 +60,9 @@ public:
 	//! Set configuration.
 	void setCfg( const SchemeCfg & cfg );
 
+	//! \return List of channels.
+	const QStringList & listOfChannels() const;
+
 	//! Paint item.
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		QWidget * widget ) Q_DECL_OVERRIDE;

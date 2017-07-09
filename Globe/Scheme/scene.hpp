@@ -48,6 +48,7 @@ namespace Scheme {
 class Source;
 class Text;
 class Aggregate;
+class SchemeCfg;
 
 
 //
@@ -91,6 +92,9 @@ public:
 	void loadScheme( const QString & fileName );
 	//! Save scheme.
 	void saveScheme( const QString & fileName );
+
+	//! Init scheme.
+	void initScheme( const SchemeCfg & cfg );
 
 	//! Add source item.
 	void addSource( const QString & channelName, const Como::Source & source,

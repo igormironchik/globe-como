@@ -338,43 +338,7 @@ Scene::loadScheme( const QString & fileName )
 
 		d->m_cfgFile = fileName;
 
-		foreach( const SourceCfg & s, cfg.sources() )
-		{
-			Como::Source source( s.type(), s.sourceName(), s.typeName(),
-				QVariant(), QString() );
-
-			const Key key( source, s.channelName() );
-
-			if( !d->m_sources.contains( key ) )
-			{
-				Source * item = new Source( source, s.channelName(),
-					&d->m_selection, this );
-
-				item->setMode( d->m_mode );
-				item->setEditMode( d->m_editMode );
-				item->setCfg( s );
-
-				addItem( item );
-
-				d->m_sources.insert( key, item );
-			}
-		}
-
-		foreach( const TextCfg & t, cfg.texts() )
-		{
-			Text * text = new Text( t.text(), &d->m_selection, this );
-			text->setMode( d->m_mode );
-			text->setEditMode( d->m_editMode );
-			text->setCfg( t );
-
-			addItem( text );
-
-			d->m_texts.append( text );
-		}
-
-		populateChannels();
-
-		syncSources();
+		initScheme( cfg );
 
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Scheme successfully loaded from file \"%1\"." )
@@ -418,6 +382,13 @@ Scene::saveScheme( const QString & fileName )
 
 		cfg.setTexts( texts );
 
+		QList< SchemeCfg > aggregates;
+
+		for( const auto * a : qAsConst( d->m_agg ) )
+			aggregates.append( a->cfg() );
+
+		cfg.setAggregates( aggregates );
+
 		SchemeCfgTag tag( cfg );
 
 		QtConfFile::writeQtConfFile( tag, fileName,
@@ -441,6 +412,60 @@ Scene::saveScheme( const QString & fileName )
 				.arg( fileName )
 				.arg( x.whatAsQString() ) );
 	}
+}
+
+void
+Scene::initScheme( const SchemeCfg & cfg )
+{
+	foreach( const SourceCfg & s, cfg.sources() )
+	{
+		Como::Source source( s.type(), s.sourceName(), s.typeName(),
+			QVariant(), QString() );
+
+		const Key key( source, s.channelName() );
+
+		if( !d->m_sources.contains( key ) )
+		{
+			Source * item = new Source( source, s.channelName(),
+				&d->m_selection, this );
+
+			item->setMode( d->m_mode );
+			item->setEditMode( d->m_editMode );
+			item->setCfg( s );
+
+			addItem( item );
+
+			d->m_sources.insert( key, item );
+		}
+	}
+
+	foreach( const TextCfg & t, cfg.texts() )
+	{
+		Text * text = new Text( t.text(), &d->m_selection, this );
+		text->setMode( d->m_mode );
+		text->setEditMode( d->m_editMode );
+		text->setCfg( t );
+
+		addItem( text );
+
+		d->m_texts.append( text );
+	}
+
+	for( const auto & a : qAsConst( cfg.aggregates() ) )
+	{
+		Aggregate * agg = new Aggregate( &d->m_selection, this );
+		agg->setMode( d->m_mode );
+		agg->setEditMode( d->m_editMode );
+		agg->setCfg( a );
+
+		addItem( agg );
+
+		d->m_agg.append( agg );
+	}
+
+	populateChannels();
+
+	syncSources();
 }
 
 void
@@ -680,6 +705,15 @@ Scene::populateChannels()
 			channels.append( it.key().channelName() );
 	}
 
+	for( const auto * a : qAsConst( d->m_agg ) )
+	{
+		for( const auto & ch : qAsConst( a->listOfChannels()  ) )
+		{
+			if( !channels.contains( ch ) )
+				channels.append( ch );
+		}
+	}
+
 	foreach( const QString & name, channels )
 		addChannel( name );
 }
@@ -774,6 +808,26 @@ Scene::syncSources()
 
 			if( !isRegistered )
 				it.value()->deregistered();
+		}
+	}
+
+	for( auto * agg : qAsConst( d->m_agg ) )
+	{
+		for( const auto & ch : qAsConst( agg->listOfChannels() ) )
+		{
+			if( !channels.contains( ch ) )
+				channels.append( ch );
+		}
+
+		for( const auto & p : agg->sources() )
+		{
+			Como::Source tmp = p.first;
+			bool isRegistered = false;
+
+			SourcesManager::instance().syncSource( p.second,
+				tmp, isRegistered );
+
+			agg->syncSource( tmp, p.second, isRegistered );
 		}
 	}
 

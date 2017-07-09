@@ -27,6 +27,14 @@
 #include <Globe/Scheme/base_item.hpp>
 #include <Globe/Scheme/scheme_cfg.hpp>
 
+// Como include.
+#include <Como/Source>
+
+// Qt include.
+#include <QString>
+#include <QList>
+#include <QPair>
+
 
 namespace Globe {
 
@@ -62,6 +70,13 @@ public:
 
 	//! \return List of channels.
 	const QStringList & listOfChannels() const;
+
+	//! \return Sources in the aggregate.
+	QList< QPair< Como::Source, QString > > sources() const;
+
+	//! Sync source.
+	void syncSource( const Como::Source & source,
+		const QString & channel, bool isRegistered );
 
 	//! Paint item.
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,

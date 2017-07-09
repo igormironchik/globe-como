@@ -27,7 +27,6 @@
 #include <Globe/Scheme/scene.hpp>
 
 // Qt include.
-#include <QList>
 #include <QPainter>
 #include <QMenu>
 #include <QIcon>
@@ -108,6 +107,36 @@ const QStringList &
 Aggregate::listOfChannels() const
 {
 	return d_ptr()->m_channels;
+}
+
+QList< QPair< Como::Source, QString > >
+Aggregate::sources() const
+{
+	QList< QPair< Como::Source, QString > > res;
+
+	for( const auto * s : qAsConst( d_ptr()->m_sources ) )
+		res.append( qMakePair( s->source(), s->channelName() ) );
+
+	return res;
+}
+
+void
+Aggregate::syncSource( const Como::Source & source,
+	const QString & channel, bool isRegistered )
+{
+	for( auto * s : qAsConst( d_ptr()->m_sources ) )
+	{
+		if( s->source() == source && s->channelName() == channel )
+		{
+			s->setSource( source );
+
+			if( !isRegistered )
+				s->deregistered();
+		}
+	}
+
+	for( auto * agg : qAsConst( d_ptr()->m_agg ) )
+		agg->syncSource( source, channel, isRegistered );
 }
 
 void

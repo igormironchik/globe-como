@@ -85,6 +85,18 @@ SchemeCfg::setTexts( const QList< TextCfg > & t )
 	m_texts = t;
 }
 
+const QList< SchemeCfg > &
+SchemeCfg::aggregates() const
+{
+	return m_aggregates;
+}
+
+void
+SchemeCfg::setAggregates( const QList< SchemeCfg > & a )
+{
+	m_aggregates = a;
+}
+
 
 //
 // SchemeCfgTag
@@ -95,31 +107,35 @@ SchemeCfgTag::SchemeCfgTag()
 	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
+	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 {
+}
+
+SchemeCfgTag::SchemeCfgTag( const QString & name, bool isMandatory )
+	:	QtConfFile::TagNoValue( name, isMandatory )
+	,	m_sources( *this, QLatin1String( "source" ), false )
+	,	m_texts( *this, QLatin1String( "text" ), false )
+	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+{
+}
+
+SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
+	bool isMandatory )
+	:	QtConfFile::TagNoValue( name, isMandatory )
+	,	m_sources( *this, QLatin1String( "source" ), false )
+	,	m_texts( *this, QLatin1String( "text" ), false )
+	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+{
+	initFromCfg( cfg );
 }
 
 SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
 	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
+	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 {
-	foreach( const SourceCfg & s, cfg.sources() )
-	{
-		QtConfFile::TagVectorOfTags< SourceCfgTag >::PointerToTag
-			t( new SourceCfgTag( s, QLatin1String( "source" ) ) );
-
-		m_sources.setValue( t );
-	}
-
-	foreach( const TextCfg & c, cfg.texts() )
-	{
-		QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag
-			t( new TextCfgTag( c, QLatin1String( "text" ) ) );
-
-		m_texts.setValue( t );
-	}
-
-	setDefined();
+	initFromCfg( cfg );
 }
 
 SchemeCfg
@@ -148,6 +164,36 @@ SchemeCfgTag::cfg() const
 	cfg.setTexts( texts );
 
 	return cfg;
+}
+
+void
+SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
+{
+	foreach( const SourceCfg & s, cfg.sources() )
+	{
+		QtConfFile::TagVectorOfTags< SourceCfgTag >::PointerToTag
+			t( new SourceCfgTag( s, QLatin1String( "source" ) ) );
+
+		m_sources.setValue( t );
+	}
+
+	foreach( const TextCfg & c, cfg.texts() )
+	{
+		QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag
+			t( new TextCfgTag( c, QLatin1String( "text" ) ) );
+
+		m_texts.setValue( t );
+	}
+
+	for( const auto & c : qAsConst( cfg.aggregates() ) )
+	{
+		QtConfFile::TagVectorOfTags< SchemeCfgTag >::PointerToTag
+			t( new SchemeCfgTag( c, QLatin1String( "aggregate" ) ) );
+
+		m_aggregates.setValue( t );
+	}
+
+	setDefined();
 }
 
 } /* namespace Scheme */

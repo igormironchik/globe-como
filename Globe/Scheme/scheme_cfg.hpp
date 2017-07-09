@@ -65,11 +65,18 @@ public:
 	//! Set texts.
 	void setTexts( const QList< TextCfg > & t );
 
+	//! \return Aggregates.
+	const QList< SchemeCfg > & aggregates() const;
+	//! Set aggregates.
+	void setAggregates( const QList< SchemeCfg > & a );
+
 private:
 	//! Sources.
 	QList< SourceCfg > m_sources;
 	//! Texts.
 	QList< TextCfg > m_texts;
+	//! Aggregates.
+	QList< SchemeCfg > m_aggregates;
 }; // class SchemeCfg
 
 
@@ -86,14 +93,25 @@ public:
 
 	explicit SchemeCfgTag( const SchemeCfg & cfg );
 
+	SchemeCfgTag( const QString & name, bool isMandatory );
+
+	SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
+		bool isMandatory = true );
+
 	//! \return Configuration.
 	SchemeCfg cfg() const;
+
+private:
+	//! Init from configuration.
+	void initFromCfg( const SchemeCfg & cfg );
 
 private:
 	//! Sources.
 	QtConfFile::TagVectorOfTags< SourceCfgTag > m_sources;
 	//! Texts.
 	QtConfFile::TagVectorOfTags< TextCfgTag > m_texts;
+	//! Aggregates.
+	QtConfFile::TagVectorOfTags< SchemeCfgTag > m_aggregates;
 }; // class SchemeCfgTag
 
 } /* namespace Scheme */

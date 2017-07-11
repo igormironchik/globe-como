@@ -24,6 +24,7 @@
 #include <Globe/Scheme/window.hpp>
 #include <Globe/Scheme/view.hpp>
 #include <Globe/Scheme/scene.hpp>
+#include <Globe/Scheme/scheme_cfg.hpp>
 
 #include <Globe/Core/mainwindow.hpp>
 #include <Globe/Core/globe_menu.hpp>
@@ -115,6 +116,12 @@ Window::setCfg( const WindowCfg & cfg )
 	restoreWindowState( cfg.windowStateCfg(), this );
 }
 
+const QString &
+Window::schemeName() const
+{
+	return d->m_view->scene()->schemeName();
+}
+
 void
 Window::loadScheme( const QString & fileName )
 {
@@ -148,6 +155,24 @@ void
 Window::saveScheme()
 {
 	d->m_view->scene()->saveScheme( d->m_cfgFile );
+}
+
+void
+Window::loadScheme( const SchemeCfg & cfg, bool editing )
+{
+	if( !cfg.name().isEmpty() )
+		setTitle( cfg.name() );
+
+	if( !editing )
+		d->m_modeAction->setChecked( false );
+	else
+		d->m_modeAction->setChecked( true );
+
+	editMode();
+
+	d->m_view->scene()->initScheme( cfg );
+
+	MainWindow::instance().addAggregate( this );
 }
 
 void
@@ -194,7 +219,10 @@ Window::closeEvent( QCloseEvent * event )
 {
 	event->accept();
 
-	MainWindow::instance().schemeWindowClosed( this );
+	if( !d->m_view->scene()->cfgFile().isEmpty() )
+		MainWindow::instance().schemeWindowClosed( this );
+	else
+		MainWindow::instance().removeAggregate( this );
 }
 
 void

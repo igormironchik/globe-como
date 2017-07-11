@@ -37,6 +37,9 @@ namespace Globe {
 
 namespace Scheme {
 
+class SchemeCfg;
+
+
 //
 // Window
 //
@@ -63,6 +66,9 @@ public:
 	//! Set window's configuration.
 	void setCfg( const WindowCfg & cfg );
 
+	//! \return Name of the scheme.
+	const QString & schemeName() const;
+
 public slots:
 	//! Load scheme configuration.
 	void loadScheme( const QString & fileName );
@@ -70,6 +76,8 @@ public slots:
 	void createNewScheme( const QString & fileName );
 	//! Save scheme.
 	void saveScheme();
+	//! Load scheme.
+	void loadScheme( const SchemeCfg & cfg, bool editing = false );
 
 private slots:
 	//! Edit mode changed.

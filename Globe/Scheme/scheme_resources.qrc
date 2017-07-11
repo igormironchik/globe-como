@@ -6,5 +6,6 @@
         <file>img/character_set_22x22.png</file>
         <file>img/transform_scale_22x22.png</file>
         <file>img/add_aggregate_22x22.png</file>
+        <file>img/document_edit_22x22.png</file>
     </qresource>
 </RCC>

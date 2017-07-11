@@ -47,6 +47,7 @@ class WindowStateCfg;
 class ToolWindowObject;
 class ChannelsList;
 class ChannelViewWindow;
+class Menu;
 
 class MainWindowPrivate;
 
@@ -82,6 +83,9 @@ public:
 	//! Init.
 	void init( const QList< ToolWindowObject* > & toolWindows );
 
+	//! \return Menu.
+	const Menu & menu() const;
+
 public slots:
 	//! Start.
 	void start();
@@ -93,6 +97,12 @@ public slots:
 	void showScheme( const QString & cfgFile, bool newScheme = false );
 	//! Session finished.
 	void sessionFinished( QSessionManager & );
+	//! Add new Aggregate window.
+	void addAggregate( Scheme::Window * w );
+	//! Remove Aggregate window.
+	void removeAggregate( Scheme::Window * w );
+	//! \return Aggregate window by its name.
+	Scheme::Window * findAggregate( const QString & name );
 
 protected:
 	friend class Configuration;

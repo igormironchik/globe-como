@@ -26,10 +26,12 @@
 #include <Globe/Scheme/text.hpp>
 #include <Globe/Scheme/scene.hpp>
 #include <Globe/Scheme/scheme_utils.hpp>
+#include <Globe/Scheme/window.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
 #include <Globe/Core/sources.hpp>
+#include <Globe/Core/mainwindow.hpp>
 
 // Qt include.
 #include <QPainter>
@@ -37,6 +39,7 @@
 #include <QIcon>
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMap>
+#include <QGraphicsSceneMouseEvent>
 
 
 namespace Globe {
@@ -376,15 +379,42 @@ Aggregate::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 	{
 		QMenu menu;
 
+		menu.addAction( QIcon( ":/img/document_edit_22x22.png" ),
+			tr( "Show Aggregate" ), this, &Aggregate::showScheme );
 		menu.addAction( QIcon( ":/img/transform_scale_22x22.png" ),
 			tr( "Change Size" ), this, SLOT( changeSize() ) );
 		menu.addAction( QIcon( ":/img/remove_22x22.png" ),
-			tr( "Delete Source" ), this, SLOT( removeItemFromScene() ) );
+			tr( "Delete Aggregate" ), this, SLOT( removeItemFromScene() ) );
 
 		menu.exec( event->screenPos() );
 	}
 
 	event->accept();
+}
+
+void
+Aggregate::mouseDoubleClickEvent( QGraphicsSceneMouseEvent * event )
+{
+	showScheme();
+
+	event->accept();
+}
+
+void
+Aggregate::showScheme()
+{
+	auto * dd = d_ptr();
+
+	Window * w = MainWindow::instance().findAggregate( dd->m_cfg.name() );
+
+	if( !w )
+	{
+		w = new Window;
+		w->initMenu( MainWindow::instance().menu() );
+		w->loadScheme( dd->m_cfg, dd->m_mode == EditScene );
+	}
+
+	w->show();
 }
 
 AggregatePrivate *

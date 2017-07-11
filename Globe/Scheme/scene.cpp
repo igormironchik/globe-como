@@ -245,6 +245,8 @@ public:
 	QList< Aggregate* > m_agg;
 	//! Configuration file.
 	QString m_cfgFile;
+	//! Name of the scheme.
+	QString m_name;
 }; // class ScenePrivate
 
 
@@ -261,6 +263,18 @@ Scene::Scene( QObject * parent )
 
 Scene::~Scene()
 {
+}
+
+const QString &
+Scene::cfgFile() const
+{
+	return d->m_cfgFile;
+}
+
+const QString &
+Scene::schemeName() const
+{
+	return d->m_name;
 }
 
 SceneMode
@@ -437,6 +451,8 @@ Scene::saveScheme( const QString & fileName )
 void
 Scene::initScheme( const SchemeCfg & cfg )
 {
+	d->m_name = cfg.name();
+
 	foreach( const SourceCfg & s, cfg.sources() )
 	{
 		Como::Source source( s.type(), s.sourceName(), s.typeName(),

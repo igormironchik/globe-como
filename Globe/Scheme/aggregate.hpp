@@ -94,6 +94,12 @@ public:
 protected:
 	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 		Q_DECL_OVERRIDE;
+	void mouseDoubleClickEvent( QGraphicsSceneMouseEvent * event );
+
+
+private slots:
+	//! Show scheme.
+	void showScheme();
 
 private:
 	AggregatePrivate * d_ptr();

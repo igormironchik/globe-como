@@ -97,6 +97,8 @@ public:
 	QList< ChannelViewWindow* > m_channelViewWindows;
 	//! Scheme windows.
 	QList< Scheme::Window* > m_schemeWindows;
+	//! Aggregate windows.
+	QList< Scheme::Window* > m_aggregates;
 	//! Map of the channel view windows configuration.
 	QMap< QString, ChannelViewWindowCfg > m_channelViewWindowsCfg;
 	//! Map of the scheme windows configurations.
@@ -214,6 +216,12 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	Sounds::instance().initMenu( d->m_menu );
 
 	checkPathAndCreateIfNotExists( QLatin1String( "./etc/schemes" ) );
+}
+
+const Menu &
+MainWindow::menu() const
+{
+	return d->m_menu;
 }
 
 void
@@ -341,6 +349,31 @@ void
 MainWindow::sessionFinished( QSessionManager & )
 {
 	saveConfiguration();
+}
+
+void
+MainWindow::addAggregate( Scheme::Window * w )
+{
+	if( !d->m_aggregates.contains( w ) )
+		d->m_aggregates.append( w );
+}
+
+void
+MainWindow::removeAggregate( Scheme::Window * w )
+{
+	d->m_aggregates.removeOne( w );
+}
+
+Scheme::Window *
+MainWindow::findAggregate( const QString & name )
+{
+	for( auto * w : d->m_aggregates )
+	{
+		if( w->schemeName() == name )
+			return w;
+	}
+
+	return Q_NULLPTR;
 }
 
 void

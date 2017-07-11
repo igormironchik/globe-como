@@ -68,6 +68,12 @@ public:
 
 	~Scene();
 
+	//! \return Configuration file name.
+	const QString & cfgFile() const;
+
+	//! \return Scheme name.
+	const QString & schemeName() const;
+
 	//! \return Scene mode.
 	SceneMode mode() const;
 	//! Set scene mode.

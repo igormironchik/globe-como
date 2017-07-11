@@ -31,11 +31,43 @@
 #include <QMenu>
 #include <QIcon>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QMap>
 
 
 namespace Globe {
 
 namespace Scheme {
+
+namespace /* anonymous */ {
+
+//
+// Key
+//
+
+//! Key of the source.
+class Key {
+public:
+	Key( const QString & name, const QString & type )
+		:	m_key( type + QLatin1String( "::" ) + name )
+	{
+	}
+
+	~Key()
+	{
+	}
+
+	bool operator < ( const Key & other ) const
+	{
+		return ( m_key < other.m_key );
+	}
+
+private:
+	//! Key.
+	QString m_key;
+}; // class Key
+
+} /* namespace anonymous */
+
 
 //
 // AggregatePrivate
@@ -55,11 +87,9 @@ public:
 	}
 
 	//! Sources.
-	QList< Source* > m_sources;
-	//! Texts.
-	QList< Text* > m_text;
-	//! Aggregates.
-	QList< Aggregate* > m_agg;
+	QMap< QString, QMap< Key, QPair< Como::Source, bool > > > m_sources;
+	//! Configuration.
+	SchemeCfg m_cfg;
 	//! Current color.
 	QColor m_fillColor;
 	//! Channels.
@@ -92,15 +122,31 @@ Aggregate::deleteItem()
 SchemeCfg
 Aggregate::cfg() const
 {
-	SchemeCfg cfg;
-
-	return cfg;
+	return d_ptr()->m_cfg;
 }
 
 void
 Aggregate::setCfg( const SchemeCfg & cfg )
 {
+	auto dd = d_ptr();
 
+	dd->m_cfg = cfg;
+
+	dd->m_channels.clear();
+
+	dd->m_sources.clear();
+
+	for( const auto & p : sources() )
+	{
+		if( !dd->m_channels.contains( p.second ) )
+			dd->m_channels.append( p.second );
+
+		const Key key( p.first.name(), p.first.typeName() );
+
+		if( !dd->m_sources[ p.second ].contains( key ) )
+			dd->m_sources[ p.second ].insert( key,
+				qMakePair( p.first, false ) );
+	}
 }
 
 const QStringList &
@@ -112,31 +158,24 @@ Aggregate::listOfChannels() const
 QList< QPair< Como::Source, QString > >
 Aggregate::sources() const
 {
-	QList< QPair< Como::Source, QString > > res;
-
-	for( const auto * s : qAsConst( d_ptr()->m_sources ) )
-		res.append( qMakePair( s->source(), s->channelName() ) );
-
-	return res;
+	return d_ptr()->m_cfg.availableSources();
 }
 
 void
 Aggregate::syncSource( const Como::Source & source,
 	const QString & channel, bool isRegistered )
 {
-	for( auto * s : qAsConst( d_ptr()->m_sources ) )
+	auto dd = d_ptr();
+
+	const Key key( source.name(), source.typeName() );
+
+	if( dd->m_sources.contains( channel ) &&
+		dd->m_sources[ channel ].contains( key ) )
 	{
-		if( s->source() == source && s->channelName() == channel )
-		{
-			s->setSource( source );
+		dd->m_sources[ channel ][ key ].first = source;
 
-			if( !isRegistered )
-				s->deregistered();
-		}
+		dd->m_sources[ channel ][ key ].second = isRegistered;
 	}
-
-	for( auto * agg : qAsConst( d_ptr()->m_agg ) )
-		agg->syncSource( source, channel, isRegistered );
 }
 
 void

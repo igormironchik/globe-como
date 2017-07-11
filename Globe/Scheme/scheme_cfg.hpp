@@ -27,6 +27,9 @@
 #include <Globe/Scheme/source_cfg.hpp>
 #include <Globe/Scheme/text_cfg.hpp>
 
+// Como include.
+#include <Como/Source>
+
 // Qt include.
 #include <QList>
 
@@ -69,6 +72,9 @@ public:
 	const QList< SchemeCfg > & aggregates() const;
 	//! Set aggregates.
 	void setAggregates( const QList< SchemeCfg > & a );
+
+	//! \return List of all sources on the scheme.
+	QList< QPair< Como::Source, QString > > availableSources() const;
 
 private:
 	//! Sources.

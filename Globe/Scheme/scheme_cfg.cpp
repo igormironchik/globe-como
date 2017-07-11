@@ -97,6 +97,25 @@ SchemeCfg::setAggregates( const QList< SchemeCfg > & a )
 	m_aggregates = a;
 }
 
+QList< QPair< Como::Source, QString > >
+SchemeCfg::availableSources() const
+{
+	QList< QPair< Como::Source, QString > > res;
+
+	for( const auto & s : qAsConst( m_sources ) )
+	{
+		res.append( qMakePair( Como::Source( s.type(), s.sourceName(),
+			s.typeName(), QVariant(), QString() ), s.channelName() ) );
+	}
+
+	for( const auto & a : qAsConst( m_aggregates ) )
+	{
+		res.append( a.availableSources() );
+	}
+
+	return res;
+}
+
 
 //
 // SchemeCfgTag

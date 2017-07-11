@@ -26,6 +26,9 @@
 #include <Globe/Scheme/text.hpp>
 #include <Globe/Scheme/scene.hpp>
 
+#include <Globe/Core/properties_manager.hpp>
+#include <Globe/Core/color_for_level.hpp>
+
 // Qt include.
 #include <QPainter>
 #include <QMenu>
@@ -66,6 +69,25 @@ private:
 	QString m_key;
 }; // class Key
 
+
+//
+// SourceProps
+//
+
+//! Additional properties of the source.
+struct SourceProps {
+	SourceProps()
+		:	m_registered( false )
+		,	m_level( None )
+	{
+	}
+
+	//! Registered?
+	bool m_registered;
+	//! Level.
+	Level m_level;
+}; // struct SourceProps
+
 } /* namespace anonymous */
 
 
@@ -79,6 +101,7 @@ class AggregatePrivate
 public:
 	AggregatePrivate( Selection * selection, Scene * scene )
 		:	SelectablePrivate( selection, scene )
+		,	m_level( None )
 	{
 	}
 
@@ -87,11 +110,15 @@ public:
 	}
 
 	//! Sources.
-	QMap< QString, QMap< Key, QPair< Como::Source, bool > > > m_sources;
+	QMap< QString, QMap< Key, QPair< Como::Source, SourceProps > > > m_sources;
 	//! Configuration.
 	SchemeCfg m_cfg;
 	//! Current color.
 	QColor m_fillColor;
+	//! Level.
+	Level m_level;
+	//! Current source.
+	Como::Source m_current;
 	//! Channels.
 	QStringList m_channels;
 }; // class AggregatePrivate;
@@ -145,7 +172,7 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 
 		if( !dd->m_sources[ p.second ].contains( key ) )
 			dd->m_sources[ p.second ].insert( key,
-				qMakePair( p.first, false ) );
+				qMakePair( p.first, SourceProps() ) );
 	}
 }
 
@@ -174,7 +201,58 @@ Aggregate::syncSource( const Como::Source & source,
 	{
 		dd->m_sources[ channel ][ key ].first = source;
 
-		dd->m_sources[ channel ][ key ].second = isRegistered;
+		dd->m_sources[ channel ][ key ].second.m_registered = isRegistered;
+
+		const Properties * props = PropertiesManager::instance()
+			.findProperties( source, channel, 0 );
+
+		Level level = None;
+
+		if( props )
+		{
+			level = props->checkConditions( source.value(),
+				source.type() ).level();
+		}
+
+		dd->m_sources[ channel ][ key ].second.m_level = level;
+
+		if( isRegistered && level < dd->m_level )
+		{
+			dd->m_current = source;
+
+			dd->m_fillColor = ColorForLevel::instance().color( level );
+
+			update();
+		}
+		else if( source == dd->m_current )
+		{
+			Level level = None;
+
+			bool found = false;
+
+			dd->m_fillColor = ColorForLevel::instance().color( level );
+
+			for( const auto & ch : qAsConst( dd->m_sources ) )
+			{
+				for( const auto & s : qAsConst( ch ) )
+				{
+					if( s.second.m_registered &&
+						s.second.m_level < level )
+					{
+						level = s.second.m_level;
+
+						dd->m_current = s.first;
+
+						dd->m_fillColor =
+							ColorForLevel::instance().color( level );
+
+						found = true;
+					}
+				}
+			}
+
+			update();
+		}
 	}
 }
 

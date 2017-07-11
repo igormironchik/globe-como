@@ -82,6 +82,15 @@ public:
 	void paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		QWidget * widget ) Q_DECL_OVERRIDE;
 
+	//! Properties changed.
+	void propertiesChanged();
+
+	//! Channel has been disconnected.
+	void channelDisconnected( const QString & name );
+
+	//! Channel has been deregistered.
+	void channelDeregistered( const QString & name );
+
 protected:
 	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 		Q_DECL_OVERRIDE;

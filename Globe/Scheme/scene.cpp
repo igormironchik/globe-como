@@ -147,6 +147,9 @@ public:
 
 		foreach( Text * t, m_texts )
 			t->setMode( mode );
+
+		for( Aggregate * a : qAsConst( m_agg ) )
+			a->setMode( mode );
 	}
 
 	//! Notify all items about scene edit mode changes.
@@ -157,6 +160,9 @@ public:
 
 		foreach( Text * t, m_texts )
 			t->setEditMode( mode );
+
+		for( Aggregate * a : m_agg )
+			a->setEditMode( mode );
 	}
 
 	//! Source deregistered.
@@ -168,6 +174,9 @@ public:
 
 		if( it != m_sources.end() )
 			it.value()->deregistered();
+
+		for( Aggregate * a : m_agg )
+			a->syncSource( s, channel, false );
 	}
 
 	//! Channel disconnected.
@@ -180,8 +189,11 @@ public:
 			it.next();
 
 			if( it.key().channelName() == channel )
-					it.value()->disconnected();
+				it.value()->disconnected();
 		}
+
+		for( Aggregate * a : m_agg )
+			a->channelDisconnected( channel );
 	}
 
 	//! Channel deregistered.
@@ -194,8 +206,11 @@ public:
 			it.next();
 
 			if( it.key().channelName() == channel )
-					it.value()->deregistered();
+				it.value()->deregistered();
 		}
+
+		for( Aggregate * a : m_agg )
+			a->channelDeregistered( channel );
 	}
 
 	//! Update source.
@@ -207,6 +222,9 @@ public:
 
 		if( it != m_sources.end() )
 			it.value()->setSource( s );
+
+		for( Aggregate * a : m_agg )
+			a->syncSource( s, channel, true );
 	}
 
 	//! Mode of the scene.
@@ -664,6 +682,9 @@ Scene::propertiesChanged()
 {
 	foreach( Source * s, d->m_sources )
 		s->propertiesChanged();
+
+	for( Aggregate * a : qAsConst( d->m_agg ) )
+		a->propertiesChanged();
 }
 
 void

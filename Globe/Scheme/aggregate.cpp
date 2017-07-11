@@ -29,6 +29,7 @@
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
+#include <Globe/Core/sources.hpp>
 
 // Qt include.
 #include <QPainter>
@@ -80,6 +81,7 @@ struct SourceProps {
 	SourceProps()
 		:	m_registered( false )
 		,	m_level( None )
+		,	m_connected( false )
 	{
 	}
 
@@ -87,6 +89,8 @@ struct SourceProps {
 	bool m_registered;
 	//! Level.
 	Level m_level;
+	//! Connected?
+	bool m_connected;
 }; // struct SourceProps
 
 } /* namespace anonymous */
@@ -120,6 +124,8 @@ public:
 	Level m_level;
 	//! Current source.
 	Como::Source m_current;
+	//! Current channel.
+	QString m_channel;
 	//! Channels.
 	QStringList m_channels;
 }; // class AggregatePrivate;
@@ -229,8 +235,6 @@ Aggregate::syncSource( const Como::Source & source,
 		{
 			Level level = None;
 
-			QString channel;
-
 			bool found = false;
 
 			dd->m_fillColor = ColorForLevel::instance().color( level );
@@ -239,18 +243,24 @@ Aggregate::syncSource( const Como::Source & source,
 				QMap< Key, QPair< Como::Source, SourceProps > > >
 					it( dd->m_sources );
 
+			bool connected = false;
+
 			while( it.hasNext() )
 			{
 				it.next();
 
 				for( const auto & s : qAsConst( it.value() ) )
 				{
+					if( s.second.m_connected )
+						connected = true;
+
 					if( s.second.m_registered &&
+						s.second.m_connected &&
 						s.second.m_level < level )
 					{
 						level = s.second.m_level;
 
-						channel = it.key();
+						dd->m_channel = it.key();
 
 						dd->m_current = s.first;
 
@@ -263,9 +273,19 @@ Aggregate::syncSource( const Como::Source & source,
 			}
 
 			if( found )
-				setToolTip( createToolTip( channel, dd->m_current ) );
-			else
+				setToolTip( createToolTip( dd->m_channel, dd->m_current ) );
+			else if( connected )
+			{
+				dd->m_fillColor = ColorForLevel::instance().deregisteredColor();
+
 				setToolTip( QString() );
+			}
+			else
+			{
+				dd->m_fillColor = ColorForLevel::instance().disconnectedColor();
+
+				setToolTip( QString() );
+			}
 
 			update();
 		}
@@ -299,6 +319,51 @@ Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 		painter->drawRect( boundingRect().width() - 3,
 			boundingRect().height() - 3, 3, 3 );
 	}
+}
+
+void
+Aggregate::propertiesChanged()
+{
+	auto dd = d_ptr();
+
+	bool registered = false;
+
+	SourcesManager::instance().syncSource( dd->m_channel,
+		dd->m_current, registered );
+
+	syncSource( dd->m_current, dd->m_channel, registered );
+}
+
+void
+Aggregate::channelDisconnected( const QString & name )
+{
+	auto dd = d_ptr();
+
+	if( dd->m_sources.contains( name ) )
+	{
+		QMutableMapIterator< Key, QPair< Como::Source, SourceProps > > it(
+			dd->m_sources[ name ] );
+
+		while( it.hasNext() )
+		{
+			it.next();
+
+			it.value().second.m_connected = false;
+			it.value().second.m_registered = false;
+		}
+	}
+
+	if( dd->m_channel == name )
+		syncSource( dd->m_current, dd->m_channel, false );
+}
+
+void
+Aggregate::channelDeregistered( const QString & name )
+{
+	auto dd = d_ptr();
+
+	if( dd->m_channel == name )
+		syncSource( dd->m_current, dd->m_channel, false );
 }
 
 void

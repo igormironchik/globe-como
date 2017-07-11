@@ -277,6 +277,35 @@ Scene::schemeName() const
 	return d->m_name;
 }
 
+SchemeCfg
+Scene::schemeCfg() const
+{
+	SchemeCfg cfg;
+
+	QList< SourceCfg > sources;
+
+	foreach( Source * s, d->m_sources )
+		sources.append( s->cfg() );
+
+	cfg.setSources( sources );
+
+	QList< TextCfg > texts;
+
+	foreach( Text * t, d->m_texts )
+		texts.append( t->cfg() );
+
+	cfg.setTexts( texts );
+
+	QList< SchemeCfg > aggregates;
+
+	for( const auto * a : qAsConst( d->m_agg ) )
+		aggregates.append( a->cfg() );
+
+	cfg.setAggregates( aggregates );
+
+	return cfg;
+}
+
 SceneMode
 Scene::mode() const
 {
@@ -400,30 +429,7 @@ void
 Scene::saveScheme( const QString & fileName )
 {
 	try {
-		SchemeCfg cfg;
-
-		QList< SourceCfg > sources;
-
-		foreach( Source * s, d->m_sources )
-			sources.append( s->cfg() );
-
-		cfg.setSources( sources );
-
-		QList< TextCfg > texts;
-
-		foreach( Text * t, d->m_texts )
-			texts.append( t->cfg() );
-
-		cfg.setTexts( texts );
-
-		QList< SchemeCfg > aggregates;
-
-		for( const auto * a : qAsConst( d->m_agg ) )
-			aggregates.append( a->cfg() );
-
-		cfg.setAggregates( aggregates );
-
-		SchemeCfgTag tag( cfg );
+		SchemeCfgTag tag( schemeCfg() );
 
 		QtConfFile::writeQtConfFile( tag, fileName,
 			QTextCodec::codecForName( "UTF-8" ) );

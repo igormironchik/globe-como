@@ -116,6 +116,12 @@ Window::setCfg( const WindowCfg & cfg )
 	restoreWindowState( cfg.windowStateCfg(), this );
 }
 
+SchemeCfg
+Window::schemeCfg() const
+{
+	return d->m_view->scene()->schemeCfg();
+}
+
 const QString &
 Window::schemeName() const
 {
@@ -187,6 +193,8 @@ Window::editMode()
 	{
 		d->m_view->scene()->setMode( ViewScene );
 		d->m_editModeToolBar->hide();
+
+		emit schemeChanged();
 	}
 }
 
@@ -223,6 +231,8 @@ Window::closeEvent( QCloseEvent * event )
 		MainWindow::instance().schemeWindowClosed( this );
 	else
 		MainWindow::instance().removeAggregate( this );
+
+	emit schemeChanged();
 }
 
 void

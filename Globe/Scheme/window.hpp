@@ -53,6 +53,10 @@ class Window
 {
 	Q_OBJECT
 
+signals:
+	//! Scheme changed.
+	void schemeChanged();
+
 public:
 	Window( QWidget * parent = 0, Qt::WindowFlags f = 0 );
 
@@ -65,6 +69,9 @@ public:
 	WindowCfg cfg() const;
 	//! Set window's configuration.
 	void setCfg( const WindowCfg & cfg );
+
+	//! \return Scheme configuration.
+	SchemeCfg schemeCfg() const;
 
 	//! \return Name of the scheme.
 	const QString & schemeName() const;

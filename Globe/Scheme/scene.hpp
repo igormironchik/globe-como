@@ -74,6 +74,9 @@ public:
 	//! \return Scheme name.
 	const QString & schemeName() const;
 
+	//! \return Scheme configuration.
+	SchemeCfg schemeCfg() const;
+
 	//! \return Scene mode.
 	SceneMode mode() const;
 	//! Set scene mode.

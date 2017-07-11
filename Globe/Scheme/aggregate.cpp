@@ -107,16 +107,21 @@ class AggregatePrivate
 	:	public SelectablePrivate
 {
 public:
-	AggregatePrivate( Selection * selection, Scene * scene )
+	AggregatePrivate( Selection * selection, Scene * scene,
+		Aggregate * parent )
 		:	SelectablePrivate( selection, scene )
 		,	m_fillColor( ColorForLevel::instance().color( None ) )
 		,	m_level( None )
+		,	q( parent )
 	{
 	}
 
 	~AggregatePrivate()
 	{
 	}
+
+	//! Calculate current value.
+	void calcCurrentValue();
 
 	//! Sources.
 	QMap< QString, QMap< Key, QPair< Como::Source, SourceProps > > > m_sources;
@@ -132,7 +137,69 @@ public:
 	QString m_channel;
 	//! Channels.
 	QStringList m_channels;
+	//! Parent.
+	Aggregate * q;
 }; // class AggregatePrivate;
+
+void
+AggregatePrivate::calcCurrentValue()
+{
+	Level level = None;
+
+	bool found = false;
+
+	m_fillColor = ColorForLevel::instance().color( level );
+
+	QMapIterator< QString,
+		QMap< Key, QPair< Como::Source, SourceProps > > >
+			it( m_sources );
+
+	bool connected = false;
+
+	while( it.hasNext() )
+	{
+		it.next();
+
+		for( const auto & s : qAsConst( it.value() ) )
+		{
+			if( s.second.m_connected )
+				connected = true;
+
+			if( s.second.m_registered &&
+				s.second.m_connected &&
+				s.second.m_level < level )
+			{
+				level = s.second.m_level;
+
+				m_channel = it.key();
+
+				m_current = s.first;
+
+				m_fillColor =
+					ColorForLevel::instance().color( level );
+
+				found = true;
+			}
+		}
+	}
+
+	if( found )
+		q->setToolTip( createToolTip( m_channel, m_current ) );
+	else if( connected )
+	{
+		m_fillColor = ColorForLevel::instance().deregisteredColor();
+
+		q->setToolTip( QString() );
+	}
+	else
+	{
+		m_fillColor = ColorForLevel::instance().disconnectedColor();
+
+		q->setToolTip( QString() );
+	}
+
+	q->update();
+}
 
 
 //
@@ -140,7 +207,7 @@ public:
 //
 
 Aggregate::Aggregate( Selection * selection, Scene * scene )
-	:	BaseItem( new AggregatePrivate( selection, scene ) )
+	:	BaseItem( new AggregatePrivate( selection, scene, this ) )
 {
 
 }
@@ -197,6 +264,8 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 
 	dd->m_width = cfg.size().width();
 	dd->m_height = cfg.size().height();
+
+	dd->calcCurrentValue();
 }
 
 const QStringList &
@@ -248,63 +317,7 @@ Aggregate::syncSource( const Como::Source & source,
 			update();
 		}
 		else if( source == dd->m_current )
-		{
-			Level level = None;
-
-			bool found = false;
-
-			dd->m_fillColor = ColorForLevel::instance().color( level );
-
-			QMapIterator< QString,
-				QMap< Key, QPair< Como::Source, SourceProps > > >
-					it( dd->m_sources );
-
-			bool connected = false;
-
-			while( it.hasNext() )
-			{
-				it.next();
-
-				for( const auto & s : qAsConst( it.value() ) )
-				{
-					if( s.second.m_connected )
-						connected = true;
-
-					if( s.second.m_registered &&
-						s.second.m_connected &&
-						s.second.m_level < level )
-					{
-						level = s.second.m_level;
-
-						dd->m_channel = it.key();
-
-						dd->m_current = s.first;
-
-						dd->m_fillColor =
-							ColorForLevel::instance().color( level );
-
-						found = true;
-					}
-				}
-			}
-
-			if( found )
-				setToolTip( createToolTip( dd->m_channel, dd->m_current ) );
-			else if( connected )
-			{
-				dd->m_fillColor = ColorForLevel::instance().deregisteredColor();
-
-				setToolTip( QString() );
-			}
-			else
-			{
-				dd->m_fillColor = ColorForLevel::instance().disconnectedColor();
-
-				setToolTip( QString() );
-			}
-
-			update();
-		}
+			dd->calcCurrentValue();
 	}
 }
 
@@ -424,9 +437,19 @@ Aggregate::showScheme()
 		w = new Window;
 		w->initMenu( MainWindow::instance().menu() );
 		w->loadScheme( dd->m_cfg, dd->m_mode == EditScene );
+
+		connect( w, &Window::schemeChanged, this, &Aggregate::schemeChanged );
 	}
 
 	w->show();
+}
+
+void
+Aggregate::schemeChanged()
+{
+	Window * w = static_cast< Window* > ( sender() );
+
+	setCfg( w->schemeCfg() );
 }
 
 AggregatePrivate *

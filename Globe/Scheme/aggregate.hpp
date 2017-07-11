@@ -100,6 +100,8 @@ protected:
 private slots:
 	//! Show scheme.
 	void showScheme();
+	//! Scheme changed.
+	void schemeChanged();
 
 private:
 	AggregatePrivate * d_ptr();

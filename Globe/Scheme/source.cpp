@@ -110,7 +110,7 @@ Source::source() const
 void
 Source::setSource( const Como::Source & source )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	dd->m_source = source;
 
@@ -137,7 +137,7 @@ Source::cfg() const
 {
 	SourceCfg cfg;
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	cfg.setChannelName( dd->m_channelName );
 	cfg.setType( dd->m_source.type() );
@@ -155,7 +155,7 @@ Source::cfg() const
 void
 Source::setCfg( const SourceCfg & cfg )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( cfg.isFontSet() )
 		dd->m_font = cfg.font();
@@ -185,7 +185,7 @@ Source::deregistered()
 void
 Source::propertiesChanged()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	const Properties * props = PropertiesManager::instance().findProperties(
 		dd->m_source, dd->m_channelName, 0 );
@@ -215,7 +215,7 @@ Source::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED( option )
 	Q_UNUSED( widget )
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_state == ItemNotSelected )
 		painter->setPen( Qt::black );
@@ -249,7 +249,7 @@ Source::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
 	QMenu menu;
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
 	{
@@ -294,7 +294,7 @@ Source::addProperties()
 void
 Source::editProperties()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	PropertiesManager::instance().editProperties( dd->m_currentKey,
 		dd->m_scene->views().first() );
@@ -303,7 +303,7 @@ Source::editProperties()
 void
 Source::deleteProperties()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	PropertiesManager::instance().removeProperties( dd->m_currentKey,
 		dd->m_scene->views().first() );
@@ -312,7 +312,7 @@ Source::deleteProperties()
 void
 Source::promoteProperties()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	PropertiesManager::instance().promoteProperties( dd->m_currentKey,
 		dd->m_scene->views().first() );

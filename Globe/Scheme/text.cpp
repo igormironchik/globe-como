@@ -85,7 +85,7 @@ Text::cfg() const
 {
 	TextCfg cfg;
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	cfg.setText( dd->m_text );
 	cfg.setPos( pos() );
@@ -100,7 +100,7 @@ Text::cfg() const
 void
 Text::setCfg( const TextCfg & cfg )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( cfg.isFontSet() )
 		dd->m_font = cfg.font();
@@ -120,7 +120,7 @@ Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED( option )
 	Q_UNUSED( widget )
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_state == ItemSelected )
 	{
@@ -146,7 +146,7 @@ Text::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 void
 Text::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
 	{
@@ -170,7 +170,7 @@ Text::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 void
 Text::changeText()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	QString text = dd->m_text;
 

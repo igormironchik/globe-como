@@ -162,7 +162,7 @@ Aggregate::cfg() const
 void
 Aggregate::setCfg( const SchemeCfg & cfg )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	dd->m_cfg = cfg;
 
@@ -199,7 +199,7 @@ void
 Aggregate::syncSource( const Como::Source & source,
 	const QString & channel, bool isRegistered )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	const Key key( source.name(), source.typeName() );
 
@@ -299,7 +299,7 @@ Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 	Q_UNUSED( option )
 	Q_UNUSED( widget )
 
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_state == ItemNotSelected )
 		painter->setPen( Qt::black );
@@ -324,7 +324,7 @@ Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 void
 Aggregate::propertiesChanged()
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	bool registered = false;
 
@@ -337,7 +337,7 @@ Aggregate::propertiesChanged()
 void
 Aggregate::channelDisconnected( const QString & name )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_sources.contains( name ) )
 	{
@@ -360,7 +360,7 @@ Aggregate::channelDisconnected( const QString & name )
 void
 Aggregate::channelDeregistered( const QString & name )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_channel == name )
 		syncSource( dd->m_current, dd->m_channel, false );
@@ -369,7 +369,7 @@ Aggregate::channelDeregistered( const QString & name )
 void
 Aggregate::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
-	auto dd = d_ptr();
+	auto * dd = d_ptr();
 
 	if( dd->m_mode == EditScene && dd->m_editMode == EditSceneSelect )
 	{

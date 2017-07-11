@@ -585,6 +585,8 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 						SchemeCfg cfg;
 						cfg.setName( dlg.name() );
+						cfg.setPos( mouseEvent->scenePos() );
+						cfg.setSize( agg->boundingRect().size() );
 
 						agg->setCfg( cfg );
 

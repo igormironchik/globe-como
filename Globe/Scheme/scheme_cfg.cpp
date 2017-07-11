@@ -55,6 +55,30 @@ SchemeCfg::setName( const QString & n )
 	m_name = n;
 }
 
+const QPointF &
+SchemeCfg::pos() const
+{
+	return m_pos;
+}
+
+void
+SchemeCfg::setPos( const QPointF & pos )
+{
+	m_pos = pos;
+}
+
+const QSizeF &
+SchemeCfg::size() const
+{
+	return m_size;
+}
+
+void
+SchemeCfg::setSize( const QSizeF & size )
+{
+	m_size = size;
+}
+
 const QList< SourceCfg > &
 SchemeCfg::sources() const
 {
@@ -122,6 +146,8 @@ SchemeCfgTag::SchemeCfgTag()
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 	,	m_name( *this, QLatin1String( "name" ), false )
+	,	m_pos( *this, QLatin1String( "pos" ), false )
+	,	m_size( *this, QLatin1String( "size" ), false )
 {
 }
 
@@ -131,6 +157,8 @@ SchemeCfgTag::SchemeCfgTag( const QString & name, bool isMandatory )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 	,	m_name( *this, QLatin1String( "name" ), false )
+	,	m_pos( *this, QLatin1String( "pos" ), false )
+	,	m_size( *this, QLatin1String( "size" ), false )
 {
 }
 
@@ -141,6 +169,8 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 	,	m_name( *this, QLatin1String( "name" ), false )
+	,	m_pos( cfg.pos(), *this, QLatin1String( "pos" ), false )
+	,	m_size( cfg.size(), *this, QLatin1String( "size" ), false )
 {
 	initFromCfg( cfg );
 }
@@ -151,6 +181,8 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
 	,	m_name( *this, QLatin1String( "name" ), false )
+	,	m_pos( *this, QLatin1String( "pos" ), false )
+	,	m_size( *this, QLatin1String( "size" ), false )
 {
 	initFromCfg( cfg );
 }
@@ -190,7 +222,11 @@ SchemeCfgTag::cfg() const
 	cfg.setAggregates( aggregates );
 
 	if( m_name.isDefined() )
+	{
 		cfg.setName( m_name.value() );
+		cfg.setPos( m_pos.point() );
+		cfg.setSize( m_size.size() );
+	}
 
 	return cfg;
 }

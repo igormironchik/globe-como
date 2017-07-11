@@ -159,8 +159,15 @@ Aggregate::deleteItem()
 
 SchemeCfg
 Aggregate::cfg() const
-{
-	return d_ptr()->m_cfg;
+{	
+	auto * dd = d_ptr();
+
+	SchemeCfg cfg = dd->m_cfg;
+
+	cfg.setPos( pos() );
+	cfg.setSize( QSizeF( dd->m_width, dd->m_height ) );
+
+	return cfg;
 }
 
 void
@@ -185,6 +192,11 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 			dd->m_sources[ p.second ].insert( key,
 				qMakePair( p.first, SourceProps() ) );
 	}
+
+	setPos( cfg.pos() );
+
+	dd->m_width = cfg.size().width();
+	dd->m_height = cfg.size().height();
 }
 
 const QStringList &

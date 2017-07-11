@@ -26,6 +26,7 @@
 // Globe include.
 #include <Globe/Scheme/source_cfg.hpp>
 #include <Globe/Scheme/text_cfg.hpp>
+#include <Globe/Scheme/item_base_cfg.hpp>
 
 // Como include.
 #include <Como/Source>
@@ -59,6 +60,16 @@ public:
 	//! Set name.
 	void setName( const QString & n );
 
+	//! \return Position of the item.
+	const QPointF & pos() const;
+	//! Set position of the item.
+	void setPos( const QPointF & pos );
+
+	//! \return Size of the item.
+	const QSizeF & size() const;
+	//! Set size of the item.
+	void setSize( const QSizeF & size );
+
 	//! \return Sources.
 	const QList< SourceCfg > & sources() const;
 	//! Set sources.
@@ -86,6 +97,10 @@ private:
 	QList< SchemeCfg > m_aggregates;
 	//! Name.
 	QString m_name;
+	//! Position.
+	QPointF m_pos;
+	//! Size.
+	QSizeF m_size;
 }; // class SchemeCfg
 
 
@@ -123,6 +138,10 @@ private:
 	QtConfFile::TagVectorOfTags< SchemeCfgTag > m_aggregates;
 	//! Name.
 	QtConfFile::TagScalar< QString > m_name;
+	//! Pos.
+	QPointFTag m_pos;
+	//! Size.
+	QSizeFTag m_size;
 }; // class SchemeCfgTag
 
 } /* namespace Scheme */

@@ -23,6 +23,7 @@
 // Globe include.
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/scene.hpp>
+#include <Globe/Scheme/scheme_utils.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
@@ -104,27 +105,6 @@ const Como::Source &
 Source::source() const
 {
 	return d_ptr()->m_source;
-}
-
-static inline QString createToolTip( const QString & channelName,
-	const Como::Source & s )
-{
-	QString res;
-
-	res.append( QLatin1String( "<b>Channel:</b> " ) );
-	res.append( channelName );
-	res.append( QLatin1String( "<br><b>Type:</b> " ) );
-	res.append( s.typeName() );
-	res.append( QLatin1String( "<br><b>Name:</b> " ) );
-	res.append( s.name() );
-
-	if( !s.description().isEmpty() )
-	{
-		res.append( QLatin1String( "<br><b>Description:</b> " ) );
-		res.append( s.description() );
-	}
-
-	return res;
 }
 
 void

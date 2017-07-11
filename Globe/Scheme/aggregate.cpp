@@ -25,6 +25,7 @@
 #include <Globe/Scheme/source.hpp>
 #include <Globe/Scheme/text.hpp>
 #include <Globe/Scheme/scene.hpp>
+#include <Globe/Scheme/scheme_utils.hpp>
 
 #include <Globe/Core/properties_manager.hpp>
 #include <Globe/Core/color_for_level.hpp>
@@ -228,18 +229,28 @@ Aggregate::syncSource( const Como::Source & source,
 		{
 			Level level = None;
 
+			QString channel;
+
 			bool found = false;
 
 			dd->m_fillColor = ColorForLevel::instance().color( level );
 
-			for( const auto & ch : qAsConst( dd->m_sources ) )
+			QMapIterator< QString,
+				QMap< Key, QPair< Como::Source, SourceProps > > >
+					it( dd->m_sources );
+
+			while( it.hasNext() )
 			{
-				for( const auto & s : qAsConst( ch ) )
+				it.next();
+
+				for( const auto & s : qAsConst( it.value() ) )
 				{
 					if( s.second.m_registered &&
 						s.second.m_level < level )
 					{
 						level = s.second.m_level;
+
+						channel = it.key();
 
 						dd->m_current = s.first;
 
@@ -250,6 +261,11 @@ Aggregate::syncSource( const Como::Source & source,
 					}
 				}
 			}
+
+			if( found )
+				setToolTip( createToolTip( channel, dd->m_current ) );
+			else
+				setToolTip( QString() );
 
 			update();
 		}

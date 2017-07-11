@@ -43,22 +43,16 @@ SchemeCfg::SchemeCfg( const QList< SourceCfg > & sources,
 {
 }
 
-SchemeCfg::SchemeCfg( const SchemeCfg & other )
-	:	m_sources( other.sources() )
-	,	m_texts( other.texts() )
+const QString &
+SchemeCfg::name() const
 {
+	return m_name;
 }
 
-SchemeCfg &
-SchemeCfg::operator = ( const SchemeCfg & other )
+void
+SchemeCfg::setName( const QString & n )
 {
-	if( this != &other )
-	{
-		m_sources = other.sources();
-		m_texts = other.texts();
-	}
-
-	return *this;
+	m_name = n;
 }
 
 const QList< SourceCfg > &
@@ -127,6 +121,7 @@ SchemeCfgTag::SchemeCfgTag()
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+	,	m_name( *this, QLatin1String( "name" ), false )
 {
 }
 
@@ -135,6 +130,7 @@ SchemeCfgTag::SchemeCfgTag( const QString & name, bool isMandatory )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+	,	m_name( *this, QLatin1String( "name" ), false )
 {
 }
 
@@ -144,6 +140,7 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+	,	m_name( *this, QLatin1String( "name" ), false )
 {
 	initFromCfg( cfg );
 }
@@ -153,6 +150,7 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
+	,	m_name( *this, QLatin1String( "name" ), false )
 {
 	initFromCfg( cfg );
 }
@@ -191,6 +189,9 @@ SchemeCfgTag::cfg() const
 
 	cfg.setAggregates( aggregates );
 
+	if( m_name.isDefined() )
+		cfg.setName( m_name.value() );
+
 	return cfg;
 }
 
@@ -220,6 +221,9 @@ SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
 
 		m_aggregates.setValue( t );
 	}
+
+	if( !cfg.name().isEmpty() )
+		m_name.setValue( cfg.name() );
 
 	setDefined();
 }

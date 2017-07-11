@@ -52,7 +52,9 @@ enum EditSceneMode {
 	//! Add new source.
 	EditSceneNewSource = 0x02,
 	//! Add new text block.
-	EditSceneNewText = 0x03
+	EditSceneNewText = 0x03,
+	//! Add new aggregate.
+	EditSceneNewAggregate = 0x04
 }; // enum EditSceneMode
 
 

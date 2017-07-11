@@ -80,6 +80,8 @@ private slots:
 	void sourceEditMode();
 	//! Set new text block edit mode.
 	void textBlockEditMode();
+	//! Add new aggregate.
+	void aggregateEditMode();
 
 protected:
 	void closeEvent( QCloseEvent * event );

@@ -553,6 +553,12 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 				}
 				break;
 
+				case EditSceneNewAggregate :
+				{
+
+				}
+					break;
+
 				default :
 				{
 					QGraphicsScene::mouseReleaseEvent( mouseEvent );

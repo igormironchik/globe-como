@@ -54,9 +54,10 @@ public:
 	SchemeCfg( const QList< SourceCfg > & sources,
 		const QList< TextCfg > & texts );
 
-	SchemeCfg( const SchemeCfg & other );
-
-	SchemeCfg & operator = ( const SchemeCfg & other );
+	//! \return Name.
+	const QString & name() const;
+	//! Set name.
+	void setName( const QString & n );
 
 	//! \return Sources.
 	const QList< SourceCfg > & sources() const;
@@ -83,6 +84,8 @@ private:
 	QList< TextCfg > m_texts;
 	//! Aggregates.
 	QList< SchemeCfg > m_aggregates;
+	//! Name.
+	QString m_name;
 }; // class SchemeCfg
 
 
@@ -118,6 +121,8 @@ private:
 	QtConfFile::TagVectorOfTags< TextCfgTag > m_texts;
 	//! Aggregates.
 	QtConfFile::TagVectorOfTags< SchemeCfgTag > m_aggregates;
+	//! Name.
+	QtConfFile::TagScalar< QString > m_name;
 }; // class SchemeCfgTag
 
 } /* namespace Scheme */

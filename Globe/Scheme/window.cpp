@@ -184,6 +184,12 @@ Window::textBlockEditMode()
 }
 
 void
+Window::aggregateEditMode()
+{
+	d->m_view->scene()->setEditMode( EditSceneNewAggregate );
+}
+
+void
 Window::closeEvent( QCloseEvent * event )
 {
 	event->accept();
@@ -215,10 +221,16 @@ Window::init()
 		this, SLOT( textBlockEditMode() ) );
 	textEditModeAction->setCheckable( true );
 
+	QAction * aggregateEditModeAction = d->m_editModeToolBar->addAction(
+		QIcon( ":/img/add_aggregate_22x22.png" ), tr( "Add Aggregate" ),
+		this, SLOT( aggregateEditMode() ) );
+	aggregateEditModeAction->setCheckable( true );
+
 	QActionGroup * actionGroup = new QActionGroup( this );
 	actionGroup->addAction( selectEditModeAction );
 	actionGroup->addAction( sourceEditModeAction );
 	actionGroup->addAction( textEditModeAction );
+	actionGroup->addAction( aggregateEditModeAction );
 
 	selectEditModeAction->setChecked( true );
 

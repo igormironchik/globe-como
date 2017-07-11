@@ -28,6 +28,7 @@
 #include <Globe/Scheme/text.hpp>
 #include <Globe/Scheme/text_cfg.hpp>
 #include <Globe/Scheme/aggregate.hpp>
+#include <Globe/Scheme/name_dlg.hpp>
 
 #include <Globe/Core/sources_dialog.hpp>
 #include <Globe/Core/log.hpp>
@@ -40,6 +41,7 @@
 #include <QPalette>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsItem>
+#include <QGraphicsView>
 #include <QMessageBox>
 #include <QKeyEvent>
 #include <QMap>
@@ -555,7 +557,27 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 				case EditSceneNewAggregate :
 				{
+					NameDlg dlg( views().first() );
 
+					if( dlg.exec() == QDialog::Accepted )
+					{
+						Aggregate * agg = new Aggregate( &d->m_selection,
+							this );
+						agg->setPos( mouseEvent->scenePos() );
+						agg->setMode( d->m_mode );
+						agg->setEditMode( d->m_editMode );
+
+						SchemeCfg cfg;
+						cfg.setName( dlg.name() );
+
+						agg->setCfg( cfg );
+
+						addItem( agg );
+
+						d->m_agg.append( agg );
+					}
+
+					mouseEvent->accept();
 				}
 					break;
 

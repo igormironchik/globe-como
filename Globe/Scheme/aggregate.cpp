@@ -106,6 +106,7 @@ class AggregatePrivate
 public:
 	AggregatePrivate( Selection * selection, Scene * scene )
 		:	SelectablePrivate( selection, scene )
+		,	m_fillColor( ColorForLevel::instance().color( None ) )
 		,	m_level( None )
 	{
 	}

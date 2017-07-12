@@ -37,6 +37,8 @@
 #include <QAction>
 #include <QToolBar>
 #include <QActionGroup>
+#include <QApplication>
+#include <QDesktopWidget>
 
 
 namespace Globe {
@@ -179,6 +181,11 @@ Window::loadScheme( const SchemeCfg & cfg, bool editing )
 	d->m_view->scene()->initScheme( cfg );
 
 	MainWindow::instance().addAggregate( this );
+
+	d->m_view->resize( ( d->m_view->scene()->sceneRect().size().toSize() +
+		QSize( 10, 10 ) ).boundedTo(
+			QApplication::desktop()->availableGeometry( this ).size() -
+			QSize( 200, 150 ) ) );
 }
 
 void

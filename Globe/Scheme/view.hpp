@@ -55,6 +55,8 @@ public:
 	//! \return Scene.
 	Scene * scene();
 
+	QSize sizeHint() const Q_DECL_OVERRIDE;
+
 protected:
 	void dragEnterEvent( QDragEnterEvent * event );
 	void dragMoveEvent( QDragMoveEvent * event );

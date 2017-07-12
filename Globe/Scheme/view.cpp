@@ -76,6 +76,12 @@ View::scene()
 	return d->m_scene;
 }
 
+QSize
+View::sizeHint() const
+{
+	return ( QGraphicsView::sizeHint() + QSize( 10, 10 ) );
+}
+
 void
 View::dragEnterEvent( QDragEnterEvent * event )
 {

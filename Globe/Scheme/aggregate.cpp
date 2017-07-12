@@ -449,7 +449,11 @@ Aggregate::schemeChanged()
 {
 	Window * w = static_cast< Window* > ( sender() );
 
-	setCfg( w->schemeCfg() );
+	SchemeCfg cfg = w->schemeCfg();
+	cfg.setPos( pos() );
+	cfg.setSize( boundingRect().size() );
+
+	setCfg( cfg );
 }
 
 AggregatePrivate *

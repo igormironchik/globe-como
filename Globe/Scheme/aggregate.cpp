@@ -83,7 +83,7 @@ private:
 struct SourceProps {
 	SourceProps()
 		:	m_registered( false )
-		,	m_level( None )
+		,	m_level( Uninitialized )
 		,	m_connected( false )
 	{
 	}
@@ -110,8 +110,8 @@ public:
 	AggregatePrivate( Selection * selection, Scene * scene,
 		Aggregate * parent )
 		:	SelectablePrivate( selection, scene )
-		,	m_fillColor( ColorForLevel::instance().color( None ) )
-		,	m_level( None )
+		,	m_fillColor( ColorForLevel::instance().disconnectedColor() )
+		,	m_level( Uninitialized )
 		,	q( parent )
 	{
 	}
@@ -144,11 +144,11 @@ public:
 void
 AggregatePrivate::calcCurrentValue()
 {
-	Level level = None;
+	Level level = Uninitialized;
 
 	bool found = false;
 
-	m_fillColor = ColorForLevel::instance().color( level );
+	m_fillColor = ColorForLevel::instance().color( None );
 
 	QMapIterator< QString,
 		QMap< Key, QPair< Como::Source, SourceProps > > >
@@ -177,6 +177,8 @@ AggregatePrivate::calcCurrentValue()
 
 				m_fillColor =
 					ColorForLevel::instance().color( level );
+
+				m_level = level;
 
 				found = true;
 			}
@@ -295,6 +297,8 @@ Aggregate::syncSource( const Como::Source & source,
 
 		dd->m_sources[ channel ][ key ].second.m_registered = isRegistered;
 
+		dd->m_sources[ channel ][ key ].second.m_connected = true;
+
 		const Properties * props = PropertiesManager::instance()
 			.findProperties( source, channel, 0 );
 
@@ -312,11 +316,19 @@ Aggregate::syncSource( const Como::Source & source,
 		{
 			dd->m_current = source;
 
+			dd->m_channel = channel;
+
+			dd->m_level = level;
+
 			dd->m_fillColor = ColorForLevel::instance().color( level );
+
+			setToolTip( createToolTip( dd->m_channel, dd->m_current ) );
 
 			update();
 		}
 		else if( source == dd->m_current )
+			dd->calcCurrentValue();
+		else if( dd->m_level == Uninitialized )
 			dd->calcCurrentValue();
 	}
 }
@@ -454,6 +466,9 @@ Aggregate::schemeChanged()
 	cfg.setSize( boundingRect().size() );
 
 	setCfg( cfg );
+
+	for( const auto & ch : qAsConst( listOfChannels() ) )
+		d_ptr()->m_scene->addChannel( ch );
 }
 
 AggregatePrivate *

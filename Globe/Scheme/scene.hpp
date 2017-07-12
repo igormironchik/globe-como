@@ -113,6 +113,12 @@ protected:
 	void mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent );
 	void keyPressEvent( QKeyEvent * keyEvent );
 
+protected:
+	friend class Aggregate;
+
+	//! Add channel.
+	void addChannel( const QString & name );
+
 private slots:
 	//! Channel was removed.
 	void channelRemoved( Channel * channel );
@@ -134,8 +140,6 @@ private:
 	void init();
 	//! Populate channels.
 	void populateChannels();
-	//! Add channel.
-	void addChannel( const QString & name );
 	//! Remove channel.
 	void removeChannel( const QString & name );
 	//! \return Is channel in use?

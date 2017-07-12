@@ -303,6 +303,8 @@ Scene::schemeCfg() const
 
 	cfg.setAggregates( aggregates );
 
+	cfg.setName( d->m_name );
+
 	return cfg;
 }
 

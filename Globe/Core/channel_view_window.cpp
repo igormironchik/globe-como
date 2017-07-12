@@ -222,6 +222,8 @@ ChannelViewWindow::setWindowCfg( const ChannelViewWindowCfg & c )
 void
 ChannelViewWindow::init()
 {
+	setAttribute( Qt::WA_DeleteOnClose );
+
 	d->m_view = new ChannelView( this );
 
 	setCentralWidget( d->m_view );

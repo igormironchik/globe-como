@@ -50,6 +50,8 @@ enum Expression {
 
 //! Level of severity of the condition.
 enum Level {
+	//! Uninitialized.
+	Uninitialized = 0xFFFF,
 	//! None level,
 	None = 0xFF,
 	//! Critical state of the source.

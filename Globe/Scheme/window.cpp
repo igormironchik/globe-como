@@ -238,6 +238,8 @@ Window::closeEvent( QCloseEvent * event )
 void
 Window::init()
 {
+	setAttribute( Qt::WA_DeleteOnClose );
+
 	d->m_view = new View( this );
 
 	setCentralWidget( d->m_view );

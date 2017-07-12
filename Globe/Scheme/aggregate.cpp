@@ -64,9 +64,9 @@ public:
 	{
 	}
 
-	bool operator < ( const Key & other ) const
+	friend bool operator < ( const Key & k1, const Key & k2 )
 	{
-		return ( m_key < other.m_key );
+		return ( k1.m_key < k2.m_key );
 	}
 
 private:

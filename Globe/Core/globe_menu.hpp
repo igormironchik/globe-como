@@ -35,6 +35,33 @@ QT_END_NAMESPACE
 namespace Globe {
 
 class ToolWindowObject;
+class ChannelViewWindow;
+
+namespace Scheme {
+
+class Window;
+
+} /* namespace Scheme */
+
+
+//
+// WindowsList
+//
+
+//! List of all windows in application.
+struct WindowsList {
+
+	WindowsList( const QList< ChannelViewWindow* > & channelViewWindows,
+		const QList< Scheme::Window* > & schemeWindows,
+		const QList< Scheme::Window* > &  aggregates );
+
+	//! Channel view windows.
+	const QList< ChannelViewWindow* > & m_channelViewWindows;
+	//! Scheme windows.
+	const QList< Scheme::Window* > & m_schemeWindows;
+	//! Aggregate windows.
+	const QList< Scheme::Window* > & m_aggregates;
+}; // struct WindowsList
 
 
 //
@@ -44,14 +71,9 @@ class ToolWindowObject;
 //! Components of the menu of application.
 class Menu {
 public:
-	Menu();
-
 	Menu( QMenu * fileMenu, QMenu * settingsMenu,
-		const QList< ToolWindowObject* > toolWindows );
-
-	Menu( const Menu & other );
-
-	Menu & operator = ( const Menu & other );
+		const QList< ToolWindowObject* > toolWindows,
+		const WindowsList & windows );
 
 	//! \return File menu.
 	QMenu * fileMenu() const;
@@ -62,6 +84,9 @@ public:
 	//! \return List with tool window objects.
 	const QList< ToolWindowObject* > & toolWindows() const;
 
+	//! \return List of all windows.
+	const WindowsList & windows() const;
+
 private:
 	//! File menu.
 	QMenu * m_fileMenu;
@@ -69,7 +94,9 @@ private:
 	QMenu * m_settingsMenu;
 	//! Tool windows objects.
 	QList< ToolWindowObject* > m_toolWindows;
-};
+	//! All windows.
+	const WindowsList & m_windows;
+}; // class Menu
 
 } /* namespace Globe */
 

@@ -66,6 +66,8 @@ public:
 		:	m_list( 0 )
 		,	m_cfgWasSaved( false )
 		,	m_confDialog( 0 )
+		,	m_windows( m_channelViewWindows, m_schemeWindows, m_aggregates )
+		,	m_menu( Q_NULLPTR )
 	{
 	}
 
@@ -105,8 +107,10 @@ public:
 	QMap< QString, Scheme::WindowCfg > m_schemeWindowsCfg;
 	//! Configuration dialog.
 	ConfigurationDialog * m_confDialog;
+	//! Windows list auxiliary struct.
+	WindowsList m_windows;
 	//! Menu.
-	Menu m_menu;
+	QScopedPointer< Menu > m_menu;
 }; // class MainWindowPrivate
 
 
@@ -194,9 +198,10 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 		tr( "&Settings" ), this, SLOT( settings() ),
 		QKeySequence( tr( "Alt+C" ) ) );
 
-	d->m_menu = Menu( fileMenu, settingsMenu, toolWindows );
+	d->m_menu.reset( new Menu( fileMenu, settingsMenu,
+		toolWindows, d->m_windows ) );
 
-	foreach( ToolWindowObject * obj, d->m_menu.toolWindows() )
+	foreach( ToolWindowObject * obj, d->m_menu->toolWindows() )
 		toolsMenu->addAction( obj->menuEntity() );
 
 	d->m_confDialog = new ConfigurationDialog( this );
@@ -209,11 +214,11 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 
 	setCentralWidget( area );
 
-	PropertiesManager::instance().initMenu( d->m_menu );
-	SourcesMainWindow::instance().initMenu( d->m_menu );
-	LogEventWindow::instance().initMenu( d->m_menu );
-	LogSourcesWindow::instance().initMenu( d->m_menu );
-	Sounds::instance().initMenu( d->m_menu );
+	PropertiesManager::instance().initMenu( *d->m_menu );
+	SourcesMainWindow::instance().initMenu( *d->m_menu );
+	LogEventWindow::instance().initMenu( *d->m_menu );
+	LogSourcesWindow::instance().initMenu( *d->m_menu );
+	Sounds::instance().initMenu( *d->m_menu );
 
 	checkPathAndCreateIfNotExists( QLatin1String( "./etc/schemes" ) );
 }
@@ -221,7 +226,7 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 const Menu &
 MainWindow::menu() const
 {
-	return d->m_menu;
+	return *d->m_menu;
 }
 
 void
@@ -283,7 +288,7 @@ MainWindow::showChannelView( const QString & channelName )
 	{
 		window = new ChannelViewWindow;
 
-		window->initMenu( d->m_menu );
+		window->initMenu( *d->m_menu );
 
 		if( !window->setChannel( channelName ) )
 			window->deleteLater();
@@ -319,7 +324,7 @@ MainWindow::showScheme( const QString & cfgFile, bool newScheme )
 	{
 		window = new Scheme::Window;
 
-		window->initMenu( d->m_menu );
+		window->initMenu( *d->m_menu );
 
 		if( newScheme )
 			window->createNewScheme( cfgFile );

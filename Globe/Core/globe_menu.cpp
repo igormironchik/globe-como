@@ -27,41 +27,31 @@
 namespace Globe {
 
 //
+// WindowsList
+//
+
+WindowsList::WindowsList( const QList< ChannelViewWindow* > & channelViewWindows,
+	const QList< Scheme::Window* > & schemeWindows,
+	const QList< Scheme::Window* > &  aggregates )
+	:	m_channelViewWindows( channelViewWindows )
+	,	m_schemeWindows( schemeWindows )
+	,	m_aggregates( aggregates )
+{
+}
+
+
+//
 // Menu
 //
 
-Menu::Menu()
-	:	m_fileMenu( 0 )
-	,	m_settingsMenu( 0 )
-{
-}
-
 Menu::Menu( QMenu * fileMenu, QMenu * settingsMenu,
-	const QList< ToolWindowObject* > toolWindows )
+	const QList< ToolWindowObject* > toolWindows,
+	const WindowsList & windows )
 	:	m_fileMenu( fileMenu )
 	,	m_settingsMenu( settingsMenu )
 	,	m_toolWindows( toolWindows )
+	,	m_windows( windows )
 {
-}
-
-Menu::Menu( const Menu & other )
-	:	m_fileMenu( other.fileMenu() )
-	,	m_settingsMenu( other.settingsMenu() )
-	,	m_toolWindows( other.toolWindows() )
-{
-}
-
-Menu &
-Menu::operator = ( const Menu & other )
-{
-	if( this != &other )
-	{
-		m_fileMenu = other.fileMenu();
-		m_settingsMenu = other.settingsMenu();
-		m_toolWindows = other.toolWindows();
-	}
-
-	return *this;
 }
 
 QMenu *
@@ -80,6 +70,12 @@ const QList< ToolWindowObject* > &
 Menu::toolWindows() const
 {
 	return m_toolWindows;
+}
+
+const WindowsList &
+Menu::windows() const
+{
+	return m_windows;
 }
 
 } /* namespace Globe */

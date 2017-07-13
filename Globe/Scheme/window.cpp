@@ -130,6 +130,12 @@ Window::schemeName() const
 	return d->m_view->scene()->schemeName();
 }
 
+const QString &
+Window::cfgFile() const
+{
+	return d->m_cfgFile;
+}
+
 void
 Window::loadScheme( const QString & fileName )
 {

@@ -62,11 +62,12 @@ namespace Globe {
 
 class MainWindowPrivate {
 public:
-	MainWindowPrivate()
+	MainWindowPrivate( MainWindow * parent )
 		:	m_list( 0 )
 		,	m_cfgWasSaved( false )
 		,	m_confDialog( 0 )
-		,	m_windows( m_channelViewWindows, m_schemeWindows, m_aggregates )
+		,	m_windows( m_channelViewWindows, m_schemeWindows, m_aggregates,
+				parent )
 		,	m_menu( Q_NULLPTR )
 	{
 	}
@@ -120,7 +121,7 @@ public:
 
 MainWindow::MainWindow( QWidget * parent, Qt::WindowFlags flags )
 	:	QMainWindow( parent, flags )
-	,	d( new MainWindowPrivate )
+	,	d( new MainWindowPrivate( this ) )
 {
 }
 
@@ -203,6 +204,8 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 
 	foreach( ToolWindowObject * obj, d->m_menu->toolWindows() )
 		toolsMenu->addAction( obj->menuEntity() );
+
+	QMenu * windowsMenu = menuBar()->addMenu( tr( "&Windows" ) );
 
 	d->m_confDialog = new ConfigurationDialog( this );
 

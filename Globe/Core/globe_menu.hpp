@@ -26,9 +26,12 @@
 // Qt include.
 #include <QtGlobal>
 #include <QList>
+#include <QObject>
+#include <QMap>
 
 QT_BEGIN_NAMESPACE
 class QMenu;
+class QWidget;
 QT_END_NAMESPACE
 
 
@@ -36,6 +39,7 @@ namespace Globe {
 
 class ToolWindowObject;
 class ChannelViewWindow;
+class MainWindow;
 
 namespace Scheme {
 
@@ -53,7 +57,8 @@ struct WindowsList {
 
 	WindowsList( const QList< ChannelViewWindow* > & channelViewWindows,
 		const QList< Scheme::Window* > & schemeWindows,
-		const QList< Scheme::Window* > &  aggregates );
+		const QList< Scheme::Window* > &  aggregates,
+		MainWindow * main );
 
 	//! Channel view windows.
 	const QList< ChannelViewWindow* > & m_channelViewWindows;
@@ -61,6 +66,8 @@ struct WindowsList {
 	const QList< Scheme::Window* > & m_schemeWindows;
 	//! Aggregate windows.
 	const QList< Scheme::Window* > & m_aggregates;
+	//! Main window.
+	MainWindow * m_main;
 }; // struct WindowsList
 
 
@@ -97,6 +104,48 @@ private:
 	//! All windows.
 	const WindowsList & m_windows;
 }; // class Menu
+
+
+//
+// WindowsMenu
+//
+
+//! Auxiliary class to create and work with windows menu.
+class WindowsMenu Q_DECL_FINAL
+	:	public QObject
+{
+	Q_OBJECT
+
+public:
+	WindowsMenu( QMenu * menu, QWidget * thisWindow,
+		const WindowsList & windows,
+		QObject * parent = Q_NULLPTR );
+	~WindowsMenu();
+
+public slots:
+	//! Update menu.
+	void update();
+
+private slots:
+	//! Show window.
+	void showWindow( QAction * a );
+
+private:
+	//! Init menu.
+	void initMenu();
+
+private:
+	Q_DISABLE_COPY( WindowsMenu )
+
+	//! QAction -> Window map.
+	QMap< QAction*, QWidget* > m_map;
+	//! Menu.
+	QMenu * m_menu;
+	//! This window.
+	QWidget * m_thisWindow;
+	//! Windows.
+	const WindowsList & m_windows;
+}; // class WindowsMenu
 
 } /* namespace Globe */
 

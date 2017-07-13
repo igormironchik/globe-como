@@ -22,6 +22,14 @@
 
 // Globe include.
 #include <Globe/Core/globe_menu.hpp>
+#include <Globe/Core/channel_view_window.hpp>
+#include <Globe/Core/mainwindow.hpp>
+
+#include <Globe/Scheme/window.hpp>
+
+// Qt include.
+#include <QMenu>
+#include <QWidget>
 
 
 namespace Globe {
@@ -32,10 +40,12 @@ namespace Globe {
 
 WindowsList::WindowsList( const QList< ChannelViewWindow* > & channelViewWindows,
 	const QList< Scheme::Window* > & schemeWindows,
-	const QList< Scheme::Window* > &  aggregates )
+	const QList< Scheme::Window* > &  aggregates,
+	MainWindow * main )
 	:	m_channelViewWindows( channelViewWindows )
 	,	m_schemeWindows( schemeWindows )
 	,	m_aggregates( aggregates )
+	,	m_main( main )
 {
 }
 
@@ -76,6 +86,99 @@ const WindowsList &
 Menu::windows() const
 {
 	return m_windows;
+}
+
+
+//
+// WindowsMenu
+//
+
+WindowsMenu::WindowsMenu( QMenu * menu, QWidget * thisWindow,
+	const WindowsList & windows, QObject * parent )
+	:	QObject( parent )
+	,	m_menu( menu )
+	,	m_thisWindow( thisWindow )
+	,	m_windows( windows )
+{
+	initMenu();
+
+	connect( m_menu, &QMenu::triggered,
+		this, &WindowsMenu::showWindow );
+}
+
+WindowsMenu::~WindowsMenu()
+{
+}
+
+void
+WindowsMenu::update()
+{
+	initMenu();
+}
+
+void
+WindowsMenu::showWindow( QAction * a )
+{
+	if( m_map.contains( a ) )
+		m_map[ a ]->show();
+}
+
+void
+WindowsMenu::initMenu()
+{
+	m_map.clear();
+	m_menu->clear();
+
+	QMenu * scheme = m_menu->addMenu( tr( "Scheme" ) );
+
+	connect( scheme, &QMenu::triggered, this, &WindowsMenu::showWindow );
+
+	for( auto * w : qAsConst( m_windows.m_schemeWindows ) )
+	{
+		if( w != m_thisWindow )
+		{
+			QAction * a = m_menu->addAction( w->cfgFile() );
+
+			m_map.insert( a, w );
+		}
+	}
+
+	QMenu * ch = m_menu->addMenu( tr( "Channel" ) );
+
+	connect( ch, &QMenu::triggered, this, &WindowsMenu::showWindow );
+
+	for( auto * w : qAsConst( m_windows.m_channelViewWindows ) )
+	{
+		if( w != m_thisWindow )
+		{
+			QAction * a = m_menu->addAction( w->channel() );
+
+			m_map.insert( a, w );
+		}
+	}
+
+	QMenu * agg = m_menu->addMenu( tr( "Aggregate" ) );
+
+	connect( agg, &QMenu::triggered, this, &WindowsMenu::showWindow );
+
+	for( auto * w : qAsConst( m_windows.m_aggregates ) )
+	{
+		if( w != m_thisWindow )
+		{
+			QAction * a = m_menu->addAction( w->schemeName() );
+
+			m_map.insert( a, w );
+		}
+	}
+
+	if( m_thisWindow != m_windows.m_main )
+	{
+		m_menu->addSeparator();
+
+		QAction * a = m_menu->addAction( tr( "Main Window" ) );
+
+		m_map.insert( a, m_thisWindow );
+	}
 }
 
 } /* namespace Globe */

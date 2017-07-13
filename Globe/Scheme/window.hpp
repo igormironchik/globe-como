@@ -76,6 +76,9 @@ public:
 	//! \return Name of the scheme.
 	const QString & schemeName() const;
 
+	//! \return Name of the configuration file.
+	const QString & cfgFile() const;
+
 public slots:
 	//! Load scheme configuration.
 	void loadScheme( const QString & fileName );

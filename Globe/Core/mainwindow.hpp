@@ -61,6 +61,12 @@ class CORE_EXPORT MainWindow
 {
 	Q_OBJECT
 
+signals:
+	//! New window created.
+	void windowCreated( QWidget * );
+	//! Window closed.
+	void windowClosed( QWidget * );
+
 private:
 	MainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
 
@@ -127,6 +133,8 @@ private slots:
 	void openScheme();
 	//! Shutdown.
 	void shutdown();
+	//! Update window menu.
+	void updateWindowsMenu( QWidget * );
 
 private:
 	//! Save configuration.

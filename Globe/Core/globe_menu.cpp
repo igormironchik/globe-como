@@ -120,7 +120,11 @@ void
 WindowsMenu::showWindow( QAction * a )
 {
 	if( m_map.contains( a ) )
-		m_map[ a ]->show();
+	{
+		m_map[ a ]->setWindowState( Qt::WindowActive );
+		m_map[ a ]->raise();
+		m_map[ a ]->setFocus();
+	}
 }
 
 void
@@ -137,7 +141,7 @@ WindowsMenu::initMenu()
 	{
 		if( w != m_thisWindow )
 		{
-			QAction * a = m_menu->addAction( w->cfgFile() );
+			QAction * a = scheme->addAction( w->cfgFile() );
 
 			m_map.insert( a, w );
 		}
@@ -151,7 +155,7 @@ WindowsMenu::initMenu()
 	{
 		if( w != m_thisWindow )
 		{
-			QAction * a = m_menu->addAction( w->channel() );
+			QAction * a = ch->addAction( w->channel() );
 
 			m_map.insert( a, w );
 		}
@@ -165,7 +169,7 @@ WindowsMenu::initMenu()
 	{
 		if( w != m_thisWindow )
 		{
-			QAction * a = m_menu->addAction( w->schemeName() );
+			QAction * a = agg->addAction( w->schemeName() );
 
 			m_map.insert( a, w );
 		}

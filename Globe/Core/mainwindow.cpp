@@ -69,6 +69,7 @@ public:
 		,	m_windows( m_channelViewWindows, m_schemeWindows, m_aggregates,
 				parent )
 		,	m_menu( Q_NULLPTR )
+		,	m_winMenu( Q_NULLPTR )
 	{
 	}
 
@@ -112,6 +113,8 @@ public:
 	WindowsList m_windows;
 	//! Menu.
 	QScopedPointer< Menu > m_menu;
+	//! Windows menu helper.
+	WindowsMenu * m_winMenu;
 }; // class MainWindowPrivate
 
 
@@ -164,6 +167,11 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	connect( qApp, &QApplication::aboutToQuit,
 		this, &MainWindow::aboutToQuit );
 
+	connect( this, &MainWindow::windowCreated,
+		this, &MainWindow::updateWindowsMenu );
+	connect( this, &MainWindow::windowClosed,
+		this, &MainWindow::updateWindowsMenu );
+
 	QMenu * fileMenu = menuBar()->addMenu( tr( "&File" ) );
 
 	QMenu * newMenu = fileMenu->addMenu( QIcon( ":/img/new_22x22.png" ),
@@ -206,6 +214,9 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 		toolsMenu->addAction( obj->menuEntity() );
 
 	QMenu * windowsMenu = menuBar()->addMenu( tr( "&Windows" ) );
+
+	d->m_winMenu = new WindowsMenu( windowsMenu, this, d->m_menu->windows(),
+		this );
 
 	d->m_confDialog = new ConfigurationDialog( this );
 
@@ -257,6 +268,8 @@ MainWindow::channelViewWindowClosed( ChannelViewWindow * window )
 		d->m_channelViewWindowsCfg.insert( cfg.channelName(), cfg );
 
 	d->m_channelViewWindows.removeAll( window );
+
+	emit windowClosed( window );
 }
 
 void
@@ -271,6 +284,8 @@ MainWindow::schemeWindowClosed( Scheme::Window * window )
 		d->m_schemeWindowsCfg.insert( cfg.schemeCfgFile(), cfg );
 
 	d->m_schemeWindows.removeAll( window );
+
+	emit windowClosed( window );
 }
 
 void
@@ -306,6 +321,8 @@ MainWindow::showChannelView( const QString & channelName )
 			else
 				window->show();
 		}
+
+		emit windowCreated( window );
 	}
 }
 
@@ -342,6 +359,8 @@ MainWindow::showScheme( const QString & cfgFile, bool newScheme )
 					d->m_schemeWindowsCfg[ cfgFile ] );
 		else
 			window->show();
+
+		emit windowCreated( window );
 	}
 }
 
@@ -363,13 +382,19 @@ void
 MainWindow::addAggregate( Scheme::Window * w )
 {
 	if( !d->m_aggregates.contains( w ) )
+	{
 		d->m_aggregates.append( w );
+
+		emit windowCreated( w );
+	}
 }
 
 void
 MainWindow::removeAggregate( Scheme::Window * w )
 {
 	d->m_aggregates.removeOne( w );
+
+	emit windowClosed( w );
 }
 
 Scheme::Window *
@@ -510,6 +535,12 @@ MainWindow::shutdown()
 	ChannelsManager::instance().shutdown();
 
 	QApplication::quit();
+}
+
+void
+MainWindow::updateWindowsMenu( QWidget * )
+{
+	d->m_winMenu->update();
 }
 
 void

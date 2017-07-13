@@ -207,13 +207,21 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 		tr( "&Settings" ), this, SLOT( settings() ),
 		QKeySequence( tr( "Alt+C" ) ) );
 
+	QMenu * windowsMenu = menuBar()->addMenu( tr( "&Windows" ) );
+
+	QMenu * help = menuBar()->addMenu( tr( "&Help" ) );
+
+	help->addAction( QIcon( ":/img/globe_22x22.png" ),
+		tr( "About" ), this, &MainWindow::about );
+
+	help->addAction( QIcon( ":/img/qt.png" ),
+		tr( "About Qt" ), this, &MainWindow::aboutQt );
+
 	d->m_menu.reset( new Menu( fileMenu, settingsMenu,
-		toolWindows, d->m_windows ) );
+		toolWindows, d->m_windows, help ) );
 
 	foreach( ToolWindowObject * obj, d->m_menu->toolWindows() )
 		toolsMenu->addAction( obj->menuEntity() );
-
-	QMenu * windowsMenu = menuBar()->addMenu( tr( "&Windows" ) );
 
 	d->m_winMenu = new WindowsMenu( windowsMenu, this, d->m_menu->windows(),
 		this );
@@ -541,6 +549,22 @@ void
 MainWindow::updateWindowsMenu( QWidget * )
 {
 	d->m_winMenu->update();
+}
+
+void
+MainWindow::about()
+{
+	QMessageBox::about( this, tr( "About Globe" ),
+		tr( "Globe - Monitoring application.\n\n"
+			"Author - Igor Mironchik (igor.mironchik at gmail dot com).\n\n"
+			"Copyright (c) 2012-2017 Igor Mironchik.\n\n"
+			"Licensed under GNU GPL 3.0." ) );
+}
+
+void
+MainWindow::aboutQt()
+{
+	QMessageBox::aboutQt( this );
 }
 
 void

@@ -108,6 +108,8 @@ Window::initMenu( const Menu & menu )
 
 	QMenu * win = menuBar()->addMenu( tr( "&Windows" ) );
 
+	menuBar()->addMenu( menu.helpMenu() );
+
 	d->m_winMenu.reset( new WindowsMenu( win, this, menu.windows(), this ) );
 }
 

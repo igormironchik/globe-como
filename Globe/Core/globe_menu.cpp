@@ -56,11 +56,12 @@ WindowsList::WindowsList( const QList< ChannelViewWindow* > & channelViewWindows
 
 Menu::Menu( QMenu * fileMenu, QMenu * settingsMenu,
 	const QList< ToolWindowObject* > toolWindows,
-	const WindowsList & windows )
+	const WindowsList & windows, QMenu * help )
 	:	m_fileMenu( fileMenu )
 	,	m_settingsMenu( settingsMenu )
 	,	m_toolWindows( toolWindows )
 	,	m_windows( windows )
+	,	m_help( help )
 {
 }
 
@@ -86,6 +87,12 @@ const WindowsList &
 Menu::windows() const
 {
 	return m_windows;
+}
+
+QMenu *
+Menu::helpMenu() const
+{
+	return m_help;
 }
 
 

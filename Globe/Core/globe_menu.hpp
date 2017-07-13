@@ -80,7 +80,8 @@ class Menu {
 public:
 	Menu( QMenu * fileMenu, QMenu * settingsMenu,
 		const QList< ToolWindowObject* > toolWindows,
-		const WindowsList & windows );
+		const WindowsList & windows,
+		QMenu * help );
 
 	//! \return File menu.
 	QMenu * fileMenu() const;
@@ -94,6 +95,9 @@ public:
 	//! \return List of all windows.
 	const WindowsList & windows() const;
 
+	//! \return Help menu.
+	QMenu * helpMenu() const;
+
 private:
 	//! File menu.
 	QMenu * m_fileMenu;
@@ -103,6 +107,8 @@ private:
 	QList< ToolWindowObject* > m_toolWindows;
 	//! All windows.
 	const WindowsList & m_windows;
+	//! Help menu.
+	QMenu * m_help;
 }; // class Menu
 
 

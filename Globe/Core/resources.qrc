@@ -38,5 +38,6 @@
         <file>img/open_22x22.png</file>
         <file>img/save_22x22.png</file>
         <file>img/export_22x22.png</file>
+        <file>img/qt.png</file>
     </qresource>
 </RCC>

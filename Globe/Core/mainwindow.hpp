@@ -135,6 +135,10 @@ private slots:
 	void shutdown();
 	//! Update window menu.
 	void updateWindowsMenu( QWidget * );
+	//! Show about dialog.
+	void about();
+	//! Show about Qt dialog.
+	void aboutQt();
 
 private:
 	//! Save configuration.

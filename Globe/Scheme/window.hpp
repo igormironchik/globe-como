@@ -100,6 +100,8 @@ private slots:
 	void textBlockEditMode();
 	//! Add new aggregate.
 	void aggregateEditMode();
+	//! Update windows menu.
+	void updateWindowsMenu( QWidget * );
 
 protected:
 	void closeEvent( QCloseEvent * event );

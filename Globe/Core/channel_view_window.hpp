@@ -76,6 +76,10 @@ private:
 	//! Restore header from configuration.
 	void restoreHeader( const ViewHeaderCfg & cfg );
 
+private slots:
+	//! Update windows menu.
+	void updateWindowsMenu( QWidget * );
+
 private:
 	Q_DISABLE_COPY( ChannelViewWindow )
 

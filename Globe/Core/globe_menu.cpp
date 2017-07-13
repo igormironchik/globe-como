@@ -181,7 +181,7 @@ WindowsMenu::initMenu()
 
 		QAction * a = m_menu->addAction( tr( "Main Window" ) );
 
-		m_map.insert( a, m_thisWindow );
+		m_map.insert( a, m_windows.m_main );
 	}
 }
 

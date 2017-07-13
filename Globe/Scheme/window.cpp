@@ -55,6 +55,7 @@ public:
 		:	m_view( 0 )
 		,	m_modeAction( 0 )
 		,	m_editModeToolBar( 0 )
+		,	m_winMenu( Q_NULLPTR )
 	{
 	}
 
@@ -66,6 +67,8 @@ public:
 	QAction * m_modeAction;
 	//! Tool bar with edit mode selectors.
 	QToolBar * m_editModeToolBar;
+	//! Windows menu.
+	QScopedPointer< WindowsMenu > m_winMenu;
 }; // class WindowPrivate
 
 
@@ -102,6 +105,10 @@ Window::initMenu( const Menu & menu )
 		toolsMenu->addAction( obj->menuEntity() );
 
 	menuBar()->addMenu( menu.settingsMenu() );
+
+	QMenu * win = menuBar()->addMenu( tr( "&Windows" ) );
+
+	d->m_winMenu.reset( new WindowsMenu( win, this, menu.windows(), this ) );
 }
 
 WindowCfg
@@ -236,6 +243,12 @@ Window::aggregateEditMode()
 }
 
 void
+Window::updateWindowsMenu( QWidget * )
+{
+	d->m_winMenu->update();
+}
+
+void
 Window::closeEvent( QCloseEvent * event )
 {
 	event->accept();
@@ -290,6 +303,11 @@ Window::init()
 	addToolBar( d->m_editModeToolBar );
 
 	d->m_editModeToolBar->hide();
+
+	connect( &MainWindow::instance(), &MainWindow::windowCreated,
+		this, &Window::updateWindowsMenu );
+	connect( &MainWindow::instance(), &MainWindow::windowClosed,
+		this, &Window::updateWindowsMenu );
 }
 
 void

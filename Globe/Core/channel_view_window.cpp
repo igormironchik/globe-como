@@ -48,6 +48,7 @@ class ChannelViewWindowPrivate {
 public:
 	ChannelViewWindowPrivate()
 		:	m_view( 0 )
+		,	m_winMenu( Q_NULLPTR )
 	{
 	}
 
@@ -55,6 +56,8 @@ public:
 	ChannelView * m_view;
 	//! Channel's name.
 	QString m_channelName;
+	//! Windows menu.
+	QScopedPointer< WindowsMenu > m_winMenu;
 }; // class ChannelViewWindowPrivate
 
 
@@ -213,6 +216,12 @@ ChannelViewWindow::restoreHeader( const ViewHeaderCfg & cfg )
 }
 
 void
+ChannelViewWindow::updateWindowsMenu( QWidget * )
+{
+	d->m_winMenu->update();
+}
+
+void
 ChannelViewWindow::setWindowCfg( const ChannelViewWindowCfg & c )
 {
 	restoreWindowState( c.windowStateCfg(), this );
@@ -235,6 +244,11 @@ ChannelViewWindow::init()
 	toolBar->addAction( d->m_view->selectAllAction() );
 	toolBar->addSeparator();
 	toolBar->addAction( d->m_view->fillColorAction() );
+
+	connect( &MainWindow::instance(), &MainWindow::windowCreated,
+		this, &ChannelViewWindow::updateWindowsMenu );
+	connect( &MainWindow::instance(), &MainWindow::windowClosed,
+		this, &ChannelViewWindow::updateWindowsMenu );
 }
 
 void
@@ -248,6 +262,10 @@ ChannelViewWindow::initMenu( const Menu & menu )
 		toolsMenu->addAction( obj->menuEntity() );
 
 	menuBar()->addMenu( menu.settingsMenu() );
+
+	QMenu * win = menuBar()->addMenu( tr( "&Windows" ) );
+
+	d->m_winMenu.reset( new WindowsMenu( win, this, menu.windows(), this ) );
 }
 
 void

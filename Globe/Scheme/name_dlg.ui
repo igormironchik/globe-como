@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Enter name of the aggregate...</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

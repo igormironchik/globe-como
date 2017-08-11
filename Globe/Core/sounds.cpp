@@ -56,6 +56,7 @@ public:
 	SoundsPrivate()
 		:	m_toolWindowObject( 0 )
 		,	m_level( None )
+		,	m_player( 0 )
 		,	m_tabs( 0 )
 		,	m_playedSoundsView( 0 )
 		,	m_disabledSoundsView( 0 )

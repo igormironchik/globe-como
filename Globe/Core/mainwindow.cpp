@@ -62,7 +62,7 @@ namespace Globe {
 
 class MainWindowPrivate {
 public:
-	MainWindowPrivate( MainWindow * parent )
+	explicit MainWindowPrivate( MainWindow * parent )
 		:	m_list( 0 )
 		,	m_cfgWasSaved( false )
 		,	m_confDialog( 0 )

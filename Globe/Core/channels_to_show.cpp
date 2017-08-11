@@ -34,7 +34,7 @@ namespace Globe {
 
 class ChannelsToShowPrivate {
 public:
-	ChannelsToShowPrivate( ShownChannels shownChannels )
+	explicit ChannelsToShowPrivate( ShownChannels shownChannels )
 		:	m_shownChannels( shownChannels )
 	{
 	}

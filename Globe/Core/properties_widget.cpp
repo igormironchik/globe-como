@@ -115,6 +115,8 @@ public:
 		:	m_valueType( valueType )
 		,	m_model( 0 )
 		,	m_contextMenuRequestedIndex( -1 )
+		,	m_expressionDelegate( 0 )
+		,	m_levelDelegate( 0 )
 	{
 	}
 

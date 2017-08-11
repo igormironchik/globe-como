@@ -49,6 +49,7 @@ public:
 		,	m_ipLabel( 0 )
 		,	m_timeoutWidget( 0 )
 		,	m_rateLabel( 0 )
+		,	m_rateUnits( 0 )
 		,	m_connectButton( 0 )
 		,	m_disconnectButton( 0 )
 		,	m_reconnectButton( 0 )

@@ -68,20 +68,6 @@ public:
 	{
 	}
 
-	PropertiesListModelData & operator = ( const PropertiesListModelData & other )
-	{
-		if( this != &other )
-		{
-			m_type = other.m_type;
-			m_expression = other.m_expression;
-			m_value = other.m_value;
-			m_level = other.m_level;
-			m_message = other.m_message;
-		}
-
-		return *this;
-	}
-
 	//! Condition type.
 	ConditionType m_type;
 	//! Expression type.

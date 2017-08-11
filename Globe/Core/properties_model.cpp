@@ -49,20 +49,6 @@ public:
 	{
 	}
 
-	PropertiesModelData & operator = ( const PropertiesModelData & other )
-	{
-		if( this != &other )
-		{
-			m_sourceName = other.m_sourceName;
-			m_typeName = other.m_typeName;
-			m_channelName = other.m_channelName;
-			m_valueType = other.m_valueType;
-			m_confFileName = other.m_confFileName;
-		}
-
-		return *this;
-	}
-
 	//! Source name.
 	QString m_sourceName;
 	//! Source type name

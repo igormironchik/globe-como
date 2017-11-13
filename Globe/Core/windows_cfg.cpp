@@ -94,34 +94,38 @@ static const QString schemeWindowTagName =
 	QLatin1String( "schemeWindow" );
 
 WindowsTag::WindowsTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "windowsCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "windowsCfg" ), true )
 	,	m_channelViewWindows( *this, channelViewWindowTagName, false )
 	,	m_schemeWindows( *this, schemeWindowTagName, false )
 {
 }
 
 WindowsTag::WindowsTag( const WindowsCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "windowsCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "windowsCfg" ), true )
 	,	m_channelViewWindows( *this, channelViewWindowTagName, false )
 	,	m_schemeWindows( *this, schemeWindowTagName, false )
 {
 	foreach( const ChannelViewWindowCfg & w, cfg.channelViewWindows() )
 	{
-		QtConfFile::TagVectorOfTags< ChannelViewWindowTag >::PointerToTag
-			t( new ChannelViewWindowTag( w, channelViewWindowTagName ) );
+		cfgfile::tag_vector_of_tags_t< ChannelViewWindowTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t
+				t( new ChannelViewWindowTag( w, channelViewWindowTagName ) );
 
-		m_channelViewWindows.setValue( t );
+		m_channelViewWindows.set_value( t );
 	}
 
 	foreach( const Scheme::WindowCfg & w, cfg.schemeWindows() )
 	{
-		QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag >::PointerToTag
-			t( new Scheme::WindowCfgTag( w, schemeWindowTagName ) );
+		cfgfile::tag_vector_of_tags_t< Scheme::WindowCfgTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t
+				t( new Scheme::WindowCfgTag( w, schemeWindowTagName ) );
 
-		m_schemeWindows.setValue( t );
+		m_schemeWindows.set_value( t );
 	}
 
-	setDefined();
+	set_defined();
 }
 
 WindowsCfg
@@ -131,8 +135,7 @@ WindowsTag::cfg() const
 
 	QList< ChannelViewWindowCfg > channelViewWindows;
 
-	foreach( QtConfFile::TagVectorOfTags< ChannelViewWindowTag >::PointerToTag t,
-		m_channelViewWindows.values() )
+	for( const auto & t : qAsConst( m_channelViewWindows.values() ) )
 	{
 		channelViewWindows.append( t->cfg() );
 	}
@@ -141,8 +144,7 @@ WindowsTag::cfg() const
 
 	QList< Scheme::WindowCfg > schemeWindows;
 
-	foreach( QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag >::PointerToTag t,
-		m_schemeWindows.values() )
+	for( const auto & t : qAsConst( m_schemeWindows.values() ) )
 	{
 		schemeWindows.append( t->cfg() );
 	}

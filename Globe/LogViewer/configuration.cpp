@@ -27,12 +27,13 @@
 #include <Globe/Core/application_cfg.hpp>
 #include <Globe/Core/db_cfg.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
-#include <QtConfFile/Exceptions>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QCoreApplication>
+#include <QTextCodec>
+#include <QFile>
 
 
 namespace LogViewer {
@@ -90,34 +91,74 @@ Configuration::readConfiguration()
 
 	Globe::ApplicationCfg appCfg;
 
-	try {
-		Globe::ApplicationCfgTag appCfgTag;
-
-		QtConfFile::readQtConfFile( appCfgTag,
-			m_cfgFileName, QTextCodec::codecForName( "UTF-8" ) );
-
-		appCfg = appCfgTag.cfg();
-	}
-	catch( const QtConfFile::Exception & x )
 	{
-		emit error( tr( "Unable to load Globe's configuration file...\n\n%1" )
-			.arg( x.whatAsQString() ) );
+		QFile file( m_cfgFileName );
 
-		return;
+		if( file.open( QIODevice::ReadOnly ) )
+		{
+			try {
+				Globe::ApplicationCfgTag appCfgTag;
+
+				QTextStream stream( &file );
+				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+				cfgfile::read_cfgfile( appCfgTag, stream, m_cfgFileName );
+
+				file.close();
+
+				appCfg = appCfgTag.cfg();
+			}
+			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+			{
+				file.close();
+
+				emit error( tr( "Unable to load Globe's configuration file...\n\n%1" )
+					.arg( x.desc() ) );
+
+				return;
+			}
+		}
+		else
+		{
+			emit error( tr( "Unable to load Globe's configuration file \"%1\"...\n\n"
+				"Unable to open file." )
+					.arg( m_cfgFileName ) );
+
+			return;
+		}
 	}
 
-	try {
-		Globe::DBTag tag;
+	QFile file( appCfg.dbCfgFile() );
 
-		QtConfFile::readQtConfFile( tag, appCfg.dbCfgFile(),
-			QTextCodec::codecForName( "UTF-8" ) );
-
-		m_dbFileName = tag.cfg().dbFileName();
-	}
-	catch( const QtConfFile::Exception & x )
+	if( file.open( QIODevice::ReadOnly ) )
 	{
-		emit error( tr( "Unable to read DB configuration...\n\n%1" )
-			.arg( x.whatAsQString() ) );
+		try {
+			Globe::DBTag tag;
+
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::read_cfgfile( tag, stream, appCfg.dbCfgFile() );
+
+			file.close();
+
+			m_dbFileName = tag.cfg().dbFileName();
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			emit error( tr( "Unable to read DB configuration...\n\n%1" )
+				.arg( x.desc() ) );
+
+			return;
+		}
+	}
+	else
+	{
+		emit error( tr( "Unable to read DB configuration \"%1\"...\n\n"
+			"Unable to open file." )
+				.arg( appCfg.dbCfgFile() ) );
 
 		return;
 	}

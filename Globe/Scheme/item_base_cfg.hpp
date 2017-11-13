@@ -23,10 +23,8 @@
 #ifndef GLOBE__SCHEME__ITEM_BASE_CFG_HPP__INCLUDED
 #define GLOBE__SCHEME__ITEM_BASE_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/ConstraintMinMax>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QPointF>
@@ -91,14 +89,14 @@ private:
 
 //! Tag that store QPointF.
 class QPointFTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	QPointFTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	QPointFTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	QPointFTag( const QPointF & point,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Point.
@@ -106,9 +104,9 @@ public:
 
 private:
 	//! X.
-	QtConfFile::TagScalar< double > m_x;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_x;
 	//! Y.
-	QtConfFile::TagScalar< double > m_y;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_y;
 }; // class QPointFTag
 
 
@@ -118,14 +116,14 @@ private:
 
 //! Tag that store QSizeF.
 class QSizeFTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	QSizeFTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	QSizeFTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	QSizeFTag( const QSizeF & size,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Size.
@@ -133,11 +131,11 @@ public:
 
 private:
 	//! Width.
-	QtConfFile::TagScalar< double > m_width;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_width;
 	//! Height.
-	QtConfFile::TagScalar< double > m_height;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_height;
 	//! Constraint.
-	QtConfFile::ConstraintMinMax< double > m_constraint;
+	cfgfile::constraint_min_max_t< double > m_constraint;
 }; // class QSizeFTag
 
 
@@ -147,14 +145,14 @@ private:
 
 //! Tag that store QFont.
 class QFontTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	QFontTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	QFontTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	QFontTag( const QFont & font,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! Set value.
@@ -165,13 +163,13 @@ public:
 
 private:
 	//! Font name.
-	QtConfFile::TagScalar< QString > m_name;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_name;
 	//! Point size.
-	QtConfFile::TagScalar< int > m_pointSize;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_pointSize;
 	//! Weight.
-	QtConfFile::TagScalar< int > m_weight;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_weight;
 	//! Is font italic?
-	QtConfFile::TagScalar< bool > m_italic;
+	cfgfile::tag_scalar_t< bool, cfgfile::qstring_trait_t > m_italic;
 }; // class QFontTag
 
 
@@ -181,14 +179,14 @@ private:
 
 //! Tag that store ItemBaseCfg.
 class ItemBaseCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	ItemBaseCfgTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	ItemBaseCfgTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	ItemBaseCfgTag( const ItemBaseCfg & cfg,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Cfg.

@@ -29,11 +29,8 @@
 #include <QDebug>
 #include <QTimer>
 
-// QtArg include.
-#include <QtArg/CmdLine>
-#include <QtArg/Arg>
-#include <QtArg/Exceptions>
-#include <QtArg/Help>
+// Args include.
+#include <Args/all.hpp>
 
 // LogViewer include.
 #include <LogViewer/configuration.hpp>
@@ -45,31 +42,25 @@ int main( int argc, char ** argv )
 	QString cfgFile = QLatin1String( "./etc/Globe.cfg" );;
 
 	try{
-		QtArgCmdLine cmdLine( argc, argv );
+		Args::CmdLine cmd;
 
-		QtArg cfgFileArg( QChar( 'c' ), QLatin1String( "conf-file" ),
-			QLatin1String( "Configuration file of the application." ),
-			false, true );
+		cmd.addArgWithFlagAndName( QChar( 'c' ), QLatin1String( "conf-file" ),
+				true, false, QLatin1String(
+					"Configuration file of the application." ) )
+			.addHelp( argv[ 0 ], QLatin1String( "Globe event's log viewer." ) );
 
-		QtArgHelp helpArg;
-		helpArg.printer()->setProgramDescription( "Globe event's log viewer." );
-		helpArg.printer()->setExecutableName( argv[0] );
+		cmd.parse( argc, argv );
 
-		cmdLine.addParseable( cfgFileArg );
-		cmdLine.addParseable( helpArg );
-
-		cmdLine.parse();
-
-		if( cfgFileArg.isDefined() )
-			cfgFile = cfgFileArg.value();
+		if( cmd.isDefined( QLatin1String( "-c" ) ) )
+			cfgFile = cmd.value( QLatin1String( "-c" ) );
 	}
-	catch( const QtArgHelpHasPrintedEx & )
+	catch( const Args::HelpHasBeenPrintedException & )
 	{
 		return 0;
 	}
-	catch( const QtArgBaseException & x )
+	catch( const Args::BaseException & x )
 	{
-		qDebug() << x.what();
+		qDebug() << x.what() << "\n";
 
 		return 1;
 	}

@@ -33,66 +33,67 @@ namespace Globe {
 
 PropertiesMapRecordTag::PropertiesMapRecordTag( const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			name, isMandatory )
 	,	m_sourceName( *this, QLatin1String( "sourceName" ), false )
 	,	m_typeName( *this, QLatin1String( "sourceTypeName" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), false )
 	,	m_valueType( *this, QLatin1String( "valueType" ), true )
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
-	m_valueTypeConstraint.addValue( comoSourceIntType );
-	m_valueTypeConstraint.addValue( comoSourceUIntType );
-	m_valueTypeConstraint.addValue( comoSourceLongLongType );
-	m_valueTypeConstraint.addValue( comoSourceULongLongType );
-	m_valueTypeConstraint.addValue( comoSourceDoubleType );
-	m_valueTypeConstraint.addValue( comoSourceStringType );
-	m_valueTypeConstraint.addValue( comoSourceDateTimeType );
-	m_valueTypeConstraint.addValue( comoSourceTimeType );
+	m_valueTypeConstraint.add_value( comoSourceIntType );
+	m_valueTypeConstraint.add_value( comoSourceUIntType );
+	m_valueTypeConstraint.add_value( comoSourceLongLongType );
+	m_valueTypeConstraint.add_value( comoSourceULongLongType );
+	m_valueTypeConstraint.add_value( comoSourceDoubleType );
+	m_valueTypeConstraint.add_value( comoSourceStringType );
+	m_valueTypeConstraint.add_value( comoSourceDateTimeType );
+	m_valueTypeConstraint.add_value( comoSourceTimeType );
 
-	m_valueType.setConstraint( &m_valueTypeConstraint );
+	m_valueType.set_constraint( &m_valueTypeConstraint );
 }
 
 PropertiesMapRecordTag::PropertiesMapRecordTag( const PropertiesKey & key,
 	const PropertiesValue & value, const QString & name )
-	:	QtConfFile::TagNoValue( name, false )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, false )
 	,	m_sourceName( *this, QLatin1String( "sourceName" ), false )
 	,	m_typeName( *this, QLatin1String( "sourceTypeName" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), false )
 	,	m_valueType( *this, QLatin1String( "valueType" ), true )
 	,	m_confFileName( *this, QLatin1String( "confFileName" ), true )
 {
-	m_valueTypeConstraint.addValue( comoSourceIntType );
-	m_valueTypeConstraint.addValue( comoSourceUIntType );
-	m_valueTypeConstraint.addValue( comoSourceLongLongType );
-	m_valueTypeConstraint.addValue( comoSourceULongLongType );
-	m_valueTypeConstraint.addValue( comoSourceDoubleType );
-	m_valueTypeConstraint.addValue( comoSourceStringType );
-	m_valueTypeConstraint.addValue( comoSourceDateTimeType );
-	m_valueTypeConstraint.addValue( comoSourceTimeType );
+	m_valueTypeConstraint.add_value( comoSourceIntType );
+	m_valueTypeConstraint.add_value( comoSourceUIntType );
+	m_valueTypeConstraint.add_value( comoSourceLongLongType );
+	m_valueTypeConstraint.add_value( comoSourceULongLongType );
+	m_valueTypeConstraint.add_value( comoSourceDoubleType );
+	m_valueTypeConstraint.add_value( comoSourceStringType );
+	m_valueTypeConstraint.add_value( comoSourceDateTimeType );
+	m_valueTypeConstraint.add_value( comoSourceTimeType );
 
-	m_valueType.setConstraint( &m_valueTypeConstraint );
+	m_valueType.set_constraint( &m_valueTypeConstraint );
 
 	if( !key.name().isEmpty() )
-		m_sourceName.setValue( key.name() );
+		m_sourceName.set_value( key.name() );
 
-	m_typeName.setValue( key.typeName() );
+	m_typeName.set_value( key.typeName() );
 
 	if( !key.channelName().isEmpty() )
-		m_channelName.setValue( key.channelName() );
+		m_channelName.set_value( key.channelName() );
 
-	m_valueType.setValue( comoSourceTypeToString( value.valueType() ) );
-	m_confFileName.setValue( value.confFileName() );
+	m_valueType.set_value( comoSourceTypeToString( value.valueType() ) );
+	m_confFileName.set_value( value.confFileName() );
 
-	setDefined();
+	set_defined();
 }
 
 PropertiesKey
 PropertiesMapRecordTag::key() const
 {
 	return PropertiesKey(
-		m_sourceName.isDefined() ? m_sourceName.value() : QString(),
+		m_sourceName.is_defined() ? m_sourceName.value() : QString(),
 		m_typeName.value(),
-		m_channelName.isDefined() ? m_channelName.value() : QString() );
+		m_channelName.is_defined() ? m_channelName.value() : QString() );
 }
 
 PropertiesValue
@@ -111,7 +112,8 @@ PropertiesMapRecordTag::value() const
 //
 
 PropertiesManagerTag::PropertiesManagerTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "propertiesManager" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "propertiesManager" ), true )
 	,	m_directory( *this, QLatin1String( "confDirectory" ), true )
 	,	m_map( *this, QLatin1String( "record" ), false )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
@@ -124,54 +126,59 @@ PropertiesManagerTag::PropertiesManagerTag( const QString & propsPath,
 	const PropertiesMap & exactlyThisTypeOfSourceMap,
 	const PropertiesMap & exactlyThisTypeOfSourceInAnyChannelMap,
 	const WindowStateCfg & windowState )
-	:	QtConfFile::TagNoValue( QLatin1String( "propertiesManager" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "propertiesManager" ), true )
 	,	m_directory( *this, QLatin1String( "confDirectory" ), true )
 	,	m_map( *this, QLatin1String( "record" ), false )
 	,	m_windowState( windowState, *this, QLatin1String( "windowState" ), true )
 {
-	m_directory.setValue( propsPath );
+	m_directory.set_value( propsPath );
 
 	for( PropertiesMap::ConstIterator it = exactlyThisSourceMap.begin(),
 		last = exactlyThisSourceMap.end(); it != last; ++it )
 	{
-		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
-			new PropertiesMapRecordTag( it.key(), it.value(),
-				QLatin1String( "record" ) ) );
+		cfgfile::tag_vector_of_tags_t< PropertiesMapRecordTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t p(
+				new PropertiesMapRecordTag( it.key(), it.value(),
+					QLatin1String( "record" ) ) );
 
-		m_map.setValue( p );
+		m_map.set_value( p );
 	}
 
 	for( PropertiesMap::ConstIterator it = exactlyThisSourceInAnyChannelMap.begin(),
 		last = exactlyThisSourceInAnyChannelMap.end(); it != last; ++it )
 	{
-		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
-			new PropertiesMapRecordTag( it.key(), it.value(),
-				QLatin1String( "record" ) ) );
+		cfgfile::tag_vector_of_tags_t< PropertiesMapRecordTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t p(
+				new PropertiesMapRecordTag( it.key(), it.value(),
+					QLatin1String( "record" ) ) );
 
-		m_map.setValue( p );
+		m_map.set_value( p );
 	}
 
 	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceMap.begin(),
 		last = exactlyThisTypeOfSourceMap.end(); it != last; ++it )
 	{
-		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
-			new PropertiesMapRecordTag( it.key(), it.value(),
-				QLatin1String( "record" ) ) );
+		cfgfile::tag_vector_of_tags_t< PropertiesMapRecordTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t p(
+				new PropertiesMapRecordTag( it.key(), it.value(),
+					QLatin1String( "record" ) ) );
 
-		m_map.setValue( p );
+		m_map.set_value( p );
 	}
 
 	for( PropertiesMap::ConstIterator it = exactlyThisTypeOfSourceInAnyChannelMap.begin(),
 		last = exactlyThisTypeOfSourceInAnyChannelMap.end(); it != last; ++it )
 	{
-		QtConfFile::TagVectorOfTags< PropertiesMapRecordTag >::PointerToTag p(
-			new PropertiesMapRecordTag( it.key(), it.value(),
-				QLatin1String( "record" ) ) );
+		cfgfile::tag_vector_of_tags_t< PropertiesMapRecordTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t p(
+				new PropertiesMapRecordTag( it.key(), it.value(),
+					QLatin1String( "record" ) ) );
 
-		m_map.setValue( p );
+		m_map.set_value( p );
 	}
 
-	setDefined();
+	set_defined();
 }
 
 QString

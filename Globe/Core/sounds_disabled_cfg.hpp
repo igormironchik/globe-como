@@ -26,12 +26,8 @@
 // Globe include.
 #include <Globe/Core/sounds_disabled_data.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintMinMax>
-#include <QtConfFile/TagVectorOfTags>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -66,14 +62,14 @@ private:
 
 //! Tag with date and time.
 class DateTimeTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	DateTimeTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	DateTimeTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	DateTimeTag( const QDateTime & dt,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Date and time.
@@ -81,25 +77,25 @@ public:
 
 private:
 	//! Year.
-	QtConfFile::TagScalar< int > m_year;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_year;
 	//! Year's constraint.
-	QtConfFile::ConstraintMinMax< int > m_yearConstraint;
+	cfgfile::constraint_min_max_t< int > m_yearConstraint;
 	//! Month.
-	QtConfFile::TagScalar< int > m_month;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_month;
 	//! Month's constraint.
-	QtConfFile::ConstraintMinMax< int > m_monthConstraint;
+	cfgfile::constraint_min_max_t< int > m_monthConstraint;
 	//! Day.
-	QtConfFile::TagScalar< int > m_day;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_day;
 	//! Day's constraint.
-	QtConfFile::ConstraintMinMax< int > m_dayConstraint;
+	cfgfile::constraint_min_max_t< int > m_dayConstraint;
 	//! Hour.
-	QtConfFile::TagScalar< int > m_hour;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_hour;
 	//! Hour's constraint.
-	QtConfFile::ConstraintMinMax< int > m_hourConstraint;
+	cfgfile::constraint_min_max_t< int > m_hourConstraint;
 	//! Minute.
-	QtConfFile::TagScalar< int > m_minute;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_minute;
 	//! Minute's constraint.
-	QtConfFile::ConstraintMinMax< int > m_minuteConstraint;
+	cfgfile::constraint_min_max_t< int > m_minuteConstraint;
 }; // class DateTimeTag
 
 
@@ -109,7 +105,7 @@ private:
 
 //! Tag with Como source and date and time.
 class SourceAndDateTimeTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit SourceAndDateTimeTag( const QString & name,
@@ -123,13 +119,13 @@ public:
 
 private:
 	//! Type of the source.
-	QtConfFile::TagScalar< QString > m_type;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_type;
 	//! Type of the source constraint.
-	QtConfFile::ConstraintOneOf< QString > m_typeConstraint;
+	cfgfile::constraint_one_of_t< QString > m_typeConstraint;
 	//! Name of the source.
-	QtConfFile::TagScalar< QString > m_name;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_name;
 	//! Type name of the source.
-	QtConfFile::TagScalar< QString > m_typeName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_typeName;
 	//! Date and time.
 	DateTimeTag m_dt;
 }; // class SourceAndDateTimeTag
@@ -141,7 +137,7 @@ private:
 
 //! Disabled sounds in specified channel.
 class DisabledSoundsInChannelTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
 	explicit DisabledSoundsInChannelTag( const QString & name,
@@ -160,7 +156,8 @@ public:
 
 private:
 	//! Disabled sounds in channel.
-	QtConfFile::TagVectorOfTags< SourceAndDateTimeTag > m_disabledSounds;
+	cfgfile::tag_vector_of_tags_t< SourceAndDateTimeTag,
+		cfgfile::qstring_trait_t > m_disabledSounds;
 }; // class DisabledSoundsInChannelTag
 
 
@@ -170,7 +167,7 @@ private:
 
 //! Tag with configuration of disabled sounds.
 class DisabledSoundsCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	DisabledSoundsCfgTag();
@@ -182,7 +179,8 @@ public:
 
 private:
 	//! Disabled sounds.
-	QtConfFile::TagVectorOfTags< DisabledSoundsInChannelTag > m_map;
+	cfgfile::tag_vector_of_tags_t< DisabledSoundsInChannelTag,
+		cfgfile::qstring_trait_t > m_map;
 }; // class DisabledSoundsCfgTag
 
 } /* namespace Globe */

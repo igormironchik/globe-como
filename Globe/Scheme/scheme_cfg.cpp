@@ -141,7 +141,8 @@ SchemeCfg::availableSources() const
 
 
 SchemeCfgTag::SchemeCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >(
+			QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
@@ -152,7 +153,8 @@ SchemeCfgTag::SchemeCfgTag()
 }
 
 SchemeCfgTag::SchemeCfgTag( const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			name, isMandatory )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
@@ -164,7 +166,8 @@ SchemeCfgTag::SchemeCfgTag( const QString & name, bool isMandatory )
 
 SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			name, isMandatory )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
@@ -176,7 +179,8 @@ SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg, const QString & name,
 }
 
 SchemeCfgTag::SchemeCfgTag( const SchemeCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "scheme" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "scheme" ), true )
 	,	m_sources( *this, QLatin1String( "source" ), false )
 	,	m_texts( *this, QLatin1String( "text" ), false )
 	,	m_aggregates( *this, QLatin1String( "aggregate" ), false )
@@ -194,8 +198,7 @@ SchemeCfgTag::cfg() const
 
 	QList< SourceCfg > sources;
 
-	foreach( QtConfFile::TagVectorOfTags< SourceCfgTag >::PointerToTag t,
-		m_sources.values() )
+	for( const auto & t : qAsConst( m_sources.values() ) )
 	{
 		sources.append( t->sourceCfg() );
 	}
@@ -204,8 +207,7 @@ SchemeCfgTag::cfg() const
 
 	QList< TextCfg > texts;
 
-	foreach( QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag t,
-		m_texts.values() )
+	for( const auto & t : qAsConst( m_texts.values() ) )
 	{
 		texts.append( t->textCfg() );
 	}
@@ -221,7 +223,7 @@ SchemeCfgTag::cfg() const
 
 	cfg.setAggregates( aggregates );
 
-	if( m_name.isDefined() )
+	if( m_name.is_defined() )
 	{
 		cfg.setName( m_name.value() );
 		cfg.setPos( m_pos.point() );
@@ -234,34 +236,37 @@ SchemeCfgTag::cfg() const
 void
 SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
 {
-	foreach( const SourceCfg & s, cfg.sources() )
+	for( const auto & s : qAsConst( cfg.sources() ) )
 	{
-		QtConfFile::TagVectorOfTags< SourceCfgTag >::PointerToTag
-			t( new SourceCfgTag( s, QLatin1String( "source" ) ) );
+		cfgfile::tag_vector_of_tags_t< SourceCfgTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t
+				t( new SourceCfgTag( s, QLatin1String( "source" ) ) );
 
-		m_sources.setValue( t );
+		m_sources.set_value( t );
 	}
 
-	foreach( const TextCfg & c, cfg.texts() )
+	for( const auto & c : qAsConst( cfg.texts() ) )
 	{
-		QtConfFile::TagVectorOfTags< TextCfgTag >::PointerToTag
-			t( new TextCfgTag( c, QLatin1String( "text" ) ) );
+		cfgfile::tag_vector_of_tags_t< TextCfgTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t
+				t( new TextCfgTag( c, QLatin1String( "text" ) ) );
 
-		m_texts.setValue( t );
+		m_texts.set_value( t );
 	}
 
 	for( const auto & c : qAsConst( cfg.aggregates() ) )
 	{
-		QtConfFile::TagVectorOfTags< SchemeCfgTag >::PointerToTag
-			t( new SchemeCfgTag( c, QLatin1String( "aggregate" ) ) );
+		cfgfile::tag_vector_of_tags_t< SchemeCfgTag,
+			cfgfile::qstring_trait_t >::ptr_to_tag_t
+				t( new SchemeCfgTag( c, QLatin1String( "aggregate" ) ) );
 
-		m_aggregates.setValue( t );
+		m_aggregates.set_value( t );
 	}
 
 	if( !cfg.name().isEmpty() )
-		m_name.setValue( cfg.name() );
+		m_name.set_value( cfg.name() );
 
-	setDefined();
+	set_defined();
 }
 
 } /* namespace Scheme */

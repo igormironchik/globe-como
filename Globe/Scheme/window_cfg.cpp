@@ -95,7 +95,7 @@ WindowCfg::setWindowStateCfg( const WindowStateCfg & cfg )
 //
 
 WindowCfgTag::WindowCfgTag( const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_schemeCfgFile( *this, QLatin1String( "schemeCfgFile" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 {
@@ -103,14 +103,14 @@ WindowCfgTag::WindowCfgTag( const QString & name, bool isMandatory )
 
 WindowCfgTag::WindowCfgTag( const WindowCfg & cfg,
 	const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_schemeCfgFile( *this, QLatin1String( "schemeCfgFile" ), true )
 	,	m_windowState( cfg.windowStateCfg(), *this,
 			QLatin1String( "windowState" ), true )
 {
-	m_schemeCfgFile.setValue( cfg.schemeCfgFile() );
+	m_schemeCfgFile.set_value( cfg.schemeCfgFile() );
 
-	setDefined();
+	set_defined();
 }
 
 WindowCfgTag::~WindowCfgTag()

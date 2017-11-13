@@ -25,12 +25,15 @@
 #include <Globe/Core/color_for_level_cfg.hpp>
 #include <Globe/Core/log.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QMessageBox>
 #include <QCoreApplication>
+#include <QFile>
+#include <QTextStream>
+#include <QTextCodec>
 
 
 namespace Globe {
@@ -161,28 +164,51 @@ ColorForLevel::setColors( const QColor & none,
 void
 ColorForLevel::saveCfg( const QString & fileName )
 {
-	try {
-		ColorForLevelTag tag( this );
+	QFile file( fileName );
 
-		QtConfFile::writeQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		try {
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Colors configuration saved into file \"%1\"." )
-				.arg( fileName ) );
+			ColorForLevelTag tag( this );
+
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Colors configuration saved into file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to save colors configuration to file \"%1\".\n"
+					"%2" )
+						.arg( fileName )
+						.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to save colors correspondence configuration..." ),
+				tr( "Unable to save colors correspondence configuration...\n\n%1" )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
-			QString( "Unable to save colors configuration to file \"%1\".\n"
-				"%2" )
-					.arg( fileName )
-					.arg( x.whatAsQString() ) );
+			QString( "Unable to save colors configuration to file \"%1\"" )
+					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save colors correspondence configuration..." ),
-			tr( "Unable to save colors correspondence configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to save colors correspondence configuration...\n\n"
+				"Unable to open file \"%1\"" )
+					.arg( fileName ) );
 	}
 }
 
@@ -191,32 +217,56 @@ ColorForLevel::readCfg( const QString & fileName )
 {
 	ColorForLevelTag tag;
 
-	try {
-		QtConfFile::readQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Colors configuration loaded from file \"%1\"." )
-				.arg( fileName ) );
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		try {
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::read_cfgfile( tag, stream, fileName );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Colors configuration loaded from file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to read colors configuration from file "
+					"\"%1\".\n"
+					"%2" )
+						.arg( fileName )
+						.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to read colors correspondence configuration..." ),
+				tr( "Unable to read colors correspondence configuration...\n\n%1" )
+					.arg( x.desc() ) );
+
+			return;
+		}
+
+		tag.initColorForLevel( this );
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to read colors configuration from file "
-				"\"%1\".\n"
-				"%2" )
-					.arg( fileName )
-					.arg( x.whatAsQString() ) );
+				"\"%1\"" )
+					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read colors correspondence configuration..." ),
-			tr( "Unable to read colors correspondence configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
-
-		return;
+			tr( "Unable to read colors correspondence configuration...\n\n"
+				"Unable to open file \"%1\"" )
+				.arg( fileName ) );
 	}
-
-	tag.initColorForLevel( this );
 }
 
 } /* namespace Globe */

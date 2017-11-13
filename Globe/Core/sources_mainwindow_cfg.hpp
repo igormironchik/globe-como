@@ -23,9 +23,8 @@
 #ifndef GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
 #define GLOBE__SOURCES_MAINWINDOW_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/window_state_cfg.hpp>
@@ -39,7 +38,7 @@ namespace Globe {
 
 //! Tag with configuration of the sources main window.
 class SourcesMainWindowTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	SourcesMainWindowTag();
@@ -55,7 +54,7 @@ public:
 
 private:
 	//! Channel's name.
-	QtConfFile::TagScalar< QString > m_channelName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_channelName;
 	//! State of the window.
 	WindowStateCfgTag m_windowState;
 }; // class SourcesMainWindowTag

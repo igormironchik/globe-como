@@ -26,10 +26,8 @@
 // Qt include.
 #include <QString>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintMinMax>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/export.hpp>
@@ -146,7 +144,7 @@ private:
 
 //! Tag with the application's configuration.
 class CORE_EXPORT ApplicationCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	ApplicationCfgTag();
@@ -158,29 +156,29 @@ public:
 
 private:
 	//! File name of the main window configuration.
-	QtConfFile::TagScalar< QString > m_mainWindowCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_mainWindowCfgFileName;
 	//! File name of the channels configuration.
-	QtConfFile::TagScalar< QString > m_channelsCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_channelsCfgFileName;
 	//! File name of the properties configuration.
-	QtConfFile::TagScalar< QString > m_propertiesCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_propertiesCfgFileName;
 	//! File name of the sources main window configuration.
-	QtConfFile::TagScalar< QString > m_sourcesMainWindowCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_sourcesMainWindowCfgFileName;
 	//! File name of the windows configuration.
-	QtConfFile::TagScalar< QString > m_windowsCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_windowsCfgFileName;
 	//! File name of the colors correspondence configuration.
-	QtConfFile::TagScalar< QString > m_colorsCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_colorsCfgFileName;
 	//! File name of the DB configuration.
-	QtConfFile::TagScalar< QString > m_dbCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_dbCfgFileName;
 	//! File name of the log configuration.
-	QtConfFile::TagScalar< QString > m_logCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_logCfgFileName;
 	//! File name of the event's log window configuration.
-	QtConfFile::TagScalar< QString > m_logEventWindowCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_logEventWindowCfgFileName;
 	//! File name of the sounds configuration.
-	QtConfFile::TagScalar< QString > m_soundsCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_soundsCfgFileName;
 	//!File name of the disabled sounds configuration.
-	QtConfFile::TagScalar< QString > m_disabledSoundsCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_disabledSoundsCfgFileName;
 	//! File name of the sources log window configuration.
-	QtConfFile::TagScalar< QString > m_sourcesLogWindowCfgFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_sourcesLogWindowCfgFileName;
 }; // class ApplicationCfgTag
 
 } /* namespace Globe */

@@ -32,7 +32,8 @@ namespace Globe {
 //
 
 ColorForLevelTag::ColorForLevelTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "colors" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "colors" ), true )
 	,	m_noneColor( *this, QLatin1String( "noneColor" ), true )
 	,	m_criticalColor( *this, QLatin1String( "criticalColor" ), true )
 	,	m_errorColor( *this, QLatin1String( "errorColor" ), true )
@@ -45,7 +46,8 @@ ColorForLevelTag::ColorForLevelTag()
 }
 
 ColorForLevelTag::ColorForLevelTag( ColorForLevel * colorForLevel )
-	:	QtConfFile::TagNoValue( QLatin1String( "colors" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "colors" ), true )
 	,	m_noneColor( *this, QLatin1String( "noneColor" ), true )
 	,	m_criticalColor( *this, QLatin1String( "criticalColor" ), true )
 	,	m_errorColor( *this, QLatin1String( "errorColor" ), true )
@@ -55,16 +57,16 @@ ColorForLevelTag::ColorForLevelTag( ColorForLevel * colorForLevel )
 	,	m_deregisteredColor( *this, QLatin1String( "deregisteredColor" ), true )
 	,	m_disconnectedColor( *this, QLatin1String( "disconnectedColor" ), true )
 {
-	m_noneColor.setValue( colorForLevel->color( None ).name() );
-	m_criticalColor.setValue( colorForLevel->color( Critical ).name() );
-	m_errorColor.setValue( colorForLevel->color( Error ).name() );
-	m_warningColor.setValue( colorForLevel->color( Warning ).name() );
-	m_debugColor.setValue( colorForLevel->color( Debug ).name() );
-	m_infoColor.setValue( colorForLevel->color( Info ).name() );
-	m_deregisteredColor.setValue( colorForLevel->deregisteredColor().name() );
-	m_disconnectedColor.setValue( colorForLevel->disconnectedColor().name() );
+	m_noneColor.set_value( colorForLevel->color( None ).name() );
+	m_criticalColor.set_value( colorForLevel->color( Critical ).name() );
+	m_errorColor.set_value( colorForLevel->color( Error ).name() );
+	m_warningColor.set_value( colorForLevel->color( Warning ).name() );
+	m_debugColor.set_value( colorForLevel->color( Debug ).name() );
+	m_infoColor.set_value( colorForLevel->color( Info ).name() );
+	m_deregisteredColor.set_value( colorForLevel->deregisteredColor().name() );
+	m_disconnectedColor.set_value( colorForLevel->disconnectedColor().name() );
 
-	setDefined();
+	set_defined();
 }
 
 void

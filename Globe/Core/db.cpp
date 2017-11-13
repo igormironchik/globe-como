@@ -26,13 +26,14 @@
 #include <Globe/Core/utils.hpp>
 #include <Globe/Core/log.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QMessageBox>
 #include <QFileInfo>
 #include <QCoreApplication>
+#include <QTextCodec>
 
 
 namespace Globe {
@@ -125,31 +126,64 @@ DB::readCfg( const QString & fileName )
 {
 	DBTag tag;
 
-	try {
-		QtConfFile::readQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Database configuration loaded from file \"%1\"." )
-				.arg( fileName ) );
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		try {
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
-		setCfg( tag.cfg() );
+			cfgfile::read_cfgfile( tag, stream, fileName );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Database configuration loaded from file \"%1\"." )
+					.arg( fileName ) );
+
+			setCfg( tag.cfg() );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to read database configuration "
+					"from file \"%1\".\n"
+					"%2" )
+						.arg( fileName )
+						.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to read DB configuration..." ),
+				tr( "Unable to read DB configuration...\n\n"
+					"%1\n\n"
+					"Default database will be used: \"%2\"." )
+						.arg( x.desc() )
+						.arg( defaultDbFile )
+			);
+
+			DBCfg cfg;
+
+			cfg.setDbFileName( defaultDbFile );
+
+			setCfg( cfg );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to read database configuration "
 				"from file \"%1\".\n"
-				"%2" )
-					.arg( fileName )
-					.arg( x.whatAsQString() ) );
+				"Unable to open file." )
+					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read DB configuration..." ),
 			tr( "Unable to read DB configuration...\n\n"
-				"%1\n\n"
+				"Unable to open file.\n\n"
 				"Default database will be used: \"%2\"." )
-					.arg( x.whatAsQString() )
 					.arg( defaultDbFile )
 		);
 
@@ -164,32 +198,56 @@ DB::readCfg( const QString & fileName )
 void
 DB::saveCfg( const QString & fileName )
 {
-	try {
-		DBCfg cfg;
-		cfg.setDbFileName( d->m_dbFileName );
+	QFile file( fileName );
 
-		DBTag tag( cfg );
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		try {
+			DBCfg cfg;
+			cfg.setDbFileName( d->m_dbFileName );
 
-		QtConfFile::writeQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+			DBTag tag( cfg );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Database configuration saved into file \"%1\"." )
-				.arg( fileName ) );
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Database configuration saved into file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to save database configuration to file "
+					"\"%1\".\n"
+					"%2" )
+						.arg( fileName )
+						.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to save DB configuration..." ),
+				tr( "Unable to save DB configuration...\n\n%1" )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to save database configuration to file "
 				"\"%1\".\n"
-				"%2" )
-					.arg( fileName )
-					.arg( x.whatAsQString() ) );
+				"Unable to open file." )
+					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save DB configuration..." ),
-			tr( "Unable to save DB configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to save DB configuration...\n\n"
+				"Unable to open file." ) );
 	}
 }
 

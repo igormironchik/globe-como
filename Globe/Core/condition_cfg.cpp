@@ -30,43 +30,45 @@ namespace Globe {
 // OtherwiseTag
 //
 
-OtherwiseTag::OtherwiseTag( QtConfFile::Tag & owner, const QString & name,
+OtherwiseTag::OtherwiseTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_level( *this, QLatin1String( "level" ), true )
 	,	m_message( *this, QLatin1String( "message" ), false )
 {
-	m_levelConstraint.addValue( criticalLevelString );
-	m_levelConstraint.addValue( errorLevelString );
-	m_levelConstraint.addValue( warningLevelString );
-	m_levelConstraint.addValue( debugLevelString );
-	m_levelConstraint.addValue( infoLevelString );
-	m_levelConstraint.addValue( noneLevelString );
+	m_levelConstraint.add_value( criticalLevelString );
+	m_levelConstraint.add_value( errorLevelString );
+	m_levelConstraint.add_value( warningLevelString );
+	m_levelConstraint.add_value( debugLevelString );
+	m_levelConstraint.add_value( infoLevelString );
+	m_levelConstraint.add_value( noneLevelString );
 
-	m_level.setConstraint( &m_levelConstraint );
+	m_level.set_constraint( &m_levelConstraint );
 }
 
-OtherwiseTag::OtherwiseTag( const Condition & cond, QtConfFile::Tag & owner,
+OtherwiseTag::OtherwiseTag( const Condition & cond, cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 	const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_level( *this, QLatin1String( "level" ), true )
 	,	m_message( *this, QLatin1String( "message" ), false )
 {
-	m_levelConstraint.addValue( criticalLevelString );
-	m_levelConstraint.addValue( errorLevelString );
-	m_levelConstraint.addValue( warningLevelString );
-	m_levelConstraint.addValue( debugLevelString );
-	m_levelConstraint.addValue( infoLevelString );
-	m_levelConstraint.addValue( noneLevelString );
+	m_levelConstraint.add_value( criticalLevelString );
+	m_levelConstraint.add_value( errorLevelString );
+	m_levelConstraint.add_value( warningLevelString );
+	m_levelConstraint.add_value( debugLevelString );
+	m_levelConstraint.add_value( infoLevelString );
+	m_levelConstraint.add_value( noneLevelString );
 
-	m_level.setConstraint( &m_levelConstraint );
+	m_level.set_constraint( &m_levelConstraint );
 
-	m_level.setValue( levelToString( cond.level() ) );
+	m_level.set_value( levelToString( cond.level() ) );
 
 	if( !cond.message().isEmpty() )
-		m_message.setValue( cond.message() );
+		m_message.set_value( cond.message() );
 
-	setDefined();
+	set_defined();
 }
 
 Condition
@@ -76,7 +78,7 @@ OtherwiseTag::value() const
 
 	c.setLevel( levelFromString( m_level.value() ) );
 
-	if( m_message.isDefined() )
+	if( m_message.is_defined() )
 		c.setMessage( m_message.value() );
 
 	return c;

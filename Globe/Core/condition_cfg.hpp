@@ -26,11 +26,8 @@
 // Globe include.
 #include <Globe/Core/condition.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintOneOf>
-#include <QtConfFile/Exceptions>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -42,27 +39,30 @@ namespace Globe {
 //! Tag with logical relation.
 template< class T >
 class IfStatementTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
-	IfStatementTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory )
-		:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
-	{
-	}
-
-	IfStatementTag( const QVariant & value, QtConfFile::Tag & owner,
+	IfStatementTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 		const QString & name, bool isMandatory )
-		:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
+		:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+				owner, name, isMandatory )
 	{
-		setValue( value.toString() );
 	}
 
-	void onFinish( const QtConfFile::ParserInfo & info )
+	IfStatementTag( const QVariant & value,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory )
+		:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+				owner, name, isMandatory )
+	{
+		set_value( value.toString() );
+	}
+
+	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 	{
 		initValue( info );
 
-		QtConfFile::TagScalar< QString >::onFinish( info );
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::on_finish( info );
 	}
 
 	QVariant value() const
@@ -72,7 +72,7 @@ public:
 
 private:
 	//! Initialize value.
-	void initValue( const QtConfFile::ParserInfo & info );
+	void initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info );
 
 private:
 	//! Value.
@@ -81,139 +81,147 @@ private:
 
 template<>
 inline void
-IfStatementTag< int >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< int >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	bool ok = false;
 
 	m_value = str.toInt( &ok );
 
 	if( !ok )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to integer." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< uint >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< uint >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	bool ok = false;
 
 	m_value = str.toUInt( &ok );
 
 	if( !ok )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to unsigned integer." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< qlonglong >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< qlonglong >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	bool ok = false;
 
 	m_value = str.toLongLong( &ok );
 
 	if( !ok )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to long long." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< qulonglong >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< qulonglong >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	bool ok = false;
 
 	m_value = str.toULongLong( &ok );
 
 	if( !ok )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to unsigned long long." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< double >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< double >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	bool ok = false;
 
 	m_value = str.toDouble( &ok );
 
 	if( !ok )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to double." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< QString >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< QString >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
 	Q_UNUSED( info )
 
-	m_value = QtConfFile::TagScalar< QString >::value();
+	m_value =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 }
 
 template<>
 inline void
-IfStatementTag< QDateTime >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< QDateTime >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	m_value = QDateTime::fromString( str );
 
 	if( !m_value.isValid() )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to date and time." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
 template<>
 inline void
-IfStatementTag< QTime >::initValue( const QtConfFile::ParserInfo & info )
+IfStatementTag< QTime >::initValue( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
-	const QString str = QtConfFile::TagScalar< QString >::value();
+	const QString str =
+		cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >::value();
 
 	m_value = QTime::fromString( str );
 
 	if( !m_value.isValid() )
-		throw QtConfFile::Exception( QString(
+		throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString(
 			"Invalid value in file \"%1\" on line %2.\n"
 			"Can't convert \"%3\" to time." )
-				.arg( info.fileName() )
-				.arg( info.lineNumber() )
+				.arg( info.file_name() )
+				.arg( info.line_number() )
 				.arg( str ) );
 }
 
@@ -264,11 +272,11 @@ static inline Level levelFromString( const QString & str )
 //! Configuration's tag for condition.
 template< class T >
 class ConditionTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit ConditionTag( const QString & name, bool isMandatory = false )
-		:	QtConfFile::TagNoValue( name, isMandatory )
+		:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 		,	m_greaterOrEqual( *this, QLatin1String( ">=" ), false )
 		,	m_greater( *this, QLatin1String( ">" ), false )
 		,	m_equal( *this, QLatin1String( "==" ), false )
@@ -277,19 +285,19 @@ public:
 		,	m_level( *this, QLatin1String( "level" ), true )
 		,	m_message( *this, QLatin1String( "message" ), false )
 	{
-		m_levelConstraint.addValue( criticalLevelString );
-		m_levelConstraint.addValue( errorLevelString );
-		m_levelConstraint.addValue( warningLevelString );
-		m_levelConstraint.addValue( debugLevelString );
-		m_levelConstraint.addValue( infoLevelString );
-		m_levelConstraint.addValue( noneLevelString );
+		m_levelConstraint.add_value( criticalLevelString );
+		m_levelConstraint.add_value( errorLevelString );
+		m_levelConstraint.add_value( warningLevelString );
+		m_levelConstraint.add_value( debugLevelString );
+		m_levelConstraint.add_value( infoLevelString );
+		m_levelConstraint.add_value( noneLevelString );
 
-		m_level.setConstraint( &m_levelConstraint );
+		m_level.set_constraint( &m_levelConstraint );
 	}
 
 	ConditionTag( const Condition & cond, const QString & name,
 		bool isMandatory = false )
-		:	QtConfFile::TagNoValue( name, isMandatory )
+		:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 		,	m_greaterOrEqual( *this, QLatin1String( ">=" ), false )
 		,	m_greater( *this, QLatin1String( ">" ), false )
 		,	m_equal( *this, QLatin1String( "==" ), false )
@@ -298,39 +306,39 @@ public:
 		,	m_level( *this, QLatin1String( "level" ), true )
 		,	m_message( *this, QLatin1String( "message" ), false )
 	{
-		m_levelConstraint.addValue( criticalLevelString );
-		m_levelConstraint.addValue( errorLevelString );
-		m_levelConstraint.addValue( warningLevelString );
-		m_levelConstraint.addValue( debugLevelString );
-		m_levelConstraint.addValue( infoLevelString );
-		m_levelConstraint.addValue( noneLevelString );
+		m_levelConstraint.add_value( criticalLevelString );
+		m_levelConstraint.add_value( errorLevelString );
+		m_levelConstraint.add_value( warningLevelString );
+		m_levelConstraint.add_value( debugLevelString );
+		m_levelConstraint.add_value( infoLevelString );
+		m_levelConstraint.add_value( noneLevelString );
 
-		m_level.setConstraint( &m_levelConstraint );
+		m_level.set_constraint( &m_levelConstraint );
 
 		switch( cond.type() )
 		{
-			case IfLessOrEqual : m_lessOrEqual.setValue( cond.value().toString() );
+			case IfLessOrEqual : m_lessOrEqual.set_value( cond.value().toString() );
 				break;
-			case IfLess : m_less.setValue( cond.value().toString() );
+			case IfLess : m_less.set_value( cond.value().toString() );
 				break;
-			case IfEqual : m_equal.setValue( cond.value().toString() );
+			case IfEqual : m_equal.set_value( cond.value().toString() );
 				break;
-			case IfGreater : m_greater.setValue( cond.value().toString() );
+			case IfGreater : m_greater.set_value( cond.value().toString() );
 				break;
-			case IfGreaterOrEqual : m_greaterOrEqual.setValue( cond.value().toString() );
+			case IfGreaterOrEqual : m_greaterOrEqual.set_value( cond.value().toString() );
 				break;
 		}
 
-		m_level.setValue( levelToString( cond.level() ) );
+		m_level.set_value( levelToString( cond.level() ) );
 
 		if( !cond.message().isEmpty() )
-			m_message.setValue( cond.message() );
+			m_message.set_value( cond.message() );
 
-		setDefined();
+		set_defined();
 	}
 
 	//! Called when tag parsing finished.
-	void onFinish( const QtConfFile::ParserInfo & info )
+	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 	{
 		bool relationDefined = false;
 		bool moreThanOneRelationDefined = false;
@@ -376,19 +384,21 @@ public:
 		}
 
 		if( !relationDefined )
-			throw QtConfFile::Exception( QString( "Undefined tag with logical relation. "
-				"Where parent is \"%1\". In file \"%2\" on line %3." )
-					.arg( name() )
-					.arg( info.fileName() )
-					.arg( info.lineNumber() ) );
+			throw cfgfile::exception_t< cfgfile::qstring_trait_t >(
+				QString( "Undefined tag with logical relation. "
+					"Where parent is \"%1\". In file \"%2\" on line %3." )
+						.arg( name() )
+						.arg( info.file_name() )
+						.arg( info.line_number() ) );
 		else if( moreThanOneRelationDefined )
-			throw QtConfFile::Exception( QString( "More than one logical relation defined. "
-				"Where parent is \"%1\". In file \"%2\" on line %3." )
-					.arg( name() )
-					.arg( info.fileName() )
-					.arg( info.lineNumber() ) );
+			throw cfgfile::exception_t< cfgfile::qstring_trait_t >(
+				QString( "More than one logical relation defined. "
+					"Where parent is \"%1\". In file \"%2\" on line %3." )
+						.arg( name() )
+						.arg( info.file_name() )
+						.arg( info.line_number() ) );
 
-		QtConfFile::TagNoValue::onFinish( info );
+		cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >::on_finish( info );
 	}
 
 	//! \return Condition.
@@ -396,27 +406,27 @@ public:
 	{
 		Condition c;
 
-		if( m_lessOrEqual.isDefined() )
+		if( m_lessOrEqual.is_defined() )
 		{
 			c.setType( IfLessOrEqual );
 			c.setValue( m_lessOrEqual.value() );
 		}
-		else if( m_less.isDefined() )
+		else if( m_less.is_defined() )
 		{
 			c.setType( IfLess );
 			c.setValue( m_less.value() );
 		}
-		else if( m_equal.isDefined() )
+		else if( m_equal.is_defined() )
 		{
 			c.setType( IfEqual );
 			c.setValue( m_equal.value() );
 		}
-		else if( m_greater.isDefined() )
+		else if( m_greater.is_defined() )
 		{
 			c.setType( IfGreater );
 			c.setValue( m_greater.value() );
 		}
-		else if( m_greaterOrEqual.isDefined() )
+		else if( m_greaterOrEqual.is_defined() )
 		{
 			c.setType( IfGreaterOrEqual );
 			c.setValue( m_greaterOrEqual.value() );
@@ -424,7 +434,7 @@ public:
 
 		c.setLevel( levelFromString( m_level.value() ) );
 
-		if( m_message.isDefined() )
+		if( m_message.is_defined() )
 			c.setMessage( m_message.value() );
 
 		return c;
@@ -442,11 +452,11 @@ private:
 	//! If less or equal.
 	IfStatementTag< T > m_lessOrEqual;
 	//! Level.
-	QtConfFile::TagScalar< QString > m_level;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_level;
 	//! Constraint for level.
-	QtConfFile::ConstraintOneOf< QString > m_levelConstraint;
+	cfgfile::constraint_one_of_t< QString > m_levelConstraint;
 	//! Message.
-	QtConfFile::TagScalar< QString > m_message;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_message;
 }; // class ConditionTag
 
 
@@ -456,13 +466,14 @@ private:
 
 //! Configuration's tag for otherwise condition.
 class OtherwiseTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	OtherwiseTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	OtherwiseTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
-	OtherwiseTag( const Condition & cond, QtConfFile::Tag & owner,
+	OtherwiseTag( const Condition & cond,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 		const QString & name, bool isMandatory = false );
 
 	//! \return Condition.
@@ -470,11 +481,11 @@ public:
 
 private:
 	//! Level.
-	QtConfFile::TagScalar< QString > m_level;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_level;
 	//! Constraint for level.
-	QtConfFile::ConstraintOneOf< QString > m_levelConstraint;
+	cfgfile::constraint_one_of_t< QString > m_levelConstraint;
 	//! Message.
-	QtConfFile::TagScalar< QString > m_message;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_message;
 }; // class OtherwiseTag
 
 } /* namespace Globe */

@@ -114,30 +114,32 @@ static inline ShownChannels stringToShownChannels( const QString & v )
 		return ShowAll;
 }
 
-ShownChannelsTag::ShownChannelsTag( QtConfFile::Tag & owner, const QString & name,
+ShownChannelsTag::ShownChannelsTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 {
 	init();
 }
 
-ShownChannelsTag::ShownChannelsTag( ShownChannels shownChannels, QtConfFile::Tag & owner,
+ShownChannelsTag::ShownChannelsTag( ShownChannels shownChannels, cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 	const QString & name, bool isMandatory )
-	:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 {
 	init();
 
-	setValue( shownChannelsToString( shownChannels ) );
+	set_value( shownChannelsToString( shownChannels ) );
 }
 
 void
 ShownChannelsTag::init()
 {
-	m_constraint.addValue( showConnectedOnly );
-	m_constraint.addValue( showDisconnectedOnly );
-	m_constraint.addValue( showAll );
+	m_constraint.add_value( showConnectedOnly );
+	m_constraint.add_value( showDisconnectedOnly );
+	m_constraint.add_value( showAll );
 
-	setConstraint( &m_constraint );
+	set_constraint( &m_constraint );
 }
 
 ShownChannels
@@ -152,7 +154,8 @@ ShownChannelsTag::shownChannels() const
 //
 
 MainWindowCfgTag::MainWindowCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "mainWindow" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "mainWindow" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 	,	m_shownChannels( *this, QLatin1String( "shownChannels" ), true )
 {
@@ -160,11 +163,12 @@ MainWindowCfgTag::MainWindowCfgTag()
 }
 
 MainWindowCfgTag::MainWindowCfgTag( const MainWindowCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "mainWindow" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "mainWindow" ), true )
 	,	m_windowState( cfg.windowState(), *this, QLatin1String( "windowState" ), true )
 	,	m_shownChannels( cfg.shownChannels(), *this, QLatin1String( "shownChannels" ), true )
 {
-	setDefined();
+	set_defined();
 }
 
 MainWindowCfg

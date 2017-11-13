@@ -141,51 +141,51 @@ SourceCfg::setSourceName( const QString & name )
 //
 
 SourceCfgTag::SourceCfgTag( const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_type( *this, QLatin1String( "type" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_typeName( *this, QLatin1String( "typeName" ), true )
 	,	m_sourceName( *this, QLatin1String( "sourceName" ), true )
 	,	m_baseCfg( *this, QLatin1String( "ui" ), true )
 {
-	m_typeConstraint.addValue( comoSourceIntType );
-	m_typeConstraint.addValue( comoSourceUIntType );
-	m_typeConstraint.addValue( comoSourceLongLongType );
-	m_typeConstraint.addValue( comoSourceULongLongType );
-	m_typeConstraint.addValue( comoSourceStringType );
-	m_typeConstraint.addValue( comoSourceDoubleType );
-	m_typeConstraint.addValue( comoSourceDateTimeType );
-	m_typeConstraint.addValue( comoSourceTimeType );
+	m_typeConstraint.add_value( comoSourceIntType );
+	m_typeConstraint.add_value( comoSourceUIntType );
+	m_typeConstraint.add_value( comoSourceLongLongType );
+	m_typeConstraint.add_value( comoSourceULongLongType );
+	m_typeConstraint.add_value( comoSourceStringType );
+	m_typeConstraint.add_value( comoSourceDoubleType );
+	m_typeConstraint.add_value( comoSourceDateTimeType );
+	m_typeConstraint.add_value( comoSourceTimeType );
 
-	m_type.setConstraint( &m_typeConstraint );
+	m_type.set_constraint( &m_typeConstraint );
 }
 
 SourceCfgTag::SourceCfgTag( const SourceCfg & cfg, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_type( *this, QLatin1String( "type" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_typeName( *this, QLatin1String( "typeName" ), true )
 	,	m_sourceName( *this, QLatin1String( "sourceName" ), true )
 	,	m_baseCfg( cfg, *this, QLatin1String( "ui" ), true )
 {
-	m_typeConstraint.addValue( comoSourceIntType );
-	m_typeConstraint.addValue( comoSourceUIntType );
-	m_typeConstraint.addValue( comoSourceLongLongType );
-	m_typeConstraint.addValue( comoSourceULongLongType );
-	m_typeConstraint.addValue( comoSourceStringType );
-	m_typeConstraint.addValue( comoSourceDoubleType );
-	m_typeConstraint.addValue( comoSourceDateTimeType );
-	m_typeConstraint.addValue( comoSourceTimeType );
+	m_typeConstraint.add_value( comoSourceIntType );
+	m_typeConstraint.add_value( comoSourceUIntType );
+	m_typeConstraint.add_value( comoSourceLongLongType );
+	m_typeConstraint.add_value( comoSourceULongLongType );
+	m_typeConstraint.add_value( comoSourceStringType );
+	m_typeConstraint.add_value( comoSourceDoubleType );
+	m_typeConstraint.add_value( comoSourceDateTimeType );
+	m_typeConstraint.add_value( comoSourceTimeType );
 
-	m_type.setConstraint( &m_typeConstraint );
+	m_type.set_constraint( &m_typeConstraint );
 
-	m_type.setValue( comoSourceTypeToString( cfg.type() ) );
-	m_channelName.setValue( cfg.channelName() );
-	m_typeName.setValue( cfg.typeName() );
-	m_sourceName.setValue( cfg.sourceName() );
+	m_type.set_value( comoSourceTypeToString( cfg.type() ) );
+	m_channelName.set_value( cfg.channelName() );
+	m_typeName.set_value( cfg.typeName() );
+	m_sourceName.set_value( cfg.sourceName() );
 
-	setDefined();
+	set_defined();
 }
 
 SourceCfg

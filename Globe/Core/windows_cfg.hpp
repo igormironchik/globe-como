@@ -23,9 +23,8 @@
 #ifndef GLOBE__WINDOWS_CFG_HPP__INCLUDED
 #define GLOBE__WINDOWS_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QList>
@@ -78,7 +77,7 @@ private:
 
 //! Tag with windows configuration.
 class WindowsTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	WindowsTag();
@@ -90,9 +89,11 @@ public:
 
 private:
 	//! Channel view windows configuration.
-	QtConfFile::TagVectorOfTags< ChannelViewWindowTag > m_channelViewWindows;
+	cfgfile::tag_vector_of_tags_t< ChannelViewWindowTag,
+		cfgfile::qstring_trait_t > m_channelViewWindows;
 	//! Scheme windows configuration.
-	QtConfFile::TagVectorOfTags< Scheme::WindowCfgTag > m_schemeWindows;
+	cfgfile::tag_vector_of_tags_t< Scheme::WindowCfgTag,
+		cfgfile::qstring_trait_t > m_schemeWindows;
 }; // class WindowsTag
 
 } /* namespace Globe */

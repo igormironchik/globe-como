@@ -74,17 +74,19 @@ LogEventCfg::setWindowState( const WindowStateCfg & cfg )
 //
 
 LogEventCfgTag::LogEventCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "logEventCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logEventCfg" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 {
 }
 
 LogEventCfgTag::LogEventCfgTag( const LogEventCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "logEventCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logEventCfg" ), true )
 	,	m_windowState( cfg.windowState(), *this,
 			QLatin1String( "windowState" ), true )
 {
-	setDefined();
+	set_defined();
 }
 
 LogEventCfg

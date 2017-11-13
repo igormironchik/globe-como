@@ -26,9 +26,8 @@
 // Qt include.
 #include <QString>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/window_state_cfg.hpp>
@@ -131,7 +130,7 @@ private:
 
 //! Tag with sounds configuration.
 class SoundsCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	SoundsCfgTag();
@@ -143,15 +142,15 @@ public:
 
 private:
 	//! Critical sound file.
-	QtConfFile::TagScalar< QString > m_criticalSoundFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_criticalSoundFile;
 	//! Error sound file.
-	QtConfFile::TagScalar< QString > m_errorSoundFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_errorSoundFile;
 	//! Warning sound file.
-	QtConfFile::TagScalar< QString > m_warningSoundFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_warningSoundFile;
 	//! Debug sound file.
-	QtConfFile::TagScalar< QString > m_debugSoundFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_debugSoundFile;
 	//! Info sound file.
-	QtConfFile::TagScalar< QString > m_infoSoundFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_infoSoundFile;
 	//! Window state configuration.
 	WindowStateCfgTag m_windowState;
 }; // class SoundsCfgTag

@@ -226,7 +226,8 @@ ApplicationCfg::setSourcesLogWindowCfgFile( const QString & fileName )
 //
 
 ApplicationCfgTag::ApplicationCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "applicationCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "applicationCfg" ), true )
 	,	m_mainWindowCfgFileName( *this, QLatin1String( "mainWindowCfgFileName" ),
 			true )
 	,	m_channelsCfgFileName( *this, QLatin1String( "channelsCfgFileName" ),
@@ -255,7 +256,8 @@ ApplicationCfgTag::ApplicationCfgTag()
 }
 
 ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "applicationCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "applicationCfg" ), true )
 	,	m_mainWindowCfgFileName( *this, QLatin1String( "mainWindowCfgFileName" ),
 			true )
 	,	m_channelsCfgFileName( *this, QLatin1String( "channelsCfgFileName" ),
@@ -281,20 +283,20 @@ ApplicationCfgTag::ApplicationCfgTag( const ApplicationCfg & cfg )
 	,	m_sourcesLogWindowCfgFileName( *this,
 			QLatin1String( "sourcesLogWindowCfgFileName" ), true )
 {
-	m_mainWindowCfgFileName.setValue( cfg.mainWindowCfgFile() );
-	m_channelsCfgFileName.setValue( cfg.channelsCfgFile() );
-	m_propertiesCfgFileName.setValue( cfg.propertiesCfgFile() );
-	m_sourcesMainWindowCfgFileName.setValue( cfg.sourcesMainWindowCfgFile() );
-	m_windowsCfgFileName.setValue( cfg.windowsCfgFile() );
-	m_colorsCfgFileName.setValue( cfg.colorsCfgFile() );
-	m_dbCfgFileName.setValue( cfg.dbCfgFile() );
-	m_logCfgFileName.setValue( cfg.logCfgFile() );
-	m_logEventWindowCfgFileName.setValue( cfg.logEventWindowCfgFile() );
-	m_soundsCfgFileName.setValue( cfg.soundsCfgFile() );
-	m_disabledSoundsCfgFileName.setValue( cfg.disabledSoundsCfgFile() );
-	m_sourcesLogWindowCfgFileName.setValue( cfg.sourcesLogWindowCfgFile() );
+	m_mainWindowCfgFileName.set_value( cfg.mainWindowCfgFile() );
+	m_channelsCfgFileName.set_value( cfg.channelsCfgFile() );
+	m_propertiesCfgFileName.set_value( cfg.propertiesCfgFile() );
+	m_sourcesMainWindowCfgFileName.set_value( cfg.sourcesMainWindowCfgFile() );
+	m_windowsCfgFileName.set_value( cfg.windowsCfgFile() );
+	m_colorsCfgFileName.set_value( cfg.colorsCfgFile() );
+	m_dbCfgFileName.set_value( cfg.dbCfgFile() );
+	m_logCfgFileName.set_value( cfg.logCfgFile() );
+	m_logEventWindowCfgFileName.set_value( cfg.logEventWindowCfgFile() );
+	m_soundsCfgFileName.set_value( cfg.soundsCfgFile() );
+	m_disabledSoundsCfgFileName.set_value( cfg.disabledSoundsCfgFile() );
+	m_sourcesLogWindowCfgFileName.set_value( cfg.sourcesLogWindowCfgFile() );
 
-	setDefined();
+	set_defined();
 }
 
 ApplicationCfg

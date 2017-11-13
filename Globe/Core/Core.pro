@@ -2,16 +2,16 @@
 TEMPLATE = lib
 TARGET = Globe.Core
 DESTDIR = ../..
-QT += core gui network sql widgets multimedia xml
-CONFIG += qt shared
-DEFINES += GLOBE_CORE
+QT += core gui network sql widgets multimedia
+CONFIG += qt shared c++14
+DEFINES += GLOBE_CORE CFGFILE_QT_SUPPORT
 
 CONFIG(debug, debug|release) {
 	DEFINES += GLOBE_CORE_DEBUG
 }
 
-INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
-DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../QtConfFile $$PWD/../../Como
+INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../Como
+DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../Como
 
 RESOURCES = resources.qrc
 
@@ -196,15 +196,6 @@ DEPENDPATH += $$PWD/../../Como
 
 win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
 else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
-
-
-unix|win32: LIBS += -L$$OUT_PWD/../../QtConfFile/lib/ -lQtConfFile
-
-INCLUDEPATH += $$PWD/../../QtConfFile
-DEPENDPATH += $$PWD/../../QtConfFile
-
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/QtConfFile.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../QtConfFile/lib/libQtConfFile.a
 
 macx {
 	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.

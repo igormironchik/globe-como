@@ -33,8 +33,8 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-// QtConfFile include.
-#include <QtConfFile/Exceptions>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -160,12 +160,12 @@ PropertiesDialog::openProperties()
 
 			d->m_properties->setProperties( p );
 		}
-		catch( const QtConfFile::Exception & x )
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 		{
 			QMessageBox::critical( 0,
 				tr( "Unable to load properties configuration..." ),
 				tr( "Unable to load properties configuration...\n\n%1" )
-					.arg( x.whatAsQString() ) );
+					.arg( x.desc() ) );
 		}
 	}
 }

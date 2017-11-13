@@ -28,18 +28,16 @@
 
 // Qt include.
 #include <QList>
+#include <QFile>
+#include <QTextStream>
+#include <QTextCodec>
 
 // Globe include.
 #include <Globe/Core/condition.hpp>
 #include <Globe/Core/condition_cfg.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintMinMax>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -99,58 +97,61 @@ private:
 //! Tag for properties of the source.
 template< class T >
 class PropertiesTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	PropertiesTag()
-		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
+		:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+				QLatin1String( "properties" ), true )
 		,	m_priority( *this, QLatin1String( "priority" ), false )
 		,	m_conditions( *this, QLatin1String( "if" ), false )
 		,	m_otherwise( *this, QLatin1String( "otherwise" ), false )
 		,	m_priorityConstraint( 0, 999 )
 	{
-		m_priority.setConstraint( &m_priorityConstraint );
+		m_priority.set_constraint( &m_priorityConstraint );
 	}
 
 	PropertiesTag( const Properties & properties )
-		:	QtConfFile::TagNoValue( QLatin1String( "properties" ), true )
+		:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+				QLatin1String( "properties" ), true )
 		,	m_priority( *this, QLatin1String( "priority" ), false )
 		,	m_conditions( *this, QLatin1String( "if" ), false )
 		,	m_otherwise( properties.otherwise(), *this,
 				QLatin1String( "otherwise" ), false )
 		,	m_priorityConstraint( 0, 999 )
 	{
-		m_priority.setConstraint( &m_priorityConstraint );
+		m_priority.set_constraint( &m_priorityConstraint );
 
 		if( properties.priority() > 0 )
-			m_priority.setValue( properties.priority() );
+			m_priority.set_value( properties.priority() );
 
 		for( int i = 0; i < properties.conditionsAmount(); ++i )
 		{
-			typename QtConfFile::TagVectorOfTags< ConditionTag< T > >::PointerToTag tag(
-				new ConditionTag< T >( properties.conditionAt( i ),
-					QLatin1String( "if" ), true ) );
+			typename cfgfile::tag_vector_of_tags_t< ConditionTag< T >,
+				cfgfile::qstring_trait_t >::ptr_to_tag_t tag(
+					new ConditionTag< T >( properties.conditionAt( i ),
+						QLatin1String( "if" ), true ) );
 
-			m_conditions.setValue( tag );
+			m_conditions.set_value( tag );
 		}
 
-		setDefined();
+		set_defined();
 	}
 
 	Properties properties() const
 	{
 		Properties p;
 
-		if( m_priority.isDefined() )
+		if( m_priority.is_defined() )
 			p.setPriority( m_priority.value() );
 
-		if( m_conditions.isDefined() )
+		if( m_conditions.is_defined() )
 		{
-			for( int i = 0; i < m_conditions.size(); ++i )
+			for( std::size_t i = 0; i < m_conditions.size(); ++i )
 				p.insertCondition( m_conditions.at( i ).condition(), i );
 		}
 
-		if( m_otherwise.isDefined() )
+		if( m_otherwise.is_defined() )
 			p.otherwise() = m_otherwise.value();
 
 		return p;
@@ -158,13 +159,14 @@ public:
 
 private:
 	//! Priority.
-	QtConfFile::TagScalar< int > m_priority;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_priority;
 	//! Conditions.
-	QtConfFile::TagVectorOfTags< ConditionTag< T > > m_conditions;
+	cfgfile::tag_vector_of_tags_t< ConditionTag< T >,
+		cfgfile::qstring_trait_t > m_conditions;
 	//! Otherwise condition.
 	OtherwiseTag m_otherwise;
 	//! Constraint for the priority.
-	QtConfFile::ConstraintMinMax< int > m_priorityConstraint;
+	cfgfile::constraint_min_max_t< int > m_priorityConstraint;
 }; // class PropertiesTag
 
 
@@ -178,10 +180,27 @@ readPropertiesConfigurationTemplate( const QString & fileName, Properties & p )
 {
 	PropertiesTag< T > tag;
 
-	QtConfFile::readQtConfFile( tag, fileName,
-		QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
 
-	p = tag.properties();
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		QTextStream stream( &file );
+		stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+		try {
+			cfgfile::read_cfgfile( tag, stream, fileName );
+
+			file.close();
+		}
+		catch( ... )
+		{
+			file.close();
+
+			throw;
+		}
+
+		p = tag.properties();
+	}
 }
 
 
@@ -196,8 +215,25 @@ savePropertiesConfigurationTemplate( const QString & fileName,
 {
 	PropertiesTag< T > tag( p );
 
-	QtConfFile::writeQtConfFile( tag, fileName,
-		QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
+
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		QTextStream stream( &file );
+		stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+		try {
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+		}
+		catch( ... )
+		{
+			file.close();
+
+			throw;
+		}
+	}
 }
 
 

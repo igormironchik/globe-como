@@ -31,7 +31,8 @@ namespace Globe {
 //
 
 SourcesMainWindowTag::SourcesMainWindowTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "sourcesMainWindow" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "sourcesMainWindow" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 {
@@ -39,13 +40,14 @@ SourcesMainWindowTag::SourcesMainWindowTag()
 
 SourcesMainWindowTag::SourcesMainWindowTag( const QString & channelName,
 	const WindowStateCfg & windowState )
-	:	QtConfFile::TagNoValue( QLatin1String( "sourcesMainWindow" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "sourcesMainWindow" ), true )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_windowState( windowState, *this, QLatin1String( "windowState" ), true )
 {
-	m_channelName.setValue( channelName );
+	m_channelName.set_value( channelName );
 
-	setDefined();
+	set_defined();
 }
 
 QString

@@ -23,9 +23,8 @@
 #ifndef GLOBE__SCHEME__WINDOW_CFG_HPP__INCLUDED
 #define GLOBE__SCHEME__WINDOW_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/window_state_cfg.hpp>
@@ -76,7 +75,7 @@ private:
 
 //! Tag with configuration of the scheme window.
 class WindowCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit WindowCfgTag( const QString & name,
@@ -92,7 +91,7 @@ public:
 
 private:
 	//! Name of the channel.
-	QtConfFile::TagScalar< QString > m_schemeCfgFile;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_schemeCfgFile;
 	//! Window state cfg.
 	WindowStateCfgTag m_windowState;
 }; // class WindowCfgTag

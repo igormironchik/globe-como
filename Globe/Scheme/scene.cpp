@@ -47,9 +47,8 @@
 #include <QMap>
 #include <QList>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
-#include <QtConfFile/Exceptions>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -395,64 +394,113 @@ Scene::loadScheme( const QString & fileName )
 {
 	SchemeCfgTag tag;
 
-	try {
-		QtConfFile::readQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
 
-		SchemeCfg cfg = tag.cfg();
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		try {
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
-		d->m_cfgFile = fileName;
+			cfgfile::read_cfgfile( tag, stream, fileName );
 
-		initScheme( cfg );
+			file.close();
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Scheme successfully loaded from file \"%1\"." )
-				.arg( fileName ) );
+			SchemeCfg cfg = tag.cfg();
+
+			d->m_cfgFile = fileName;
+
+			initScheme( cfg );
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Scheme successfully loaded from file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to load scheme configuration "
+					"from file \"%1\".\n"
+					"%2" )
+						.arg( fileName )
+						.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to read scheme configuration..." ),
+				tr( "Unable to read scheme configuration from file \"%1\"\n\n"
+					"%2" )
+					.arg( fileName )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to load scheme configuration "
 				"from file \"%1\".\n"
-				"%2" )
-					.arg( fileName )
-					.arg( x.whatAsQString() ) );
+				"Unable to open file." )
+					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read scheme configuration..." ),
 			tr( "Unable to read scheme configuration from file \"%1\"\n\n"
-				"%2" )
-				.arg( fileName )
-				.arg( x.whatAsQString() ) );
+				"Unable to open file." )
+				.arg( fileName ) );
 	}
 }
 
 void
 Scene::saveScheme( const QString & fileName )
 {
-	try {
-		SchemeCfgTag tag( schemeCfg() );
+	QFile file( fileName );
 
-		QtConfFile::writeQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		try {
+			SchemeCfgTag tag( schemeCfg() );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Scheme configuration saved "
-				"in file \"%1\"." )
-					.arg( fileName ) );
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Scheme configuration saved "
+					"in file \"%1\"." )
+						.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to save scheme configuration "
+					"to file \"%1\"." )
+						.arg( fileName ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to save scheme configuration..." ),
+				tr( "Unable to save scheme configuration to file \"%1\".\n\n%2" )
+					.arg( fileName )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to save scheme configuration "
-				"to file \"%1\"." )
+				"to file \"%1\". Unable to open file." )
 					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save scheme configuration..." ),
-			tr( "Unable to save scheme configuration to file \"%1\".\n\n%2" )
-				.arg( fileName )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to save scheme configuration to file \"%1\".\n\n"
+				"Unable to open file." )
+				.arg( fileName ) );
 	}
 }
 

@@ -307,34 +307,36 @@ ChannelViewWindowCfg::setViewHeaderCfg( const ViewHeaderCfg & cfg )
 // HeaderColumnTag
 //
 
-HeaderColumnTag::HeaderColumnTag( QtConfFile::Tag & owner, const QString & name,
+HeaderColumnTag::HeaderColumnTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_pos( *this, QLatin1String( "pos" ), true )
 	,	m_posConstraint( 0, 4 )
 	,	m_sizeConstraint( 0, 9999 )
 {
-	m_size.setConstraint( &m_sizeConstraint );
-	m_pos.setConstraint( &m_posConstraint );
+	m_size.set_constraint( &m_sizeConstraint );
+	m_pos.set_constraint( &m_posConstraint );
 }
 
 HeaderColumnTag::HeaderColumnTag( const HeaderColumnCfg & cfg,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_pos( *this, QLatin1String( "pos" ), true )
 	,	m_posConstraint( 0, 4 )
 	,	m_sizeConstraint( 0, 9999 )
 {
-	m_size.setConstraint( &m_sizeConstraint );
-	m_pos.setConstraint( &m_posConstraint );
+	m_size.set_constraint( &m_sizeConstraint );
+	m_pos.set_constraint( &m_posConstraint );
 
-	m_size.setValue( cfg.size() );
-	m_pos.setValue( cfg.pos() );
+	m_size.set_value( cfg.size() );
+	m_pos.set_value( cfg.pos() );
 
-	setDefined();
+	set_defined();
 }
 
 HeaderColumnCfg
@@ -351,9 +353,9 @@ HeaderColumnTag::cfg() const
 static const QString ascendingOrder = QLatin1String( "ascending" );
 static const QString descendingOrder = QLatin1String( "descending" );
 
-SortOrderTag::SortOrderTag( QtConfFile::Tag & owner, const QString & name,
-	bool isMandatory )
-	:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
+SortOrderTag::SortOrderTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+	const QString & name, bool isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > ( owner, name, isMandatory )
 {
 	init();
 }
@@ -367,13 +369,14 @@ static QString sortOrderToString( Qt::SortOrder order )
 }
 
 SortOrderTag::SortOrderTag( Qt::SortOrder sortOrder,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagScalar< QString > ( owner, name, isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 {
 	init();
 
-	setValue( sortOrderToString( sortOrder ) );
+	set_value( sortOrderToString( sortOrder ) );
 }
 
 static Qt::SortOrder sortOrderFromString( const QString & order )
@@ -393,10 +396,10 @@ SortOrderTag::sortOrder() const
 void
 SortOrderTag::init()
 {
-	m_constraint.addValue( ascendingOrder );
-	m_constraint.addValue( descendingOrder );
+	m_constraint.add_value( ascendingOrder );
+	m_constraint.add_value( descendingOrder );
 
-	setConstraint( &m_constraint );
+	set_constraint( &m_constraint );
 }
 
 
@@ -404,9 +407,10 @@ SortOrderTag::init()
 // ViewHeaderTag
 //
 
-ViewHeaderTag::ViewHeaderTag( QtConfFile::Tag & owner, const QString & name,
+ViewHeaderTag::ViewHeaderTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_sortColumn( *this, QLatin1String( "sortColumn" ), true )
 	,	m_sortColumnConstraint( 0, 4 )
 	,	m_sortOrder( *this, QLatin1String( "sortOrder" ), true )
@@ -416,12 +420,13 @@ ViewHeaderTag::ViewHeaderTag( QtConfFile::Tag & owner, const QString & name,
 	,	m_dateTimeColumn( *this, QLatin1String( "dateTimeColumn" ), true )
 	,	m_priorityColumn( *this, QLatin1String( "priorityColumn" ), true )
 {
-	m_sortColumn.setConstraint( &m_sortColumnConstraint );
+	m_sortColumn.set_constraint( &m_sortColumnConstraint );
 }
 
-ViewHeaderTag::ViewHeaderTag( const ViewHeaderCfg & cfg, QtConfFile::Tag & owner,
+ViewHeaderTag::ViewHeaderTag( const ViewHeaderCfg & cfg, cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 	const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_sortColumn( *this, QLatin1String( "sortColumn" ), true )
 	,	m_sortColumnConstraint( 0, 4 )
 	,	m_sortOrder( cfg.sortOrder(), *this,
@@ -437,11 +442,11 @@ ViewHeaderTag::ViewHeaderTag( const ViewHeaderCfg & cfg, QtConfFile::Tag & owner
 	,	m_priorityColumn( cfg.priorityColumn(), *this,
 			QLatin1String( "priorityColumn" ), true )
 {
-	m_sortColumn.setConstraint( &m_sortColumnConstraint );
+	m_sortColumn.set_constraint( &m_sortColumnConstraint );
 
-	m_sortColumn.setValue( cfg.sortColumn() );
+	m_sortColumn.set_value( cfg.sortColumn() );
 
-	setDefined();
+	set_defined();
 }
 
 ViewHeaderCfg
@@ -457,20 +462,20 @@ ViewHeaderTag::cfg() const
 }
 
 void
-ViewHeaderTag::onFinish( const QtConfFile::ParserInfo & info )
+ViewHeaderTag::onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
 	if( m_sourceNameColumn.cfg().pos() +
 		m_typeNameColumn.cfg().pos() +
 		m_valueColumn.cfg().pos() +
 		m_dateTimeColumn.cfg().pos() +
 		m_priorityColumn.cfg().pos() != 10 )
-			throw QtConfFile::Exception( QString( "Wrong positions of the columns. "
+			throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString( "Wrong positions of the columns. "
 				"Where parent is \"%1\". In file \"%2\" on line %3." )
 					.arg( name() )
-					.arg( info.fileName() )
-					.arg( info.lineNumber() ) );
+					.arg( info.file_name() )
+					.arg( info.line_number() ) );
 
-	QtConfFile::TagNoValue::onFinish( info );
+	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >::on_finish( info );
 }
 
 
@@ -480,7 +485,7 @@ ViewHeaderTag::onFinish( const QtConfFile::ParserInfo & info )
 
 ChannelViewWindowTag::ChannelViewWindowTag( const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 	,	m_viewHeader( *this, QLatin1String( "header" ), false )
@@ -489,16 +494,16 @@ ChannelViewWindowTag::ChannelViewWindowTag( const QString & name,
 
 ChannelViewWindowTag::ChannelViewWindowTag( const ChannelViewWindowCfg & cfg,
 	const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_channelName( *this, QLatin1String( "channelName" ), true )
 	,	m_windowState( cfg.windowStateCfg(), *this,
 			QLatin1String( "windowState" ), true )
 	,	m_viewHeader( cfg.viewHeaderCfg(), *this,
 			QLatin1String( "header" ), true )
 {
-	m_channelName.setValue( cfg.channelName() );
+	m_channelName.set_value( cfg.channelName() );
 
-	setDefined();
+	set_defined();
 }
 
 ChannelViewWindowTag::~ChannelViewWindowTag()
@@ -513,7 +518,7 @@ ChannelViewWindowTag::cfg() const
 	cfg.setChannelName( m_channelName.value() );
 	cfg.setWindowStateCfg( m_windowState.cfg() );
 
-	if( m_viewHeader.isDefined() )
+	if( m_viewHeader.is_defined() )
 		cfg.setViewHeaderCfg( m_viewHeader.cfg() );
 
 	return cfg;

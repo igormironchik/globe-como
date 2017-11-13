@@ -23,11 +23,8 @@
 #ifndef GLOBE__PROPERTIES_CFG_HPP__INCLUDED
 #define GLOBE__PROPERTIES_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/properties_map.hpp>
@@ -42,7 +39,7 @@ namespace Globe {
 
 //! Tag with one record of the properties map.
 class PropertiesMapRecordTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit PropertiesMapRecordTag( const QString & name,
@@ -59,17 +56,17 @@ public:
 
 private:
 	//! Source's name.
-	QtConfFile::TagScalar< QString > m_sourceName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_sourceName;
 	//! Source's type name.
-	QtConfFile::TagScalar< QString > m_typeName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_typeName;
 	//! Channel's name.
-	QtConfFile::TagScalar< QString > m_channelName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_channelName;
 	//! Type of the value of the source.
-	QtConfFile::TagScalar< QString > m_valueType;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_valueType;
 	//! Constraint for the type of the value of the source.
-	QtConfFile::ConstraintOneOf< QString > m_valueTypeConstraint;
+	cfgfile::constraint_one_of_t< QString > m_valueTypeConstraint;
 	//! Configuration file of the properties.
-	QtConfFile::TagScalar< QString > m_confFileName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_confFileName;
 }; // class PropertiesMapRecordTag
 
 
@@ -79,7 +76,7 @@ private:
 
 //! Tag with configuration of the properties manager.
 class PropertiesManagerTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	PropertiesManagerTag();
@@ -111,9 +108,10 @@ public:
 
 private:
 	//! Directory with properties configuration files.
-	QtConfFile::TagScalar< QString > m_directory;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_directory;
 	//! Map of the properties.
-	QtConfFile::TagVectorOfTags< PropertiesMapRecordTag > m_map;
+	cfgfile::tag_vector_of_tags_t< PropertiesMapRecordTag,
+		cfgfile::qstring_trait_t > m_map;
 	//! State of the window of the properties manager.
 	WindowStateCfgTag m_windowState;
 }; // class PropertiesManagerTag

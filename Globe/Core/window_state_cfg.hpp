@@ -27,11 +27,8 @@
 #include <QPoint>
 #include <QSize>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintOneOf>
-#include <QtConfFile/ConstraintMinMax>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 QT_BEGIN_NAMESPACE
 class QWidget;
@@ -129,23 +126,24 @@ void restoreWindowState( const WindowStateCfg & cfg, QWidget * window );
 
 //! Tag with position.
 class PosTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	PosTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	PosTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	PosTag( const QPoint & pos,
-		QtConfFile::Tag & owner, const QString & name, bool isMandatory = false );
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	//! \return Position.
 	QPoint pos() const;
 
 private:
 	//! X coordinates.
-	QtConfFile::TagScalar< double > m_x;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_x;
 	//! Y coordinates.
-	QtConfFile::TagScalar< double > m_y;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_y;
 }; // class PosTag
 
 
@@ -155,25 +153,26 @@ private:
 
 //! Tag with size.
 class SizeTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	SizeTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	SizeTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	SizeTag( const QSize & size,
-		QtConfFile::Tag & owner, const QString & name, bool isMandatory = false );
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	//! \return Size.
 	QSize size() const;
 
 private:
 	//! Width.
-	QtConfFile::TagScalar< double > m_width;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_width;
 	//! Height.
-	QtConfFile::TagScalar< double > m_height;
+	cfgfile::tag_scalar_t< double, cfgfile::qstring_trait_t > m_height;
 	//! Constraint for width and height.
-	QtConfFile::ConstraintMinMax< double > m_constraint;
+	cfgfile::constraint_min_max_t< double > m_constraint;
 }; // class SizeTag
 
 
@@ -183,14 +182,15 @@ private:
 
 //! Tag with state.
 class StateTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
-	StateTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	StateTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	StateTag( const WindowState & state,
-		QtConfFile::Tag & owner, const QString & name, bool isMandatory = false );
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	//! \return State.
 	WindowState state() const;
@@ -201,7 +201,7 @@ private:
 
 private:
 	//! Constraint.
-	QtConfFile::ConstraintOneOf< QString > m_constraint;
+	cfgfile::constraint_one_of_t< QString > m_constraint;
 }; // class StateTag
 
 
@@ -211,16 +211,17 @@ private:
 
 //! Tag in the conf file with the state of the window.
 class WindowStateCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit WindowStateCfgTag( const QString & name, bool isMandatory = false );
 
-	WindowStateCfgTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	WindowStateCfgTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	WindowStateCfgTag( const WindowStateCfg & cfg,
-		QtConfFile::Tag & owner, const QString & name, bool isMandatory = false );
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	//! \return Configuration.
 	WindowStateCfg cfg() const;
@@ -233,7 +234,7 @@ private:
 	//! State.
 	StateTag m_state;
 	//! Is window active?
-	QtConfFile::TagNoValue m_isActive;
+	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > m_isActive;
 }; // class WindowStateCfgTag
 
 } /* namespace Globe */

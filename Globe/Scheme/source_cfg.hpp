@@ -23,10 +23,8 @@
 #ifndef GLOBE__SCHEME__SOURCE_CFG_HPP__INCLUDED
 #define GLOBE__SCHEME__SOURCE_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Scheme/item_base_cfg.hpp>
@@ -101,7 +99,7 @@ private:
 
 //! Tag with source item configuration.
 class SourceCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	SourceCfgTag( const QString & name, bool isMandatory = false );
@@ -114,15 +112,15 @@ public:
 
 private:
 	//! Type.
-	QtConfFile::TagScalar< QString > m_type;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_type;
 	//! Type constraint.
-	QtConfFile::ConstraintOneOf< QString > m_typeConstraint;
+	cfgfile::constraint_one_of_t< QString > m_typeConstraint;
 	//! Channel name.
-	QtConfFile::TagScalar< QString > m_channelName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_channelName;
 	//! Type name.
-	QtConfFile::TagScalar< QString > m_typeName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_typeName;
 	//! Source name.
-	QtConfFile::TagScalar< QString > m_sourceName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_sourceName;
 	//! Item base cfg.
 	ItemBaseCfgTag m_baseCfg;
 }; // class SourceCfgTag

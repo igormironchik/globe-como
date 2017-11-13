@@ -23,11 +23,8 @@
 #ifndef GLOBE__CHANNEL_VIEW_WINDOW_CFG_HPP__INCLUDED
 #define GLOBE__CHANNEL_VIEW_WINDOW_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintMinMax>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Core/window_state_cfg.hpp>
@@ -191,14 +188,14 @@ private:
 
 //! Tag for header column configuration.
 class HeaderColumnTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	HeaderColumnTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	HeaderColumnTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
 	HeaderColumnTag( const HeaderColumnCfg & cfg,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Configuration of the header column.
@@ -206,13 +203,13 @@ public:
 
 private:
 	//! Size of the column.
-	QtConfFile::TagScalar< int > m_size;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_size;
 	//! Pos of the column.
-	QtConfFile::TagScalar< int > m_pos;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_pos;
 	//! Constraint for pos.
-	QtConfFile::ConstraintMinMax< int > m_posConstraint;
+	cfgfile::constraint_min_max_t< int > m_posConstraint;
 	//! Constraint for size.
-	QtConfFile::ConstraintMinMax< int > m_sizeConstraint;
+	cfgfile::constraint_min_max_t< int > m_sizeConstraint;
 }; // class HeaderColumnTag
 
 
@@ -222,14 +219,14 @@ private:
 
 //! Tag with sort order.
 class SortOrderTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
-	SortOrderTag( QtConfFile::Tag & owner, const QString & name,
+	SortOrderTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	SortOrderTag( Qt::SortOrder sortOrder,
-		QtConfFile::Tag & owner, const QString & name,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 		bool isMandatory = false );
 
 	//! \return Sort order.
@@ -241,7 +238,7 @@ private:
 
 private:
 	//! Constraint.
-	QtConfFile::ConstraintOneOf< QString > m_constraint;
+	cfgfile::constraint_one_of_t< QString > m_constraint;
 }; // class SortOrderTag
 
 
@@ -251,25 +248,26 @@ private:
 
 //! Tag with configuration of the view header.
 class ViewHeaderTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
-	ViewHeaderTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	ViewHeaderTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
-	ViewHeaderTag( const ViewHeaderCfg & cfg, QtConfFile::Tag & owner,
+	ViewHeaderTag( const ViewHeaderCfg & cfg,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 		const QString & name, bool isMandatory = false );
 
 	//! \return Configuration of the header.
 	ViewHeaderCfg cfg() const;
 
-	void onFinish( const QtConfFile::ParserInfo & info );
+	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info );
 
 private:
 	//! Sort column.
-	QtConfFile::TagScalar< int > m_sortColumn;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_sortColumn;
 	//! sort column constraint.
-	QtConfFile::ConstraintMinMax< int > m_sortColumnConstraint;
+	cfgfile::constraint_min_max_t< int > m_sortColumnConstraint;
 	//! Sort order.
 	SortOrderTag m_sortOrder;
 	//! Configuration of the source name column.
@@ -291,7 +289,7 @@ private:
 
 //! Tag with configuration of the channel view window.
 class ChannelViewWindowTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	explicit ChannelViewWindowTag( const QString & name,
@@ -307,7 +305,7 @@ public:
 
 private:
 	//! Name of the channel.
-	QtConfFile::TagScalar< QString > m_channelName;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_channelName;
 	//! Window state cfg.
 	WindowStateCfgTag m_windowState;
 	//! View header configuration.

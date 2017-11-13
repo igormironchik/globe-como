@@ -23,12 +23,8 @@
 #ifndef GLOBE__CHANNELS_CFG_HPP__INCLUDED
 #define GLOBE__CHANNELS_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/ConstraintMinMax>
-#include <QtConfFile/TagVectorOfTags>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Qt include.
 #include <QString>
@@ -113,15 +109,16 @@ typedef QList< ChannelCfg > AvailableChannelsCfg;
 
 //! Tag with channel in the configuration.
 class ChannelTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
 	explicit ChannelTag( const QString & name, bool isMandatory = false );
 
-	ChannelTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	ChannelTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
-	ChannelTag( const ChannelCfg & cfg, QtConfFile::Tag & owner,
+	ChannelTag( const ChannelCfg & cfg,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 		const QString & name, bool isMandatory = false );
 
 	ChannelTag( const ChannelCfg & cfg,
@@ -134,19 +131,19 @@ public:
 
 private:
 	//! Address of the channel.
-	QtConfFile::TagScalar< QString > m_address;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_address;
 	//! Port of the channel.
-	QtConfFile::TagScalar< int > m_port;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_port;
 	//! Constraint for the port's values.
-	QtConfFile::ConstraintMinMax< int > m_portConstraint;
+	cfgfile::constraint_min_max_t< int > m_portConstraint;
 	//! Whether the channel must be connected.
-	QtConfFile::TagNoValue m_isMustBeConnected;
+	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > m_isMustBeConnected;
 	//! Timeout in the channel.
-	QtConfFile::TagScalar< int > m_timeout;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_timeout;
 	//! Consatrint for the timeout.
-	QtConfFile::ConstraintMinMax< int > m_timeoutConstraint;
+	cfgfile::constraint_min_max_t< int > m_timeoutConstraint;
 	//! Channel's type.
-	QtConfFile::TagScalar< QString > m_type;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_type;
 }; // class ChannelTag
 
 
@@ -156,7 +153,7 @@ private:
 
 //! Tag with all available channel's configuration.
 class AvailableChannelsCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	AvailableChannelsCfgTag();
@@ -168,7 +165,7 @@ public:
 
 private:
 	//! Channels.
-	QtConfFile::TagVectorOfTags< ChannelTag > m_channels;
+	cfgfile::tag_vector_of_tags_t< ChannelTag, cfgfile::qstring_trait_t > m_channels;
 }; // class AvailableChannelsCfgTag
 
 } /* namespace Globe */

@@ -2,8 +2,9 @@
 TEMPLATE = app
 TARGET = Globe.App
 DESTDIR = ../..
-QT += core gui widgets network xml sql multimedia
-CONFIG += windows
+QT += core gui widgets network sql multimedia
+CONFIG += windows c++14
+DEFINES += ARGS_QSTRING_BUILD CFGFILE_QT_SUPPORT
 
 win32 {
     RC_FILE = globe.rc
@@ -11,7 +12,7 @@ win32 {
 
 SOURCES += main.cpp
 
-include ( ../../QtArg/QtArg/qtarg.pri )
+include ( ../../3rdparty/Args/Args/Args.pri )
 
 exists( ../../como_defines.pri ) {
     include( ../../como_defines.pri )
@@ -20,19 +21,14 @@ exists( ../../como_defines.pri ) {
 
 unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
 
-INCLUDEPATH += $$PWD/../../Como
-DEPENDPATH += $$PWD/../../Como
+INCLUDEPATH += $$PWD/../../Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
+DEPENDPATH += $$PWD/../../Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
 
 win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
 else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
 
 
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
-
-INCLUDEPATH += $$PWD/../.. $$PWD/../../QtConfFile
-DEPENDPATH += $$PWD/../.. $$PWD/../../QtConfFile
-
-unix|win32: LIBS += -L$$OUT_PWD/../../QtConfFile/lib -lQtConfFile
 
 macx {
 	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.

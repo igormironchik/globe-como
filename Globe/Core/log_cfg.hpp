@@ -23,9 +23,8 @@
 #ifndef GLOBE__LOG_CFG_HPP__INCLUDED
 #define GLOBE__LOG_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -75,7 +74,7 @@ private:
 
 //! Tag with configuration of the log.
 class LogTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	LogTag();
@@ -87,11 +86,11 @@ public:
 
 private:
 	//! Is event's log enabled tag?
-	QtConfFile::TagScalar< bool > m_isEventLogEnabled;
+	cfgfile::tag_scalar_t< bool, cfgfile::qstring_trait_t > m_isEventLogEnabled;
 	//! Is source's log enabled?
-	QtConfFile::TagScalar< bool > m_isSourcesLogEnabled;
+	cfgfile::tag_scalar_t< bool, cfgfile::qstring_trait_t > m_isSourcesLogEnabled;
 	//! Number of days of the source's log.
-	QtConfFile::TagScalar< int > m_sourcesLogDays;
+	cfgfile::tag_scalar_t< int, cfgfile::qstring_trait_t > m_sourcesLogDays;
 }; // class LogTag
 
 } /* namespace Globe */

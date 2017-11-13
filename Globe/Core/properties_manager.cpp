@@ -174,7 +174,7 @@ public:
 							.arg( channelName )
 							.arg( fileName ) );
 			}
-			catch( const QtConfFile::Exception & x )
+			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 			{
 				Log::instance().writeMsgToEventLog( LogLevelError,
 					QString( "Unable to save properties for source %1\n"
@@ -185,12 +185,12 @@ public:
 							.arg( keyAsString )
 							.arg( channelName )
 							.arg( fileName )
-							.arg( x.whatAsQString() ) );
+							.arg( x.desc() ) );
 
 				QMessageBox::critical( 0,
 					QObject::tr( "Unable to save properties..." ),
 					QObject::tr( "Unable to save properties...\n\n%1" )
-						.arg( x.whatAsQString() ) );
+						.arg( x.desc() ) );
 			}
 		}
 	}
@@ -229,7 +229,7 @@ public:
 						.arg( channelName )
 						.arg( propertieConfFileName ) );
 		}
-		catch( const QtConfFile::Exception & x )
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 		{
 			Log::instance().writeMsgToEventLog( LogLevelError,
 				QString( "Unable to save properties for source %1\n"
@@ -240,12 +240,12 @@ public:
 						.arg( keyAsString )
 						.arg( channelName )
 						.arg( propertieConfFileName )
-						.arg( x.whatAsQString() ) );
+						.arg( x.desc() ) );
 
 			QMessageBox::critical( 0,
 				QObject::tr( "Unable to save properties..." ),
 				QObject::tr( "Unable to save properties...\n\n%1" )
-					.arg( x.whatAsQString() ) );
+					.arg( x.desc() ) );
 		}
 	}
 
@@ -642,7 +642,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 							.arg( keyAsString )
 							.arg( fileName ) );
 			}
-			catch( const QtConfFile::Exception & x )
+			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 			{
 				Log::instance().writeMsgToEventLog( LogLevelError,
 					QString( "Unable to save properties for key %1\n"
@@ -650,11 +650,11 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 						"%3" )
 							.arg( keyAsString )
 							.arg( fileName )
-							.arg( x.whatAsQString() ) );
+							.arg( x.desc() ) );
 
 				QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 					tr( "Unable to save properties...\n\n%1" )
-						.arg( x.whatAsQString() ) );
+						.arg( x.desc() ) );
 			}
 		}
 	}
@@ -773,33 +773,56 @@ PropertiesManager::promoteProperties( const PropertiesKey & key,
 void
 PropertiesManager::saveConfiguration( const QString & fileName )
 {
-	try {
-		PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
-			d->m_exactlyThisSourceMap,
-			d->m_exactlyThisSourceInAnyChannelMap,
-			d->m_exactlyThisTypeOfSourceMap,
-			d->m_exactlyThisTypeOfSourceInAnyChannelMap,
-			windowStateCfg( this ) );
+	QFile file( fileName );
 
-		QtConfFile::writeQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		try {
+			PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
+				d->m_exactlyThisSourceMap,
+				d->m_exactlyThisSourceInAnyChannelMap,
+				d->m_exactlyThisTypeOfSourceMap,
+				d->m_exactlyThisTypeOfSourceInAnyChannelMap,
+				windowStateCfg( this ) );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo,
-			QString( "Properties manager's configuration saved "
-				"in file \"%1\"." )
-					.arg( fileName ) );
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo,
+				QString( "Properties manager's configuration saved "
+					"in file \"%1\"." )
+						.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError,
+				QString( "Unable to save properties manager's configuration "
+					"to file \"%1\"." )
+						.arg( fileName ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to save properties configuration..." ),
+				tr( "Unable to save properties configuration...\n\n%1" )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Unable to save properties manager's configuration "
-				"to file \"%1\"." )
+				"to file \"%1\".\nUnable to open file." )
 					.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save properties configuration..." ),
-			tr( "Unable to save properties configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to save properties configuration...\n\n"
+				"Unable to open file." ) );
 	}
 }
 
@@ -823,7 +846,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 					"was loaded." )
 					.arg( keyAsString ) );
 		}
-		catch( const QtConfFile::Exception & x )
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 		{
 			const QString fileName = d->m_directoryName +
 				it.value().confFileName();
@@ -840,7 +863,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 					tr( "Unable to read properties configuration...\n\n"
 						"%1\n\n"
 						"Do you want to delete this file?" )
-							.arg( x.whatAsQString() ),
+							.arg( x.desc() ),
 					QMessageBox::Ok | QMessageBox::Cancel,
 					QMessageBox::Ok );
 
@@ -875,28 +898,54 @@ PropertiesManager::readConfiguration( const QString & fileName )
 	{
 		PropertiesManagerTag tag;
 
-		try {
-			QtConfFile::readQtConfFile( tag, fileName,
-				QTextCodec::codecForName( "UTF-8" ) );
+		QFile file( fileName );
 
-			Log::instance().writeMsgToEventLog( LogLevelInfo,
-				QString( "Properties manager's configuration loaded "
-					"from file \"%1\"." )
-						.arg( fileName ) );
+		if( file.open( QIODevice::ReadOnly ) )
+		{
+			try {
+				QTextStream stream( &file );
+				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+				cfgfile::read_cfgfile( tag, stream, fileName );
+
+				file.close();
+
+				Log::instance().writeMsgToEventLog( LogLevelInfo,
+					QString( "Properties manager's configuration loaded "
+						"from file \"%1\"." )
+							.arg( fileName ) );
+			}
+			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+			{
+				file.close();
+
+				Log::instance().writeMsgToEventLog( LogLevelError,
+					QString( "Unable to load properties manager's configuration "
+						" from file \"%1\".\n"
+						"%2" )
+							.arg( fileName )
+							.arg( x.desc() ) );
+
+				QMessageBox::critical( 0,
+					tr( "Unable to read properties configuration..." ),
+					tr( "Unable to read properties configuration...\n\n%1" )
+						.arg( x.desc() ) );
+
+				return;
+			}
 		}
-		catch( const QtConfFile::Exception & x )
+		else
 		{
 			Log::instance().writeMsgToEventLog( LogLevelError,
 				QString( "Unable to load properties manager's configuration "
 					" from file \"%1\".\n"
-					"%2" )
-						.arg( fileName )
-						.arg( x.whatAsQString() ) );
+					"Unable to open file." )
+						.arg( fileName ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read properties configuration..." ),
-				tr( "Unable to read properties configuration...\n\n%1" )
-					.arg( x.whatAsQString() ) );
+				tr( "Unable to read properties configuration...\n\n"
+					"Unable to open file." ) );
 
 			return;
 		}

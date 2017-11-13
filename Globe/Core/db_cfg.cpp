@@ -68,18 +68,20 @@ DBCfg::setDbFileName( const QString & fileName )
 //
 
 DBTag::DBTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "dbCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "dbCfg" ), true )
 	,	m_dbFileName( *this, QLatin1String( "dbFileName" ), true )
 {
 }
 
 DBTag::DBTag( const DBCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "dbCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "dbCfg" ), true )
 	,	m_dbFileName( *this, QLatin1String( "dbFileName" ), true )
 {
-	m_dbFileName.setValue( cfg.dbFileName() );
+	m_dbFileName.set_value( cfg.dbFileName() );
 
-	setDefined();
+	set_defined();
 }
 
 DBCfg

@@ -99,7 +99,8 @@ LogCfg::setSourcesLogDays( int days )
 //
 
 LogTag::LogTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "logCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logCfg" ), true )
 	,	m_isEventLogEnabled( *this, QLatin1String( "isEventLogEnabled" ), true )
 	,	m_isSourcesLogEnabled( *this, QLatin1String( "isSourcesLogEnabled" ), true )
 	,	m_sourcesLogDays( *this, QLatin1String( "sourcesLogDays" ), false )
@@ -107,18 +108,19 @@ LogTag::LogTag()
 }
 
 LogTag::LogTag( const LogCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "logCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logCfg" ), true )
 	,	m_isEventLogEnabled( *this, QLatin1String( "isEventLogEnabled" ), true )
 	,	m_isSourcesLogEnabled( *this, QLatin1String( "isSourcesLogEnabled" ), true )
 	,	m_sourcesLogDays( *this, QLatin1String( "sourcesLogDays" ), false )
 {
-	m_isEventLogEnabled.setValue( cfg.isEventLogEnabled() );
-	m_isSourcesLogEnabled.setValue( cfg.isSourcesLogEnabled() );
+	m_isEventLogEnabled.set_value( cfg.isEventLogEnabled() );
+	m_isSourcesLogEnabled.set_value( cfg.isSourcesLogEnabled() );
 
 	if( cfg.isSourcesLogEnabled() )
-		m_sourcesLogDays.setValue( cfg.sourcesLogDays() );
+		m_sourcesLogDays.set_value( cfg.sourcesLogDays() );
 
-	setDefined();
+	set_defined();
 }
 
 LogCfg

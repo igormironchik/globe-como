@@ -253,7 +253,8 @@ SoundsCfg::setWindowState( const WindowStateCfg & state )
 //
 
 SoundsCfgTag::SoundsCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "soundsCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "soundsCfg" ), true )
 	,	m_criticalSoundFile( *this, QLatin1String( "criticalSoundFile" ), false )
 	,	m_errorSoundFile( *this, QLatin1String( "errorSoundFile" ), false )
 	,	m_warningSoundFile( *this, QLatin1String( "warningSoundFile" ), false )
@@ -264,7 +265,8 @@ SoundsCfgTag::SoundsCfgTag()
 }
 
 SoundsCfgTag::SoundsCfgTag( const SoundsCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "soundsCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "soundsCfg" ), true )
 	,	m_criticalSoundFile( *this, QLatin1String( "criticalSoundFile" ), false )
 	,	m_errorSoundFile( *this, QLatin1String( "errorSoundFile" ), false )
 	,	m_warningSoundFile( *this, QLatin1String( "warningSoundFile" ), false )
@@ -274,21 +276,21 @@ SoundsCfgTag::SoundsCfgTag( const SoundsCfg & cfg )
 			QLatin1String( "windowState" ), true )
 {
 	if( cfg.isCriticalSoundEnabled() && !cfg.criticalSoundFile().isEmpty() )
-		m_criticalSoundFile.setValue( cfg.criticalSoundFile() );
+		m_criticalSoundFile.set_value( cfg.criticalSoundFile() );
 
 	if( cfg.isErrorSoundEnabled() && !cfg.errorSoundFile().isEmpty() )
-		m_errorSoundFile.setValue( cfg.errorSoundFile() );
+		m_errorSoundFile.set_value( cfg.errorSoundFile() );
 
 	if( cfg.isWarningSoundEnabled() && !cfg.warningSoundFile().isEmpty() )
-		m_warningSoundFile.setValue( cfg.warningSoundFile() );
+		m_warningSoundFile.set_value( cfg.warningSoundFile() );
 
 	if( cfg.isDebugSoundEnabled() && !cfg.debugSoundFile().isEmpty() )
-		m_debugSoundFile.setValue( cfg.debugSoundFile() );
+		m_debugSoundFile.set_value( cfg.debugSoundFile() );
 
 	if( cfg.isInfoSoundEnabled() && !cfg.infoSoundFile().isEmpty() )
-		m_infoSoundFile.setValue( cfg.infoSoundFile() );
+		m_infoSoundFile.set_value( cfg.infoSoundFile() );
 
-	setDefined();
+	set_defined();
 }
 
 SoundsCfg
@@ -296,19 +298,19 @@ SoundsCfgTag::cfg() const
 {
 	SoundsCfg c;
 
-	if( m_criticalSoundFile.isDefined() )
+	if( m_criticalSoundFile.is_defined() )
 		c.setCriticalSoundFile( m_criticalSoundFile.value() );
 
-	if( m_errorSoundFile.isDefined() )
+	if( m_errorSoundFile.is_defined() )
 		c.setErrorSoundFile( m_errorSoundFile.value() );
 
-	if( m_warningSoundFile.isDefined() )
+	if( m_warningSoundFile.is_defined() )
 		c.setWarningSoundFile( m_warningSoundFile.value() );
 
-	if( m_debugSoundFile.isDefined() )
+	if( m_debugSoundFile.is_defined() )
 		c.setDebugSoundFile( m_debugSoundFile.value() );
 
-	if( m_infoSoundFile.isDefined() )
+	if( m_infoSoundFile.is_defined() )
 		c.setInfoSoundFile( m_infoSoundFile.value() );
 
 	c.setWindowState( m_windowState.cfg() );

@@ -2,8 +2,9 @@
 TEMPLATE = app
 TARGET = LogViewer.App
 DESTDIR = ../..
-QT += core gui network sql widgets multimedia xml
-CONFIG += windows
+QT += core gui network sql widgets multimedia
+CONFIG += windows c++14
+DEFINES += ARGS_QSTRING_BUILD CFGFILE_QT_SUPPORT
 
 win32 {
     RC_FILE = log_viewer.rc
@@ -20,15 +21,14 @@ SOURCES += main.cpp \
            configuration.cpp \
            log.cpp
 
-include ( ../../QtArg/QtArg/qtarg.pri )
+include ( ../../3rdparty/Args/Args/Args.pri )
 
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
 
-INCLUDEPATH += $$PWD/../../ $$PWD/../../QtConfFile $$PWD/../ $$PWD/../../Como
-DEPENDPATH += $$PWD/../../ $$PWD/../../QtConfFile $$PWD/../ $$PWD/../../Como
+INCLUDEPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../Como $$PWD/../../3rdparty/Args
+DEPENDPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../Como $$PWD/../../3rdparty/Args
 
-unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo \
-    -L$$OUT_PWD/../../QtConfFile/lib/ -lQtConfFile
+unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
 
 win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
 else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a

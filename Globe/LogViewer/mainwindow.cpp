@@ -39,8 +39,8 @@
 #include <QSqlQuery>
 #include <QApplication>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace LogViewer {

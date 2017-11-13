@@ -23,9 +23,8 @@
 #ifndef GLOBE__COLOR_FOR_LEVEL_CFG_HPP__INCLUDED
 #define GLOBE__COLOR_FOR_LEVEL_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -39,7 +38,7 @@ class ColorForLevel;
 
 //! Tag with corresondence between level and color.
 class ColorForLevelTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	ColorForLevelTag();
@@ -51,21 +50,21 @@ public:
 
 private:
 	//! Color for "none" level.
-	QtConfFile::TagScalar< QString > m_noneColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_noneColor;
 	//! Color for "critical" level.
-	QtConfFile::TagScalar< QString > m_criticalColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_criticalColor;
 	//! Color for "error" level.
-	QtConfFile::TagScalar< QString > m_errorColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_errorColor;
 	//! Color for "warning" level.
-	QtConfFile::TagScalar< QString > m_warningColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_warningColor;
 	//! Color for "debug" level.
-	QtConfFile::TagScalar< QString > m_debugColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_debugColor;
 	//! Color for "info" level.
-	QtConfFile::TagScalar< QString > m_infoColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_infoColor;
 	//! Color for deregistered sources.
-	QtConfFile::TagScalar< QString > m_deregisteredColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_deregisteredColor;
 	//! Color for disconected sources.
-	QtConfFile::TagScalar< QString > m_disconnectedColor;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_disconnectedColor;
 }; // class ColorForLevelTag
 
 } /* namespace Globe */

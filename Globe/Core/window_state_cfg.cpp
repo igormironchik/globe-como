@@ -229,26 +229,28 @@ QPoint fromRelativePos( const QPointF & p )
 // PosTag
 //
 
-PosTag::PosTag( QtConfFile::Tag & owner, const QString & name,
+PosTag::PosTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_x( *this, QLatin1String( "x" ), true )
 	,	m_y( *this, QLatin1String( "y" ), true )
 {
 }
 
 PosTag::PosTag( const QPoint & pos,
-	QtConfFile::Tag & owner, const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name, bool isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_x( *this, QLatin1String( "x" ), true )
 	,	m_y( *this, QLatin1String( "y" ), true )
 {
 	const QPointF fp = toRelativePos( pos );
 
-	m_x.setValue( fp.x() );
-	m_y.setValue( fp.y() );
+	m_x.set_value( fp.x() );
+	m_y.set_value( fp.y() );
 
-	setDefined();
+	set_defined();
 }
 
 QPoint
@@ -290,33 +292,35 @@ QSize fromRelativeSize( const QSizeF & s )
 // SizeTag
 //
 
-SizeTag::SizeTag( QtConfFile::Tag & owner, const QString & name,
+SizeTag::SizeTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
 	,	m_constraint( 0.0, 1.0 )
 {
-	m_width.setConstraint( &m_constraint );
-	m_height.setConstraint( &m_constraint );
+	m_width.set_constraint( &m_constraint );
+	m_height.set_constraint( &m_constraint );
 }
 
 SizeTag::SizeTag( const QSize & size,
-	QtConfFile::Tag & owner, const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name, bool isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
 	,	m_constraint( 0.0, 1.0 )
 {
-	m_width.setConstraint( &m_constraint );
-	m_height.setConstraint( &m_constraint );
+	m_width.set_constraint( &m_constraint );
+	m_height.set_constraint( &m_constraint );
 
 	const QSizeF fs = toRelativeSize( size );
 
-	m_width.setValue( fs.width() );
-	m_height.setValue( fs.height() );
+	m_width.set_value( fs.width() );
+	m_height.set_value( fs.height() );
 
-	setDefined();
+	set_defined();
 }
 
 QSize
@@ -361,31 +365,33 @@ static inline WindowState stringToWindowState( const QString & v )
 		return MaximizedWindow;
 }
 
-StateTag::StateTag( QtConfFile::Tag & owner, const QString & name,
+StateTag::StateTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagScalar< QString >( owner, name, isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 {
 	init();
 }
 
 StateTag::StateTag( const WindowState & state,
-	QtConfFile::Tag & owner, const QString & name, bool isMandatory )
-	:	QtConfFile::TagScalar< QString >( owner, name, isMandatory )
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name, bool isMandatory )
+	:	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 {
 	init();
 
-	setValue( windowStateToString( state ) );
+	set_value( windowStateToString( state ) );
 }
 
 void
 StateTag::init()
 {
-	m_constraint.addValue( normalWindow );
-	m_constraint.addValue( minimizedWindow );
-	m_constraint.addValue( maximizedWindow );
-	m_constraint.addValue( hiddenWindow );
+	m_constraint.add_value( normalWindow );
+	m_constraint.add_value( minimizedWindow );
+	m_constraint.add_value( maximizedWindow );
+	m_constraint.add_value( hiddenWindow );
 
-	setConstraint( &m_constraint );
+	set_constraint( &m_constraint );
 }
 
 WindowState
@@ -400,7 +406,7 @@ StateTag::state() const
 //
 
 WindowStateCfgTag::WindowStateCfgTag( const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_pos( *this, QLatin1String( "position" ), true )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_state( *this, QLatin1String( "state" ), true )
@@ -408,9 +414,10 @@ WindowStateCfgTag::WindowStateCfgTag( const QString & name, bool isMandatory )
 {
 }
 
-WindowStateCfgTag::WindowStateCfgTag( QtConfFile::Tag & owner, const QString & name,
+WindowStateCfgTag::WindowStateCfgTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_pos( *this, QLatin1String( "position" ), true )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_state( *this, QLatin1String( "state" ), true )
@@ -420,17 +427,18 @@ WindowStateCfgTag::WindowStateCfgTag( QtConfFile::Tag & owner, const QString & n
 }
 
 WindowStateCfgTag::WindowStateCfgTag( const WindowStateCfg & cfg,
-	QtConfFile::Tag & owner, const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name, bool isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_pos( cfg.pos(), *this, QLatin1String( "position" ), true )
 	,	m_size( cfg.size(), *this, QLatin1String( "size" ), true )
 	,	m_state( cfg.state(), *this, QLatin1String( "state" ), true )
 	,	m_isActive( *this, QLatin1String( "activeWindow" ), false )
 {
 	if( cfg.isActive() )
-		m_isActive.setDefined();
+		m_isActive.set_defined();
 
-	setDefined();
+	set_defined();
 }
 
 WindowStateCfg
@@ -441,7 +449,7 @@ WindowStateCfgTag::cfg() const
 	cfg.setPos( m_pos.pos() );
 	cfg.setSize( m_size.size() );
 	cfg.setState( m_state.state() );
-	cfg.setActive( m_isActive.isDefined() );
+	cfg.setActive( m_isActive.is_defined() );
 
 	return cfg;
 }

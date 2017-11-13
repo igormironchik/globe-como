@@ -34,9 +34,8 @@
 // Qt include.
 #include <QList>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagVectorOfTags>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -110,7 +109,7 @@ private:
 
 //! Tag with scheme configuration.
 class SchemeCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	SchemeCfgTag();
@@ -131,13 +130,16 @@ private:
 
 private:
 	//! Sources.
-	QtConfFile::TagVectorOfTags< SourceCfgTag > m_sources;
+	cfgfile::tag_vector_of_tags_t< SourceCfgTag,
+		cfgfile::qstring_trait_t > m_sources;
 	//! Texts.
-	QtConfFile::TagVectorOfTags< TextCfgTag > m_texts;
+	cfgfile::tag_vector_of_tags_t< TextCfgTag,
+		cfgfile::qstring_trait_t > m_texts;
 	//! Aggregates.
-	QtConfFile::TagVectorOfTags< SchemeCfgTag > m_aggregates;
+	cfgfile::tag_vector_of_tags_t< SchemeCfgTag,
+		cfgfile::qstring_trait_t > m_aggregates;
 	//! Name.
-	QtConfFile::TagScalar< QString > m_name;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_name;
 	//! Pos.
 	QPointFTag m_pos;
 	//! Size.

@@ -121,27 +121,29 @@ ItemBaseCfg::setFont( const QFont & font )
 // QPointFTag
 //
 
-QPointFTag::QPointFTag( QtConfFile::Tag & owner, const QString & name,
+QPointFTag::QPointFTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_x( *this, QLatin1String( "x" ), true )
 	,	m_y( *this, QLatin1String( "y" ), true )
 {
 }
 
 QPointFTag::QPointFTag( const QPointF & point,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_x( *this, QLatin1String( "x" ), true )
 	,	m_y( *this, QLatin1String( "y" ), true )
 {
 	const QPointF mm = pointToMm( point );
 
-	m_x.setValue( mm.x() );
-	m_y.setValue( mm.y() );
+	m_x.set_value( mm.x() );
+	m_y.set_value( mm.y() );
 
-	setDefined();
+	set_defined();
 }
 
 QPointF
@@ -157,34 +159,36 @@ QPointFTag::point() const
 // QSizeFTag
 //
 
-QSizeFTag::QSizeFTag( QtConfFile::Tag & owner, const QString & name,
+QSizeFTag::QSizeFTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
 	,	m_constraint( 0, 9999 )
 {
-	m_width.setConstraint( &m_constraint );
-	m_height.setConstraint( &m_constraint );
+	m_width.set_constraint( &m_constraint );
+	m_height.set_constraint( &m_constraint );
 }
 
 QSizeFTag::QSizeFTag( const QSizeF & size,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_width( *this, QLatin1String( "width" ), true )
 	,	m_height( *this, QLatin1String( "height" ), true )
 	,	m_constraint( 0, 9999 )
 {
-	m_width.setConstraint( &m_constraint );
-	m_height.setConstraint( &m_constraint );
+	m_width.set_constraint( &m_constraint );
+	m_height.set_constraint( &m_constraint );
 
 	const QSizeF mm = sizeToMm( size );
 
-	m_width.setValue( mm.width() );
-	m_height.setValue( mm.height() );
+	m_width.set_value( mm.width() );
+	m_height.set_value( mm.height() );
 
-	setDefined();
+	set_defined();
 }
 
 QSizeF
@@ -200,9 +204,10 @@ QSizeFTag::size() const
 // QFontTag
 //
 
-QFontTag::QFontTag( QtConfFile::Tag & owner, const QString & name,
+QFontTag::QFontTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_name( *this, QLatin1String( "name" ), true )
 	,	m_pointSize( *this, QLatin1String( "pointSize" ), true )
 	,	m_weight( *this, QLatin1String( "weight" ), true )
@@ -211,9 +216,10 @@ QFontTag::QFontTag( QtConfFile::Tag & owner, const QString & name,
 }
 
 QFontTag::QFontTag( const QFont & font,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_name( *this, QLatin1String( "name" ), true )
 	,	m_pointSize( *this, QLatin1String( "pointSize" ), true )
 	,	m_weight( *this, QLatin1String( "weight" ), true )
@@ -225,12 +231,12 @@ QFontTag::QFontTag( const QFont & font,
 void
 QFontTag::setValue( const QFont & font )
 {
-	m_name.setValue( font.family() );
-	m_pointSize.setValue( font.pointSize() );
-	m_weight.setValue( font.weight() );
-	m_italic.setValue( font.italic() );
+	m_name.set_value( font.family() );
+	m_pointSize.set_value( font.pointSize() );
+	m_weight.set_value( font.weight() );
+	m_italic.set_value( font.italic() );
 
-	setDefined();
+	set_defined();
 }
 
 QFont
@@ -245,9 +251,10 @@ QFontTag::font() const
 // ItemBaseCfgTag
 //
 
-ItemBaseCfgTag::ItemBaseCfgTag( QtConfFile::Tag & owner, const QString & name,
+ItemBaseCfgTag::ItemBaseCfgTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_pos( *this, QLatin1String( "pos" ), true )
 	,	m_size( *this, QLatin1String( "size" ), true )
 	,	m_font( *this, QLatin1String( "font" ), false )
@@ -255,9 +262,10 @@ ItemBaseCfgTag::ItemBaseCfgTag( QtConfFile::Tag & owner, const QString & name,
 }
 
 ItemBaseCfgTag::ItemBaseCfgTag( const ItemBaseCfg & cfg,
-	QtConfFile::Tag & owner, const QString & name,
+	cfgfile::tag_t< cfgfile::qstring_trait_t > & owner, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( owner, name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			owner, name, isMandatory )
 	,	m_pos( cfg.pos(), *this, QLatin1String( "pos" ), true )
 	,	m_size( cfg.size(), *this, QLatin1String( "size" ), true )
 	,	m_font( *this, QLatin1String( "font" ), false )
@@ -265,7 +273,7 @@ ItemBaseCfgTag::ItemBaseCfgTag( const ItemBaseCfg & cfg,
 	if( cfg.isFontSet() )
 		m_font.setValue( cfg.font() );
 
-	setDefined();
+	set_defined();
 }
 
 ItemBaseCfg
@@ -276,7 +284,7 @@ ItemBaseCfgTag::baseCfg() const
 	cfg.setPos( m_pos.point() );
 	cfg.setSize( m_size.size() );
 
-	if( m_font.isDefined() )
+	if( m_font.is_defined() )
 		cfg.setFont( m_font.font() );
 
 	return cfg;

@@ -27,10 +27,8 @@
 #include <Globe/Core/window_state_cfg.hpp>
 #include <Globe/Core/channels_to_show.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
-#include <QtConfFile/ConstraintOneOf>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -75,13 +73,14 @@ private:
 
 //! Tag with shown windows mode.
 class ShownChannelsTag
-	:	public QtConfFile::TagScalar< QString >
+	:	public cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t >
 {
 public:
-	ShownChannelsTag( QtConfFile::Tag & owner, const QString & name,
-		bool isMandatory = false );
+	ShownChannelsTag( cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
+		const QString & name, bool isMandatory = false );
 
-	ShownChannelsTag( ShownChannels shownChannels, QtConfFile::Tag & owner,
+	ShownChannelsTag( ShownChannels shownChannels,
+		cfgfile::tag_t< cfgfile::qstring_trait_t > & owner,
 		const QString & name, bool isMandatory = false );
 
 	//! \return Shown channels mode.
@@ -93,7 +92,7 @@ private:
 
 private:
 	//! Constraint.
-	QtConfFile::ConstraintOneOf< QString > m_constraint;
+	cfgfile::constraint_one_of_t< QString > m_constraint;
 }; // class ShownChannelsTag
 
 
@@ -103,7 +102,7 @@ private:
 
 //! Tag with main window configuration.
 class MainWindowCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	MainWindowCfgTag();

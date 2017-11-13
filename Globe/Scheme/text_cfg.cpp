@@ -91,7 +91,7 @@ TextCfg::setText( const QString & t )
 //
 
 TextCfgTag::TextCfgTag( const QString & name, bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_text( *this, QLatin1String( "text" ), true )
 	,	m_baseCfg( *this, QLatin1String( "ui" ), true )
 {
@@ -99,13 +99,13 @@ TextCfgTag::TextCfgTag( const QString & name, bool isMandatory )
 
 TextCfgTag::TextCfgTag( const TextCfg & cfg, const QString & name,
 	bool isMandatory )
-	:	QtConfFile::TagNoValue( name, isMandatory )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > ( name, isMandatory )
 	,	m_text( *this, QLatin1String( "text" ), true )
 	,	m_baseCfg( cfg, *this, QLatin1String( "ui" ), true )
 {
-	m_text.setValue( cfg.text() );
+	m_text.set_value( cfg.text() );
 
-	setDefined();
+	set_defined();
 }
 
 TextCfg

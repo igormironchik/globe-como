@@ -30,10 +30,9 @@ defineTest(minQtVersion) {
 TEMPLATE = subdirs
 
 SUBDIRS = Como/Como \
-          QtConfFile/QtConfFile \
-          Globe
+	Globe
 
-Globe.depends = Como/Como QtConfFile/QtConfFile
+Globe.depends = Como/Como
 
 libDir.commands = mkdir lib
 

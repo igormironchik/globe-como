@@ -26,8 +26,8 @@
 // Globe include.
 #include <Globe/Core/window_state_cfg.hpp>
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -64,7 +64,7 @@ private:
 
 //! Tag with sources log configuration.
 class LogSourcesCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	LogSourcesCfgTag();

@@ -74,17 +74,19 @@ LogSourcesCfg::setWindowState( const WindowStateCfg & cfg )
 //
 
 LogSourcesCfgTag::LogSourcesCfgTag()
-	:	QtConfFile::TagNoValue( QLatin1String( "logSourcesCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logSourcesCfg" ), true )
 	,	m_windowState( *this, QLatin1String( "windowState" ), true )
 {
 }
 
 LogSourcesCfgTag::LogSourcesCfgTag( const LogSourcesCfg & cfg )
-	:	QtConfFile::TagNoValue( QLatin1String( "logSourcesCfg" ), true )
+	:	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t > (
+			QLatin1String( "logSourcesCfg" ), true )
 	,	m_windowState( cfg.windowState(), *this,
 			QLatin1String( "windowState" ), true )
 {
-	setDefined();
+	set_defined();
 }
 
 LogSourcesCfg

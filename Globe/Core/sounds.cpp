@@ -40,9 +40,11 @@
 #include <QMessageBox>
 #include <QTabWidget>
 #include <QCoreApplication>
+#include <QTextCodec>
+#include <QFile>
 
-// QtConfFile include.
-#include <QtConfFile/Utils>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 
 namespace Globe {
@@ -143,26 +145,51 @@ Sounds::readCfg( const QString & fileName )
 {
 	SoundsCfgTag tag;
 
-	try {
-		QtConfFile::readQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+	QFile file( fileName );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
-			"Sounds configuration read from file \"%1\"." )
-				.arg( fileName ) );
+	if( file.open( QIODevice::ReadOnly ) )
+	{
+		try {
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::read_cfgfile( tag, stream, fileName );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+				"Sounds configuration read from file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError, QString(
+				"Unable to read sounds configuration from file \"%1\".\n"
+				"%2" )
+					.arg( fileName )
+					.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to read sounds configuration..." ),
+				tr( "Unable to read sounds configuration...\n\n%1" )
+					.arg( x.desc() ) );
+
+			return;
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to read sounds configuration from file \"%1\".\n"
-			"%2" )
-				.arg( fileName )
-				.arg( x.whatAsQString() ) );
+			"Unable to open file." )
+				.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read sounds configuration..." ),
-			tr( "Unable to read sounds configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to read sounds configuration...\n\n"
+				"Unable to open file." ) );
 
 		return;
 	}
@@ -175,30 +202,53 @@ Sounds::readCfg( const QString & fileName )
 void
 Sounds::saveCfg( const QString & fileName )
 {
-	try {
-		d->m_cfg.setWindowState( windowStateCfg( this ) );
+	QFile file( fileName );
 
-		SoundsCfgTag tag( d->m_cfg );
+	if( file.open( QIODevice::WriteOnly ) )
+	{
+		try {
+			d->m_cfg.setWindowState( windowStateCfg( this ) );
 
-		QtConfFile::writeQtConfFile( tag, fileName,
-			QTextCodec::codecForName( "UTF-8" ) );
+			SoundsCfgTag tag( d->m_cfg );
 
-		Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
-			"Sounds configuration saved to file \"%1\"." )
-				.arg( fileName ) );
+			QTextStream stream( &file );
+			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
+
+			cfgfile::write_cfgfile( tag, stream );
+
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelInfo, QString(
+				"Sounds configuration saved to file \"%1\"." )
+					.arg( fileName ) );
+		}
+		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
+		{
+			file.close();
+
+			Log::instance().writeMsgToEventLog( LogLevelError, QString(
+				"Unable to save sounds configuration to file \"%1\".\n"
+				"%2" )
+					.arg( fileName )
+					.arg( x.desc() ) );
+
+			QMessageBox::critical( 0,
+				tr( "Unable to save sounds configuration..." ),
+				tr( "Unable to save sounds configuration...\n\n%1" )
+					.arg( x.desc() ) );
+		}
 	}
-	catch( const QtConfFile::Exception & x )
+	else
 	{
 		Log::instance().writeMsgToEventLog( LogLevelError, QString(
 			"Unable to save sounds configuration to file \"%1\".\n"
-			"%2" )
-				.arg( fileName )
-				.arg( x.whatAsQString() ) );
+			"Unable to open file." )
+				.arg( fileName ) );
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save sounds configuration..." ),
-			tr( "Unable to save sounds configuration...\n\n%1" )
-				.arg( x.whatAsQString() ) );
+			tr( "Unable to save sounds configuration...\n\n"
+				"Unable to open file." ) );
 	}
 }
 

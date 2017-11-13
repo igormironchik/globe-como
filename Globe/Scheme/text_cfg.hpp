@@ -23,9 +23,8 @@
 #ifndef GLOBE__SCHEME__TEXT_CFG_HPP__INCLUDED
 #define GLOBE__SCHEME__TEXT_CFG_HPP__INCLUDED
 
-// QtConfFile include.
-#include <QtConfFile/TagNoValue>
-#include <QtConfFile/TagScalar>
+// cfgfile include.
+#include <cfgfile/all.hpp>
 
 // Globe include.
 #include <Globe/Scheme/item_base_cfg.hpp>
@@ -75,7 +74,7 @@ private:
 
 //! Tag with text item configuration.
 class TextCfgTag
-	:	public QtConfFile::TagNoValue
+	:	public cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >
 {
 public:
 	TextCfgTag( const QString & name, bool isMandatory = false );
@@ -88,7 +87,7 @@ public:
 
 private:
 	//! Text.
-	QtConfFile::TagScalar< QString > m_text;
+	cfgfile::tag_scalar_t< QString, cfgfile::qstring_trait_t > m_text;
 	//! Item base cfg.
 	ItemBaseCfgTag m_baseCfg;
 }; // class TextCfgTag

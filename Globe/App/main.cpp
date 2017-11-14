@@ -61,7 +61,7 @@ int main( int argc, char ** argv )
 
 		cmd.addArgWithFlagAndName( QChar( 'c' ), QLatin1String( "conf-file" ),
 			true, false, QLatin1String( "Configuration file of the application." ) )
-			.addHelp( argv[ 0 ], QLatin1String( "Tool for viewieng sources "
+			.addHelp( true, argv[ 0 ], QLatin1String( "Tool for viewieng sources "
 				"in the remote applications" ) );
 
 		cmd.parse( argc, argv );

@@ -22,16 +22,17 @@ SOURCES += main.cpp \
            log.cpp
 
 include ( ../../3rdparty/Args/Args/Args.pri )
+include ( ../../3rdparty/cfgfile/cfgfile/cfgfile.pri )
 
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
 
-INCLUDEPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../Como $$PWD/../../3rdparty/Args
-DEPENDPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../Como $$PWD/../../3rdparty/Args
+INCLUDEPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/Args
+DEPENDPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/Args
 
-unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
+unix|win32: LIBS += -L$$OUT_PWD/../../3rdparty/Como/lib/ -lComo
 
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/Como.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/libComo.a
 
 macx {
 	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.

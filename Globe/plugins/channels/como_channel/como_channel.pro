@@ -9,15 +9,15 @@ DESTDIR = ../../../../plugins/como_channel
 
 SOURCES = plugin.cpp
 
-unix|win32: LIBS += -L$$OUT_PWD/../../../../Como/lib/ \
+unix|win32: LIBS += -L$$OUT_PWD/../../../../3rdparty/Como/lib/ \
     -L$$OUT_PWD/../../../.. \
     -lComo -lGlobe.Core
 
-INCLUDEPATH += $$PWD/../../../../Como $$PWD/../../../..
-DEPENDPATH += $$PWD/../../../../Como $$PWD/../../../..
+INCLUDEPATH += $$PWD/../../../../3rdparty/Como $$PWD/../../../..
+DEPENDPATH += $$PWD/../../../../3rdparty/Como $$PWD/../../../..
 
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../../../Como/lib/Como.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../../../Como/lib/libComo.a
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../../../3rdparty/Como/lib/Como.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../../../3rdparty/Como/lib/libComo.a
 
 dir.commands = mkdir ../../../../plugins/como_channel
 

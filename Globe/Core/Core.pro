@@ -10,8 +10,10 @@ CONFIG(debug, debug|release) {
 	DEFINES += GLOBE_CORE_DEBUG
 }
 
-INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../Como
-DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../Como
+INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Como
+DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Como
+
+include( ../../3rdparty/cfgfile/cfgfile/cfgfile.pri )
 
 RESOURCES = resources.qrc
 
@@ -189,13 +191,10 @@ exists( ../../como_defines.pri ) {
 include ( ../Scheme/Scheme.pri )
 
 
-unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
+unix|win32: LIBS += -L$$OUT_PWD/../../3rdparty/Como/lib/ -lComo
 
-INCLUDEPATH += $$PWD/../../Como
-DEPENDPATH += $$PWD/../../Como
-
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/Como.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/libComo.a
 
 macx {
 	QMAKE_LFLAGS += -Wl,-rpath,@loader_path/.,-rpath,@executable_path/.

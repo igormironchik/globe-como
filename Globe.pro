@@ -29,10 +29,10 @@ defineTest(minQtVersion) {
 
 TEMPLATE = subdirs
 
-SUBDIRS = Como/Como \
+SUBDIRS = 3rdparty/Como/Como \
 	Globe
 
-Globe.depends = Como/Como
+Globe.depends = 3rdparty/Como/Como
 
 libDir.commands = mkdir lib
 

@@ -19,13 +19,13 @@ exists( ../../como_defines.pri ) {
 }
 
 
-unix|win32: LIBS += -L$$OUT_PWD/../../Como/lib/ -lComo
+unix|win32: LIBS += -L$$OUT_PWD/../../3rdparty/Como/lib/ -lComo
 
-INCLUDEPATH += $$PWD/../../Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
-DEPENDPATH += $$PWD/../../Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
+INCLUDEPATH += $$PWD/../../3rdparty/Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
+DEPENDPATH += $$PWD/../../3rdparty/Como $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
 
-win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/Como.lib
-else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../Como/lib/libComo.a
+win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/Como.lib
+else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/libComo.a
 
 
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core

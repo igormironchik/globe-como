@@ -1,3 +1,5 @@
+[![Donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/imironchik/donate)
+
 Globe is a tool (application) for viewing Como sources. About Como you can read
 [here.]( https://github.com/igormironchik/components-observation )
 

@@ -462,7 +462,7 @@ ViewHeaderTag::cfg() const
 }
 
 void
-ViewHeaderTag::onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
+ViewHeaderTag::on_finish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 {
 	if( m_sourceNameColumn.cfg().pos() +
 		m_typeNameColumn.cfg().pos() +

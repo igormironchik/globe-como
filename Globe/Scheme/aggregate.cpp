@@ -155,6 +155,7 @@ AggregatePrivate::calcCurrentValue()
 			it( m_sources );
 
 	bool connected = false;
+	bool disconnected = false;
 
 	while( it.hasNext() )
 	{
@@ -164,6 +165,8 @@ AggregatePrivate::calcCurrentValue()
 		{
 			if( s.second.m_connected )
 				connected = true;
+			else
+				disconnected = true;
 
 			if( s.second.m_registered &&
 				s.second.m_connected &&
@@ -185,17 +188,17 @@ AggregatePrivate::calcCurrentValue()
 		}
 	}
 
-	if( found )
+	if( !disconnected && found )
 		q->setToolTip( createToolTip( m_channel, m_current ) );
-	else if( connected )
+	else if( disconnected )
 	{
-		m_fillColor = ColorForLevel::instance().deregisteredColor();
+		m_fillColor = ColorForLevel::instance().disconnectedColor();
 
 		q->setToolTip( QString() );
 	}
-	else
+	else if( connected )
 	{
-		m_fillColor = ColorForLevel::instance().disconnectedColor();
+		m_fillColor = ColorForLevel::instance().deregisteredColor();
 
 		q->setToolTip( QString() );
 	}
@@ -364,15 +367,8 @@ Aggregate::paint( QPainter * painter, const QStyleOptionGraphicsItem * option,
 
 void
 Aggregate::propertiesChanged()
-{
-	auto * dd = d_ptr();
-
-	bool registered = false;
-
-	SourcesManager::instance().syncSource( dd->m_channel,
-		dd->m_current, registered );
-
-	syncSource( dd->m_current, dd->m_channel, registered );
+{	
+	d_ptr()->calcCurrentValue();
 }
 
 void
@@ -394,17 +390,13 @@ Aggregate::channelDisconnected( const QString & name )
 		}
 	}
 
-	if( dd->m_channel == name )
-		syncSource( dd->m_current, dd->m_channel, false );
+	dd->calcCurrentValue();
 }
 
 void
 Aggregate::channelDeregistered( const QString & name )
 {
-	auto * dd = d_ptr();
-
-	if( dd->m_channel == name )
-		syncSource( dd->m_current, dd->m_channel, false );
+	channelDisconnected( name );
 }
 
 void

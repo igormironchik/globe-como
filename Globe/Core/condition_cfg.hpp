@@ -58,7 +58,7 @@ public:
 		set_value( value.toString() );
 	}
 
-	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
+	void on_finish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 	{
 		initValue( info );
 
@@ -338,12 +338,12 @@ public:
 	}
 
 	//! Called when tag parsing finished.
-	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
+	void on_finish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info )
 	{
 		bool relationDefined = false;
 		bool moreThanOneRelationDefined = false;
 
-		if( m_lessOrEqual.isDefined() )
+		if( m_lessOrEqual.is_defined() )
 		{
 			if( relationDefined )
 				moreThanOneRelationDefined = true;
@@ -351,7 +351,7 @@ public:
 			relationDefined = true;
 		}
 
-		if( m_less.isDefined() )
+		if( m_less.is_defined() )
 		{
 			if( relationDefined )
 				moreThanOneRelationDefined = true;
@@ -359,7 +359,7 @@ public:
 			relationDefined = true;
 		}
 
-		if( m_equal.isDefined() )
+		if( m_equal.is_defined() )
 		{
 			if( relationDefined )
 				moreThanOneRelationDefined = true;
@@ -367,7 +367,7 @@ public:
 			relationDefined = true;
 		}
 
-		if( m_greater.isDefined() )
+		if( m_greater.is_defined() )
 		{
 			if( relationDefined )
 				moreThanOneRelationDefined = true;
@@ -375,7 +375,7 @@ public:
 			relationDefined = true;
 		}
 
-		if( m_greaterOrEqual.isDefined() )
+		if( m_greaterOrEqual.is_defined() )
 		{
 			if( relationDefined )
 				moreThanOneRelationDefined = true;

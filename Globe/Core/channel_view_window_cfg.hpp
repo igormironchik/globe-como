@@ -261,7 +261,7 @@ public:
 	//! \return Configuration of the header.
 	ViewHeaderCfg cfg() const;
 
-	void onFinish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info );
+	void on_finish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t > & info );
 
 private:
 	//! Sort column.

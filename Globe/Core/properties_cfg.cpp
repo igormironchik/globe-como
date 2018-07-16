@@ -192,7 +192,7 @@ PropertiesManagerTag::exactlyThisSourceMap() const
 {
 	PropertiesMap map;
 
-	const int propsSize = m_map.size();
+	const int propsSize = static_cast< int > ( m_map.size() );
 
 	for( int i = 0; i < propsSize; ++i )
 	{
@@ -212,7 +212,7 @@ PropertiesManagerTag::exactlyThisSourceInAnyChannelMap() const
 {
 	PropertiesMap map;
 
-	const int propsSize = m_map.size();
+	const int propsSize = static_cast< int > ( m_map.size() );
 
 	for( int i = 0; i < propsSize; ++i )
 	{
@@ -232,7 +232,7 @@ PropertiesManagerTag::exactlyThisTypeOfSourceMap() const
 {
 	PropertiesMap map;
 
-	const int propsSize = m_map.size();
+	const int propsSize = static_cast< int > ( m_map.size() );
 
 	for( int i = 0; i < propsSize; ++i )
 	{
@@ -252,7 +252,7 @@ PropertiesManagerTag::exactlyThisTypeOfSourceInAnyChannelMap() const
 {
 	PropertiesMap map;
 
-	const int propsSize = m_map.size();
+	const int propsSize = static_cast< int > ( m_map.size() );
 
 	for( int i = 0; i < propsSize; ++i )
 	{

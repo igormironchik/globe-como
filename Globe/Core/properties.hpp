@@ -148,7 +148,8 @@ public:
 		if( m_conditions.is_defined() )
 		{
 			for( std::size_t i = 0; i < m_conditions.size(); ++i )
-				p.insertCondition( m_conditions.at( i ).condition(), i );
+				p.insertCondition( m_conditions.at( i ).condition(),
+					static_cast< int > ( i ) );
 		}
 
 		if( m_otherwise.is_defined() )

@@ -369,8 +369,9 @@ ChannelViewWindowModel::connected()
 {
 	d->m_isConnected = true;
 
-	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
-		QAbstractTableModel::index( d->m_data.size() - 1, priorityColumn ) );
+	beginResetModel();
+	d->m_data.clear();
+	endResetModel();
 }
 
 void

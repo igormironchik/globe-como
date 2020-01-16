@@ -32,6 +32,7 @@
 QT_BEGIN_NAMESPACE
 class QMenu;
 class QWidget;
+class QAction;
 QT_END_NAMESPACE
 
 

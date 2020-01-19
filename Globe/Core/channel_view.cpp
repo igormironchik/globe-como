@@ -37,6 +37,7 @@
 #include <Globe/Core/channel_view_window_model.hpp>
 #include <Globe/Core/color_for_level.hpp>
 #include <Globe/Core/properties_manager.hpp>
+#include <Globe/Core/word_wrap_delegate.hpp>
 
 
 namespace Globe {
@@ -57,6 +58,7 @@ public:
 		,	m_deletePropertiesAction( 0 )
 		,	m_addPropertiesAction( 0 )
 		,	m_promotePropertiesAction( 0 )
+		,	m_delegate( nullptr )
 	{
 	}
 
@@ -78,6 +80,8 @@ public:
 	QAction * m_addPropertiesAction;
 	//! Action for promoting of properties.
 	QAction * m_promotePropertiesAction;
+	//! Delegate.
+	WordWrapItemDelegate * m_delegate;
 	//! Current source.
 	Como::Source m_currentSource;
 	//! Key for current properties.
@@ -318,6 +322,9 @@ ChannelView::init()
 	setWordWrap( true );
 	setDragDropMode( QAbstractItemView::DragOnly );
 
+	d->m_delegate = new WordWrapItemDelegate( this );
+	setItemDelegate( d->m_delegate );
+
 	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
 		tr( "Copy" ), this );
 	d->m_copyAction->setShortcut( QKeySequence( "Ctrl+C" ) );
@@ -377,6 +384,16 @@ ChannelView::init()
 	unused.setVerticalHeader( header() );
 	header()->setParent( this );
 	unused.setVerticalHeader( new QHeaderView( Qt::Horizontal ) );
+
+	connect( header(), &QHeaderView::sectionResized,
+		this, &ChannelView::sectionResized );
+}
+
+void
+ChannelView::sectionResized( int section, int, int )
+{
+	for( int i = 0; i < d->m_model->rowCount(); ++i )
+		emit d->m_delegate->sizeHintChanged( d->m_model->index( i, section ) );
 }
 
 } /* namespace Globe */

@@ -147,6 +147,8 @@ private slots:
 	void moveUnderCursorDown();
 	//! Delete under cursor.
 	void deleteUnderCursor();
+	//! Section resized.
+	void sectionResized( int section, int, int );
 
 protected:
 	//! Context menu event.

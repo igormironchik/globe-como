@@ -91,6 +91,8 @@ private slots:
 	void deleteProperties();
 	//! Promote properties.
 	void promoteProperties();
+	//! Section resized.
+	void sectionResized( int section, int, int );
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

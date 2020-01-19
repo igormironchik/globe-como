@@ -25,6 +25,7 @@
 #include <Globe/Core/log_sources_model.hpp>
 #include <Globe/Core/color_for_level.hpp>
 #include <Globe/Core/properties_manager.hpp>
+#include <Globe/Core/word_wrap_delegate.hpp>
 
 // Qt include.
 #include <QAction>
@@ -34,6 +35,7 @@
 #include <QPainter>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QHeaderView>
 
 
 namespace Globe {
@@ -48,6 +50,7 @@ public:
 		:	m_model( 0 )
 		,	m_copyAction( 0 )
 		,	m_selectAllAction( 0 )
+		,	m_delegate( nullptr )
 	{
 	}
 
@@ -57,6 +60,8 @@ public:
 	QAction * m_copyAction;
 	//! Select all action.
 	QAction * m_selectAllAction;
+	//! Delegate.
+	WordWrapItemDelegate * m_delegate;
 }; // class LogSourcesViewPrivate;
 
 
@@ -90,6 +95,9 @@ LogSourcesView::init()
 	setSelectionBehavior( QAbstractItemView::SelectRows );
 	setWordWrap( true );
 
+	d->m_delegate = new WordWrapItemDelegate( this );
+	setItemDelegate( d->m_delegate );
+
 	d->m_copyAction= new QAction( QIcon( ":/img/edit_copy_22x22.png" ),
 		tr( "Copy" ), this );
 	d->m_copyAction->setShortcut( QKeySequence( "Ctrl+C" ) );
@@ -106,6 +114,8 @@ LogSourcesView::init()
 		this, &LogSourcesView::copyImplementation );
 	connect( d->m_selectAllAction, &QAction::triggered,
 		this, &LogSourcesView::selectAllImplementation );
+	connect( header(), &QHeaderView::sectionResized,
+		this, &LogSourcesView::sectionResized );
 
 	d->m_model = new LogSourcesModel( this );
 
@@ -207,6 +217,13 @@ LogSourcesView::contextMenuEvent( QContextMenuEvent * event )
 	menu.exec( event->globalPos() );
 
 	event->accept();
+}
+
+void
+LogSourcesView::sectionResized( int section, int, int )
+{
+	for( int i = 0; i < d->m_model->rowCount(); ++i )
+		emit d->m_delegate->sizeHintChanged( d->m_model->index( i, section ) );
 }
 
 } /* namespace Globe */

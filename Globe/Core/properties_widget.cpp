@@ -23,6 +23,7 @@
 // Globe include.
 #include <Globe/Core/properties_widget.hpp>
 #include <Globe/Core/properties_widget_model.hpp>
+#include <Globe/Core/word_wrap_delegate.hpp>
 
 // Qt include.
 #include <QContextMenuEvent>
@@ -117,6 +118,7 @@ public:
 		,	m_contextMenuRequestedIndex( -1 )
 		,	m_expressionDelegate( 0 )
 		,	m_levelDelegate( 0 )
+		,	m_delegate( nullptr )
 	{
 	}
 
@@ -184,6 +186,8 @@ public:
 	ComboBoxDelegate * m_expressionDelegate;
 	//! Delegate for the level.
 	ComboBoxDelegate * m_levelDelegate;
+	//! Delegate.
+	WordWrapItemDelegate * m_delegate;
 }; // class PropertiesListPrivate
 
 
@@ -221,6 +225,9 @@ PropertiesList::init()
 	setWordWrap( true );
 	header()->setSectionResizeMode( QHeaderView::ResizeToContents );
 
+	d->m_delegate = new WordWrapItemDelegate( this );
+	setItemDelegate( d->m_delegate );
+
 	setItemDelegateForColumn( 1, d->m_expressionDelegate );
 	setItemDelegateForColumn( 3, d->m_levelDelegate );
 
@@ -228,6 +235,8 @@ PropertiesList::init()
 		this, &PropertiesList::propertiesWrong );
 	connect( d->m_model, &PropertiesListModel::changed,
 		this, &PropertiesList::propertiesChanged );
+	connect( header(), &QHeaderView::sectionResized,
+		this, &PropertiesList::sectionResized );
 }
 
 Properties
@@ -411,6 +420,15 @@ PropertiesList::contextMenuEvent( QContextMenuEvent * event )
 	event->accept();
 }
 
+void
+PropertiesList::sectionResized( int section, int, int )
+{
+	if( section != 1 && section != 3 )
+	{
+		for( int i = 0; i < d->m_model->rowCount(); ++i )
+			emit d->m_delegate->sizeHintChanged( d->m_model->index( i, section ) );
+	}
+}
 
 //
 // PropertiesWidgetPrivate

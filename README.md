@@ -69,18 +69,3 @@ After clone update submodules with the next command:
 ```
 git submodule update --init --recursive
 ```
-
-# To Do
-
-In Qt 5.14.0 I see a regression with word wrapping in `QTreeView`, it doesn't work anymore and
-text is elided. I investigated the solution of the issue
-[here](https://imironchik.blogspot.com/2020/01/regression-in-qtreeview-with-word.html)
-
-It's not a trivial task, and I need to update code with the fix in event's log,
-channel view, sources log, properties dialog, etc.
-
-This is a good news that I know about the issue, but not sure when I will fix it, if will fix at all.
-Sure, if somebody will request the fix I will do it quickly, but not sure that somebody uses this
-application...
-
-If somebody want to make a PR with fix, you are welcome.

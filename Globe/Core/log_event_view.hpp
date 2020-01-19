@@ -66,6 +66,8 @@ private slots:
 	void selectAllImplementation();
 	//! Copy.
 	void copyImplementation();
+	//! Section resized.
+	void sectionResized( int section, int, int );
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

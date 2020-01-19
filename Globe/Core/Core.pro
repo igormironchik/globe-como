@@ -92,7 +92,8 @@ HEADERS += application_cfg.hpp \
            with_menu.hpp \
            tool_window_object.hpp \
            tool_window.hpp \
-           utils.hpp
+           utils.hpp \
+           word_wrap_delegate.hpp
 
 SOURCES += application_cfg.cpp \
            channel_attributes.cpp \
@@ -168,7 +169,8 @@ SOURCES += application_cfg.cpp \
            with_menu.cpp \
            tool_window_object.cpp \
            tool_window.cpp \
-           utils.cpp
+           utils.cpp \
+           word_wrap_delegate.cpp
 
 FORMS	 = channels_to_show.ui \
            channel_name_dialog.ui \

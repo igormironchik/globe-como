@@ -28,9 +28,10 @@ defineTest(minQtVersion) {
 }
 
 TEMPLATE = subdirs
+CONFIG += ordered
 
 SUBDIRS = 3rdparty/Como/Como \
-	Globe
+	src
 
 Globe.depends = 3rdparty/Como/Como
 

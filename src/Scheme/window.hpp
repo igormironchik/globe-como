@@ -58,7 +58,7 @@ signals:
 	void schemeChanged();
 
 public:
-	Window( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	Window( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~Window();
 

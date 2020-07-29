@@ -46,7 +46,7 @@ class SizeDialog
 
 public:
 	SizeDialog( int & width, int & height,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~SizeDialog();
 

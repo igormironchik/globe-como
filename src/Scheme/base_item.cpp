@@ -62,7 +62,7 @@ BaseItem::setMode( SceneMode mode )
 			QGraphicsItem::ItemIsFocusable );
 	else
 	{
-		setFlags( 0 );
+		setFlags( GraphicsItemFlags() );
 		setItemState( ItemNotSelected );
 	}
 }

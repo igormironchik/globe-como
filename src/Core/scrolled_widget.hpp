@@ -43,7 +43,7 @@ class ScrolledWidget
 	friend class ScrolledView;
 
 public:
-	ScrolledWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ScrolledWidget( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	virtual ~ScrolledWidget();
 

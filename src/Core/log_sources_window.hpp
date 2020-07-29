@@ -48,7 +48,7 @@ class CORE_EXPORT LogSourcesWindow
 	Q_OBJECT
 
 private:
-	LogSourcesWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	LogSourcesWindow( QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~LogSourcesWindow();
 

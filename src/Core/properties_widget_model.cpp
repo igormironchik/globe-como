@@ -418,7 +418,7 @@ PropertiesListModel::moveConditionUp( int row )
 	if( row == 0 )
 		return false;
 
-	d->m_data.swap( row, row - 1 );
+	d->m_data.swapItemsAt( row, row - 1 );
 
 	emit dataChanged( QAbstractTableModel::index( row - 1, conditionTypeColumn ),
 		QAbstractTableModel::index( row, messageColumn ) );
@@ -442,7 +442,7 @@ PropertiesListModel::moveConditionDown( int row )
 	else if( row == d->m_data.size() - 1 )
 		return false;
 
-	d->m_data.swap( row, row + 1 );
+	d->m_data.swapItemsAt( row, row + 1 );
 
 	emit dataChanged( QAbstractTableModel::index( row, conditionTypeColumn ),
 		QAbstractTableModel::index( row + 1, messageColumn ) );

@@ -44,7 +44,7 @@ class DisableSoundToDialog
 
 public:
 	explicit DisableSoundToDialog( QDateTime & to,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~DisableSoundToDialog();
 

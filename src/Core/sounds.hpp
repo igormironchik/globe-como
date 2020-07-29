@@ -56,7 +56,7 @@ class CORE_EXPORT Sounds
 	Q_OBJECT
 
 private:
-	Sounds( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	Sounds( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~Sounds();
 

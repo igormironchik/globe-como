@@ -57,7 +57,7 @@ signals:
 	void propertiesChanged();
 
 private:
-	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	PropertiesManager( QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~PropertiesManager();
 

@@ -58,7 +58,7 @@ signals:
 	void goToStartPageButtonClicked();
 
 public:
-	SelectQueryNavigation( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	SelectQueryNavigation( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~SelectQueryNavigation();
 

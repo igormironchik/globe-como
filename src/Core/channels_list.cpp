@@ -430,12 +430,12 @@ ChannelsList::sort( Qt::SortOrder order )
 	if( order == Qt::AscendingOrder )
 	{
 		ChannelWidgetLessThenFunction func;
-		qSort( d->m_widgets.begin(), d->m_widgets.end(), func );
+		std::sort( d->m_widgets.begin(), d->m_widgets.end(), func );
 	}
 	else
 	{
 		ChannelWidgetGreaterThenFunction func;
-		qSort( d->m_widgets.begin(), d->m_widgets.end(), func );
+		std::sort( d->m_widgets.begin(), d->m_widgets.end(), func );
 	}
 
 	d->updateWidgetsPosition();

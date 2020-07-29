@@ -45,7 +45,7 @@ class ChannelNameDialog
 public:
 	ChannelNameDialog( QString & result,
 		const QStringList & names,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~ChannelNameDialog();
 

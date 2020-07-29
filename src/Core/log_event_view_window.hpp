@@ -49,7 +49,7 @@ class CORE_EXPORT LogEventWindow
 	Q_OBJECT
 
 private:
-	LogEventWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	LogEventWindow( QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~LogEventWindow();
 

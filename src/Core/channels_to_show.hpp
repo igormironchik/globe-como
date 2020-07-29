@@ -64,7 +64,7 @@ signals:
 
 public:
 	ChannelsToShow( ShownChannels shownChannels = ShowAll,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~ChannelsToShow();
 
 	//! \return Shown channels mode.

@@ -51,7 +51,7 @@ signals:
 
 public:
 	ChannelTimeoutWidget( int timeout = 0,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~ChannelTimeoutWidget();
 
 	QSize sizeHint() const;

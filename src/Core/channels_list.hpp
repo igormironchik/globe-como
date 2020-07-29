@@ -56,7 +56,7 @@ public:
 	ChannelsList( ShownChannels shownChannels = ShowAll,
 		Qt::SortOrder sortOrder = Qt::AscendingOrder,
 		QWidget * parent = 0,
-		Qt::WindowFlags f = 0 );
+		Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~ChannelsList();
 

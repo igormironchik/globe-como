@@ -50,7 +50,7 @@ class SourceManualDialog
 
 public:
 	SourceManualDialog( Como::Source & source, QString & channelName,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~SourceManualDialog();
 

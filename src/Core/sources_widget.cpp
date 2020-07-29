@@ -95,7 +95,7 @@ SourcesWidget::init()
 	connect( &ChannelsManager::instance(), &ChannelsManager::channelRemoved,
 		this, &SourcesWidget::channelRemoved );
 
-	void ( QComboBox::*signal ) ( const QString & ) =
+	void ( QComboBox::*signal ) ( int ) =
 		&QComboBox::currentIndexChanged;
 
 	connect( d->m_ui.m_channel, signal,
@@ -156,8 +156,10 @@ SourcesWidget::channelRemoved( Channel * channel )
 }
 
 void
-SourcesWidget::selectChannel( const QString & channelName )
+SourcesWidget::selectChannel( int index )
 {
+	const auto channelName = d->m_ui.m_channel->itemText( index );
+
 	if( !channelName.isEmpty() )
 	{
 		d->m_model->setChannelName( channelName );

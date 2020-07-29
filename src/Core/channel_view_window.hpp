@@ -48,7 +48,7 @@ class ChannelViewWindow
 	Q_OBJECT
 
 public:
-	ChannelViewWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	ChannelViewWindow( QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~ChannelViewWindow();
 

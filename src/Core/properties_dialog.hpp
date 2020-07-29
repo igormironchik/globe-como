@@ -49,7 +49,7 @@ class PropertiesDialog
 
 public:
 	PropertiesDialog( const QString & cfgDirName, Como::Source::Type valueType,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~PropertiesDialog();
 
 	//! \return Properties widget.

@@ -47,7 +47,7 @@ class SourcesDialog
 
 public:
 	SourcesDialog( Como::Source & source, QString & channelName,
-		QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+		QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~SourcesDialog();
 

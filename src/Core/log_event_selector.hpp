@@ -77,7 +77,7 @@ class CORE_EXPORT LogEventSelector
 	Q_OBJECT
 
 public:
-	LogEventSelector( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	LogEventSelector( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~LogEventSelector();
 

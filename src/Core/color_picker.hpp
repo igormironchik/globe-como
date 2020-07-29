@@ -44,7 +44,7 @@ class ColorPicker
 	Q_OBJECT
 
 public:
-	ColorPicker( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ColorPicker( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~ColorPicker();
 
 	//! \return Color.

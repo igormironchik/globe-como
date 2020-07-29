@@ -48,7 +48,7 @@ class CORE_EXPORT SourcesMainWindow
 	Q_OBJECT
 
 private:
-	SourcesMainWindow( QWidget * parent = 0, Qt::WindowFlags flags = 0 );
+	SourcesMainWindow( QWidget * parent = 0, Qt::WindowFlags flags = Qt::WindowFlags() );
 
 	~SourcesMainWindow();
 

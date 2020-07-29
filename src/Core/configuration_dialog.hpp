@@ -49,7 +49,7 @@ class ConfigurationDialog
 	Q_OBJECT
 
 public:
-	ConfigurationDialog( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	ConfigurationDialog( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~ConfigurationDialog();
 

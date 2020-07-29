@@ -305,10 +305,7 @@ ComoChannel::ComoChannel( const QString & name,
 		this, &ComoChannel::sourceHasUpdatedValue,
 		Qt::QueuedConnection );
 
-	void ( Como::ClientSocket::*signal )( QAbstractSocket::SocketError ) =
-		&Como::ClientSocket::error;
-
-	connect( d->m_socket, signal,
+	connect( d->m_socket, &Como::ClientSocket::errorOccurred,
 		this, &ComoChannel::socketError,
 		Qt::QueuedConnection );
 

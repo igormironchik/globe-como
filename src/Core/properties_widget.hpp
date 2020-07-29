@@ -57,7 +57,7 @@ signals:
 
 public:
 	explicit PropertiesWidget( Como::Source::Type valueType,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~PropertiesWidget();
 
 	//! \return Properties.

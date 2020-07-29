@@ -51,7 +51,7 @@ class LogSourcesSelector
 	Q_OBJECT
 
 public:
-	LogSourcesSelector( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	LogSourcesSelector( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~LogSourcesSelector();
 

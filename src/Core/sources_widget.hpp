@@ -59,7 +59,7 @@ signals:
 	void channelSelected( const QString & );
 
 public:
-	SourcesWidget( QWidget * parent = 0, Qt::WindowFlags f = 0 );
+	SourcesWidget( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 	~SourcesWidget();
 
 	//! \return Name of the current channel.
@@ -79,7 +79,7 @@ private slots:
 	//! Channel removed.
 	void channelRemoved( Channel * channel );
 	//! Channel selected.
-	void selectChannel( const QString & channelName );
+	void selectChannel( int index );
 	//! Item activated.
 	void itemActivated( const QModelIndex & index );
 

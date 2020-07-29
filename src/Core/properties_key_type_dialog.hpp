@@ -47,7 +47,7 @@ class PropertiesKeyTypeDialog
 
 public:
 	explicit PropertiesKeyTypeDialog( PropertiesKeyType & type,
-		QWidget * parent = 0, Qt::WindowFlags f = 0 );
+		QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );
 
 	~PropertiesKeyTypeDialog();
 

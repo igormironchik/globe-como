@@ -25,7 +25,7 @@
 
 // Qt include.
 #include <QWidget>
-#include <QDesktopWidget>
+#include <QScreen>
 #include <QApplication>
 
 
@@ -167,7 +167,7 @@ void
 restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
 {
 	static const QRect screenGeometry =
-		QApplication::desktop()->availableGeometry();
+		QApplication::primaryScreen()->availableGeometry();
 
 	QPoint pos = cfg.pos();
 
@@ -206,7 +206,7 @@ restoreWindowState( const WindowStateCfg & cfg, QWidget * window )
 
 QPointF toRelativePos( const QPoint & p )
 {
-	const QRect geometry = QApplication::desktop()->screenGeometry();
+	const QRect geometry = QApplication::primaryScreen()->geometry();
 
 	return QPointF( (qreal) p.x() / (qreal) geometry.width(),
 		(qreal) p.y() / (qreal) geometry.height() );
@@ -219,7 +219,7 @@ QPointF toRelativePos( const QPoint & p )
 
 QPoint fromRelativePos( const QPointF & p )
 {
-	const QRect geometry = QApplication::desktop()->screenGeometry();
+	const QRect geometry = QApplication::primaryScreen()->geometry();
 
 	return QPoint( p.x() * geometry.width(), p.y() * geometry.height() );
 }
@@ -268,7 +268,7 @@ PosTag::pos() const
 
 QSizeF toRelativeSize( const QSize & s )
 {
-	const QRect geometry = QApplication::desktop()->screenGeometry();
+	const QRect geometry = QApplication::primaryScreen()->geometry();
 
 	return QSizeF( (qreal) s.width() / (qreal) geometry.width(),
 		(qreal) s.height() / (qreal) geometry.height() );
@@ -281,7 +281,7 @@ QSizeF toRelativeSize( const QSize & s )
 
 QSize fromRelativeSize( const QSizeF & s )
 {
-	const QRect geometry = QApplication::desktop()->screenGeometry();
+	const QRect geometry = QApplication::primaryScreen()->geometry();
 
 	return QSize( s.width() * geometry.width(),
 		s.height() * geometry.height() );

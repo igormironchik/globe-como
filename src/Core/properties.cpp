@@ -112,7 +112,7 @@ Properties::removeCondition( int index )
 void
 Properties::swapConditions( int i, int j )
 {
-	m_conditions.swap( i, j );
+	m_conditions.swapItemsAt( i, j );
 }
 
 const Condition &

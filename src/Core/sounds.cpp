@@ -168,8 +168,7 @@ Sounds::readCfg( const QString & fileName )
 			Log::instance().writeMsgToEventLog( LogLevelError, QString(
 				"Unable to read sounds configuration from file \"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read sounds configuration..." ),
@@ -229,8 +228,7 @@ Sounds::saveCfg( const QString & fileName )
 			Log::instance().writeMsgToEventLog( LogLevelError, QString(
 				"Unable to save sounds configuration to file \"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save sounds configuration..." ),

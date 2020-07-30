@@ -73,11 +73,11 @@ PropertiesKeyTypeDialog::init()
 	setWindowTitle( tr( "Select propertie's type..." ) );
 
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
-		this, &PropertiesKeyTypeDialog::accepted );
+		this, &PropertiesKeyTypeDialog::ok );
 }
 
 void
-PropertiesKeyTypeDialog::accepted()
+PropertiesKeyTypeDialog::ok()
 {
 	if( d->m_ui.m_exactly->isChecked() )
 		d->m_type =	ExactlyThisSource;

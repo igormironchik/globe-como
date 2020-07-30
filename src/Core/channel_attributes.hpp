@@ -98,7 +98,7 @@ private slots:
 	//! Port edited.
 	void portEdited( int val );
 	//! Accepted.
-	void accepted();
+	void ok();
 	//! Check fields.
 	void checkFields();
 	//! Check IPv4?

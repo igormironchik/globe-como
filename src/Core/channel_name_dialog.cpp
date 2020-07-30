@@ -70,7 +70,7 @@ ChannelNameDialog::~ChannelNameDialog()
 }
 
 void
-ChannelNameDialog::accepted()
+ChannelNameDialog::ok()
 {
 	d->m_result = d->m_ui.m_channel->currentText();
 
@@ -95,7 +95,7 @@ ChannelNameDialog::init( const QStringList & names )
 		this, &ChannelNameDialog::currentIndexChanged );
 
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
-		this, &ChannelNameDialog::accepted );
+		this, &ChannelNameDialog::ok );
 
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 

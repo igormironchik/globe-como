@@ -574,10 +574,9 @@ ChannelsList::addChannel()
 					QString( "Unable to create channel with "
 						"name: \"%1\" address: \"%2\", port: %3 "
 						"and type: \"%4\"" )
-							.arg( attributes.name() )
-							.arg( attributes.address() )
-							.arg( QString::number( attributes.port() ) )
-							.arg( attributes.type() ) );
+							.arg( attributes.name(), attributes.address(),
+								QString::number( attributes.port() ),
+								attributes.type() ) );
 
 				QMessageBox::critical( this, tr( "Unable to create channel..." ),
 					tr( "Unable to create channel with:\n"
@@ -585,10 +584,9 @@ ChannelsList::addChannel()
 						"\tAddress: %2\n"
 						"\tPort: %3\n"
 						"\tType: %4" )
-							.arg( attributes.name() )
-							.arg( attributes.address() )
-							.arg( QString::number( attributes.port() ) )
-							.arg( attributes.type() ) );
+							.arg( attributes.name(), attributes.address(),
+								QString::number( attributes.port() ),
+								attributes.type() ) );
 			}
 		}
 	}

@@ -471,9 +471,7 @@ ViewHeaderTag::on_finish( const cfgfile::parser_info_t< cfgfile::qstring_trait_t
 		m_priorityColumn.cfg().pos() != 10 )
 			throw cfgfile::exception_t< cfgfile::qstring_trait_t >( QString( "Wrong positions of the columns. "
 				"Where parent is \"%1\". In file \"%2\" on line %3." )
-					.arg( name() )
-					.arg( info.file_name() )
-					.arg( info.line_number() ) );
+					.arg( name(), info.file_name(), QString::number( info.line_number() ) ) );
 
 	cfgfile::tag_no_value_t< cfgfile::qstring_trait_t >::on_finish( info );
 }

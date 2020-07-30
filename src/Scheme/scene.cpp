@@ -162,7 +162,7 @@ public:
 		foreach( Text * t, m_texts )
 			t->setEditMode( mode );
 
-		for( Aggregate * a : m_agg )
+		for( Aggregate * a : qAsConst( m_agg ) )
 			a->setEditMode( mode );
 	}
 
@@ -176,7 +176,7 @@ public:
 		if( it != m_sources.end() )
 			it.value()->deregistered();
 
-		for( Aggregate * a : m_agg )
+		for( Aggregate * a : qAsConst( m_agg ) )
 			a->syncSource( s, channel, false );
 	}
 
@@ -193,7 +193,7 @@ public:
 				it.value()->disconnected();
 		}
 
-		for( Aggregate * a : m_agg )
+		for( Aggregate * a : qAsConst( m_agg ) )
 			a->channelDisconnected( channel );
 	}
 
@@ -210,7 +210,7 @@ public:
 				it.value()->deregistered();
 		}
 
-		for( Aggregate * a : m_agg )
+		for( Aggregate * a : qAsConst( m_agg ) )
 			a->channelDeregistered( channel );
 	}
 
@@ -224,7 +224,7 @@ public:
 		if( it != m_sources.end() )
 			it.value()->setSource( s );
 
-		for( Aggregate * a : m_agg )
+		for( Aggregate * a : qAsConst( m_agg ) )
 			a->syncSource( s, channel, true );
 	}
 
@@ -424,15 +424,13 @@ Scene::loadScheme( const QString & fileName )
 				QString( "Unable to load scheme configuration "
 					"from file \"%1\".\n"
 					"%2" )
-						.arg( fileName )
-						.arg( x.desc() ) );
+						.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read scheme configuration..." ),
 				tr( "Unable to read scheme configuration from file \"%1\"\n\n"
 					"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 		}
 	}
 	else
@@ -485,8 +483,7 @@ Scene::saveScheme( const QString & fileName )
 			QMessageBox::critical( 0,
 				tr( "Unable to save scheme configuration..." ),
 				tr( "Unable to save scheme configuration to file \"%1\".\n\n%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 		}
 	}
 	else
@@ -629,7 +626,7 @@ Scene::mouseReleaseEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
 				case EditSceneNewAggregate :
 				{
-					NameDlg dlg( views().first() );
+					NameDlg dlg( views().constFirst() );
 
 					if( dlg.exec() == QDialog::Accepted )
 					{
@@ -865,14 +862,12 @@ Scene::addChannel( const QString & name )
 		Log::instance().writeMsgToEventLog( LogLevelError,
 			QString( "Channel \"%1\" is unavailable for the\n"
 					 "scheme \"%2\"." )
-				.arg( name )
-				.arg( d->m_cfgFile ) );
+				.arg( name, d->m_cfgFile ) );
 
 		QMessageBox::critical( 0, tr( "Channel is unavailable..." ),
 			tr( "Channel \"%1\" is unavailable for the\n"
 				"scheme \"%2\"." )
-				.arg( name )
-				.arg( d->m_cfgFile ) );
+				.arg( name, d->m_cfgFile ) );
 	}
 }
 
@@ -942,7 +937,9 @@ Scene::syncSources()
 				channels.append( ch );
 		}
 
-		for( const auto & p : agg->sources() )
+		const auto s = agg->sources();
+
+		for( const auto & p : s )
 		{
 			Como::Source tmp = p.first;
 			bool isRegistered = false;

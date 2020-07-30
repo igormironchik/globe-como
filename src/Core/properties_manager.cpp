@@ -156,10 +156,7 @@ public:
 					"and key %2\n"
 					"from channel \"%3\" has been added.\n"
 					"New properties will be saved into file \"%4\"." )
-						.arg( sourceAsString )
-						.arg( keyAsString )
-						.arg( channelName )
-						.arg( fileName ) );
+						.arg( sourceAsString, keyAsString, channelName, fileName ) );
 
 			try {
 				savePropertiesConfiguration( m_directoryName + fileName,
@@ -169,10 +166,7 @@ public:
 					QString( "Properties for source %1\n"
 						"and key %2\n"
 						"from channel \"%3\" was saved in file \"%4\"." )
-							.arg( sourceAsString )
-							.arg( keyAsString )
-							.arg( channelName )
-							.arg( fileName ) );
+							.arg( sourceAsString, keyAsString, channelName, fileName ) );
 			}
 			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 			{
@@ -181,11 +175,7 @@ public:
 						"and key %2\n"
 						"from channel \"%3\" to file \"%4\".\n"
 						"%5" )
-							.arg( sourceAsString )
-							.arg( keyAsString )
-							.arg( channelName )
-							.arg( fileName )
-							.arg( x.desc() ) );
+							.arg( sourceAsString, keyAsString, channelName, fileName, x.desc() ) );
 
 				QMessageBox::critical( 0,
 					QObject::tr( "Unable to save properties..." ),
@@ -210,10 +200,7 @@ public:
 				"and key %2\n"
 				"from channel \"%3\" has been changed.\n"
 				"New properties will be saved into file \"%4\"." )
-					.arg( sourceAsString )
-					.arg( keyAsString )
-					.arg( channelName )
-					.arg( propertieConfFileName ) );
+					.arg( sourceAsString, keyAsString, channelName, propertieConfFileName ) );
 
 		try {
 			savePropertiesConfiguration( propertieConfFileName,
@@ -224,10 +211,7 @@ public:
 					"and key %2\n"
 					"from channel \"%3\"\n"
 					"was saved in file \"%4\"." )
-						.arg( sourceAsString )
-						.arg( keyAsString )
-						.arg( channelName )
-						.arg( propertieConfFileName ) );
+						.arg( sourceAsString, keyAsString, channelName, propertieConfFileName ) );
 		}
 		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 		{
@@ -236,11 +220,8 @@ public:
 					"and key %2\n"
 					"from channel \"%3\" to file \"%4\".\n"
 					"%5" )
-						.arg( sourceAsString )
-						.arg( keyAsString )
-						.arg( channelName )
-						.arg( propertieConfFileName )
-						.arg( x.desc() ) );
+						.arg( sourceAsString, keyAsString, channelName, propertieConfFileName,
+							x.desc() ) );
 
 			QMessageBox::critical( 0,
 				QObject::tr( "Unable to save properties..." ),
@@ -388,7 +369,7 @@ PropertiesManager::findProperties( const Como::Source & source,
 
 		PropertiesMap::ConstIterator it = d->m_exactlyThisSourceMap.find( key );
 
-		if( it != d->m_exactlyThisSourceMap.end() )
+		if( it != d->m_exactlyThisSourceMap.cend() )
 		{
 			if( resultedKey )
 				*resultedKey = key;
@@ -403,7 +384,7 @@ PropertiesManager::findProperties( const Como::Source & source,
 		PropertiesMap::ConstIterator it =
 			d->m_exactlyThisSourceInAnyChannelMap.find( key );
 
-		if( it != d->m_exactlyThisSourceInAnyChannelMap.end() )
+		if( it != d->m_exactlyThisSourceInAnyChannelMap.cend() )
 		{
 			if( resultedKey )
 				*resultedKey = key;
@@ -418,7 +399,7 @@ PropertiesManager::findProperties( const Como::Source & source,
 		PropertiesMap::ConstIterator it =
 			d->m_exactlyThisTypeOfSourceMap.find( key );
 
-		if( it != d->m_exactlyThisTypeOfSourceMap.end() )
+		if( it != d->m_exactlyThisTypeOfSourceMap.cend() )
 		{
 			if( resultedKey )
 				*resultedKey = key;
@@ -433,7 +414,7 @@ PropertiesManager::findProperties( const Como::Source & source,
 		PropertiesMap::ConstIterator it =
 			d->m_exactlyThisTypeOfSourceInAnyChannelMap.find( key );
 
-		if( it != d->m_exactlyThisTypeOfSourceInAnyChannelMap.end() )
+		if( it != d->m_exactlyThisTypeOfSourceInAnyChannelMap.cend() )
 		{
 			if( resultedKey )
 				*resultedKey = key;
@@ -639,8 +620,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 				Log::instance().writeMsgToEventLog( LogLevelInfo,
 					QString( "Properties for key %1\n"
 						"was saved in file \"%2\"." )
-							.arg( keyAsString )
-							.arg( fileName ) );
+							.arg( keyAsString, fileName ) );
 			}
 			catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 			{
@@ -648,9 +628,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 					QString( "Unable to save properties for key %1\n"
 						"to file \"%2\".\n"
 						"%3" )
-							.arg( keyAsString )
-							.arg( fileName )
-							.arg( x.desc() ) );
+							.arg( keyAsString, fileName, x.desc() ) );
 
 				QMessageBox::critical( 0, tr( "Unable to save properties..." ),
 					tr( "Unable to save properties...\n\n%1" )
@@ -854,8 +832,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 			Log::instance().writeMsgToEventLog( LogLevelError,
 				QString( "Unable to read propertie's configuration for key %1\n"
 					"from file \"%2\"." )
-						.arg( keyAsString )
-						.arg( fileName ) );
+						.arg( keyAsString, fileName ) );
 
 			const QMessageBox::StandardButton button =
 				QMessageBox::question( 0,
@@ -923,8 +900,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 					QString( "Unable to load properties manager's configuration "
 						" from file \"%1\".\n"
 						"%2" )
-							.arg( fileName )
-							.arg( x.desc() ) );
+							.arg( fileName, x.desc() ) );
 
 				QMessageBox::critical( 0,
 					tr( "Unable to read properties configuration..." ),

@@ -253,7 +253,9 @@ Aggregate::setCfg( const SchemeCfg & cfg )
 
 	dd->m_sources.clear();
 
-	for( const auto & p : sources() )
+	const auto s = sources();
+
+	for( const auto & p : s )
 	{
 		if( !dd->m_channels.contains( p.second ) )
 			dd->m_channels.append( p.second );

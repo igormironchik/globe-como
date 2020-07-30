@@ -124,7 +124,7 @@ public:
 		QMap< QString, QList< MapValue > >::ConstIterator it =
 			m_map.find( channelName );
 
-		if( it != m_map.end() )
+		if( it != m_map.cend() )
 		{
 			foreach( const MapValue & value, it.value() )
 				if( value.isRegistered() )
@@ -142,7 +142,7 @@ public:
 		QMap< QString, QList< MapValue > >::ConstIterator it =
 			m_map.find( channelName );
 
-		if( it != m_map.end() )
+		if( it != m_map.cend() )
 		{
 			foreach( const MapValue & value, it.value() )
 				if( !value.isRegistered() )
@@ -160,7 +160,7 @@ public:
 		QMap< QString, QList< MapValue > >::ConstIterator it =
 			m_map.find( channelName );
 
-		if( it != m_map.end() )
+		if( it != m_map.cend() )
 		{
 			foreach( const MapValue & value, it.value() )
 				result.append( value.source() );

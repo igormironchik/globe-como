@@ -156,8 +156,7 @@ LogEventWindow::saveConfiguration( const QString & fileName )
 				"Unable to save event's log window configuration to file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save event's log window configuration..." ),
@@ -209,8 +208,7 @@ LogEventWindow::readConfiguration( const QString & fileName )
 				"Unable to read event's log window configuration from file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read event's log window configuration..." ),

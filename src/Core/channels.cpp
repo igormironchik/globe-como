@@ -145,8 +145,10 @@ public:
 void
 ChannelsManagerPrivate::init()
 {
-	for( const auto & path : plugins( qApp->applicationDirPath() +
-		QStringLiteral( "/plugins" ) ) )
+	const auto pluginsPath = plugins( qApp->applicationDirPath() +
+		QStringLiteral( "/plugins" ) );
+
+	for( const auto & path : pluginsPath )
 	{
 		QPluginLoader loader( path );
 
@@ -287,10 +289,7 @@ ChannelsManager::createChannel(	const QString & name,
 			Log::instance().writeMsgToEventLog( LogLevelInfo,
 				QString( "Channel created. Name \"%1\", ip \"%2\", "
 						"port %3 and type \"%4\"." )
-					.arg( name )
-					.arg( hostAddress )
-					.arg( QString::number( port ) )
-					.arg( type ) );
+					.arg( name, hostAddress, QString::number( port ), type ) );
 
 			emit channelCreated( ch );
 
@@ -316,9 +315,7 @@ ChannelsManager::removeChannel( const QString & name )
 
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Channel removed. Name \"%1\", ip \"%2\" and port %3." )
-				.arg( name )
-				.arg( ch->hostAddress() )
-				.arg( QString::number( ch->portNumber() ) ) );
+				.arg( name, ch->hostAddress(), QString::number( ch->portNumber() ) ) );
 
 		emit channelRemoved( ch );
 

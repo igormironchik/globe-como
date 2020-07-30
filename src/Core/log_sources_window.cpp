@@ -157,8 +157,7 @@ LogSourcesWindow::saveConfiguration( const QString & fileName )
 				"Unable to save sources log window configuration to file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save sources log window configuration..." ),
@@ -210,8 +209,7 @@ LogSourcesWindow::readConfiguration( const QString & fileName )
 				"Unable to read sources log window configuration from file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read sources log window configuration..." ),

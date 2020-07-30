@@ -258,8 +258,7 @@ Configuration::readAppCfg( const QString & cfgFileName )
 				"Unable to load application's configuration from file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( d->m_cfgFileName )
-					.arg( x.desc() ) );
+					.arg( d->m_cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to load Globe's configuration file..." ),
@@ -333,8 +332,7 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 				"Unable to load main window's configuration from file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( cfgFileName )
-					.arg( x.desc() ) );
+					.arg( cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to load main window's configuration..." ),
@@ -407,8 +405,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 					"Unable to load channels configuration from file "
 					"\"%1\".\n"
 					"%2" )
-						.arg( cfgFileName )
-						.arg( x.desc() ) );
+						.arg( cfgFileName, x.desc() ) );
 
 				QMessageBox::critical( 0,
 					tr( "Unable to load channels configuration..." ),
@@ -493,15 +490,13 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 			Log::instance().writeMsgToEventLog( LogLevelError, QString(
 				"Unable to create new channel...\n"
 				"Channel with address \"%1\" and port %2 already exists." )
-					.arg( channelCfg.address() )
-					.arg( QString::number( channelCfg.port() ) ) );
+					.arg( channelCfg.address(), QString::number( channelCfg.port() ) ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to create new channel..." ),
 				tr( "Unable to create new channel...\n\n"
 					"Channel with address \"%1\" and port %2 already exists." )
-					.arg( channelCfg.address() )
-					.arg( QString::number( channelCfg.port() ) ) );
+					.arg( channelCfg.address(), QString::number( channelCfg.port() ) ) );
 		}
 	}
 }
@@ -604,8 +599,7 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 					"Unable to load windows configuration from file "
 					"\"%1\".\n"
 					"%2" )
-						.arg( cfgFileName )
-						.arg( x.desc() ) );
+						.arg( cfgFileName, x.desc() ) );
 
 				QMessageBox::critical( 0,
 					tr( "Unable to load windows configuration..." ),
@@ -901,8 +895,7 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 				"Unable to save application's configuration in file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( cfgFileName )
-					.arg( x.desc() ) );
+					.arg( cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save application's configuration..." ),
@@ -960,8 +953,7 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 				"Unable to save main window's configuration in file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( cfgFileName )
-					.arg( x.desc() ) );
+					.arg( cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save main window's configuration..." ),
@@ -1030,8 +1022,7 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 				"Unable to save channels configuration in file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( cfgFileName )
-					.arg( x.desc() ) );
+					.arg( cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save channels configuration..." ),
@@ -1097,8 +1088,7 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 				"Unable to save windows configuration in file "
 				"\"%1\".\n"
 				"%2" )
-					.arg( cfgFileName )
-					.arg( x.desc() ) );
+					.arg( cfgFileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save windows configuration..." ),

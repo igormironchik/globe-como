@@ -88,7 +88,7 @@ PropertiesCfgFileNameDialog::init()
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
-		this, &PropertiesCfgFileNameDialog::accepted );
+		this, &PropertiesCfgFileNameDialog::ok );
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::rejected,
 		this, &PropertiesCfgFileNameDialog::reject );
 	connect( d->m_ui.m_fileName, &QLineEdit::textChanged,
@@ -109,7 +109,7 @@ PropertiesCfgFileNameDialog::selectFile()
 }
 
 void
-PropertiesCfgFileNameDialog::accepted()
+PropertiesCfgFileNameDialog::ok()
 {
 	static const QString fileNameExtension = QLatin1String( ".cfg" );
 

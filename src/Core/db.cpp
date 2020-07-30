@@ -152,16 +152,14 @@ DB::readCfg( const QString & fileName )
 				QString( "Unable to read database configuration "
 					"from file \"%1\".\n"
 					"%2" )
-						.arg( fileName )
-						.arg( x.desc() ) );
+						.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read DB configuration..." ),
 				tr( "Unable to read DB configuration...\n\n"
 					"%1\n\n"
 					"Default database will be used: \"%2\"." )
-						.arg( x.desc() )
-						.arg( defaultDbFile )
+						.arg( x.desc(), defaultDbFile )
 			);
 
 			DBCfg cfg;
@@ -227,8 +225,7 @@ DB::saveCfg( const QString & fileName )
 				QString( "Unable to save database configuration to file "
 					"\"%1\".\n"
 					"%2" )
-						.arg( fileName )
-						.arg( x.desc() ) );
+						.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save DB configuration..." ),

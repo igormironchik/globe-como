@@ -57,7 +57,7 @@ private:
 
 private slots:
 	//! Accepted.
-	void accepted();
+	void ok();
 
 private:
 	Q_DISABLE_COPY( PropertiesKeyTypeDialog )

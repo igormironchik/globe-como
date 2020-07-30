@@ -295,7 +295,7 @@ ChannelAttributesDialog::init( const QStringList & types )
 	connect( d->m_ui.m_port, signal,
 		this, &ChannelAttributesDialog::portEdited );
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
-		this, &ChannelAttributesDialog::accepted );
+		this, &ChannelAttributesDialog::ok );
 	connect( d->m_checkButton, &QPushButton::clicked,
 		this, &ChannelAttributesDialog::checkFields );
 	connect( d->m_ui.m_checkIPv4, &QCheckBox::stateChanged,
@@ -390,7 +390,7 @@ ChannelAttributesDialog::portEdited( int val )
 }
 
 void
-ChannelAttributesDialog::accepted()
+ChannelAttributesDialog::ok()
 {
 	d->m_attributes.setName( d->m_ui.m_name->text() );
 	d->m_attributes.setAddress( d->m_ui.m_ip->text() );

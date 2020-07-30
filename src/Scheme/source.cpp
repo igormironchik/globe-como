@@ -288,7 +288,7 @@ void
 Source::addProperties()
 {
 	PropertiesManager::instance().addProperties( source(), channelName(),
-		d_ptr()->m_scene->views().first() );
+		d_ptr()->m_scene->views().constFirst() );
 }
 
 void
@@ -297,7 +297,7 @@ Source::editProperties()
 	auto * dd = d_ptr();
 
 	PropertiesManager::instance().editProperties( dd->m_currentKey,
-		dd->m_scene->views().first() );
+		dd->m_scene->views().constFirst() );
 }
 
 void
@@ -306,7 +306,7 @@ Source::deleteProperties()
 	auto * dd = d_ptr();
 
 	PropertiesManager::instance().removeProperties( dd->m_currentKey,
-		dd->m_scene->views().first() );
+		dd->m_scene->views().constFirst() );
 }
 
 void
@@ -315,7 +315,7 @@ Source::promoteProperties()
 	auto * dd = d_ptr();
 
 	PropertiesManager::instance().promoteProperties( dd->m_currentKey,
-		dd->m_scene->views().first() );
+		dd->m_scene->views().constFirst() );
 }
 
 SourcePrivate *

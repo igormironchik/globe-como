@@ -60,7 +60,7 @@ private:
 
 private slots:
 	//! Accepted.
-	void accepted();
+	void ok();
 	//! Channel was set.
 	void channelWasSet( int index );
 	//! Name was set.

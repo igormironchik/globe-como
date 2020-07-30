@@ -51,7 +51,7 @@ public:
 
 private slots:
 	//! Accepted.
-	void accepted();
+	void ok();
 	//! Current index changed.
 	void currentIndexChanged( int index );
 

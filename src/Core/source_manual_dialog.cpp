@@ -96,7 +96,7 @@ SourceManualDialog::init()
 	d->m_ui.m_buttons->button( QDialogButtonBox::Ok )->setEnabled( false );
 
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::accepted,
-		this, &SourceManualDialog::accepted );
+		this, &SourceManualDialog::ok );
 
 	connect( d->m_ui.m_buttons, &QDialogButtonBox::rejected,
 		this, &SourceManualDialog::reject );
@@ -134,7 +134,7 @@ static inline Como::Source::Type typeFromComboBox( int index )
 }
 
 void
-SourceManualDialog::accepted()
+SourceManualDialog::ok()
 {
 	Como::Source source( typeFromComboBox( d->m_ui.m_valueType->currentIndex() ),
 		d->m_ui.m_name->text(), d->m_ui.m_typeName->text(), QVariant(),

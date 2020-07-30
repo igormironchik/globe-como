@@ -945,8 +945,7 @@ Log::readCfg( const QString & fileName )
 			writeMsgToEventLog( LogLevelError, QString(
 				"Unable to read log configuration from file \"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read log configuration..." ),
@@ -1011,8 +1010,7 @@ Log::saveCfg( const QString & fileName )
 			writeMsgToEventLog( LogLevelError, QString(
 				"Unable to save log configuration to file \"%1\".\n"
 				"%2" )
-					.arg( fileName )
-					.arg( x.desc() ) );
+					.arg( fileName, x.desc() ) );
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save log configuration..." ),

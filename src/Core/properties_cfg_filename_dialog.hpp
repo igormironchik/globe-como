@@ -57,7 +57,7 @@ private slots:
 	//! Select file.
 	void selectFile();
 	//! Accepted.
-	void accepted();
+	void ok();
 	//! File name changed.
 	void fileNameChanged( const QString & text );
 

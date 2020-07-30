@@ -408,7 +408,7 @@ MainWindow::removeAggregate( Scheme::Window * w )
 Scheme::Window *
 MainWindow::findAggregate( const QString & name )
 {
-	for( auto * w : d->m_aggregates )
+	for( auto * w : qAsConst( d->m_aggregates ) )
 	{
 		if( w->schemeName() == name )
 			return w;

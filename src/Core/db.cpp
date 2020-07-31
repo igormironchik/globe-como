@@ -157,10 +157,8 @@ DB::readCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read DB configuration..." ),
-				tr( "Unable to read DB configuration...\n\n"
-					"%1\n\n"
-					"Default database will be used: \"%2\"." )
-						.arg( x.desc(), Configuration::instance().path() + defaultDbFile )
+				tr( "%1\n\nDefault database will be used: \"%2\"." )
+					.arg( x.desc(), Configuration::instance().path() + defaultDbFile )
 			);
 
 			DBCfg cfg;
@@ -180,10 +178,9 @@ DB::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read DB configuration..." ),
-			tr( "Unable to read DB configuration...\n\n"
-				"Unable to open file.\n\n"
+			tr( "Unable to open file \"%1\".\n\n"
 				"Default database will be used: \"%2\"." )
-					.arg( Configuration::instance().path() + defaultDbFile )
+					.arg( fileName, Configuration::instance().path() + defaultDbFile )
 		);
 
 		DBCfg cfg;
@@ -230,8 +227,7 @@ DB::saveCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save DB configuration..." ),
-				tr( "Unable to save DB configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -244,8 +240,7 @@ DB::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save DB configuration..." ),
-			tr( "Unable to save DB configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 

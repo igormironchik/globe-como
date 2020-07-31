@@ -174,8 +174,7 @@ Sounds::readCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read sounds configuration..." ),
-				tr( "Unable to read sounds configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			return;
 		}
@@ -189,8 +188,7 @@ Sounds::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read sounds configuration..." ),
-			tr( "Unable to read sounds configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 
 		return;
 	}
@@ -234,8 +232,7 @@ Sounds::saveCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save sounds configuration..." ),
-				tr( "Unable to save sounds configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -247,8 +244,7 @@ Sounds::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save sounds configuration..." ),
-			tr( "Unable to save sounds configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 

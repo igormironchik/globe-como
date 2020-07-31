@@ -161,8 +161,7 @@ LogSourcesWindow::saveConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save sources log window configuration..." ),
-				tr( "Unable to save sources log window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -175,8 +174,7 @@ LogSourcesWindow::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save sources log window configuration..." ),
-			tr( "Unable to save sources log window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 
@@ -213,8 +211,7 @@ LogSourcesWindow::readConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read sources log window configuration..." ),
-				tr( "Unable to read sources log window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			return;
 		}
@@ -231,8 +228,7 @@ LogSourcesWindow::readConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read sources log window configuration..." ),
-			tr( "Unable to read sources log window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 

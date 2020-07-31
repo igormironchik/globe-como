@@ -160,8 +160,7 @@ LogEventWindow::saveConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save event's log window configuration..." ),
-				tr( "Unable to save event's log window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -174,8 +173,7 @@ LogEventWindow::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save event's log window configuration..." ),
-			tr( "Unable to save event's log window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 
@@ -212,8 +210,7 @@ LogEventWindow::readConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read event's log window configuration..." ),
-				tr( "Unable to read event's log window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			return;
 		}
@@ -228,8 +225,7 @@ LogEventWindow::readConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read event's log window configuration..." ),
-			tr( "Unable to read event's log window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 
 		return;
 	}

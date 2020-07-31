@@ -178,8 +178,7 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save sources main window configuration..." ),
-				tr( "Unable to save sources main window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -192,8 +191,7 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save sources main window configuration..." ),
-			tr( "Unable to save sources main window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 
@@ -230,8 +228,7 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read sources main window configuration..." ),
-				tr( "Unable to read sources main window configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			return;
 		}
@@ -246,8 +243,7 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read sources main window configuration..." ),
-			tr( "Unable to read sources main window configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 
 		return;
 	}

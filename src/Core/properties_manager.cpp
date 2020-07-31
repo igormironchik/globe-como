@@ -785,8 +785,7 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save properties configuration..." ),
-				tr( "Unable to save properties configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -798,8 +797,7 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save properties configuration..." ),
-			tr( "Unable to save properties configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 
@@ -902,8 +900,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 				QMessageBox::critical( 0,
 					tr( "Unable to read properties configuration..." ),
-					tr( "Unable to read properties configuration...\n\n%1" )
-						.arg( x.desc() ) );
+					x.desc() );
 
 				return;
 			}
@@ -918,8 +915,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read properties configuration..." ),
-				tr( "Unable to read properties configuration...\n\n"
-					"Unable to open file." ) );
+				tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 
 			return;
 		}

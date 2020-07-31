@@ -193,8 +193,7 @@ ColorForLevel::saveCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save colors correspondence configuration..." ),
-				tr( "Unable to save colors correspondence configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -205,9 +204,8 @@ ColorForLevel::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save colors correspondence configuration..." ),
-			tr( "Unable to save colors correspondence configuration...\n\n"
-				"Unable to open file \"%1\"" )
-					.arg( fileName ) );
+			tr( "Unable to open file \"%1\"." )
+				.arg( fileName ) );
 	}
 }
 
@@ -244,8 +242,7 @@ ColorForLevel::readCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read colors correspondence configuration..." ),
-				tr( "Unable to read colors correspondence configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			return;
 		}
@@ -261,8 +258,7 @@ ColorForLevel::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read colors correspondence configuration..." ),
-			tr( "Unable to read colors correspondence configuration...\n\n"
-				"Unable to open file \"%1\"" )
+			tr( "Unable to open file \"%1\"." )
 				.arg( fileName ) );
 	}
 }

@@ -949,8 +949,7 @@ Log::readCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to read log configuration..." ),
-				tr( "Unable to read log configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 
 			d->m_logState = ErrorLogState;
 
@@ -966,8 +965,7 @@ Log::readCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to read log configuration..." ),
-			tr( "Unable to read log configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 
 		d->m_logState = ErrorLogState;
 
@@ -1014,8 +1012,7 @@ Log::saveCfg( const QString & fileName )
 
 			QMessageBox::critical( 0,
 				tr( "Unable to save log configuration..." ),
-				tr( "Unable to save log configuration...\n\n%1" )
-					.arg( x.desc() ) );
+				x.desc() );
 		}
 	}
 	else
@@ -1027,8 +1024,7 @@ Log::saveCfg( const QString & fileName )
 
 		QMessageBox::critical( 0,
 			tr( "Unable to save log configuration..." ),
-			tr( "Unable to save log configuration...\n\n"
-				"Unable to open file." ) );
+			tr( "Unable to open file \"%1\"." ).arg( fileName ) );
 	}
 }
 

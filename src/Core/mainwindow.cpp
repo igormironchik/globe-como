@@ -492,7 +492,7 @@ MainWindow::newSchemeWindow()
 
 	if( !fileName.isEmpty() )
 	{
-		fileName = relativeFilePath( fileName );
+		fileName = relativeFilePath( fileName, Configuration::instance().path() );
 
 		showScheme( fileName, true );
 	}
@@ -508,7 +508,7 @@ MainWindow::openScheme()
 
 	if( !fileName.isEmpty() )
 	{
-		fileName = relativeFilePath( fileName );
+		fileName = relativeFilePath( fileName, Configuration::instance().path() );
 
 		showScheme( fileName );
 	}

@@ -29,6 +29,7 @@
 #include <Core/mainwindow.hpp>
 #include <Core/globe_menu.hpp>
 #include <Core/tool_window_object.hpp>
+#include <Core/configuration.hpp>
 
 // Qt include.
 #include <QCloseEvent>
@@ -156,7 +157,7 @@ Window::loadScheme( const QString & fileName )
 
 	editMode();
 
-	d->m_view->scene()->loadScheme( d->m_cfgFile );
+	d->m_view->scene()->loadScheme( Configuration::instance().path() + d->m_cfgFile );
 }
 
 void
@@ -177,7 +178,7 @@ Window::createNewScheme( const QString & fileName )
 void
 Window::saveScheme()
 {
-	d->m_view->scene()->saveScheme( d->m_cfgFile );
+	d->m_view->scene()->saveScheme( Configuration::instance().path() + d->m_cfgFile );
 }
 
 void

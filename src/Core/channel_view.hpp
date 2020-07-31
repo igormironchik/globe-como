@@ -93,6 +93,8 @@ private slots:
 	void promoteProperties();
 	//! Section resized.
 	void sectionResized( int section, int, int );
+	//! Priority of the source has been changed.
+	void priorityChanged();
 
 protected:
 	void drawRow( QPainter * painter, const QStyleOptionViewItem & option,

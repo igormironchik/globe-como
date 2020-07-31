@@ -39,6 +39,8 @@
 #include <Core/properties_manager.hpp>
 #include <Core/word_wrap_delegate.hpp>
 
+#include <QDebug>
+
 
 namespace Globe {
 
@@ -376,6 +378,9 @@ ChannelView::init()
 	d->m_sortModel = new QSortFilterProxyModel( this );
 	d->m_sortModel->setSourceModel( d->m_model );
 
+	connect( d->m_model, &ChannelViewWindowModel::priorityChanged,
+		this, &ChannelView::priorityChanged );
+
 	setModel( d->m_sortModel );
 
 	// Enable moving of first column.
@@ -394,6 +399,13 @@ ChannelView::sectionResized( int section, int, int )
 {
 	for( int i = 0; i < d->m_model->rowCount(); ++i )
 		emit d->m_delegate->sizeHintChanged( d->m_model->index( i, section ) );
+}
+
+void
+ChannelView::priorityChanged()
+{
+	if( d->m_sortModel->sortColumn() == priorityColumn )
+		d->m_sortModel->invalidate();
 }
 
 } /* namespace Globe */

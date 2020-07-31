@@ -58,6 +58,10 @@ class ChannelViewWindowModel
 {
 	Q_OBJECT
 
+signals:
+	//! Priority of the source has been changed.
+	void priorityChanged();
+
 public:
 	ChannelViewWindowModel( QObject * parent = 0 );
 

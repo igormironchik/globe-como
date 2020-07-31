@@ -327,7 +327,7 @@ ChannelViewWindowModel::sourceUpdated( const Como::Source & source )
 		data.m_level = level;
 		data.m_isRegistered = true;
 
-		emit dataChanged( QAbstractTableModel::index( index, sourceNameColumn ),
+		emit dataChanged( QAbstractTableModel::index( index, valueColumn ),
 			QAbstractTableModel::index( index, priorityColumn ) );
 	}
 	else
@@ -357,7 +357,7 @@ ChannelViewWindowModel::sourceDeregistered( const Como::Source & source )
 
 		data.m_isRegistered = false;
 
-		emit dataChanged( QAbstractTableModel::index( index, sourceNameColumn ),
+		emit dataChanged( QAbstractTableModel::index( index, valueColumn ),
 			QAbstractTableModel::index( index, priorityColumn ) );
 	}
 	else
@@ -379,7 +379,7 @@ ChannelViewWindowModel::disconnected()
 {
 	d->m_isConnected = false;
 
-	emit dataChanged( QAbstractTableModel::index( 0, sourceNameColumn ),
+	emit dataChanged( QAbstractTableModel::index( 0, valueColumn ),
 		QAbstractTableModel::index( d->m_data.size() - 1, priorityColumn ) );
 }
 
@@ -395,6 +395,8 @@ void
 ChannelViewWindowModel::propertiesChanged()
 {
 	const int size = d->m_data.size();
+
+	bool prChanged = false;
 
 	for( int i = 0; i < size; ++i )
 	{
@@ -414,15 +416,21 @@ ChannelViewWindowModel::propertiesChanged()
 				data.m_source.type() ).level();
 		}
 
+		if( priority != data.m_priority )
+			prChanged = true;
+
 		if( priority != data.m_priority || level != data.m_level )
 		{
 			data.m_priority = priority;
 			data.m_level = level;
 
-			emit dataChanged( QAbstractTableModel::index( i, sourceNameColumn ),
+			emit dataChanged( QAbstractTableModel::index( i, valueColumn ),
 				QAbstractTableModel::index( i, priorityColumn ) );
 		}
 	}
+
+	if( prChanged )
+		emit priorityChanged();
 }
 
 void

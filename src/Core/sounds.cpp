@@ -31,6 +31,7 @@
 #include <Core/sounds_played_view.hpp>
 #include <Core/sounds_played_model.hpp>
 #include <Core/sounds_disabled_view.hpp>
+#include <Core/configuration.hpp>
 
 // Qt include.
 #include <QMenu>
@@ -42,6 +43,7 @@
 #include <QCoreApplication>
 #include <QTextCodec>
 #include <QFile>
+#include <QFileInfo>
 
 // cfgfile include.
 #include <cfgfile/all.hpp>
@@ -301,7 +303,9 @@ Sounds::playSound( Level level, const Como::Source & source,
 		if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
 		{
 			d->m_player->stop();
-			d->m_player->setMedia( QUrl::fromLocalFile( soundFileName( level ) ) );
+			d->m_player->setMedia( QUrl::fromLocalFile(
+				QFileInfo( Configuration::instance().path() + soundFileName( level ) )
+					.absoluteFilePath() ) );
 			d->m_player->play();
 
 			d->m_level = level;
@@ -331,9 +335,6 @@ Sounds::closeEvent( QCloseEvent * event )
 void
 Sounds::init()
 {
-	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
-		QLatin1String( "sounds" ) );
-
 	setWindowTitle( tr( "Sounds" ) );
 
 	QAction * showAction = new QAction( tr( "S&ounds" ), this );

@@ -36,6 +36,7 @@
 #include <Core/log.hpp>
 #include <Core/globe_menu.hpp>
 #include <Core/properties_cfg.hpp>
+#include <Core/configuration.hpp>
 
 #include "ui_properties_mainwindow.h"
 
@@ -54,13 +55,10 @@ namespace Globe {
 // PropertiesManagerPrivate
 //
 
-static const QString defaultConfigurationDirectory =
-	QLatin1String( "./etc/dataclasses/" );
-
 class PropertiesManagerPrivate {
 public:
 	explicit PropertiesManagerPrivate( PropertiesManager * parent )
-		:	m_directoryName( defaultConfigurationDirectory )
+		:	m_directoryName( defaultPropsConfigurationDirectory )
 		,	m_model( 0 )
 		,	m_sortModel( 0 )
 		,	m_toolWindowObject( 0 )
@@ -71,7 +69,7 @@ public:
 	//! Set directory for the properties configuration files.
 	void setDirectory( const QString & dir )
 	{
-		m_directoryName = relativeFilePath( dir );
+		m_directoryName = relativeFilePath( dir, Configuration::instance().path() );
 
 		if( !m_directoryName.endsWith( QChar( '/' ) ) &&
 			!m_directoryName.endsWith( QChar( '\\' ) ) )
@@ -159,8 +157,8 @@ public:
 						.arg( sourceAsString, keyAsString, channelName, fileName ) );
 
 			try {
-				savePropertiesConfiguration( m_directoryName + fileName,
-					p, source.type() );
+				savePropertiesConfiguration( Configuration::instance().path() +
+					m_directoryName + fileName, p, source.type() );
 
 				Log::instance().writeMsgToEventLog( LogLevelInfo,
 					QString( "Properties for source %1\n"
@@ -193,7 +191,7 @@ public:
 		it.value().properties() = p;
 
 		const QString propertieConfFileName =
-			m_directoryName + it.value().confFileName();
+			Configuration::instance().path() + m_directoryName + it.value().confFileName();
 
 		Log::instance().writeMsgToEventLog( LogLevelInfo,
 			QString( "Properties for source %1\n"
@@ -552,7 +550,8 @@ PropertiesManager::removeProperties( const PropertiesKey & key,
 
 			if( deleteFileButton == QMessageBox::Ok )
 			{
-				QFile confFile( d->m_directoryName + it.value().confFileName() );
+				QFile confFile( Configuration::instance().path() +
+					d->m_directoryName + it.value().confFileName() );
 				confFile.remove();
 			}
 		}
@@ -599,7 +598,7 @@ PropertiesManager::editProperties( const PropertiesKey & key, QWidget * parent )
 
 		if( propertiesDialog.exec() == QDialog::Accepted )
 		{
-			const QString fileName = d->m_directoryName +
+			const QString fileName = Configuration::instance().path() + d->m_directoryName +
 				it.value().confFileName();
 			const QString keyAsString = keyToString( key );
 
@@ -756,7 +755,7 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 	if( file.open( QIODevice::WriteOnly ) )
 	{
 		try {
-			PropertiesManagerTag tag( relativeFilePath( d->m_directoryName ),
+			PropertiesManagerTag tag( defaultPropsConfigurationDirectory,
 				d->m_exactlyThisSourceMap,
 				d->m_exactlyThisSourceInAnyChannelMap,
 				d->m_exactlyThisTypeOfSourceMap,
@@ -816,7 +815,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 
 		try {
 			readPropertiesConfiguration(
-				d->m_directoryName + it.value().confFileName(),
+				Configuration::instance().path() + d->m_directoryName + it.value().confFileName(),
 				it.value().properties(), it.value().valueType() );
 
 			Log::instance().writeMsgToEventLog( LogLevelInfo,
@@ -826,7 +825,7 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 		}
 		catch( const cfgfile::exception_t< cfgfile::qstring_trait_t > & x )
 		{
-			const QString fileName = d->m_directoryName +
+			const QString fileName = Configuration::instance().path() + d->m_directoryName +
 				it.value().confFileName();
 
 			Log::instance().writeMsgToEventLog( LogLevelError,
@@ -866,7 +865,6 @@ PropertiesManager::readPropertiesConfigs( PropertiesMap & map )
 void
 PropertiesManager::initWithDefaultCfg()
 {
-	checkPathAndCreateIfNotExists( d->m_directoryName );
 }
 
 void
@@ -928,7 +926,7 @@ PropertiesManager::readConfiguration( const QString & fileName )
 
 		d->setDirectory( tag.propertiesDirectory() );
 
-		checkPathAndCreateIfNotExists( d->m_directoryName );
+		checkDirAndCreateIfNotExists( Configuration::instance().path(), d->m_directoryName );
 
 		d->m_exactlyThisSourceMap = tag.exactlyThisSourceMap();
 		d->m_exactlyThisSourceInAnyChannelMap =

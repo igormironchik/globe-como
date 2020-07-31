@@ -33,6 +33,9 @@
 
 namespace Globe {
 
+static const QString defaultPropsConfigurationDirectory =
+	QLatin1String( "dataclasses/" );
+
 //
 // Configuration
 //
@@ -64,6 +67,9 @@ public:
 
 	//! Set configuration file name.
 	void setCfgFile( const QString & fileName );
+
+	//! \return Relative path for configuration files.
+	QString path() const;
 
 private:
 	//! Read application's configuration.

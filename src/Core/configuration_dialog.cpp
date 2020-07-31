@@ -28,6 +28,7 @@
 #include <Core/utils.hpp>
 #include <Core/sounds_cfg.hpp>
 #include <Core/sounds.hpp>
+#include <Core/configuration.hpp>
 
 #include "ui_configuration_dialog.h"
 
@@ -130,7 +131,7 @@ ConfigurationDialog::init()
 	connect( d->m_ui.m_clearSourcesLogButton, &QToolButton::clicked,
 		this, &ConfigurationDialog::clearSourcesLog );
 
-	checkDirAndCreateIfNotExists( QLatin1String( "./etc" ),
+	checkDirAndCreateIfNotExists( Configuration::instance().path(),
 		QLatin1String( "sounds" ) );
 }
 
@@ -336,11 +337,11 @@ ConfigurationDialog::soundSelectButtonClicked( QLineEdit * line )
 {
 	QString fileName = QFileDialog::getOpenFileName( this,
 		tr( "Open Sound" ),
-		"./etc/sounds",
+		Configuration::instance().path() + QStringLiteral( "sounds" ),
 		tr( "Sound Files (*.wav *.mp3 *.ogg)" ) );
 
 	if( !fileName.isEmpty() )
-		line->setText( relativeFilePath( fileName ) );
+		line->setText( relativeFilePath( fileName, Configuration::instance().path() ) );
 }
 
 void

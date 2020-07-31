@@ -241,8 +241,6 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 	LogEventWindow::instance().initMenu( *d->m_menu );
 	LogSourcesWindow::instance().initMenu( *d->m_menu );
 	Sounds::instance().initMenu( *d->m_menu );
-
-	checkPathAndCreateIfNotExists( QLatin1String( "./etc/schemes" ) );
 }
 
 const Menu &
@@ -489,7 +487,7 @@ MainWindow::newSchemeWindow()
 {
 	QString fileName = QFileDialog::getSaveFileName( this,
 		tr( "Save New Scheme" ),
-		QLatin1String( "./etc/schemes" ),
+		Configuration::instance().path() + QLatin1String( "schemes" ),
 		tr( "Scheme (*.scheme)" ) );
 
 	if( !fileName.isEmpty() )
@@ -505,7 +503,7 @@ MainWindow::openScheme()
 {
 	QString fileName = QFileDialog::getOpenFileName( this,
 		tr( "Open Scheme" ),
-		QLatin1String( "./etc/schemes" ),
+		Configuration::instance().path() + QLatin1String( "schemes" ),
 		tr( "Scheme (*.scheme)" ) );
 
 	if( !fileName.isEmpty() )

@@ -25,6 +25,7 @@
 #include <Core/db_cfg.hpp>
 #include <Core/utils.hpp>
 #include <Core/log.hpp>
+#include <Core/configuration.hpp>
 
 // cfgfile include.
 #include <cfgfile/all.hpp>
@@ -39,7 +40,7 @@
 namespace Globe {
 
 static const QString defaultDbFile =
-	QLatin1String( "./etc/db/globe.db" );
+	QLatin1String( "db/globe.db" );
 
 
 //
@@ -159,7 +160,7 @@ DB::readCfg( const QString & fileName )
 				tr( "Unable to read DB configuration...\n\n"
 					"%1\n\n"
 					"Default database will be used: \"%2\"." )
-						.arg( x.desc(), defaultDbFile )
+						.arg( x.desc(), Configuration::instance().path() + defaultDbFile )
 			);
 
 			DBCfg cfg;
@@ -182,7 +183,7 @@ DB::readCfg( const QString & fileName )
 			tr( "Unable to read DB configuration...\n\n"
 				"Unable to open file.\n\n"
 				"Default database will be used: \"%2\"." )
-					.arg( defaultDbFile )
+					.arg( Configuration::instance().path() + defaultDbFile )
 		);
 
 		DBCfg cfg;
@@ -256,12 +257,12 @@ DB::init( const QString & dbFileName )
 
 	d->m_dbFileName = dbFileName;
 
-	QFileInfo info( d->m_dbFileName );
+	QFileInfo info( Configuration::instance().path() + d->m_dbFileName );
 
 	checkPathAndCreateIfNotExists( info.path() );
 
 	d->m_connection = QSqlDatabase::addDatabase( "QSQLITE" );
-	d->m_connection.setDatabaseName( d->m_dbFileName );
+	d->m_connection.setDatabaseName( Configuration::instance().path() + d->m_dbFileName );
 
 	if( !d->m_connection.open() )
 	{

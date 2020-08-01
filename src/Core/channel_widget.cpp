@@ -278,6 +278,12 @@ ChannelWidget::channel() const
 }
 
 void
+ChannelWidget::setTimeout( int t )
+{
+	d->m_timeoutWidget->setTimeout( t );
+}
+
+void
 ChannelWidget::timeoutChanged( int msecs )
 {
 	d->m_channel->updateTimeout( msecs );

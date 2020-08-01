@@ -137,6 +137,25 @@ ChannelTimeoutWidget::minimumSizeHint() const
 }
 
 void
+ChannelTimeoutWidget::setTimeout( int t )
+{
+	if( t < timeout6 )
+		t = 0;
+
+	if( t > timeout1 )
+		t = timeout1;
+
+	const auto changed = d->m_timeout != t;
+
+	d->m_timeout = t;
+
+	update();
+
+	if( changed )
+		emit timeoutChanged( d->m_timeout );
+}
+
+void
 ChannelTimeoutWidget::paintEvent( QPaintEvent * event )
 {
 	Q_UNUSED( event )

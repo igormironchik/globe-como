@@ -57,6 +57,10 @@ public:
 	QSize sizeHint() const;
 	QSize minimumSizeHint() const;
 
+public slots:
+	//! Set timeout.
+	void setTimeout( int t );
+
 protected:
 	void paintEvent( QPaintEvent * event );
 	void mouseMoveEvent( QMouseEvent * event );

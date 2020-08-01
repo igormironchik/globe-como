@@ -482,10 +482,7 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 
 		if( channel )
 		{
-			MainWindow::instance().list()->addChannel( channel );
-
-			if( channelCfg.timeout() )
-				channel->updateTimeout( channelCfg.timeout() );
+			MainWindow::instance().list()->addChannel( channel, channelCfg.timeout() );
 
 			if( channelCfg.isMustBeConnected() )
 				channel->connectToHost();

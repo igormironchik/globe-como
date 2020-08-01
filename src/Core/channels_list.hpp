@@ -61,7 +61,7 @@ public:
 	~ChannelsList();
 
 	//! Add channel.
-	void addChannel( Channel * channel );
+	void addChannel( Channel * channel, int timeout );
 	//! Remove channel.
 	void removeChannel( Channel * channel );
 

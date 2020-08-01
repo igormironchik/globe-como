@@ -187,7 +187,7 @@ public:
 	}
 
 	//! \return ChannelWidgetAndLine for the given channel.
-	const ChannelWidgetAndLine & findWidget( Channel * channel )
+	const ChannelWidgetAndLine & findWidget( Channel * channel ) const
 	{
 		static const ChannelWidgetAndLine dummy;
 
@@ -198,8 +198,22 @@ public:
 		return dummy;
 	}
 
+	//! \return ChannelWidgetAndLine for the given channel.
+	ChannelWidgetAndLine & findWidget( Channel * channel )
+	{
+		static ChannelWidgetAndLine dummy;
+
+		auto it = std::find_if( m_widgets.begin(), m_widgets.end(),
+			[&] ( const auto & w ) { return w.widget()->channel() == channel; } );
+
+		if( it != m_widgets.end() )
+			return *it;
+
+		return dummy;
+	}
+
 	//! \return Is ChannelWidgetAndLine the last in the list.
-	bool isLast( const ChannelWidgetAndLine & w )
+	bool isLast( const ChannelWidgetAndLine & w ) const
 	{
 		return ( m_widgets.indexOf( w ) == ( m_widgets.size() - 1 ) );
 	}
@@ -297,7 +311,7 @@ ChannelsList::init()
 }
 
 void
-ChannelsList::addChannel( Channel * channel )
+ChannelsList::addChannel( Channel * channel, int timeout )
 {
 	if( channel )
 	{
@@ -348,6 +362,11 @@ ChannelsList::addChannel( Channel * channel )
 
 			sort( d->m_sortOrder );
 		}
+
+		auto & wt = d->findWidget( channel );
+
+		if( wt.widget() )
+			wt.widget()->setTimeout( timeout );
 	}
 }
 
@@ -567,7 +586,7 @@ ChannelsList::addChannel()
 				attributes.type() );
 
 			if( channel )
-				addChannel( channel );
+				addChannel( channel, 0 );
 			else
 			{
 				Log::instance().writeMsgToEventLog( LogLevelError,

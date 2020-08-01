@@ -57,6 +57,10 @@ public:
 	//! \return Channel.
 	Channel * channel() const;
 
+public slots:
+	//! Set timeout.
+	void setTimeout( int t );
+
 private slots:
 	//! Timeout was changed.
 	void timeoutChanged( int msecs );

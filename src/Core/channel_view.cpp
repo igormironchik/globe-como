@@ -213,13 +213,13 @@ ChannelView::copyImplementation()
 void
 ChannelView::fillWithColorChanged()
 {
-	update();
+	viewport()->update();
 }
 
 void
 ChannelView::colorForLevelChanged()
 {
-	update();
+	viewport()->update();
 }
 
 void

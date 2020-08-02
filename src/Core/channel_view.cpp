@@ -323,6 +323,7 @@ ChannelView::init()
 	setSelectionBehavior( QAbstractItemView::SelectRows );
 	setWordWrap( true );
 	setDragDropMode( QAbstractItemView::DragOnly );
+	setAllColumnsShowFocus( true );
 
 	d->m_delegate = new WordWrapItemDelegate( this );
 	setItemDelegate( d->m_delegate );

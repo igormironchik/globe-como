@@ -555,7 +555,7 @@ MainWindow::about()
 	QMessageBox::about( this, tr( "About Globe" ),
 		tr( "Globe - Monitoring application.\n\n"
 			"Author - Igor Mironchik (igor.mironchik at gmail dot com).\n\n"
-			"Copyright (c) 2012-2017 Igor Mironchik.\n\n"
+			"Copyright (c) 2012-2020 Igor Mironchik.\n\n"
 			"Licensed under GNU GPL 3.0." ) );
 }
 

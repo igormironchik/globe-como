@@ -41,6 +41,7 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QMap>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsView>
 
 
 namespace Globe {
@@ -420,6 +421,14 @@ Aggregate::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 
 		menu.exec( event->screenPos() );
 	}
+	else if( dd->m_mode == ViewScene )
+	{
+		QMenu menu;
+
+		menu.addAction( tr( "Show Aggregate" ), this, &Aggregate::showScheme );
+
+		menu.exec( event->screenPos() );
+	}
 
 	event->accept();
 }
@@ -444,6 +453,9 @@ Aggregate::showScheme()
 		w = new Window;
 		w->initMenu( MainWindow::instance().menu() );
 		w->loadScheme( dd->m_cfg, dd->m_mode == EditScene );
+
+		auto * v = scene()->views().first();
+		w->move( v->mapToGlobal( v->mapFromScene( scenePos() ) ) );
 
 		connect( w, &Window::schemePossiblyChanged, this, &Aggregate::schemeChanged );
 	}

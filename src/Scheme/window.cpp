@@ -217,7 +217,7 @@ Window::editMode()
 		d->m_view->scene()->setMode( ViewScene );
 		d->m_editModeToolBar->hide();
 
-		emit schemeChanged();
+		emit schemePossiblyChanged();
 	}
 }
 
@@ -261,7 +261,7 @@ Window::closeEvent( QCloseEvent * event )
 	else
 		MainWindow::instance().removeAggregate( this );
 
-	emit schemeChanged();
+	emit schemePossiblyChanged();
 }
 
 void

@@ -54,8 +54,8 @@ class Window
 	Q_OBJECT
 
 signals:
-	//! Scheme changed.
-	void schemeChanged();
+	//! Scheme possibly changed.
+	void schemePossiblyChanged();
 
 public:
 	Window( QWidget * parent = 0, Qt::WindowFlags f = Qt::WindowFlags() );

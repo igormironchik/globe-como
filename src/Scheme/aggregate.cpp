@@ -32,6 +32,7 @@
 #include <Core/color_for_level.hpp>
 #include <Core/sources.hpp>
 #include <Core/mainwindow.hpp>
+#include <Core/channels.hpp>
 
 // Qt include.
 #include <QPainter>
@@ -444,7 +445,7 @@ Aggregate::showScheme()
 		w->initMenu( MainWindow::instance().menu() );
 		w->loadScheme( dd->m_cfg, dd->m_mode == EditScene );
 
-		connect( w, &Window::schemeChanged, this, &Aggregate::schemeChanged );
+		connect( w, &Window::schemePossiblyChanged, this, &Aggregate::schemeChanged );
 	}
 
 	w->show();
@@ -461,8 +462,45 @@ Aggregate::schemeChanged()
 
 	setCfg( cfg );
 
+	auto * dd = d_ptr();
+
 	for( const auto & ch : qAsConst( listOfChannels() ) )
-		d_ptr()->m_scene->addChannel( ch );
+		dd->m_scene->addChannel( ch );
+
+	QMutableMapIterator< QString,
+		QMap< Key, QPair< Como::Source, SourceProps > > >
+			it( dd->m_sources );
+
+	while( it.hasNext() )
+	{
+		it.next();
+
+		QMutableMapIterator< Key, QPair< Como::Source, SourceProps > > sit( it.value() );
+
+		while( sit.hasNext() )
+		{
+			sit.next();
+
+			SourcesManager::instance().syncSource( it.key(), sit.value().first,
+				sit.value().second.m_registered );
+
+			const Properties * props = PropertiesManager::instance()
+				.findProperties( sit.value().first, it.key(), 0 );
+
+			if( props )
+			{
+				sit.value().second.m_level = props->checkConditions( sit.value().first.value(),
+					sit.value().first.type() ).level();
+			}
+
+			auto * ch = ChannelsManager::instance().channelByName( it.key() );
+
+			if( ch )
+				sit.value().second.m_connected = ch->isConnected();
+		}
+	}
+
+	dd->calcCurrentValue();
 }
 
 AggregatePrivate *

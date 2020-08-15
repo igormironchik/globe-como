@@ -3,6 +3,8 @@ Globe is a tool (application) for viewing Como sources. About Como you can read
 
 The main idea of the application is that the user creates a channel in the Globe for viewing available Como sources in the application that provides such information through the given channel.
 
+![](doc/img/globe.png)
+
 # Channels
 
 ![Main window]( doc/img/globe_mainwindow.png )

@@ -215,14 +215,10 @@ BaseItem::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 				d->m_selection->clear();
 
 			d->m_selection->addItem( this );
-
-			event->accept();
 		}
-		else
-			QGraphicsObject::mouseReleaseEvent( event );
 	}
-	else
-		QGraphicsObject::mouseReleaseEvent( event );
+
+	QGraphicsObject::mouseReleaseEvent( event );
 }
 
 void

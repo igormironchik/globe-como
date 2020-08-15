@@ -30,13 +30,18 @@ defineTest(minQtVersion) {
 TEMPLATE = subdirs
 CONFIG += ordered
 
-SUBDIRS = 3rdparty/Como/Como \
+SUBDIRS = 3rdparty/Como \
 	src
 
-Globe.depends = 3rdparty/Como/Como
+Globe.depends = 3rdparty/Como
 
 libDir.commands = mkdir lib
 
 pluginsDir.commands = mkdir plugins
 
 QMAKE_EXTRA_TARGETS += libDir pluginsDir
+
+buildDir.input = build_directory.in
+buildDir.output = $$PWD/example/build_directory
+
+QMAKE_SUBSTITUTES += buildDir

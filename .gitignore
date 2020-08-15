@@ -10,3 +10,5 @@
 /**/ui_*.h
 /**/qrc_*.cpp
 /**/Globe.pro.user*
+/**/example/build_directory
+/**/example/Globe/db/*

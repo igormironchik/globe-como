@@ -96,9 +96,6 @@ int main( int argc, char ** argv )
 	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
 	app.installTranslator( &appTranslator );
 
-	Globe::checkDirAndCreateIfNotExists( QLatin1String( "./" ),
-		QLatin1String( "etc" ) );
-
 	Globe::LaunchTime::instance();
 
 	Globe::Log::instance();

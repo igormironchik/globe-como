@@ -164,13 +164,13 @@ LogSourcesSelector::channelNameChanged( const QString & text )
 }
 
 void
-LogSourcesSelector::chanelCreated( Channel * ch )
+LogSourcesSelector::chanelCreated( Globe::Channel * ch )
 {
 	d->m_ui.m_channel->addItem( ch->name() );
 }
 
 void
-LogSourcesSelector::channelRemoved( Channel * ch )
+LogSourcesSelector::channelRemoved( Globe::Channel * ch )
 {
 	const int index = d->m_ui.m_channel->findText( ch->name() );
 

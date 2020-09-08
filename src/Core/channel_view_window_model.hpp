@@ -124,7 +124,7 @@ private slots:
 	//! Properties changed.
 	void propertiesChanged();
 	//! Channel removed.
-	void channelRemoved( Channel * ch );
+	void channelRemoved( Globe::Channel * ch );
 
 private:
 	Q_DISABLE_COPY( ChannelViewWindowModel )

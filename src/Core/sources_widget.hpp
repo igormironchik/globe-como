@@ -75,9 +75,9 @@ private slots:
 	//! New source.
 	void newSource( const Como::Source & source, const QString & channelName );
 	//! Channel created.
-	void channelCreated( Channel * channel );
+	void channelCreated( Globe::Channel * channel );
 	//! Channel removed.
-	void channelRemoved( Channel * channel );
+	void channelRemoved( Globe::Channel * channel );
 	//! Channel selected.
 	void selectChannel( int index );
 	//! Item activated.

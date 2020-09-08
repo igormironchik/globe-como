@@ -85,7 +85,7 @@ public:
 
 public slots:
 	//! Play sound.
-	void playSound( Level level, const Como::Source & source,
+	void playSound( Globe::Level level, const Como::Source & source,
 		const QString & channelName );
 
 private slots:

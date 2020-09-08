@@ -90,9 +90,9 @@ private slots:
 	//! Source deregistered.
 	void sourceDeregistered( const Como::Source & source );
 	//! Channel created.
-	void channelCreated( Channel * channel );
+	void channelCreated( Globe::Channel * channel );
 	//! Channel removed.
-	void channelRemoved( Channel * channel );
+	void channelRemoved( Globe::Channel * channel );
 	//! Channel disconnected.
 	void channelDisconnected();
 

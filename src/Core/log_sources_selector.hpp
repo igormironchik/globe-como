@@ -81,9 +81,9 @@ private slots:
 	//! Channel name changed.
 	void channelNameChanged( const QString & text );
 	//! New channel.
-	void chanelCreated( Channel * ch );
+	void chanelCreated( Globe::Channel * ch );
 	//! Channel removed.
-	void channelRemoved( Channel * ch );
+	void channelRemoved( Globe::Channel * ch );
 	//! New sources available.
 	void newSource( const Como::Source & source, const QString & channelName );
 	//! Type changed.

@@ -182,7 +182,7 @@ Window::saveScheme()
 }
 
 void
-Window::loadScheme( const SchemeCfg & cfg, bool editing )
+Window::loadScheme( const Globe::Scheme::SchemeCfg & cfg, bool editing )
 {
 	if( !cfg.name().isEmpty() )
 		setTitle( cfg.name() );

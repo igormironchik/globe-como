@@ -121,7 +121,7 @@ protected:
 
 private slots:
 	//! Channel was removed.
-	void channelRemoved( Channel * channel );
+	void channelRemoved( Globe::Channel * channel );
 	//! New source or update.
 	void sourceUpdated( const Como::Source & source );
 	//! Source deregistered.

@@ -132,13 +132,13 @@ SourcesWidget::newSource( const Como::Source & source,
 }
 
 void
-SourcesWidget::channelCreated( Channel * channel )
+SourcesWidget::channelCreated( Globe::Channel * channel )
 {
 	d->m_ui.m_channel->addItem( channel->name() );
 }
 
 void
-SourcesWidget::channelRemoved( Channel * channel )
+SourcesWidget::channelRemoved( Globe::Channel * channel )
 {
 	const int index = d->m_ui.m_channel->findText( channel->name() );
 

@@ -200,9 +200,9 @@ class ChannelsManager
 
 signals:
 	//! New channel created.
-	void channelCreated( Channel * );
+	void channelCreated( Globe::Channel * );
 	//! Channel was removed.
-	void channelRemoved( Channel * );
+	void channelRemoved( Globe::Channel * );
 
 private:
 	ChannelsManager();

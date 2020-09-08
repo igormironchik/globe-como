@@ -434,7 +434,7 @@ ChannelViewWindowModel::propertiesChanged()
 }
 
 void
-ChannelViewWindowModel::channelRemoved( Channel * ch )
+ChannelViewWindowModel::channelRemoved( Globe::Channel * ch )
 {
 	if( ch->name() == d->m_channelName )
 		disconnected();

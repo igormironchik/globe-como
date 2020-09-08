@@ -87,7 +87,7 @@ public slots:
 	//! Save scheme.
 	void saveScheme();
 	//! Load scheme.
-	void loadScheme( const SchemeCfg & cfg, bool editing = false );
+	void loadScheme( const Globe::Scheme::SchemeCfg & cfg, bool editing = false );
 
 private slots:
 	//! Edit mode changed.

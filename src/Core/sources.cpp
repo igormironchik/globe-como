@@ -339,7 +339,7 @@ SourcesManager::sourceDeregistered( const Como::Source & source )
 }
 
 void
-SourcesManager::channelCreated( Channel * channel )
+SourcesManager::channelCreated( Globe::Channel * channel )
 {
 	if( d->m_map.find( channel->name() ) == d->m_map.end() )
 		d->m_map.insert( channel->name(), QList< MapValue > () );
@@ -355,7 +355,7 @@ SourcesManager::channelCreated( Channel * channel )
 }
 
 void
-SourcesManager::channelRemoved( Channel * channel )
+SourcesManager::channelRemoved( Globe::Channel * channel )
 {
 	d->m_map.remove( channel->name() );
 

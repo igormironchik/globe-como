@@ -291,7 +291,7 @@ Sounds::soundFileName( Level level )
 }
 
 void
-Sounds::playSound( Level level, const Como::Source & source,
+Sounds::playSound( Globe::Level level, const Como::Source & source,
 	const QString & channelName )
 {
 	if( level <= d->m_level && isSoundEnabled( level ) )

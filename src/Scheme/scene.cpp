@@ -716,7 +716,7 @@ Scene::keyPressEvent( QKeyEvent * keyEvent )
 }
 
 void
-Scene::channelRemoved( Channel * channel )
+Scene::channelRemoved( Globe::Channel * channel )
 {
 	if( d->m_mode == ViewScene )
 	{

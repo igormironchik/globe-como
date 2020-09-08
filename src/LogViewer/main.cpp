@@ -47,7 +47,7 @@ int main( int argc, char ** argv )
 		cmd.addArgWithFlagAndName( QChar( 'c' ), QLatin1String( "conf-file" ),
 				true, false, QLatin1String(
 					"Configuration file of the application." ) )
-			.addHelp( argv[ 0 ], QLatin1String( "Globe event's log viewer." ) );
+			.addHelp( true, argv[ 0 ], QLatin1String( "Globe event's log viewer." ) );
 
 		cmd.parse( argc, argv );
 

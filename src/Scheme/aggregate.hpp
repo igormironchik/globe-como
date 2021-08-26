@@ -94,7 +94,7 @@ public:
 protected:
 	void contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 		Q_DECL_OVERRIDE;
-	void mouseDoubleClickEvent( QGraphicsSceneMouseEvent * event );
+	void mouseDoubleClickEvent( QGraphicsSceneMouseEvent * event ) Q_DECL_OVERRIDE;
 
 
 private slots:

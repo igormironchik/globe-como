@@ -4,3 +4,6 @@
 [submodule "3rdparty/Como"]
 	path = 3rdparty/Como
 	url = https://github.com/igormironchik/components-observation.git
+[submodule "3rdparty/args-parser"]
+	path = 3rdparty/args-parser
+	url = https://github.com/igormironchik/args-parser.git

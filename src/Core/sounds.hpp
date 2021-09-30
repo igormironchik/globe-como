@@ -90,7 +90,7 @@ public slots:
 
 private slots:
 	//! Player state changed.
-	void playerStateChanged( QMediaPlayer::State state );
+	void playerStateChanged( QMediaPlayer::PlaybackState state );
 
 protected:
 	void closeEvent( QCloseEvent * event );

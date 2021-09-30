@@ -39,7 +39,7 @@
 #include <QToolBar>
 #include <QActionGroup>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QScreen>
 
 
 namespace Globe {
@@ -200,8 +200,7 @@ Window::loadScheme( const Globe::Scheme::SchemeCfg & cfg, bool editing )
 
 	d->m_view->resize( ( d->m_view->scene()->sceneRect().size().toSize() +
 		QSize( 10, 10 ) ).boundedTo(
-			QApplication::desktop()->availableGeometry( this ).size() -
-			QSize( 200, 150 ) ) );
+			screen()->availableGeometry().size() - QSize( 200, 150 ) ) );
 }
 
 void

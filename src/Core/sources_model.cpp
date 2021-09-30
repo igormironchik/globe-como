@@ -30,6 +30,7 @@
 #include <QDataStream>
 #include <QMimeData>
 #include <QStringList>
+#include <QIODevice>
 
 
 namespace Globe {

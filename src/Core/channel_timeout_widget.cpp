@@ -184,7 +184,7 @@ ChannelTimeoutWidget::mouseMoveEvent( QMouseEvent * event )
 {
 	if( d->m_mousePressed )
 	{
-		const int column = d->column( event->x() );
+		const int column = d->column( event->position().x() );
 		const int timeout = d->timeoutForColumn( column );
 		if( d->m_timeout != timeout )
 		{
@@ -203,7 +203,7 @@ void
 ChannelTimeoutWidget::mousePressEvent( QMouseEvent * event )
 {
 	d->m_mousePressed = true;
-	const int column = d->column( event->x() );
+	const int column = d->column( event->position().x() );
 	const int timeout = d->timeoutForColumn( column );
 
 	if( d->m_timeout != timeout )

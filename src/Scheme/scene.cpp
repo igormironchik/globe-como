@@ -400,7 +400,6 @@ Scene::loadScheme( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 
@@ -460,7 +459,6 @@ Scene::saveScheme( const QString & fileName )
 			SchemeCfgTag tag( schemeCfg() );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 

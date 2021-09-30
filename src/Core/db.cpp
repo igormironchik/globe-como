@@ -34,7 +34,6 @@
 #include <QMessageBox>
 #include <QFileInfo>
 #include <QCoreApplication>
-#include <QTextCodec>
 
 
 namespace Globe {
@@ -133,7 +132,6 @@ DB::readCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 
@@ -205,7 +203,6 @@ DB::saveCfg( const QString & fileName )
 			DBTag tag( cfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 

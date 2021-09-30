@@ -30,7 +30,7 @@
 #include <QPushButton>
 #include <QButtonGroup>
 #include <QRadioButton>
-#include <QRegExp>
+#include <QRegularExpression>
 
 
 namespace Globe {
@@ -58,7 +58,7 @@ public:
 	//! Color of normal text.
 	QColor m_textColor;
 	//! Regular expression for checking the format of date and time.
-	QRegExp m_formatRegExp;
+	QRegularExpression m_formatRegExp;
 }; // class DisableSoundToDialogPrivate
 
 
@@ -92,18 +92,19 @@ DisableSoundToDialog::acceptButtonClicked()
 		d->m_to = d->m_ui.m_actualDateTimeEdit->dateTime();
 	else
 	{
-		const int pos = d->m_formatRegExp.indexIn(
-			d->m_ui.m_relativeDateTimeEdit->text() );
+		const auto match = d->m_formatRegExp.match(
+			d->m_ui.m_relativeDateTimeEdit->text(),
+			QRegularExpression::PartialPreferCompleteMatch );
 
-		if( pos > -1 )
+		if( match.hasMatch() )
 		{
 			int days = 0;
 			int hours = 0;
 			int minutes = 0;
 
-			const QString daysString = d->m_formatRegExp.cap( 2 );
-			const QString hoursString = d->m_formatRegExp.cap( 4 );
-			const QString minutesString = d->m_formatRegExp.cap( 6 );
+			const QString daysString = match.captured( 2 );
+			const QString hoursString = match.captured( 4 );
+			const QString minutesString = match.captured( 6 );
 
 			if( !daysString.isEmpty() )
 				days = daysString.toInt();
@@ -186,7 +187,10 @@ DisableSoundToDialog::init()
 bool
 DisableSoundToDialog::checkCorrectnessOfFormat( const QString & dt )
 {
-	return d->m_formatRegExp.exactMatch( dt );
+	const auto match = d->m_formatRegExp.match( dt,
+		QRegularExpression::PartialPreferCompleteMatch );
+
+	return ( match.hasMatch() && !match.hasPartialMatch() );
 }
 
 void

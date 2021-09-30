@@ -763,7 +763,6 @@ PropertiesManager::saveConfiguration( const QString & fileName )
 				windowStateCfg( this ) );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -877,7 +876,6 @@ PropertiesManager::readConfiguration( const QString & fileName )
 		{
 			try {
 				QTextStream stream( &file );
-				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 				cfgfile::read_cfgfile( tag, stream, fileName );
 

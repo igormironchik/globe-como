@@ -22,7 +22,6 @@ SOURCES += main.cpp \
            log.cpp
 
 include ( ../../3rdparty/Args/Args/Args.pri )
-include ( ../../3rdparty/cfgfile/cfgfile/cfgfile.pri )
 
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
 

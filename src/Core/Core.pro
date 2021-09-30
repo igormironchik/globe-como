@@ -13,8 +13,6 @@ CONFIG(debug, debug|release) {
 INCLUDEPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Como
 DEPENDPATH += $$PWD/.. $$PWD/../.. $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Como
 
-include( ../../3rdparty/cfgfile/cfgfile/cfgfile.pri )
-
 RESOURCES = resources.qrc
 
 HEADERS += application_cfg.hpp \

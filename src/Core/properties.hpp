@@ -30,7 +30,6 @@
 #include <QList>
 #include <QFile>
 #include <QTextStream>
-#include <QTextCodec>
 
 // Globe include.
 #include <Core/condition.hpp>
@@ -186,7 +185,6 @@ readPropertiesConfigurationTemplate( const QString & fileName, Properties & p )
 	if( file.open( QIODevice::ReadOnly ) )
 	{
 		QTextStream stream( &file );
-		stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 		try {
 			cfgfile::read_cfgfile( tag, stream, fileName );
@@ -221,7 +219,6 @@ savePropertiesConfigurationTemplate( const QString & fileName,
 	if( file.open( QIODevice::WriteOnly ) )
 	{
 		QTextStream stream( &file );
-		stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 		try {
 			cfgfile::write_cfgfile( tag, stream );

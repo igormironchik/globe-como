@@ -12,8 +12,6 @@ win32 {
 
 SOURCES += main.cpp
 
-include ( ../../3rdparty/Args/Args/Args.pri )
-
 exists( ../../como_defines.pri ) {
     include( ../../como_defines.pri )
 }
@@ -21,8 +19,8 @@ exists( ../../como_defines.pri ) {
 
 unix|win32: LIBS += -L$$OUT_PWD/../../3rdparty/Como/lib/ -lComo
 
-INCLUDEPATH += $$PWD/../../3rdparty/Como $$PWD/../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
-DEPENDPATH += $$PWD/../../3rdparty/Como $$PWD/../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/Args
+INCLUDEPATH += $$PWD/../../3rdparty/Como $$PWD/../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/args-parser
+DEPENDPATH += $$PWD/../../3rdparty/Como $$PWD/../ $$PWD/../../3rdparty/cfgfile $$PWD/../../3rdparty/args-parser
 
 win32:!win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/Como.lib
 else:unix|win32-g++: PRE_TARGETDEPS += $$OUT_PWD/../../3rdparty/Como/lib/libComo.a

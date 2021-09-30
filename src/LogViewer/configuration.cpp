@@ -32,7 +32,6 @@
 
 // Qt include.
 #include <QCoreApplication>
-#include <QTextCodec>
 #include <QFile>
 
 
@@ -100,7 +99,6 @@ Configuration::readConfiguration()
 				Globe::ApplicationCfgTag appCfgTag;
 
 				QTextStream stream( &file );
-				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 				cfgfile::read_cfgfile( appCfgTag, stream, m_cfgFileName );
 
@@ -136,7 +134,6 @@ Configuration::readConfiguration()
 			Globe::DBTag tag;
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, appCfg.dbCfgFile() );
 

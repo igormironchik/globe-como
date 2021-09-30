@@ -21,12 +21,10 @@ SOURCES += main.cpp \
            configuration.cpp \
            log.cpp
 
-include ( ../../3rdparty/Args/Args/Args.pri )
-
 unix|win32: LIBS += -L$$OUT_PWD/../../ -lGlobe.Core
 
-INCLUDEPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/Args
-DEPENDPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/Args
+INCLUDEPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/args-parser
+DEPENDPATH += $$PWD/../../ $$PWD/../../3rdparty/cfgfile $$PWD/../ $$PWD/../../3rdparty/Como $$PWD/../../3rdparty/args-parser
 
 unix|win32: LIBS += -L$$OUT_PWD/../../3rdparty/Como/lib/ -lComo
 

@@ -30,7 +30,7 @@
 #include <QTimer>
 
 // Args include.
-#include <Args/all.hpp>
+#include <args-parser/all.hpp>
 
 // LogViewer include.
 #include <LogViewer/configuration.hpp>

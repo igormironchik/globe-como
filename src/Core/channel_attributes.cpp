@@ -344,7 +344,7 @@ ChannelAttributesDialog::ipEdited( const QString & text )
 	{
 		if( d->m_checkIPv4 )
 		{
-			const auto matchRes = ipValidationRegExp.match( text,
+			const auto matchRes = ipValidationRegExp.match( text, 0,
 				QRegularExpression::PartialPreferCompleteMatch );
 
 			if( !matchRes.hasMatch() )

@@ -93,7 +93,7 @@ DisableSoundToDialog::acceptButtonClicked()
 	else
 	{
 		const auto match = d->m_formatRegExp.match(
-			d->m_ui.m_relativeDateTimeEdit->text(),
+			d->m_ui.m_relativeDateTimeEdit->text(), 0,
 			QRegularExpression::PartialPreferCompleteMatch );
 
 		if( match.hasMatch() )
@@ -187,7 +187,7 @@ DisableSoundToDialog::init()
 bool
 DisableSoundToDialog::checkCorrectnessOfFormat( const QString & dt )
 {
-	const auto match = d->m_formatRegExp.match( dt,
+	const auto match = d->m_formatRegExp.match( dt, 0,
 		QRegularExpression::PartialPreferCompleteMatch );
 
 	return ( match.hasMatch() && !match.hasPartialMatch() );

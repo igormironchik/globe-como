@@ -93,8 +93,8 @@ int main( int argc, char ** argv )
 	app.setWindowIcon( appIcon );
 
 	QTranslator appTranslator;
-	appTranslator.load( "./tr/globe_" + QLocale::system().name() );
-	app.installTranslator( &appTranslator );
+	if( appTranslator.load( "./tr/globe_" + QLocale::system().name() ) )
+		app.installTranslator( &appTranslator );
 
 	Globe::LaunchTime::instance();
 

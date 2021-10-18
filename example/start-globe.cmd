@@ -1,2 +1,2 @@
 set /p BUILD_PATH=<build_directory
-"%BUILD_PATH%/Globe.exe" -c ./Globe/Globe.cfg
+"%BUILD_PATH%/src/App/Globe.exe" -c ./Globe/Globe.cfg

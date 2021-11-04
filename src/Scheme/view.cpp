@@ -126,7 +126,7 @@ View::dropEvent( QDropEvent * event )
 		source.setDateTime( dateTime );
 
 		d->m_scene->addSource( channelName, source,
-			mapToScene( event->pos() ) );
+			mapToScene( event->position().toPoint() ) );
 
 		event->acceptProposedAction();
 	}

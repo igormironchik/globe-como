@@ -41,7 +41,6 @@
 #include <QMessageBox>
 #include <QTabWidget>
 #include <QCoreApplication>
-#include <QTextCodec>
 #include <QFile>
 #include <QFileInfo>
 
@@ -153,7 +152,6 @@ Sounds::readCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 
@@ -211,7 +209,6 @@ Sounds::saveCfg( const QString & fileName )
 			SoundsCfgTag tag( d->m_cfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -299,7 +296,7 @@ Sounds::playSound( Globe::Level level, const Como::Source & source,
 		if( DisabledSounds::instance().isSoundsEnabled( source, channelName ) )
 		{
 			d->m_player->stop();
-			d->m_player->setMedia( QUrl::fromLocalFile(
+			d->m_player->setSource( QUrl::fromLocalFile(
 				QFileInfo( Configuration::instance().path() + soundFileName( level ) )
 					.absoluteFilePath() ) );
 			d->m_player->play();
@@ -314,7 +311,7 @@ Sounds::playSound( Globe::Level level, const Como::Source & source,
 }
 
 void
-Sounds::playerStateChanged( QMediaPlayer::State state )
+Sounds::playerStateChanged( QMediaPlayer::PlaybackState state )
 {
 	if( state == QMediaPlayer::StoppedState )
 		d->m_level = None;
@@ -339,7 +336,7 @@ Sounds::init()
 
 	d->m_player = new QMediaPlayer( this );
 
-	connect( d->m_player, &QMediaPlayer::stateChanged,
+	connect( d->m_player, &QMediaPlayer::playbackStateChanged,
 		this, &Sounds::playerStateChanged );
 
 	d->m_tabs = new QTabWidget( this );

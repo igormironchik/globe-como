@@ -39,7 +39,7 @@
 #include <QWidget>
 #include <QSqlQuery>
 #include <QCoreApplication>
-#include <QTextCodec>
+#include <QFile>
 
 // cfgfile include.
 #include <cfgfile/all.hpp>
@@ -138,7 +138,6 @@ LogEventWindow::saveConfiguration( const QString & fileName )
 			LogEventCfgTag tag( LogEventCfg( windowStateCfg( this ) ) );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -188,7 +187,6 @@ LogEventWindow::readConfiguration( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 

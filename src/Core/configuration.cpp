@@ -247,7 +247,6 @@ Configuration::readAppCfg( const QString & cfgFileName )
 	if( file.open( QIODevice::ReadOnly ) )
 	{
 		QTextStream stream( &file );
-		stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 		try {
 			ApplicationCfgTag appCfgTag;
@@ -315,7 +314,6 @@ Configuration::readMainWindowCfg( const QString & cfgFileName )
 			if( file.open( QIODevice::ReadOnly ) )
 			{
 				QTextStream stream( &file );
-				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 				MainWindowCfgTag tag;
 
@@ -406,7 +404,6 @@ Configuration::readChannelsCfg( const QString & cfgFileName )
 				AvailableChannelsCfgTag tag;
 
 				QTextStream stream( &file );
-				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 				cfgfile::read_cfgfile( tag, stream, p );
 
@@ -593,7 +590,6 @@ Configuration::readWindowsCfg( const QString & cfgFileName )
 		{
 			try {
 				QTextStream stream( &file );
-				stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 				WindowsTag tag;
 
@@ -891,7 +887,6 @@ Configuration::saveAppCfg( const QString & cfgFileName )
 			ApplicationCfgTag tag( d->m_appCfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -947,7 +942,6 @@ Configuration::saveMainWindowCfg( const QString & cfgFileName )
 			MainWindowCfgTag tag( mainWindowCfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -1014,7 +1008,6 @@ Configuration::saveChannelsCfg( const QString & cfgFileName )
 			AvailableChannelsCfgTag tag( channelsCfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -1078,7 +1071,6 @@ Configuration::saveWindowsCfg( const QString & cfgFileName )
 			WindowsTag tag( cfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 

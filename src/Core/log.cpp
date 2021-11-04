@@ -30,7 +30,6 @@
 #include <QTimer>
 #include <QCoreApplication>
 #include <QFile>
-#include <QTextCodec>
 
 // Globe include.
 #include <Core/log.hpp>
@@ -928,7 +927,6 @@ Log::readCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 
@@ -991,7 +989,6 @@ Log::saveCfg( const QString & fileName )
 			LogTag tag( d->m_cfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 

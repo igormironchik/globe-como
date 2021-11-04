@@ -31,7 +31,7 @@
 #include <QColor>
 #include <QPushButton>
 #include <QToolTip>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QComboBox>
 
 
@@ -334,7 +334,7 @@ ChannelAttributesDialog::nameEdited( const QString & text )
 void
 ChannelAttributesDialog::ipEdited( const QString & text )
 {
-	static const QRegExp ipValidationRegExp(
+	static const QRegularExpression ipValidationRegExp(
 		"^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
 		"([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
@@ -344,11 +344,23 @@ ChannelAttributesDialog::ipEdited( const QString & text )
 	{
 		if( d->m_checkIPv4 )
 		{
-			if( !ipValidationRegExp.exactMatch( text ) )
+			const auto matchRes = ipValidationRegExp.match( text, 0,
+				QRegularExpression::PartialPreferCompleteMatch );
+
+			if( !matchRes.hasMatch() )
 			{
-				d->highlightError( d->m_ui.m_ip );
-				d->m_isIPSet = false;
-				d->stateChanged();
+				if( matchRes.hasPartialMatch() )
+				{
+					d->highlightNormal( d->m_ui.m_ip );
+					d->m_isIPSet = false;
+					d->stateChanged();
+				}
+				else
+				{
+					d->highlightError( d->m_ui.m_ip );
+					d->m_isIPSet = false;
+					d->stateChanged();
+				}
 			}
 			else
 			{

@@ -33,7 +33,6 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QTextStream>
-#include <QTextCodec>
 
 
 namespace Globe {
@@ -170,7 +169,6 @@ ColorForLevel::saveCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			ColorForLevelTag tag( this );
 
@@ -220,7 +218,6 @@ ColorForLevel::readCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 

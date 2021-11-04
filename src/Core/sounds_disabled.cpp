@@ -30,7 +30,6 @@
 #include <QTimer>
 #include <QMessageBox>
 #include <QCoreApplication>
-#include <QTextCodec>
 #include <QFile>
 
 // cfgfile include.
@@ -152,7 +151,6 @@ DisabledSounds::readCfg( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 
@@ -213,7 +211,6 @@ DisabledSounds::saveCfg( const QString & fileName )
 			DisabledSoundsCfgTag tag( cfg );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 

@@ -30,7 +30,7 @@
 #include <QTimer>
 
 // Args include.
-#include <Args/all.hpp>
+#include <args-parser/all.hpp>
 
 // LogViewer include.
 #include <LogViewer/configuration.hpp>
@@ -76,12 +76,12 @@ int main( int argc, char ** argv )
 	app.setWindowIcon( appIcon );
 
 	QTranslator globeTranslator;
-	globeTranslator.load( "./tr/globe_" + QLocale::system().name() );
-	app.installTranslator( &globeTranslator );
+	if( globeTranslator.load( "./tr/globe_" + QLocale::system().name() ) )
+		app.installTranslator( &globeTranslator );
 
 	QTranslator appTranslator;
-	appTranslator.load( "./tr/logviewer_" + QLocale::system().name() );
-	app.installTranslator( &appTranslator );
+	if( appTranslator.load( "./tr/logviewer_" + QLocale::system().name() ) )
+		app.installTranslator( &appTranslator );
 
 	LogViewer::Configuration::instance().setCfgFileName( cfgFile );
 

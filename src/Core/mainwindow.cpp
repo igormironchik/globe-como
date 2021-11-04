@@ -70,6 +70,7 @@ public:
 				parent )
 		,	m_menu( Q_NULLPTR )
 		,	m_winMenu( Q_NULLPTR )
+		,	m_isQuit( false )
 	{
 	}
 
@@ -115,6 +116,8 @@ public:
 	QScopedPointer< Menu > m_menu;
 	//! Windows menu helper.
 	WindowsMenu * m_winMenu;
+	//! Is application quit already?
+	bool m_isQuit;
 }; // class MainWindowPrivate
 
 
@@ -418,9 +421,10 @@ MainWindow::findAggregate( const QString & name )
 void
 MainWindow::closeEvent( QCloseEvent * event )
 {
-	event->accept();
+	if( !d->m_isQuit )
+		shutdown();
 
-	shutdown();
+	event->accept();
 }
 
 WindowsCfg
@@ -539,6 +543,8 @@ MainWindow::shutdown()
 		w->close();
 
 	ChannelsManager::instance().shutdown();
+
+	d->m_isQuit = true;
 
 	QApplication::quit();
 }

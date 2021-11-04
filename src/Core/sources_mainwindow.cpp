@@ -36,7 +36,6 @@
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QCoreApplication>
-#include <QTextCodec>
 #include <QFile>
 
 // cfgfile include.
@@ -156,7 +155,6 @@ SourcesMainWindow::saveConfiguration( const QString & fileName )
 				windowStateCfg( this ) );
 
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::write_cfgfile( tag, stream );
 
@@ -206,7 +204,6 @@ SourcesMainWindow::readConfiguration( const QString & fileName )
 	{
 		try {
 			QTextStream stream( &file );
-			stream.setCodec( QTextCodec::codecForName( "UTF-8" ) );
 
 			cfgfile::read_cfgfile( tag, stream, fileName );
 

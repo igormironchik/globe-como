@@ -193,22 +193,22 @@ MainWindow::init( const QList< ToolWindowObject* > & toolWindows )
 		SLOT( openScheme() ) );
 
 	fileMenu->addAction( QIcon( ":/img/save_22x22.png" ),
-		tr( "Save Configuration" ), this, SLOT( save() ),
-		QKeySequence( tr( "Ctrl+S" ) ) );
+		tr( "Save Configuration" ),	QKeySequence( tr( "Ctrl+S" ) ),
+		this, &MainWindow::save );
 
 	fileMenu->addSeparator();
 
 	fileMenu->addAction( QIcon( ":/img/exit_22x22.png" ),
-		tr( "E&xit" ), this, SLOT( shutdown() ),
-		QKeySequence( tr( "Ctrl+Q" ) ) );
+		tr( "E&xit" ), QKeySequence( tr( "Ctrl+Q" ) ),
+		this, &MainWindow::shutdown );
 
 	QMenu * toolsMenu = menuBar()->addMenu( tr( "&Tools" ) );
 
 	QMenu * settingsMenu = menuBar()->addMenu( tr( "&Settings" ) );
 
 	settingsMenu->addAction( QIcon( ":/img/settings_22x22.png" ),
-		tr( "&Settings" ), this, SLOT( settings() ),
-		QKeySequence( tr( "Alt+C" ) ) );
+		tr( "&Settings" ), QKeySequence( tr( "Alt+C" ) ),
+		this, &MainWindow::settings );
 
 	QMenu * windowsMenu = menuBar()->addMenu( tr( "&Windows" ) );
 

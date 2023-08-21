@@ -37,4 +37,11 @@ add_executable( Globe.LogViewer ${SRC} )
 
 add_dependencies( Globe.LogViewer Globe.Core )
 
+set_target_properties( Globe.LogViewer
+	PROPERTIES
+	ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../App"
+	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../App"
+	RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../App"
+)
+
 target_link_libraries( Globe.LogViewer Globe.Core Qt6::Multimedia Qt6::Widgets Qt6::Gui Qt6::Network Qt6::Sql Qt6::Core )

@@ -52,7 +52,7 @@ WordWrapItemDelegate::sizeHint( const QStyleOptionViewItem & option,
 
 void
 WordWrapItemDelegate::paint( QPainter * painter,
-	const QStyleOptionViewItem & option, const QModelIndex & index) const
+	const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
 	QStyledItemDelegate::paint( painter, option, QModelIndex() );
 

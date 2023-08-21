@@ -24,4 +24,4 @@ set_target_properties( como_channel
 	LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/../../../App/plugins/como_channel"
 )
 
-target_link_libraries( como_channel Como Qt6::Gui Qt6::Network Qt6::Core )
+target_link_libraries( como_channel Como Globe.Core Qt6::Gui Qt6::Network Qt6::Core )

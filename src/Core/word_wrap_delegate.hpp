@@ -32,16 +32,19 @@ namespace Globe {
 
 //! Item delegate for word wrapping.
 class WordWrapItemDelegate final
-  :  public QStyledItemDelegate
+	:	public QStyledItemDelegate
 {
 public:
-  WordWrapItemDelegate( QTreeView * parent = nullptr );
+	WordWrapItemDelegate( QTreeView * parent = nullptr );
 
-  QSize sizeHint( const QStyleOptionViewItem & option,
-	const QModelIndex & index ) const override;
-  void paint( QPainter * painter, const QStyleOptionViewItem & option,
-	const QModelIndex & index) const override;
+	QSize sizeHint( const QStyleOptionViewItem & option,
+		const QModelIndex & index ) const override;
+	void paint( QPainter * painter, const QStyleOptionViewItem & option,
+		const QModelIndex & index) const override;
 
+protected:
+	void initStyleOption( QStyleOptionViewItem * option,
+		const QModelIndex & index ) const override;
 
 private:
   QTreeView * m_parent;

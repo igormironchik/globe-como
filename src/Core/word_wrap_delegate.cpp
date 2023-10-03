@@ -54,11 +54,19 @@ void
 WordWrapItemDelegate::paint( QPainter * painter,
 	const QStyleOptionViewItem & option, const QModelIndex & index ) const
 {
-	QStyledItemDelegate::paint( painter, option, QModelIndex() );
+	QStyledItemDelegate::paint( painter, option, index );
 
 	painter->drawText( option.rect,
 		Qt::AlignLeft | Qt::TextWordWrap | Qt::AlignVCenter,
 		index.data( Qt::DisplayRole ).toString() );
+}
+
+void
+WordWrapItemDelegate::initStyleOption( QStyleOptionViewItem * option,
+	const QModelIndex & index ) const
+{
+	QStyledItemDelegate::initStyleOption( option, index );
+	option->text = QString();
 }
 
 } /* namespace Globe */

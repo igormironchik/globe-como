@@ -128,7 +128,7 @@ WindowsMenu::initMenu()
 
 	connect( scheme, &QMenu::triggered, this, &WindowsMenu::showWindow );
 
-	for( auto * w : qAsConst( m_windows.m_schemeWindows ) )
+	for( auto * w : std::as_const( m_windows.m_schemeWindows ) )
 	{
 		if( w != m_thisWindow )
 		{
@@ -142,7 +142,7 @@ WindowsMenu::initMenu()
 
 	connect( ch, &QMenu::triggered, this, &WindowsMenu::showWindow );
 
-	for( auto * w : qAsConst( m_windows.m_channelViewWindows ) )
+	for( auto * w : std::as_const( m_windows.m_channelViewWindows ) )
 	{
 		if( w != m_thisWindow )
 		{
@@ -156,7 +156,7 @@ WindowsMenu::initMenu()
 
 	connect( agg, &QMenu::triggered, this, &WindowsMenu::showWindow );
 
-	for( auto * w : qAsConst( m_windows.m_aggregates ) )
+	for( auto * w : std::as_const( m_windows.m_aggregates ) )
 	{
 		if( w != m_thisWindow )
 		{

@@ -56,23 +56,14 @@ ColorForLevelTag::ColorForLevelTag( ColorForLevel * colorForLevel )
 void
 ColorForLevelTag::initColorForLevel( ColorForLevel * colorForLevel )
 {
-	QColor none;
-	QColor critical;
-	QColor error;
-	QColor warning;
-	QColor debug;
-	QColor info;
-	QColor deregistered;
-	QColor disconnected;
-
-	none.setNamedColor( m_noneColor.value() );
-	critical.setNamedColor( m_criticalColor.value() );
-	error.setNamedColor( m_errorColor.value() );
-	warning.setNamedColor( m_warningColor.value() );
-	debug.setNamedColor( m_debugColor.value() );
-	info.setNamedColor( m_infoColor.value() );
-	deregistered.setNamedColor( m_deregisteredColor.value() );
-	disconnected.setNamedColor( m_disconnectedColor.value() );
+	const auto none = QColor::fromString( m_noneColor.value() );
+	const auto critical = QColor::fromString( m_criticalColor.value() );
+	const auto error = QColor::fromString( m_errorColor.value() );
+	const auto warning = QColor::fromString( m_warningColor.value() );
+	const auto debug = QColor::fromString( m_debugColor.value() );
+	const auto info = QColor::fromString( m_infoColor.value() );
+	const auto deregistered = QColor::fromString( m_deregisteredColor.value() );
+	const auto disconnected = QColor::fromString( m_disconnectedColor.value() );
 
 	colorForLevel->setColors( none, critical, error, warning,
 		debug, info, deregistered, disconnected );

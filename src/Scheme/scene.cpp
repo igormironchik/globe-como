@@ -133,7 +133,7 @@ public:
 		foreach( Text * t, m_texts )
 			t->setMode( mode );
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->setMode( mode );
 	}
 
@@ -146,7 +146,7 @@ public:
 		foreach( Text * t, m_texts )
 			t->setEditMode( mode );
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->setEditMode( mode );
 	}
 
@@ -160,7 +160,7 @@ public:
 		if( it != m_sources.end() )
 			it.value()->deregistered();
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->syncSource( s, channel, false );
 	}
 
@@ -177,7 +177,7 @@ public:
 				it.value()->disconnected();
 		}
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->channelDisconnected( channel );
 	}
 
@@ -194,7 +194,7 @@ public:
 				it.value()->deregistered();
 		}
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->channelDeregistered( channel );
 	}
 
@@ -208,7 +208,7 @@ public:
 		if( it != m_sources.end() )
 			it.value()->setSource( s );
 
-		for( Aggregate * a : qAsConst( m_agg ) )
+		for( Aggregate * a : std::as_const( m_agg ) )
 			a->syncSource( s, channel, true );
 	}
 
@@ -281,7 +281,7 @@ Scene::schemeCfg() const
 
 	QList< SchemeCfg > aggregates;
 
-	for( const auto * a : qAsConst( d->m_agg ) )
+	for( const auto * a : std::as_const( d->m_agg ) )
 		aggregates.append( a->cfg() );
 
 	cfg.setAggregates( aggregates );
@@ -366,7 +366,7 @@ Scene::removeAggregate( Aggregate * agg )
 
 	d->m_agg.removeOne( agg );
 
-	for( const auto & ch : qAsConst( agg->listOfChannels() ) )
+	for( const auto & ch : std::as_const( agg->listOfChannels() ) )
 	{
 		if( !isChannelInUse( ch ) )
 			removeChannel( ch );
@@ -522,7 +522,7 @@ Scene::initScheme( const SchemeCfg & cfg )
 		d->m_texts.append( text );
 	}
 
-	for( const auto & a : qAsConst( cfg.aggregates() ) )
+	for( const auto & a : std::as_const( cfg.aggregates() ) )
 	{
 		Aggregate * agg = new Aggregate( &d->m_selection, this );
 		agg->setMode( d->m_mode );
@@ -764,7 +764,7 @@ Scene::propertiesChanged()
 	foreach( Source * s, d->m_sources )
 		s->propertiesChanged();
 
-	for( Aggregate * a : qAsConst( d->m_agg ) )
+	for( Aggregate * a : std::as_const( d->m_agg ) )
 		a->propertiesChanged();
 }
 
@@ -807,9 +807,9 @@ Scene::populateChannels()
 			channels.append( it.key().channelName() );
 	}
 
-	for( const auto * a : qAsConst( d->m_agg ) )
+	for( const auto * a : std::as_const( d->m_agg ) )
 	{
-		for( const auto & ch : qAsConst( a->listOfChannels()  ) )
+		for( const auto & ch : std::as_const( a->listOfChannels()  ) )
 		{
 			if( !channels.contains( ch ) )
 				channels.append( ch );
@@ -865,7 +865,7 @@ Scene::removeChannel( const QString & name )
 bool
 Scene::isChannelInUse( const QString & name )
 {
-	for( const auto * agg : qAsConst( d->m_agg ) )
+	for( const auto * agg : std::as_const( d->m_agg ) )
 	{
 		if( agg->listOfChannels().contains( name ) )
 			return true;
@@ -911,9 +911,9 @@ Scene::syncSources()
 		}
 	}
 
-	for( auto * agg : qAsConst( d->m_agg ) )
+	for( auto * agg : std::as_const( d->m_agg ) )
 	{
-		for( const auto & ch : qAsConst( agg->listOfChannels() ) )
+		for( const auto & ch : std::as_const( agg->listOfChannels() ) )
 		{
 			if( !channels.contains( ch ) )
 				channels.append( ch );

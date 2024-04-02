@@ -119,7 +119,7 @@ WindowsTag::cfg() const
 
 	QList< ChannelViewWindowCfg > channelViewWindows;
 
-	for( const auto & t : qAsConst( m_channelViewWindows.values() ) )
+	for( const auto & t : std::as_const( m_channelViewWindows.values() ) )
 	{
 		channelViewWindows.append( t->cfg() );
 	}
@@ -128,7 +128,7 @@ WindowsTag::cfg() const
 
 	QList< Scheme::WindowCfg > schemeWindows;
 
-	for( const auto & t : qAsConst( m_schemeWindows.values() ) )
+	for( const auto & t : std::as_const( m_schemeWindows.values() ) )
 	{
 		schemeWindows.append( t->cfg() );
 	}

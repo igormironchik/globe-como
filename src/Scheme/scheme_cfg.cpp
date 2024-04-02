@@ -104,13 +104,13 @@ SchemeCfg::availableSources() const
 {
 	QList< QPair< Como::Source, QString > > res;
 
-	for( const auto & s : qAsConst( m_sources ) )
+	for( const auto & s : std::as_const( m_sources ) )
 	{
 		res.append( qMakePair( Como::Source( s.type(), s.sourceName(),
 			s.typeName(), QVariant(), QString() ), s.channelName() ) );
 	}
 
-	for( const auto & a : qAsConst( m_aggregates ) )
+	for( const auto & a : std::as_const( m_aggregates ) )
 	{
 		res.append( a.availableSources() );
 	}
@@ -182,7 +182,7 @@ SchemeCfgTag::cfg() const
 
 	QList< SourceCfg > sources;
 
-	for( const auto & t : qAsConst( m_sources.values() ) )
+	for( const auto & t : std::as_const( m_sources.values() ) )
 	{
 		sources.append( t->sourceCfg() );
 	}
@@ -191,7 +191,7 @@ SchemeCfgTag::cfg() const
 
 	QList< TextCfg > texts;
 
-	for( const auto & t : qAsConst( m_texts.values() ) )
+	for( const auto & t : std::as_const( m_texts.values() ) )
 	{
 		texts.append( t->textCfg() );
 	}
@@ -200,7 +200,7 @@ SchemeCfgTag::cfg() const
 
 	QList< SchemeCfg > aggregates;
 
-	for( const auto & t : qAsConst( m_aggregates.values() ) )
+	for( const auto & t : std::as_const( m_aggregates.values() ) )
 	{
 		aggregates.append( t->cfg() );
 	}
@@ -220,7 +220,7 @@ SchemeCfgTag::cfg() const
 void
 SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
 {
-	for( const auto & s : qAsConst( cfg.sources() ) )
+	for( const auto & s : std::as_const( cfg.sources() ) )
 	{
 		cfgfile::tag_vector_of_tags_t< SourceCfgTag,
 			cfgfile::qstring_trait_t >::ptr_to_tag_t
@@ -229,7 +229,7 @@ SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
 		m_sources.set_value( t );
 	}
 
-	for( const auto & c : qAsConst( cfg.texts() ) )
+	for( const auto & c : std::as_const( cfg.texts() ) )
 	{
 		cfgfile::tag_vector_of_tags_t< TextCfgTag,
 			cfgfile::qstring_trait_t >::ptr_to_tag_t
@@ -238,7 +238,7 @@ SchemeCfgTag::initFromCfg( const SchemeCfg & cfg )
 		m_texts.set_value( t );
 	}
 
-	for( const auto & c : qAsConst( cfg.aggregates() ) )
+	for( const auto & c : std::as_const( cfg.aggregates() ) )
 	{
 		cfgfile::tag_vector_of_tags_t< SchemeCfgTag,
 			cfgfile::qstring_trait_t >::ptr_to_tag_t

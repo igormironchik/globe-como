@@ -147,7 +147,7 @@ AggregatePrivate::calcCurrentValue()
 	{
 		it.next();
 
-		for( const auto & s : qAsConst( it.value() ) )
+		for( const auto & s : std::as_const( it.value() ) )
 		{
 			if( s.second.m_connected )
 				connected = true;
@@ -460,7 +460,7 @@ Aggregate::schemeChanged()
 
 	auto * dd = d_ptr();
 
-	for( const auto & ch : qAsConst( listOfChannels() ) )
+	for( const auto & ch : std::as_const( listOfChannels() ) )
 		dd->m_scene->addChannel( ch );
 
 	QMutableMapIterator< QString,

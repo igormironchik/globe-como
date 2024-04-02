@@ -277,7 +277,7 @@ AvailableChannelsCfgTag::cfg() const
 {
 	AvailableChannelsCfg cfg;
 
-	for( const auto & t : qAsConst( m_channels.values() ) )
+	for( const auto & t : std::as_const( m_channels.values() ) )
 		cfg.append( t->cfg() );
 
 	return cfg;

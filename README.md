@@ -1,3 +1,6 @@
+[![License: GPL](https://img.shields.io/badge/license-GPLv3-blue
+)](https://opensource.org/license/GPL-3.0)
+
 Globe is a tool (application) for viewing Como sources. About Como you can read
 [here.]( https://github.com/igormironchik/components-observation )
 
